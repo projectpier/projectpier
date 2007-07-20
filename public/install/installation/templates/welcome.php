@@ -4,7 +4,7 @@ you meet the minimum system requirements and have the database login information
 proceeding.</p>
 <h2>System Requirements:</h2>
 <ul>
-  <li>PHP 5.1 or greater</li>
+  <li>PHP 5.0.2 or greater (MySQL, GD and SimpleXML extensions are required.)</li>
   <li>MySQL 4.1 or greater with InnoDB support</li>
   <li>Apache 2.0 or greater or IIS 5.0 or greater</li>
 </ul>

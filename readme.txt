@@ -3,11 +3,12 @@
 System requirements
 ~~~~~~~~~~~~~~~~~~~
 	
-ProjectPier requires a web server, PHP (5.0 or greater) and MySQL with InnoDB
-support. The recommended web server is Apache.
+ProjectPier requires a web server, PHP (5.0.2 or greater with MySQL, GD, and 
+SimpleXML extensions) and MySQL with InnoDB support. The recommended web 
+server is Apache, but IIS 5 and above have been reported to work also.
 	
 ProjectPier is not PHP4 compatible and it will not run on PHP versions prior
-to PHP5.
+to PHP 5.0.2.
 	
 Recommended configuration:
 	

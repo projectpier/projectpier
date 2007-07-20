@@ -13,18 +13,18 @@ body {
 }
 
 a {
-  color: #bf6000;
+  color: #2c2b7f;
   text-decoration: none;
   border-bottom: 1px dotted #ccc;
 }
 
 a:hover {
   border-bottom: 1px solid #333;
-  color: #BA0101;
+  color: #2c2b7f;
 }
 
 h1, h2, h3 {
-  color: #692301;
+  color: #2c2b7f;
   margin: 0 0 10px 0;
 }
 
@@ -76,7 +76,7 @@ input, select {
 
 #wrapper {
   margin: 10px auto;
-  border: 1px dashed #bf6000;
+  border: 1px dashed #e4e8eb;
   padding: 10px;
   width: 700px;
   text-align: left;
@@ -84,7 +84,7 @@ input, select {
 
 #header {
   padding: 15px 10px 10px 10px;
-  background: #bf6000;
+  background: #2c2b7f;
   color: white;
 }
 
@@ -105,7 +105,7 @@ h1.pageTitle span {
 #installerControls {
   padding: 5px;
   padding-bottom: 0;
-  border-top: 1px solid #bf6000;
+  border-top: 1px solid #2c2b7f;
 }
 
 #footer {
