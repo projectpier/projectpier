@@ -42,7 +42,9 @@ Some installations of MySQL don't support InnoDB by default.  The ProjectPier in
 will tell you if your server is not configured to support InnoDB. This is easy to fix: 
 
 1. Open your MySQL options file, the file name is my.cnf (Linux) - usually at /etc/my.cnf 
-   or my.ini (Windows) - usually at c:/windows/my.ini.
+   or my.ini (Windows) - usually at c:/windows/my.ini.  If you are using the Uniform Server
+   on Windows, the file will be named 'my-small' and will need to be edited with a unix 
+   compatible editor such as PSPad or EditPad Lite.
 2. Comment the skip-innodb line by adding # in front of it (like #skip-innodb). 
 3. It would also be good to increase max_allowed_packet to ensure that 
    you'll be able to upload files larger than 1MB. Just add this 
@@ -56,7 +58,5 @@ About ProjectPier
 ProjectPier is an Open Source project management and collaboration
 tool that you can install on your own server. It is released under the 
 terms of the Honest Public License - HPL (see license.txt for details).  
-It is built upon the source code of the activeCollab software version 0.7.1 
-which is also licensed under the HPL
 	
 : http://www.projectpier.org
