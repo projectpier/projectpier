@@ -3,7 +3,13 @@
 <?php if($current_step->hasPreviousStep()) { ?>
   <button type="button" onclick="location.href = '<?php echo $current_step->getPreviousStepUrl() ?>'; return true;">&laquo; Back</button>&nbsp;
 <?php } // if ?>
-  <button type="submit" <?php if($current_step->getNextDisabled()) { ?>disabled="disabled"<?php } // if ?>>Next &raquo;</button>
+
+  <?php if($current_step->getNextDisabled()) { ?>
+    <button type="button" onclick="location.href = '<?php echo $current_step->getStepUrl() ?>'; return true;">Try Again &raquo;</button>
+  <?php } else { // if ?>
+    <button type="submit">Next &raquo;</button>
+  <?php	} // if ?>
+	
 <?php } else { ?>
 <?php if(isset($absolute_url)) { ?>
   <button type="button" onclick="location.href = '<?php echo $absolute_url ?>'">Finish</button>
