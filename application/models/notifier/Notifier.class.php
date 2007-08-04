@@ -91,7 +91,7 @@
       return self::sendEmail(
         $recepients,
         self::prepareEmailAddress($message->getCreatedBy()->getEmail(), $message->getCreatedByDisplayName()),
-        $message->getProject()->getName() . ' - ' . lang('new message'),
+        $message->getProject()->getName() . ' - ' . $message->getTitle(),
         tpl_fetch(get_template_path('new_message', 'notifier'))
       ); // send
     } // newMessage
@@ -138,7 +138,7 @@
       return self::sendEmail(
         $recepients,
         self::prepareEmailAddress($comment->getCreatedBy()->getEmail(), $comment->getCreatedByDisplayName()),
-        $comment->getProject()->getName() . ' - ' . lang('new comment'),
+        $comment->getProject()->getName() . ' - ' . $message->getTitle(),
         tpl_fetch(get_template_path('new_comment', 'notifier'))
       ); // send
     } // newMessageComment
@@ -167,7 +167,7 @@
       return self::sendEmail(
         self::prepareEmailAddress($milestone->getAssignedTo()->getEmail(), $milestone->getAssignedTo()->getDisplayName()),
         self::prepareEmailAddress($milestone->getCreatedBy()->getEmail(), $milestone->getCreatedByDisplayName()),
-        lang('milestone assigned to you'),
+        $milestone->getProject()->getName() . ' - ' . lang('milestone assigned to you') . " - " . $milestone->getName(),
         tpl_fetch(get_template_path('milestone_assigned', 'notifier'))
       ); // send
     } // milestoneAssigned
@@ -293,6 +293,5 @@
       } // if
     } // getMailer
   
-  } // Notifier
-
+  } // Notifier  
 ?>
