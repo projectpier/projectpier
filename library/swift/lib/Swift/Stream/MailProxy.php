@@ -367,7 +367,8 @@ class Swift_Stream_MailProxy implements Swift_IStream
 		@ini_set('sendmail_from', $this->from);
 		$extra = "-oi -f ".$this->from;
 		$sent = @mail(
-		  str_replace("\n", ", implode(', ', $this->getTo($string))),
+		  //implode(', ', $this->getTo($string)),
+	          str_replace("\n", '', implode(', ', $this->getTo($string))),
 		  $this->getSubject($string),
 		  $this->getBody($string),
 		  $this->getHeaders($string),
