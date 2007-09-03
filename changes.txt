@@ -6,7 +6,11 @@ ProjectPier Change Log
 ----------------------------------------------------------
 Version 0.8.0 Release Candidate 1 (0.8.0RC1)  03 Sept 2007
 ----------------------------------------------------------
-- Fixed (Node 96) - cache and upload folders did not exist in distribution zip file
+- Fixed (Node 96) - cache, upload, and public/files folders did not exist in 
+  distribution zip file
+- Fixed (Node 98) - Installation - colors / line break in installation screens
+  Created a whole new layout scheme for 'Complete the Installation' screen, now
+  separate css from login screen.
 - Fixed (Node 99) - added a link to public/install folder on 
 - Fixed (Node 100) - added a 'retry' button to 2nd page on installation screen
 - Fixed (Node 114) - resolved problems with mailer on some systems
