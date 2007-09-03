@@ -23,7 +23,7 @@ them.  They are all licensed under various compatible Open Source licenses.
 : MySQL  : http://www.mysql.com/
 : Apache : http://www.apache.org/
 	
-~~~~~~~~~~~~ 
+~~~~~~~~~~~~
 Installation
 ~~~~~~~~~~~~
 	
@@ -34,9 +34,9 @@ Installation
 4. Direct your browser to the /public/install directory and follow the installation
    procedure.
 	   
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 Enabling InnoDB Support
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Some installations of MySQL don't support InnoDB by default.  The ProjectPier installer 
 will tell you if your server is not configured to support InnoDB. This is easy to fix: 
@@ -50,6 +50,36 @@ will tell you if your server is not configured to support InnoDB. This is easy t
    you'll be able to upload files larger than 1MB. Just add this 
    line bellow #skip-innodb line: 
    set-variable = max_allowed_packet=64M
+
+~~~~~~~~~~~~~~~~~~~~~
+Changing the Language
+~~~~~~~~~~~~~~~~~~~~~
+
+ProjectPier installation screens are in English and English is the default language
+for the program.  However, ProjectPier is distributed with 13 other language options.
+
+After installation is complete, the language can be changed by manually editing the
+file /config/config.php. 
+
+How: Find this line in your config.php file: define('DEFAULT_LOCALIZATION', 'en_us');
+     Change en_us to the appropriate language abbreviation (select from the list below).
+     Example for German: define('DEFAULT_LOCALIZATION', 'de_de');
+
+The following languages are available:
+da_dk = Danish
+de_de = German
+el_gr = Greek
+en_us = English (US)
+es_ar = Argentinian Spanish
+hu_formal = Hungarian (formal)
+hu_informal = Hungarian (informal)
+nl_nl = Dutch
+pl_pl = Polish
+pt_br = Bralilian Portuguese
+sl_si = Slovenian
+sv_sv = Swedish
+tr_tr = Turkish
+zn_ch = Simplified Chinese
 
 ~~~~~~~~~~~~~~~~~
 About ProjectPier
