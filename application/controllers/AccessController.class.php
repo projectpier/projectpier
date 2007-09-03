@@ -161,7 +161,7 @@
       if(Companies::getOwnerCompany() instanceof Company) {
         die('Owner company already exists'); // Somebody is trying to access this method even if the user already exists
       } // if
-      
+			$this->setLayout('complete_install');
       $form_data = array_var($_POST, 'form');
       tpl_assign('form_data', $form_data);
       
