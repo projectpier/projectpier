@@ -23,6 +23,14 @@ them.  They are all licensed under various compatible Open Source licenses.
 : MySQL  : http://www.mysql.com/
 : Apache : http://www.apache.org/
 	
+~~~~~~~~~
+Upgrading
+~~~~~~~~~
+
+If you are upgrading from ProjectPier 0.8.0-dev or activeCollab 0.7.1, do not
+follow the installation steps below, instead see upgrade.txt for an upgrade procedure.
+It is not possible to upgrade from older versions of activeCollab.
+
 ~~~~~~~~~~~~
 Installation
 ~~~~~~~~~~~~
@@ -33,7 +41,7 @@ Installation
 3. Unpack and upload the files to your web server.
 4. Direct your browser to the /public/install directory and follow the installation
    procedure.
-	   
+
 ~~~~~~~~~~~~~~~~~~~~~~~
 Enabling InnoDB Support
 ~~~~~~~~~~~~~~~~~~~~~~~
