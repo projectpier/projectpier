@@ -45,7 +45,7 @@
   // If script is not installed config.php will return false. Othervise it will
   // return NULL. If we get false redirect to install folder
   if(!include_once(ROOT . '/config/config.php')) {
-    print "ProjectPier is not installed. Please redirect your browser to <b>" . PUBLIC_FOLDER . "/install</b> folder and follow installation procedure";
+		print "ProjectPier is not installed. Please redirect your browser to <b><a href=\"./". PUBLIC_FOLDER . "/install\">" . PUBLIC_FOLDER . "/install</a></b> folder and follow installation procedure";
     die();
   } // if
   

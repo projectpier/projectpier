@@ -90,7 +90,8 @@
       $database_name   = $this->getDatabaseName();
       $database_prefix = $this->getTablePrefix();
       $absolute_url    = $this->getAbsoluteUrl();
-      
+      $installkey      = sha1(date('l dS \of F Y h:i:s A').$_SERVER['REMOTE_ADDR'].rand(10000,99999));
+			
       $connected = false;
       if($this->database_connection = @mysql_connect($database_host, $database_user, $database_pass)) {
         $connected = @mysql_select_db($database_name, $this->database_connection);
@@ -124,10 +125,11 @@
         'DEFAULT_LOCALIZATION' => 'en_us',
         'DEBUG'                => false,
         'PRODUCT_VERSION'      => require INSTALLATION_PATH . '/version.php',
-				'SHOW_MESSAGE_BODY'    => true,
-				'SHOW_COMMENT_BODY'    => true,
-				'SHOW_MILESTONE_BODY'  => true,
-				
+        'SHOW_MESSAGE_BODY'    => true,
+        'SHOW_COMMENT_BODY'    => true,
+        'SHOW_MILESTONE_BODY'  => true,
+        'TOKEN_COOKIE_NAME'    => $installkey,
+
       ); // array
       
       tpl_assign('table_prefix', $database_prefix);
