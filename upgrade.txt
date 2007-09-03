@@ -44,6 +44,9 @@ When upgrading, do NOT run the installation scripts!
    TOKEN_COOKIE_NAME = set this to any unique string of characters, the exact length is not important.  This
                        is required, but only used to differentiate between installations when there are
                        multiple installations on the same server.
+   
+   Change from: define('PRODUCT_VERSION', '0.7.1');
+            to: define('PRODUCT_VERSION', '0.8.0');
 
 6) Upload /config/config.php that you just edited to your server, overwriting the existing file.
 
