@@ -102,9 +102,9 @@
     * @return boolean
     */
     private function initLoggedUser() {
-      $user_id       = Cookie::getValue('id');
-      $twisted_token = Cookie::getValue('token');
-      $remember      = (boolean) Cookie::getValue('remember', false);
+      $user_id       = Cookie::getValue('id'.TOKEN_COOKIE_NAME);
+      $twisted_token = Cookie::getValue(TOKEN_COOKIE_NAME);
+      $remember      = (boolean) Cookie::getValue('remember'.TOKEN_COOKIE_NAME, false);
       
       if(empty($user_id) || empty($twisted_token)) {
         return false; // we don't have a user
@@ -159,9 +159,9 @@
     */
     function logUserOut() {
       $this->logged_user = null;
-      Cookie::unsetValue('id');
-      Cookie::unsetValue('token');
-      Cookie::unsetValue('remember');
+      Cookie::unsetValue('id'.TOKEN_COOKIE_NAME);
+      Cookie::unsetValue(TOKEN_COOKIE_NAME);
+      Cookie::unsetValue('remember'.TOKEN_COOKIE_NAME);
     } // logUserOut
     
     // ---------------------------------------------------
@@ -220,13 +220,13 @@
       
       $expiration = $remember ? REMEMBER_LOGIN_LIFETIME : SESSION_LIFETIME;
       
-      Cookie::setValue('id', $user->getId(), $expiration);
-      Cookie::setValue('token', $user->getTwistedToken(), $expiration);
+      Cookie::setValue('id'.TOKEN_COOKIE_NAME, $user->getId(), $expiration);
+      Cookie::setValue(TOKEN_COOKIE_NAME, $user->getTwistedToken(), $expiration);
       
       if($remember) {
-        Cookie::setValue('remember', 1, $expiration);
+        Cookie::setValue('remember'.TOKEN_COOKIE_NAME, 1, $expiration);
       } else {
-        Cookie::unsetValue('remember');
+        Cookie::unsetValue('remember'.TOKEN_COOKIE_NAME);
       } // if
       
       $this->logged_user = $user;
