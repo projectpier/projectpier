@@ -330,28 +330,41 @@
   * @param boolean $force_download Send Content-Disposition: attachment to force save dialog
   * @return boolean
   */
-  function download_contents($content, $type, $name, $size, $force_download = false) {
-    if(connection_status() != 0) return false; // check connection
-    
-    if($force_download) {
-      header("Cache-Control: public");
-    } else {
-      header("Cache-Control: no-store, no-cache, must-revalidate");
-      header("Cache-Control: post-check=0, pre-check=0", false);
-      header("Pragma: no-cache");
-    } // if
-    header("Expires: " . gmdate("D, d M Y H:i:s", mktime(date("H") + 2, date("i"), date("s"), date("m"), date("d"), date("Y"))) . " GMT");
-    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-    header("Content-Type: $type");
-    header("Content-Length: " . (string) $size);
-    
-    // Prepare disposition
-    $disposition = $force_download ? 'attachment' : 'inline';
-    header("Content-Disposition: $disposition; filename=\"" . $name . "\"");
-    header("Content-Transfer-Encoding: binary");
-    print $content;
-    
-    return((connection_status() == 0) && !connection_aborted());   
+  /**  
+  * SAVR 10/20/06 : force file download over SSL for IE
+  * BIP  09/17/07 : inserted and tested for ProjectPier 
+  * Was:
+  * function download_contents($content, $type, $name, $size, $force_download = false) {
+  */
+  function download_contents($content, $type, $name, $size, $force_download = true) {
+  if(connection_status() != 0) return false; // check connection
+
+  if($force_download) {
+
+  /** SAVR 10/20/06
+  * Was:
+  * header("Cache-Control: public");
+  */
+  header("Cache-Control: public, must-revalidate");
+  header("Pragma: hack");
+
+  } else {
+  header("Cache-Control: no-store, no-cache, must-revalidate");
+  header("Cache-Control: post-check=0, pre-check=0", false);
+  header("Pragma: no-cache");
+  } // if
+  header("Expires: " . gmdate("D, d M Y H:i:s", mktime(date("H") + 2, date("i"), date("s"), date("m"), date("d"), date("Y"))) . " GMT");
+  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+  header("Content-Type: $type");
+  header("Content-Length: " . (string) $size);
+
+  // Prepare disposition
+  $disposition = $force_download ? 'attachment' : 'inline';
+  header("Content-Disposition: $disposition; filename=\"" . $name) . "\"";
+  header("Content-Transfer-Encoding: binary");
+  print $content;
+
+  return((connection_status() == 0) && !connection_aborted());
   } // download_contents
   
   /**
