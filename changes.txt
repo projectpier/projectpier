@@ -32,4 +32,3 @@ Version 0.8-dev  23 Jun 2007
 - Rebranded the product from activeCollab to ProjectPier
 - Updated installation screens to add more information
 
--R.C. TEST COMMIT Priviledge
