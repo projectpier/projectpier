@@ -91,13 +91,13 @@
       $database_prefix = $this->getTablePrefix();
       $absolute_url    = $this->getAbsoluteUrl();
       $installkey      = sha1(date('l dS \of F Y h:i:s A').$_SERVER['REMOTE_ADDR'].rand(10000,99999));
-			
+      
       $connected = false;
-      if($this->database_connection = @mysql_connect($database_host, $database_user, $database_pass)) {
+      if ($this->database_connection = @mysql_connect($database_host, $database_user, $database_pass)) {
         $connected = @mysql_select_db($database_name, $this->database_connection);
       } // if
       
-      if($connected) {
+      if ($connected) {
         $this->printMessage('Database connection has been established successfully');
       } else {
         return $this->breakExecution('Failed to connect to database with data you provided');
@@ -107,7 +107,7 @@
       //  Check if we have InnoDB support
       // ---------------------------------------------------
       
-      if($this->haveInnoDbSupport()) {
+      if ($this->haveInnoDbSupport()) {
         $this->printMessage('InnoDB storage engine is supported');
       } else {
         return $this->breakExecution('InnoDB storage engine is not supported');
@@ -137,7 +137,7 @@
       
       // Check MySQL version
       $mysql_version = mysql_get_server_info($this->database_connection);
-      if($mysql_version && version_compare($mysql_version, '4.1', '>=')) {
+      if ($mysql_version && version_compare($mysql_version, '4.1', '>=')) {
         $constants['DB_CHARSET'] = 'utf8';
         @mysql_query("SET NAMES 'utf8'", $this->database_connection);
         tpl_assign('default_collation', 'collate utf8_unicode_ci');
@@ -152,7 +152,7 @@
       // Database construction
       $total_queries = 0;
       $executed_queries = 0;
-      if($this->executeMultipleQueries(tpl_fetch(get_template_path('sql/mysql_schema.php')), $total_queries, $executed_queries)) {
+      if ($this->executeMultipleQueries(tpl_fetch(get_template_path('sql/mysql_schema.php')), $total_queries, $executed_queries)) {
         $this->printMessage("Tables created in '$database_name'. (Executed queries: $executed_queries)");
       } else {
         return $this->breakExecution('Failed to import database construction. MySQL said: ' . mysql_error($this->database_connection));
@@ -161,7 +161,7 @@
       // Initial data
       $total_queries = 0;
       $executed_queries = 0;
-      if($this->executeMultipleQueries(tpl_fetch(get_template_path('sql/mysql_initial_data.php')), $total_queries, $executed_queries)) {
+      if ($this->executeMultipleQueries(tpl_fetch(get_template_path('sql/mysql_initial_data.php')), $total_queries, $executed_queries)) {
         $this->printMessage("Initial data imported into '$database_name'. (Executed queries: $executed_queries)");
       } else {
         return $this->breakExecution('Failed to import initial data. MySQL said: ' . mysql_error($this->database_connection));
@@ -169,7 +169,7 @@
       
       @mysql_query('COMMIT', $this->database_connection);
       
-      if($this->writeConfigFile($constants)) {
+      if ($this->writeConfigFile($constants)) {
         $this->printMessage('Configuration data has been successfully added to the configuration file');
       } else {
         return $this->breakExecution('Failed to write config data into config file');
@@ -191,7 +191,7 @@
     */
     function breakExecution($error_message) {
       $this->printMessage($error_message, true);
-      if(is_resource($this->database_connection)) {
+      if (is_resource($this->database_connection)) {
         @mysql_query('ROLLBACK', $this->database_connection);
       } // if
       return false;
@@ -216,8 +216,8 @@
     * @return boolean
     */
     function haveInnoDbSupport() {
-      if($result = mysql_query("SHOW VARIABLES LIKE 'have_innodb'", $this->database_connection)) {
-        if($row = mysql_fetch_assoc($result)) {
+      if ($result = mysql_query("SHOW VARIABLES LIKE 'have_innodb'", $this->database_connection)) {
+        if ($row = mysql_fetch_assoc($result)) {
           return strtolower(array_var($row, 'Value')) == 'yes';
         } // if
       } // if
@@ -240,7 +240,7 @@
     * @return boolean
     */
     function executeMultipleQueries($sql, &$total_queries, &$executed_queries) {
-      if(!trim($sql)) {
+      if (!trim($sql)) {
         $total_queries = 0;
         $executed_queries = 0;
         return true;
@@ -250,16 +250,16 @@
       $sql = str_replace(array("\r\n", "\r"), array("\n", "\n"), $sql);
       
       $queries = explode(";\n", $sql);
-      if(!is_array($queries) || !count($queries)) {
+      if (!is_array($queries) || !count($queries)) {
         $total_queries = 0;
         $executed_queries = 0;
         return true;
       } // if
       
       $total_queries = count($queries);
-      foreach($queries as $query) {
-        if(trim($query)) {
-          if(@mysql_query(trim($query))) {
+      foreach ($queries as $query) {
+        if (trim($query)) {
+          if (@mysql_query(trim($query))) {
             $executed_queries++;
           } else {
             return false;
@@ -303,7 +303,7 @@
     * @return null
     */
     function printMessage($message, $is_error = false) {
-      if($this->output instanceof Output) {
+      if ($this->output instanceof Output) {
         $this->output->printMessage($message, $is_error);
       } // if
     } // printMessage

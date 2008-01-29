@@ -29,7 +29,9 @@
     * @return User
     */
     function getUser() {
-      if(is_null($this->user)) $this->user = Users::findById($this->getUserId());
+      if (is_null($this->user)) {
+        $this->user = Users::findById($this->getUserId());
+      }
       return $this->user;
     } // getUser
     
@@ -40,7 +42,9 @@
     * @return ProjectMessage
     */
     function getMessage() {
-      if(is_null($this->message)) $this->message = ProjectMessages::findById($this->getMessageId());
+      if (is_null($this->message)) {
+        $this->message = ProjectMessages::findById($this->getMessageId());
+      }
       return $this->message;
     } // getMessage
     

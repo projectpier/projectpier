@@ -110,11 +110,13 @@
       $this->setReleaseDate(DateTimeValueLib::makeFromString((string) $node->release_date));
       $this->setChangeLogUrl($node->change_log);
       
-      if($node->download_links->children() instanceof SimpleXMLElement) {
+      if ($node->download_links->children() instanceof SimpleXMLElement) {
         $download_links = array();
-        foreach($node->download_links->children() as $link_node) {
+        foreach ($node->download_links->children() as $link_node) {
           $download_link = new VersionsFeedDownloadLink($link_node);
-          if($download_link->isLoaded()) $download_links[] = $download_link;
+          if ($download_link->isLoaded()) {
+            $download_links[] = $download_link;
+          }
         } // foreach
         $this->download_links = count($download_links) ? $download_links : null;
       } // if
@@ -263,7 +265,9 @@
     * @return null
     */
     private function setReleaseDate($value) {
-      if($value instanceof DateTimeValue) $this->release_date = $value;
+      if ($value instanceof DateTimeValue) {
+        $this->release_date = $value;
+      }
     } // setReleaseDate
     
     /**
@@ -305,9 +309,11 @@
     function getDownloadLinkByFormat($format) {
       $search_for = trim(strtolower($format));
       $download_links = $this->getDownloadLinks();
-      if(is_array($download_links)) {
-        foreach($download_links as $download_link) {
-          if($download_link->getFormat() == $search_for) return $download_link;
+      if (is_array($download_links)) {
+        foreach ($download_links as $download_link) {
+          if ($download_link->getFormat() == $search_for) {
+            return $download_link;
+          }
         } // if
       } // if
       return null;

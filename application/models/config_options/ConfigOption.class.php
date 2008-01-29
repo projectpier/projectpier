@@ -42,13 +42,19 @@
     * @return ConfigHandler
     */
     function getConfigHandler() {
-      if($this->config_handler instanceof ConfigHandler) return $this->config_handler;
+      if ($this->config_handler instanceof ConfigHandler) {
+        return $this->config_handler;
+      }
       
       $handler_class = trim($this->getConfigHandlerClass());
-      if(!$handler_class) throw new Error('Handler class is not set for "' . $this->getName() . '" config option');
+      if (!$handler_class) {
+        throw new Error('Handler class is not set for "' . $this->getName() . '" config option');
+      }
       
       $handler = new $handler_class();
-      if(!($handler instanceof ConfigHandler)) throw new Error('Handler class for "' . $this->getName() . '" config option is not valid');
+      if (!($handler instanceof ConfigHandler)) {
+        throw new Error('Handler class for "' . $this->getName() . '" config option is not valid');
+      }
       
       $handler->setConfigOption($this);
       $handler->setRawValue(parent::getValue());

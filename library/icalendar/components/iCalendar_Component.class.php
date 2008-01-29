@@ -66,7 +66,7 @@
     */
     function setPropertyValue($property_name, $value, $attributes = null) {
       $prepared_property_name = strtoupper($property_name);
-      if(!$this->isValidProperty($prepared_property_name)) {
+      if (!$this->isValidProperty($prepared_property_name)) {
         throw new iCalendar_InvalidComponentPropertyError($this->getName(), $prepared_property_name);
       } // if
       $this->property_values[$property_name] = new iCalendar_PropertyValue($value, $attributes);
@@ -80,7 +80,7 @@
     * @throws iCalendar_InvalidComponentSubcomponentError
     */
     function addComponent(iCalendar_Component $component) {
-      if(!$this->isValidComponent($component)) {
+      if (!$this->isValidComponent($component)) {
         throw new iCalendar_InvalidComponentSubcomponentError($this->getName(), $component->getName());
       } // if
       $this->components[] = $component;
@@ -119,12 +119,12 @@
       //pre_var_dump($this->getName());
       
       // Render properties
-      foreach($this->property_values as $property => $value) {
+      foreach ($this->property_values as $property => $value) {
         $parts[] = $value->render($property);
       } // foreach
       
       // Now render components
-      foreach($this->components as $component) {
+      foreach ($this->components as $component) {
         $parts[] = $component->render();
       } // foreach
       
@@ -155,8 +155,8 @@
     */
     function setValidProperties() {
       $value = func_get_args();
-      if(is_array($value)) {
-        foreach($value as $k => $v) {
+      if (is_array($value)) {
+        foreach ($value as $k => $v) {
           $value[$k] = strtoupper($v);
         } // foreach
         $this->valid_properties = $value;
@@ -183,8 +183,8 @@
     */
     function setValidComponents() {
       $value = func_get_args();
-      if(is_array($value)) {
-        foreach($value as $k => $v) {
+      if (is_array($value)) {
+        foreach ($value as $k => $v) {
           $value[$k] = strtoupper($v);
         } // foreach
         $this->valid_components = $value;

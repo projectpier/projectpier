@@ -13,9 +13,11 @@
   function substr_utf($string, $start = 0, $length = null) {
     
     $start = (integer) $start >= 0 ? (integer) $start : 0;
-    if(is_null($length)) $lenght = strlen_utf($string) - $start;
+    if (is_null($length)) {
+      $length = strlen_utf($string) - $start;
+    } // if
     
-    if(function_exists('mb_substr')) {
+    if (function_exists('mb_substr')) {
       return mb_substr($string, $start, $length);
     } else {
       return substr($string, $start, $length);
@@ -31,7 +33,7 @@
   * @return integer
   */
   function strlen_utf($string) {
-    if(function_exists('mb_strlen')) {
+    if (function_exists('mb_strlen')) {
       return mb_strlen($string);
     } else {
       return strlen($string);

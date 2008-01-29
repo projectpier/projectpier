@@ -2,10 +2,10 @@
   <h2><?php echo lang('message subscribers') ?></h2>
   <div class="blockContent">
     <p><?php echo lang('subscribers desc') ?></p>
-<?php if(isset($subscribers) && is_array($subscribers) && count($subscribers)) { ?>
+<?php if (isset($subscribers) && is_array($subscribers) && count($subscribers)) { ?>
     <ul>
-<?php foreach($subscribers as $user) { ?>
-<?php if($user->getId() == logged_user()->getId()) { ?>
+<?php foreach ($subscribers as $user) { ?>
+<?php if ($user->getId() == logged_user()->getId()) { ?>
       <li><a href="<?php echo $user->getCardUrl() ?>"><?php echo clean($user->getDisplayName()) ?></a> (<a href="<?php echo $message->getUnsubscribeUrl() ?>" onclick="return confirm('<?php echo lang('confirm unsubscribe') ?>')"><?php echo lang('unsubscribe from message') ?></a>)</li>
 <?php } else { ?>
       <li><a href="<?php echo $user->getCardUrl() ?>"><?php echo clean($user->getDisplayName()) ?></a></li>
@@ -15,13 +15,13 @@
 <?php } else { ?>
     <p><?php echo lang('no subscribers') ?></p>
 <?php } // if ?>
-<?php if(!$message->isSubscriber(logged_user())) { ?>
+<?php if (!$message->isSubscriber(logged_user())) { ?>
     <p><a href="<?php echo $message->getSubscribeUrl() ?>" onclick="return confirm('<?php echo lang('confirm subscribe') ?>')"><?php echo lang('subscribe to message') ?></a></p>
 <?php } // if ?>
   </div>
 </div>
 
-<?php if($message->canUpdateOptions(logged_user())) { ?>
+<?php if ($message->canUpdateOptions(logged_user())) { ?>
 <div class="sidebarBlock">
   <h2><?php echo lang('options') ?></h2>
   <div class="blockContent">

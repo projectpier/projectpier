@@ -17,16 +17,16 @@
     */
     static function check($force = true) {
       $allow_url_fopen = strtolower(ini_get('allow_url_fopen'));
-      if(function_exists('simplexml_load_file') && ($allow_url_fopen == '1' || $allow_url_fopen == 'on')) {
+      if (function_exists('simplexml_load_file') && ($allow_url_fopen == '1' || $allow_url_fopen == 'on')) {
       
         // Execute once a day, if not forced check if we need to execute it now
-        if(!$force) {
-          if(config_option('upgrade_last_check_new_version', false)) {
+        if (!$force) {
+          if (config_option('upgrade_last_check_new_version', false)) {
             return true; // already have it checked and already have a new version
           } // if
           
           $last_check = config_option('upgrade_last_check_datetime');
-          if(($last_check instanceof DateTimeValue) && (($last_check->getTimestamp() + 86400) > DateTimeValueLib::now()->getTimestamp())) {
+          if (($last_check instanceof DateTimeValue) && (($last_check->getTimestamp() + 86400) > DateTimeValueLib::now()->getTimestamp())) {
             return true; // checked in the last day
           } // if
         } // if

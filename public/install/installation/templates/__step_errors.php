@@ -1,10 +1,10 @@
-<?php if($installer->hasErrors()) { ?>
+<?php if ($installer->hasErrors()) { ?>
 <?php $installer_errors = $installer->getErrors() ?>
 <div id="errors">
-<?php if(count($installer_errors) > 1) { ?>
+<?php if (count($installer_errors) > 1) { ?>
 <p>Errors:</p>
 <ul>
-<?php foreach($installer_errors as $error) { ?>
+<?php foreach ($installer_errors as $error) { ?>
   <li><?php echo clean($error) ?></li>
 <?php } // foreach ?>
 </ul>

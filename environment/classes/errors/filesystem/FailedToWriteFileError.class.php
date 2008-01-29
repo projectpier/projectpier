@@ -23,7 +23,9 @@
     * @return FailedToWriteFileError
     */
     function __construct($file_path, $message = null) {
-      if(is_null($message)) $message = "Failed to write content into '$file_path'";
+      if (is_null($message)) {
+        $message = "Failed to write content into '$file_path'";
+      } // if
       parent::__construct($message);
       $this->setFilePath($file_path);
     } // __construct

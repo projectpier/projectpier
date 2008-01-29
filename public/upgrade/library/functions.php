@@ -12,7 +12,7 @@
   * @return integer
   */
   function compare_scripts_by_version_from($script1, $script2) {
-    if(!($script1 instanceof ScriptUpgraderScript) || !($script2 instanceof ScriptUpgraderScript)) {
+    if (!($script1 instanceof ScriptUpgraderScript) || !($script2 instanceof ScriptUpgraderScript)) {
       return 0;
     } // if
     return version_compare($script1->getVersionFrom(), $script2->getVersionFrom());
@@ -55,8 +55,8 @@
   */
   function tpl_assign($varname, $varvalue = null) {
     $template_instance = Template::instance();
-    if(is_array($varname)) {
-      foreach($varname as $k => $v) {
+    if (is_array($varname)) {
+      foreach ($varname as $k => $v) {
         $template_instance->assign($k, $v);
       } // foreach
     } else {

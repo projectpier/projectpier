@@ -35,26 +35,26 @@
   * @return null
   */
   function clean_var_info($var, $indent = '&nbsp;&nbsp;', $indent_close_bracet = '') {
-    if(is_object($var)) {
+    if (is_object($var)) {
       return 'Object (class: ' . get_class($var) . ')';
-    } elseif(is_resource($var)) {
+    } elseif (is_resource($var)) {
       return 'Resource (type: ' . get_resource_type($var) . ')';
-    } elseif(is_array($var)) {
+    } elseif (is_array($var)) {
       $result = 'Array (';
-      if(count($var)) {
-        foreach($var as $k => $v) {
+      if (count($var)) {
+        foreach ($var as $k => $v) {
           $k_for_display = is_integer($k) ? $k : "'" . clean($k) . "'";
           $result .= "\n" . $indent . '[' . $k_for_display . '] => ' . clean_var_info($v, $indent . '&nbsp;&nbsp;', $indent_close_bracet . $indent);
         } // foreach
       } // if
       return $result . "\n$indent_close_bracet)";
-    } elseif(is_int($var)) {
+    } elseif (is_int($var)) {
       return '(int)' . $var;
-    } elseif(is_float($var)) {
+    } elseif (is_float($var)) {
       return '(float)' . $var;
-    } elseif(is_bool($var)) {
+    } elseif (is_bool($var)) {
       return $var ? 'true' : 'false';
-    } elseif(is_null($var)) {
+    } elseif (is_null($var)) {
       return 'NULL';
     } else {
       return "(string) '" . clean($var) . "'";
@@ -96,10 +96,12 @@
   */
   function is_valid_function_name($str) {
     $check_str = trim($str);
-    if($check_str == '') return false; // empty string
+    if ($check_str == '') {
+      return false; // empty string
+    }
     
     $first_char = substr_utf($check_str, 0, 1);
-    if(is_numeric($first_char)) return false; // first char can't be number
+    if (is_numeric($first_char)) return false; // first char can't be number
     
     return (boolean) preg_match("/^([a-zA-Z0-9_]*)$/", $check_str);
   } // is_valid_function_name
@@ -125,7 +127,9 @@
   * @return mixed
   */
   function array_var(&$from, $name, $default = null) {
-    if(is_array($from)) return isset($from[$name]) ? $from[$name] : $default;
+    if (is_array($from)) {
+      return isset($from[$name]) ? $from[$name] : $default;
+    }
     return $default;
   } // array_var
   
@@ -136,10 +140,12 @@
   * @return array
   */
   function string_to_array($str) {
-    if(!is_string($str) || (strlen($str) == 0)) return array();
+    if (!is_string($str) || (strlen($str) == 0)) {
+      return array();
+    }
     
     $result = array();
-    for($i = 0, $strlen = strlen($str); $i < $strlen; $i++) {
+    for ($i = 0, $strlen = strlen($str); $i < $strlen; $i++) {
       $result[] = $str[$i];
     } // if
     
@@ -157,12 +163,14 @@
   */
   function get_id($var_name = 'id', $from = null, $default = null) {
     $var_name = trim($var_name);
-    if($var_name == '') return $default; // empty varname?
+    if ($var_name == '') return $default; // empty varname?
     
-    if(is_null($from)) $from = $_GET;
+    if (is_null($from)) {
+      $from = $_GET;
+    }
     
-    if(!is_array($from)) return $default; // $from is array?
-    if(!is_valid_function_name($var_name)) return $default; // $var_name is valid?
+    if (!is_array($from)) return $default; // $from is array?
+    if (!is_valid_function_name($var_name)) return $default; // $var_name is valid?
     
     $value = array_var($from, $var_name, $default);
     return is_numeric($value) ? (integer) $value : $default;
@@ -178,18 +186,22 @@
   */
   function array_flat($array) {
     // Not an array
-    if(!is_array($array)) return array($array);
+    if (!is_array($array)) {
+      return array($array);
+    }
     
     // Prepare result
     $result = array();
     
     // Loop elemetns
-    foreach($array as $value) {
+    foreach ($array as $value) {
       
       // Subelement is array? Flat it
-      if(is_array($value)) {
+      if (is_array($value)) {
         $value = array_flat($value);
-        foreach($value as $subvalue) $result[] = $subvalue;
+        foreach ($value as $subvalue) {
+          $result[] = $subvalue;
+        }
       } else {
         $result[] = $value;
       } // if
@@ -211,7 +223,7 @@
   */
   function str_replace_first($search_for, $replace_with, $in) {
     $pos = strpos($in, $search_for);
-    if($pos === false) {
+    if ($pos === false) {
       return $in;
     } else {
       return substr($in, 0, $pos) . $replace_with . substr($in, $pos + strlen($search_for), strlen($in));
@@ -228,7 +240,7 @@
   * @param string $niddle Needle string
   * @return boolean
   */
-  function str_starts_with($string, $niddle) {  
+  function str_starts_with($string, $niddle) {
   	return substr($string, 0, strlen($niddle)) == $niddle;  	
   } // end func str_starts with
   
@@ -274,7 +286,7 @@
   */
   function is_valid_email($user_email) {
     $chars = EMAIL_FORMAT;
-    if(strstr($user_email, '@') && strstr($user_email, '.')) {
+    if (strstr($user_email, '@') && strstr($user_email, '.')) {
     	return (boolean) preg_match($chars, $user_email);
     } else {
     	return false;
@@ -289,7 +301,9 @@
   * @return boolean
   */
   function is_valid_url($url) {
-    if(str_starts_with(strtolower($url), 'http://localhost')) return true;
+    if (str_starts_with(strtolower($url), 'http://localhost')) {
+      return true;
+    }
     return preg_match(URL_FORMAT, $url);
   } // end func is_valid_url 
   
@@ -303,11 +317,13 @@
   */
   function redirect_to($to, $die = true) {
   	$to = trim($to);
-  	if(strpos($to, '&amp;') !== false) {
+  	if (strpos($to, '&amp;') !== false) {
   	  $to = str_replace('&amp;', '&', $to);
   	} // if
     header('Location: ' . $to);
-    if($die) die();
+    if ($die) {
+      die();
+    }
   } // end func redirect_to
   
   /**
@@ -319,7 +335,7 @@
   */
   function redirect_to_referer($alternative = nulls) {
     $referer = get_referer();
-    if(!is_valid_url($referer)) {
+    if (!is_valid_url($referer)) {
       redirect_to($alternative);
     } else {
       redirect_to($referer);
@@ -360,7 +376,7 @@
   function php_config_value_to_bytes($val) {
     $val = trim($val);
     $last = strtolower($val{strlen($val)-1});
-    switch($last) {
+    switch ($last) {
       // The 'G' modifier is available since PHP 5.1.0
       case 'g':
         $val *= 1024;
@@ -386,7 +402,7 @@
   * @return null
   */
   function fix_input_quotes() {
-    if(get_magic_quotes_gpc()) {
+    if (get_magic_quotes_gpc()) {
       array_stripslashes($_GET);
       array_stripslashes($_POST);
       array_stripslashes($_COOKIE);
@@ -400,9 +416,11 @@
   * @return null
   */
   function array_stripslashes(&$array) {
-    if(!is_array($array)) return;
-    foreach($array as $k => $v) {
-      if(is_array($array[$k])) {
+    if (!is_array($array)) {
+      return;
+    }
+    foreach ($array as $k => $v) {
+      if (is_array($array[$k])) {
         array_stripslashes($array[$k]);
       } else {
         $array[$k] = stripslashes($array[$k]);

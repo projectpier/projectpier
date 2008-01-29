@@ -77,14 +77,14 @@
     * @throws NotifierConnectionError
     */
     static function newMessage(ProjectMessage $message, $people) {
-      if(!is_array($people) || !count($people)) {
+      if (!is_array($people) || !count($people)) {
         return; // nothing here...
       } // if
       
       tpl_assign('new_message', $message);
       
       $recepients = array();
-      foreach($people as $user) {
+      foreach ($people as $user) {
         $recepients[] = self::prepareEmailAddress($user->getEmail(), $user->getDisplayName());
       } // foreach
       
@@ -105,23 +105,23 @@
     */
     static function newMessageComment(Comment $comment) {
       $message = $comment->getObject();
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         throw new Error('Invalid comment object');
       } // if
       
       $all_subscribers = $message->getSubscribers();
-      if(!is_array($all_subscribers)) {
+      if (!is_array($all_subscribers)) {
         return true; // no subscribers
       } // if
       
       $recepients = array();
-      foreach($all_subscribers as $subscriber) {
-        if($subscriber->getId() == $comment->getCreatedById()) {
+      foreach ($all_subscribers as $subscriber) {
+        if ($subscriber->getId() == $comment->getCreatedById()) {
           continue; // skip comment author
         } // if
         
-        if($comment->isPrivate()) {
-          if($subscriber->isMemberOfOwnerCompany()) {
+        if ($comment->isPrivate()) {
+          if ($subscriber->isMemberOfOwnerCompany()) {
             $recepients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
           } // if
         } else {
@@ -129,14 +129,14 @@
         } // of
       } // foreach
       
-      if(!count($recepients)) {
+      if (!count($recepients)) {
         return true; // no recepients
       } // if
       
       tpl_assign('new_comment', $comment);
       
       return self::sendEmail(
-        $recepients,
+        $recipients,
         self::prepareEmailAddress($comment->getCreatedBy()->getEmail(), $comment->getCreatedByDisplayName()),
         $comment->getProject()->getName() . ' - ' . $message->getTitle(),
         tpl_fetch(get_template_path('new_comment', 'notifier'))
@@ -155,10 +155,10 @@
     * @throws NotifierConnectionError
     */
     function milestoneAssigned(ProjectMilestone $milestone) {
-      if($milestone->isCompleted()) {
+      if ($milestone->isCompleted()) {
         return true; // milestone has been already completed...
       } // if
-      if(!($milestone->getAssignedTo() instanceof User)) {
+      if (!($milestone->getAssignedTo() instanceof User)) {
         return true; // not assigned to user
       } // if
       
@@ -186,7 +186,7 @@
     * @return string
     */
     static function prepareEmailAddress($email, $name = null) {
-      if(trim($name) && !self::getExchangeCompatible()) {
+      if (trim($name) && !self::getExchangeCompatible()) {
         return trim($name) . ' <' . trim($email) . '>';
       } else {
         return trim($email);
@@ -200,28 +200,28 @@
     * @return boolean
     */
     static function getExchangeCompatible() {
-      if(is_null(self::$exchange_compatible)) {
+      if (is_null(self::$exchange_compatible)) {
         self::$exchange_compatible = config_option('exchange_compatible', false);
       } // if
       return self::$exchange_compatible;
     } // getExchangeCompatible
     
     /**
-	  * Send an email using Swift (send commands)
-	  * 
-	  * @param string to_address
-	  * @param string from_address
-	  * @param string subject
-	  * @param string body, optional
-	  * @param string content-type,optional
-	  * @param string content-transfer-encoding,optional
-	  * @return bool successful
-	  */
+    * Send an email using Swift (send commands)
+    * 
+    * @param string to_address
+    * @param string from_address
+    * @param string subject
+    * @param string body, optional
+    * @param string content-type,optional
+    * @param string content-transfer-encoding,optional
+    * @return bool successful
+    */
     static function sendEmail($to, $from, $subject, $body = false, $type = 'text/plain', $encoding = '8bit') {
       Env::useLibrary('swift');
       
       $mailer = self::getMailer();
-      if(!($mailer instanceof Swift)) {
+      if (!($mailer instanceof Swift)) {
         throw new NotifierConnectionError();
       } // if
       
@@ -242,24 +242,24 @@
       $mail_transport_config = config_option('mail_transport', self::MAIL_TRANSPORT_MAIL);
       
       // Emulate mail() - use NativeMail
-      if($mail_transport_config == self::MAIL_TRANSPORT_MAIL) {
+      if ($mail_transport_config == self::MAIL_TRANSPORT_MAIL) {
         $mailer = new Swift(new Swift_Connection_NativeMail());
         return $mailer->isConnected() ? $mailer : null;
         
       // Use SMTP server
-      } elseif($mail_transport_config == self::MAIL_TRANSPORT_SMTP) {
+      } elseif ($mail_transport_config == self::MAIL_TRANSPORT_SMTP) {
         
         // Load SMTP config
         $smtp_server = config_option('smtp_server');
         $smtp_port = config_option('smtp_port', 25);
         $smtp_secure_connection = config_option('smtp_secure_connection', self::SMTP_SECURE_CONNECTION_NO);
         $smtp_authenticate = config_option('smtp_authenticate', false);
-        if($smtp_authenticate) {
+        if ($smtp_authenticate) {
           $smtp_username = config_option('smtp_username');
           $smtp_password = config_option('smtp_password');
         } // if
         
-        switch($smtp_secure_connection) {
+        switch ($smtp_secure_connection) {
           case self::SMTP_SECURE_CONNECTION_SSL:
             $transport = SWIFT_SSL;
             break;
@@ -271,14 +271,14 @@
         } // switch
         
         $mailer = new Swift(new Swift_Connection_SMTP($smtp_server, $smtp_port, $transport));
-        if(!$mailer->isConnected()) {
+        if (!$mailer->isConnected()) {
           return null;
         } // if
         
         $mailer->setCharset('UTF-8');
         
-        if($smtp_authenticate) {
-          if($mailer->authenticate($smtp_username, $smtp_password)) {
+        if ($smtp_authenticate) {
+          if ($mailer->authenticate($smtp_username, $smtp_password)) {
             return $mailer;
           } else {
             return null;

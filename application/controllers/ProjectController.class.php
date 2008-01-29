@@ -36,7 +36,7 @@
     * @return null
     */
     function overview() {
-      if(!logged_user()->isProjectUser(active_project())) {
+      if (!logged_user()->isProjectUser(active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -69,16 +69,18 @@
     * @return null
     */
     function search() {
-      if(!logged_user()->isProjectUser(active_project())) {
+      if (!logged_user()->isProjectUser(active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $search_for = array_var($_GET, 'search_for');
       $page = (integer) array_var($_GET, 'page', 1);
-      if($page < 1) $page = 1;
+      if ($page < 1) {
+        $page = 1;
+      }
       
-      if(trim($search_for) == '') {
+      if (trim($search_for) == '') {
         $search_results = null;
         $pagination = null;
       } else {
@@ -101,7 +103,7 @@
     * @return null
     */
     function tags() {
-      if(!logged_user()->isProjectUser(active_project())) {
+      if (!logged_user()->isProjectUser(active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -116,7 +118,7 @@
     * @return null
     */
     function people() {
-      if(!logged_user()->isProjectUser(active_project())) {
+      if (!logged_user()->isProjectUser(active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -131,7 +133,7 @@
     * @return null
     */
     function permissions() {
-      if(!active_project()->canChangePermissions(logged_user())) {
+      if (!active_project()->canChangePermissions(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl(active_project()->getOverviewUrl());
       } // if
@@ -145,12 +147,12 @@
       
       $companies = array(owner_company());
       $clients = owner_company()->getClientCompanies();
-      if(is_array($clients)) {
+      if (is_array($clients)) {
         $companies = array_merge($companies, $clients);
       } // if
       tpl_assign('companies', $companies);
       
-      if(array_var($_POST, 'process') == 'process') {
+      if (array_var($_POST, 'process') == 'process') {
         try {
           DB::beginWork();
           
@@ -159,17 +161,17 @@
           
           $companies = array(owner_company());
           $client_companies = owner_company()->getClientCompanies();
-          if(is_array($client_companies)) {
+          if (is_array($client_companies)) {
             $companies = array_merge($companies, $client_companies);
           } // if
           
-          foreach($companies as $company) {
+          foreach ($companies as $company) {
             
             // Company is selected!
-            if(array_var($_POST, 'project_company_' . $company->getId()) == 'checked') {
+            if (array_var($_POST, 'project_company_' . $company->getId()) == 'checked') {
               
               // Owner company is automaticly included so it does not need to be in project_companies table
-              if(!$company->isOwner()) {
+              if (!$company->isOwner()) {
                 $project_company = new ProjectCompany();
                 $project_company->setProjectId(active_project()->getId());
                 $project_company->setCompanyId($company->getId());
@@ -177,18 +179,18 @@
               } // if
               
               $users = $company->getUsers();
-              if(is_array($users)) {
+              if (is_array($users)) {
                 $counter = 0;
-                foreach($users as $user) {
+                foreach ($users as $user) {
                   $user_id = $user->getId();
                   $counter++;
-                  if(array_var($_POST, "project_user_$user_id") == 'checked') {
+                  if (array_var($_POST, "project_user_$user_id") == 'checked') {
                     
                     $project_user = new ProjectUser();
                     $project_user->setProjectId(active_project()->getId());
                     $project_user->setUserId($user_id);
                     
-                    foreach($permissions as $permission => $permission_text) {
+                    foreach ($permissions as $permission => $permission_text) {
                       
                       // Owner company members have all permissions
                       $permission_value = $company->isOwner() ? true : array_var($_POST, 'project_user_' . $user_id . '_' . $permission) == 'checked';
@@ -229,7 +231,7 @@
       $this->setTemplate('add_project');
       $this->setLayout('administration');
       
-      if(!Project::canAdd(logged_user())) {
+      if (!Project::canAdd(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
@@ -241,11 +243,11 @@
       tpl_assign('project_data', $project_data);
       
       // Submited...
-      if(is_array($project_data)) {
+      if (is_array($project_data)) {
         $project->setFromAttributes($project_data);
         
         $default_folders_config = str_replace(array("\r\n", "\r"), array("\n", "\n"), config_option('default_project_folders', ''));
-        if(trim($default_folders_config) == '') {
+        if (trim($default_folders_config) == '') {
           $default_folders = array();
         } else {
           $default_folders = explode("\n", $default_folders_config);
@@ -260,35 +262,41 @@
           
           // We are getting the list of auto assign users. If current user is not in the list
           // add it. He's creating the project after all...
-          if(is_array($auto_assign_users)) {
+          if (is_array($auto_assign_users)) {
             $auto_assign_logged_user = false;
-            foreach($auto_assign_users as $user) {
-              if($user->getId() == logged_user()->getId()) $auto_assign_logged_user = true;
+            foreach ($auto_assign_users as $user) {
+              if ($user->getId() == logged_user()->getId()) {
+                $auto_assign_logged_user = true;
+              }
             } // if
-            if(!$auto_assign_logged_user) $auto_assign_users[] = logged_user();
+            if (!$auto_assign_logged_user) {
+              $auto_assign_users[] = logged_user();
+            }
           } else {
             $auto_assign_users[] = logged_user();
           } // if
           
-          foreach($auto_assign_users as $user) {
+          foreach ($auto_assign_users as $user) {
             $project_user = new ProjectUser();
             $project_user->setProjectId($project->getId());
             $project_user->setUserId($user->getId());
-            if(is_array($permissions)) {
-              foreach($permissions as $permission) $project_user->setColumnValue($permission, true);
+            if (is_array($permissions)) {
+              foreach ($permissions as $permission) {
+                $project_user->setColumnValue($permission, true);
+              }
             } // if
             $project_user->save();
           } // foreach
           
-          if(count($default_folders)) {
+          if (count($default_folders)) {
             $added_folders = array();
-            foreach($default_folders as $default_folder) {
+            foreach ($default_folders as $default_folder) {
               $folder_name = trim($default_folder);
-              if($folder_name == '') {
+              if ($folder_name == '') {
                 continue;
               } // if
               
-              if(in_array($folder_name, $added_folders)) {
+              if (in_array($folder_name, $added_folders)) {
                 continue;
               } // if
               
@@ -327,18 +335,18 @@
       $this->setLayout('administration');
       
       $project = Projects::findById(get_id());
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
         $this->redirectTo('administration', 'projects');
       } // if
       
-      if(!$project->canEdit(logged_user())) {
+      if (!$project->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('administration', 'projects'));
       } // if
       
       $project_data = array_var($_POST, 'project');
-      if(!is_array($project_data)) {
+      if (!is_array($project_data)) {
         $project_data = array(
           'name' => $project->getName(),
           'description' => $project->getDescription(),
@@ -349,7 +357,7 @@
       tpl_assign('project', $project);
       tpl_assign('project_data', $project_data);
       
-      if(is_array(array_var($_POST, 'project'))) {
+      if (is_array(array_var($_POST, 'project'))) {
         $project->setFromAttributes($project_data);
         
         try {
@@ -375,12 +383,12 @@
     */
     function delete() {
       $project = Projects::findById(get_id());
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
         $this->redirectTo('administration', 'projects');
       } // if
       
-      if(!$project->canDelete(logged_user())) {
+      if (!$project->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('administration', 'projects'));
       } // if
@@ -412,12 +420,12 @@
     function complete() {
       
       $project = Projects::findById(get_id());
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
         $this->redirectTo('administration', 'projects');
       } // if
       
-      if(!$project->canChangeStatus(logged_user())) {
+      if (!$project->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('administration', 'projects'));
       } // if
@@ -450,12 +458,12 @@
     */
     function open() {
       $project = Projects::findById(get_id());
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
         $this->redirectTo('administration', 'projects');
       } // if
       
-      if(!$project->canChangeStatus(logged_user())) {
+      if (!$project->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('administration', 'projects'));
       } // if
@@ -487,30 +495,30 @@
     * @return null
     */
     function remove_user() {
-      if(!active_project()->canChangePermissions(logged_user())) {
+      if (!active_project()->canChangePermissions(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(active_project()->getOverviewUrl());
       } // if
       
       $user = Users::findById(get_id('user_id'));
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectTo('project', 'people');
       } // if
       
-      if($user->isAccountOwner()) {
+      if ($user->isAccountOwner()) {
         flash_error(lang('user cant be removed from project'));
         $this->redirectTo('project', 'people');
       } // if
       
       $project = Projects::findById(get_id('project_id'));
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
         $this->redirectTo('project', 'people');
       } // if
       
       $project_user = ProjectUsers::findById(array('project_id' => $project->getId(), 'user_id' => $user->getId()));
-      if(!($project_user instanceof ProjectUser)) {
+      if (!($project_user instanceof ProjectUser)) {
         flash_error(lang('user not on project'));
         $this->redirectTo('project', 'people');
       } // if
@@ -532,25 +540,25 @@
     * @return null
     */
     function remove_company() {
-      if(!active_project()->canChangePermissions(logged_user())) {
+      if (!active_project()->canChangePermissions(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(active_project()->getOverviewUrl());
       } // if
       
       $project = Projects::findById(get_id('project_id'));
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
         $this->redirectTo('project', 'people');
       } // if
       
       $company = Companies::findById(get_id('company_id'));
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectTo('project', 'people');
       } // if
       
       $project_company = ProjectCompanies::findById(array('project_id' => $project->getId(), 'company_id' => $company->getId()));
-      if(!($project_company instanceof ProjectCompany)) {
+      if (!($project_company instanceof ProjectCompany)) {
         flash_error(lang('company not on project'));
         $this->redirectTo('project', 'people');
       } // if
@@ -560,10 +568,12 @@
         DB::beginWork();
         $project_company->delete();
         $users = ProjectUsers::getCompanyUsersByProject($company, $project);
-        if(is_array($users)) {
-          foreach($users as $user) {
+        if (is_array($users)) {
+          foreach ($users as $user) {
             $project_user = ProjectUsers::findById(array('project_id' => $project->getId(), 'user_id' => $user->getId()));
-            if($project_user instanceof ProjectUser) $project_user->delete();
+            if ($project_user instanceof ProjectUser) {
+              $project_user->delete();
+            }
           } // foreach
         } // if
         DB::commit();

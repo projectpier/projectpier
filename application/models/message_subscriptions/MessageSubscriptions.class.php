@@ -19,10 +19,12 @@
       $subscriptions = MessageSubscriptions::findAll(array(
         'conditions' => '`message_id` = ' . DB::escape($message->getId())
       )); // findAll
-      if(is_array($subscriptions)) {
-        foreach($subscriptions as $subscription) {
+      if (is_array($subscriptions)) {
+        foreach ($subscriptions as $subscription) {
           $user = $subscription->getUser();
-          if($user instanceof User) $users[] = $user;
+          if ($user instanceof User) {
+            $users[] = $user;
+          } // if
         } // foreach
       } // if
       return count($users) ? $users : null;
@@ -39,10 +41,12 @@
       $subscriptions = MessageSubscriptions::findAll(array(
         'conditions' => '`user_id` = ' . DB::escape($user->getId())
       )); // findAll
-      if(is_array($subscriptions)) {
-        foreach($subscriptions as $subscription) {
+      if (is_array($subscriptions)) {
+        foreach ($subscriptions as $subscription) {
           $message = $subscription->getMessage();
-          if($message instanceof ProjectMessage) $messages[] = $message;
+          if ($message instanceof ProjectMessage) {
+            $messages[] = $message;
+          }
         } // foreach
       } // if
       return count($messages) ? $messages : null;

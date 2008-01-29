@@ -102,7 +102,9 @@
     * @return array
     */
     function getSubscribers() {
-      if(is_null($this->subscribers)) $this->subscribers = MessageSubscriptions::getUsersByMessage($this);
+      if (is_null($this->subscribers)) {
+        $this->subscribers = MessageSubscriptions::getUsersByMessage($this);
+      }
       return $this->subscribers;
     } // getSubscribers
     
@@ -127,10 +129,10 @@
     * @return boolean
     */
     function subscribeUser(User $user) {
-      if($this->isNew()) {
+      if ($this->isNew()) {
         throw new Error('Can\'t subscribe user to message that is not saved');
       } // if
-      if($this->isSubscriber($user)) {
+      if ($this->isSubscriber($user)) {
         return true;
       } // if
       
@@ -152,7 +154,7 @@
         'message_id' => $this->getId(),
         'user_id' => $user->getId()
       )); // findById
-      if($subscription instanceof MessageSubscription) {
+      if ($subscription instanceof MessageSubscription) {
         return $subscription->delete();
       } else {
         return true;
@@ -180,7 +182,7 @@
     * @return array
     */
     function getRelatedForms() {
-      if(is_null($this->related_forms)) {
+      if (is_null($this->related_forms)) {
         $this->related_forms = ProjectForms::findAll(array(
           'conditions' => '`action` = ' . DB::escape(ProjectForm::ADD_COMMENT_ACTION) . ' AND `in_object_id` = ' . DB::escape($this->getId()),
           'order' => '`order`'
@@ -201,7 +203,7 @@
     * @return boolean
     */
     function canManage(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       return $user->getProjectPermission($this->getProject(), ProjectUsers::CAN_MANAGE_MESSAGES);
@@ -214,10 +216,10 @@
     * @return boolean
     */
     function canView(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user have access to project
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't access private objects
       } // if
       return true;
@@ -232,10 +234,10 @@
     * @return booelean
     */
     function canAdd(User $user, Project $project) {
-      if(!$user->isProjectUser($project)) {
+      if (!$user->isProjectUser($project)) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // administrator
       } // if
       return $user->getProjectPermission($project, ProjectUsers::CAN_MANAGE_MESSAGES);
@@ -249,16 +251,16 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // user is administrator or root
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't edit private message
       } // if
-      if($user->getId() == $this->getCreatedById()) {
+      if ($user->getId() == $this->getCreatedById()) {
         return true; // user is message author
       } // if
       return false; // no no
@@ -282,10 +284,10 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // user is administrator or root
       } // if
       return false; // no no
@@ -299,18 +301,18 @@
     * @return boolean
     */
     function canAddComment(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if(!$user->isMemberOfOwnerCompany()) {
-        if($this->isPrivate()) {
+      if (!$user->isMemberOfOwnerCompany()) {
+        if ($this->isPrivate()) {
           return false;
         } // if
-        if($this->getIsLocked()) {
+        if ($this->getIsLocked()) {
           return false;
         } // if
       } // if
-      if(!$this->canManage($user)) {
+      if (!$this->canManage($user)) {
         return false;
       } // if
       return true;
@@ -407,11 +409,15 @@
     */
     function delete() {
       $comments = $this->getComments();
-      if(is_array($comments)) foreach($comments as $comment) $comment->delete();
+      if (is_array($comments)) {
+        foreach ($comments as $comment) {
+          $comment->delete();
+        }
+      }
       
       $related_forms = $this->getRelatedForms();
-      if(is_array($related_forms)) {
-        foreach($related_forms as $related_form) {
+      if (is_array($related_forms)) {
+        foreach ($related_forms as $related_form) {
           $related_form->setInObjectId(0);
           $related_form->save();
         } // foreach
@@ -428,12 +434,16 @@
     * @return null
     */
     function validate(&$errors) {
-      if($this->validatePresenceOf('title')) {
-        if(!$this->validateUniquenessOf('title', 'project_id')) $errors[] = lang('message title unique');
+      if ($this->validatePresenceOf('title')) {
+        if (!$this->validateUniquenessOf('title', 'project_id')) {
+          $errors[] = lang('message title unique');
+        }
       } else {
         $errors[] = lang('message title required');
       } // if
-      if(!$this->validatePresenceOf('text')) $errors[] = lang('message text required');
+      if (!$this->validatePresenceOf('text')) {
+        $errors[] = lang('message text required');
+      }
     } // validate
     
     // ---------------------------------------------------

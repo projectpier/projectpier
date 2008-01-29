@@ -92,7 +92,9 @@
     * @return string
     */
     function lang($name, $default = null) {
-      if(is_null($default)) $default = "<span style=\"font-weight: bolder; color: red;\">Missing lang: $name</span>";
+      if (is_null($default)) {
+        $default = "<span style=\"font-weight: bolder; color: red;\">Missing lang: $name</span>";
+      } // if
       return $this->langs->get($name, $default);
     } // lang
     
@@ -129,13 +131,13 @@
     private function loadLanguageSettings() {
       
       // Check dir...
-      if(!is_dir($this->getLanguageDirPath())) {
+      if (!is_dir($this->getLanguageDirPath())) {
         throw new DirDnxError($this->getLanguageDirPath());
       } // if
       
       // Get settings file path and include it
       $settings_file = $this->getLanguageDirPath() . '/' . $this->getLocale() . '.php';
-      if(is_file($settings_file)) {
+      if (is_file($settings_file)) {
         include_once $settings_file;
       } else {
         throw new FileDnxError($settings_file, "Failed to find language settings file. Expected location: '$settings_file'.");
@@ -146,14 +148,16 @@
       
       // Get langs dir
       $langs_dir = $this->getLanguageDirPath() . '/' . $this->getLocale();
-      if(is_dir($langs_dir)) {
+      if (is_dir($langs_dir)) {
         $files = get_files($langs_dir, 'php');
         
         // Loop through files and add langs
-        if(is_array($files)) {
-          foreach($files as $file) {
+        if (is_array($files)) {
+          foreach ($files as $file) {
             $langs = include_once $file;
-            if(is_array($langs)) $this->langs->append($langs);
+            if (is_array($langs)) {
+              $this->langs->append($langs);
+            } // if
           } // foreach
         } // if
         
@@ -338,7 +342,7 @@
     * @return string
     */
     //function getCurrentLocale() {
-    //  if(trim($this->current_locale)) {
+    //  if (trim($this->current_locale)) {
     //    return $this->current_locale;
     //  } else {
     //    return setlocale(LC_ALL, 0);
@@ -367,7 +371,7 @@
       static $instance;
       
       // Prepare instance
-      if(!($instance instanceof Localization)) {
+      if (!($instance instanceof Localization)) {
         $instance = new Localization();
       } // if
       

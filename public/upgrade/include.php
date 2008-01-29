@@ -1,14 +1,14 @@
 <?php
 
   // PHP5?
-  if(!version_compare(phpversion(), '5.0', '>=')) {
+  if (!version_compare(phpversion(), '5.0', '>=')) {
     die('<strong>Upgrade error:</strong> in order to run ProjectPier you need PHP5. Your current PHP version is: ' . phpversion());
   } // if
 
   session_start();
   error_reporting(E_ALL);
   
-  if(function_exists('date_default_timezone_set')) {
+  if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('gmt');
   } // if
   

@@ -28,11 +28,13 @@
       $companies = array();
       
       $sql = "SELECT $companies_table.* FROM $companies_table, $project_companies_table WHERE ($companies_table.`client_of_id` = '$owner_id') AND ($companies_table.`id` = $project_companies_table.`company_id` AND $project_companies_table.`project_id` = " . DB::escape($project->getId()) . ')';
-      if(trim($additional_conditions) <> '') $sql .= " AND ($additional_conditions)";
+      if (trim($additional_conditions) <> '') {
+        $sql .= " AND ($additional_conditions)";
+      }
       
       $rows = DB::executeAll($sql);
-      if(is_array($rows)) {
-        foreach($rows as $row) {
+      if (is_array($rows)) {
+        foreach ($rows as $row) {
           $companies[] = Companies::instance()->loadFromRow($row);
         } // foreach
       } // if
@@ -50,7 +52,9 @@
     * @return array
     */
     static function getProjectsByCompany(Company $company, $additional_conditions = null) {
-      if($company->isOwner()) return Projects::getAll();
+      if ($company->isOwner()) {
+        return Projects::getAll();
+      }
       
       $projects_table = Projects::instance()->getTableName(true);
       $project_companies_table=  ProjectCompanies::instance()->getTableName(true);
@@ -58,11 +62,13 @@
       $projects = array();
       
       $sql = "SELECT $projects_table.* FROM $projects_table, $project_companies_table WHERE ($projects_table.`id` = $project_companies_table.`project_id` AND $project_companies_table.`company_id` = " . DB::escape($company->getId()) . ')';
-      if(trim($additional_conditions) <> '') $sql .= " AND ($additional_conditions)";
+      if (trim($additional_conditions) <> '') {
+        $sql .= " AND ($additional_conditions)";
+      }
       
       $rows = DB::executeAll($sql);
-      if(is_array($rows)) {
-        foreach($rows as $row) {
+      if (is_array($rows)) {
+        foreach ($rows as $row) {
           $projects[] = Projects::instance()->loadFromRow($row);
         } // foreach
       } // if

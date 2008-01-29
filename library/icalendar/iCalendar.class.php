@@ -9,15 +9,15 @@
     * @return string
     */
     static function render($calendar) {
-      if(is_array($calendar)) {
+      if (is_array($calendar)) {
         $result = '';
-        foreach($calendar as $single_calendar) {
+        foreach ($calendar as $single_calendar) {
           $result .= self::render($single_calendar) . "\r\n";
         } // foreach
         return $result;
       } // if
       
-      if(!($calendar instanceof iCalendar_Calendar)) return ''; // nothing to render
+      if (!($calendar instanceof iCalendar_Calendar)) return ''; // nothing to render
       
       return $calendar->render();
     } // render

@@ -64,7 +64,9 @@
     * @return MessageSubscriptions 
     */
     function manager() {
-      if(!($this->manager instanceof MessageSubscriptions)) $this->manager = MessageSubscriptions::instance();
+      if (!($this->manager instanceof MessageSubscriptions)) {
+        $this->manager = MessageSubscriptions::instance();
+      }
       return $this->manager;
     } // manager
   

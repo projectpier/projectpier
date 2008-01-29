@@ -10,8 +10,8 @@
 <?php tpl_display(get_template_path('form_errors')) ?>
 
   <div>
-    <?php echo label_tag(lang('test mail recepient'), 'testMailFormRecipient', true) ?>
-    <?php echo text_field('test_mail[recepient]', array_var($test_mail_data, 'recepient'), array('id' => 'testMailFormRecipient', 'class' => 'long')) ?>
+    <?php echo label_tag(lang('test mail recipient'), 'testMailFormRecipient', true) ?>
+    <?php echo text_field('test_mail[recipient]', array_var($test_mail_data, 'recipient'), array('id' => 'testMailFormRecipient', 'class' => 'long')) ?>
   </div>
   
   <div>

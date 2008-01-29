@@ -49,7 +49,7 @@
       $this->setSystemControllerClass('PageController');;
       
       $this->addHelper('common', 'page', 'format', 'pagination');
-      if(Env::helperExists($this->getControllerName())) $this->addHelper($this->getControllerName()); // controller name helper
+      if (Env::helperExists($this->getControllerName())) $this->addHelper($this->getControllerName()); // controller name helper
     } // __construct
     
     /**
@@ -60,7 +60,7 @@
     */
     function execute($action) {
       parent::execute($action);
-      if($this->getAutoRender()) $render = $this->render(); // Auto render?
+      if ($this->getAutoRender()) $render = $this->render(); // Auto render?
       return true;
     } // execute
     
@@ -81,8 +81,12 @@
     function render($template = null, $layout = null, $die = true) {
       
       // Set template and layout...
-      if(!is_null($template)) $this->setTemplate($template);
-      if(!is_null($layout)) $this->setLayout($layout);
+      if (!is_null($template)) {
+        $this->setTemplate($template);
+      } // if
+      if (!is_null($layout)) {
+        $this->setLayout($layout);
+      } // if
       
       // Get template and layout paths
       $template_path = $this->getTemplatePath();
@@ -95,7 +99,9 @@
       $this->renderLayout($layout_path, $content);
       
       // Die!
-      if($die) die();
+      if ($die) {
+        die();
+      } // if
       
       // We are done here...
       return true;
@@ -127,7 +133,7 @@
     function renderText($text, $render_layout = false) {
       $this->setAutoRender(false); // Turn off auto render because we will render whole thing now...
       
-      if($render_layout) {
+      if ($render_layout) {
         $layout_path = $this->getLayoutPath();
         $this->renderLayout($layout_path, $text);
       } else {
@@ -230,11 +236,15 @@
     */
     function addHelper($helper) {
       $args = func_get_args();
-      if(!is_array($args)) return false;
+      if (!is_array($args)) {
+        return false;
+      } // if
       
-      foreach($args as $helper) {
-        if(!in_array($helper, $this->helpers)) {
-          if(Env::useHelper($helper)) $this->helpers[] = $helper;
+      foreach ($args as $helper) {
+        if (!in_array($helper, $this->helpers)) {
+          if (Env::useHelper($helper)) {
+            $this->helpers[] = $helper;
+          } // if
         } // if
       } // foreach
       
@@ -275,14 +285,16 @@
         $this->getTemplate();
         
       // Prepare path...
-      if(is_file($this->getTemplate())) {
+      if (is_file($this->getTemplate())) {
         $path = $this->getTemplate();
       } else {
         $path = get_template_path($template, $this->getControllerName());
       } // if
       
       // Template dnx?
-      if(!is_file($path)) throw new FileDnxError($path);
+      if (!is_file($path)) {
+        throw new FileDnxError($path);
+      } // if
       
       // Return path
       return $path;
@@ -304,7 +316,9 @@
       $path = Env::getLayoutPath($layout_name);
       
       // File dnx? Throw exception
-      if(!is_file($path)) throw new FileDnxError($path);
+      if (!is_file($path)) {
+        throw new FileDnxError($path);
+      } // if
       
       // Return path
       return $path;

@@ -69,9 +69,9 @@
     */
     function upgrade($version_from, $version_to) {
       $scripts = $this->getScripts();
-      if(is_array($scripts)) {
-        foreach($scripts as $script) {
-          if(($script->getVersionFrom() == $version_from) && ($script->getVersionTo() == $version_to)) {
+      if (is_array($scripts)) {
+        foreach ($scripts as $script) {
+          if (($script->getVersionFrom() == $version_from) && ($script->getVersionTo() == $version_to)) {
             $script->execute();
             return true;
           } // if
@@ -89,14 +89,14 @@
     */
     function executeScript($upgrader_script_class) {
       $upgrader_script_file = UPGRADER_PATH . "/scripts/$upgrader_script_class.class.php";
-      if(is_file($upgrader_script_file)) {
-        if(!class_exists($upgrader_script_class)) {
+      if (is_file($upgrader_script_file)) {
+        if (!class_exists($upgrader_script_class)) {
           require_once $upgrader_script_file;
         } // if
         
-        if(class_exists($upgrader_script_class)) {
+        if (class_exists($upgrader_script_class)) {
           $installer_script = new $upgrader_script_class($this->getOutput());
-          if($installer_script instanceof ScriptUpgraderScript) {
+          if ($installer_script instanceof ScriptUpgraderScript) {
             $installer_script->setUpgrader($this);
             
             $installer_script->execute();
@@ -134,17 +134,17 @@
       $d = dir($script_path);
       
       $scripts = array();
-      while(($entry = $d->read()) !== false) {
-        if(($entry == '.') || ($entry == '..')) {
+      while (($entry = $d->read()) !== false) {
+        if (($entry == '.') || ($entry == '..')) {
           continue;
         } // if
         $file_path = $script_path . '/' . $entry;
         
-        if(is_readable($file_path) && str_ends_with($file_path, '.class.php')) {
+        if (is_readable($file_path) && str_ends_with($file_path, '.class.php')) {
           include_once $file_path;
           $script_class = substr($entry, 0, strlen($entry) - 10);
           $script = new $script_class($this->getOutput());
-          if($script instanceof $script_class) {
+          if ($script instanceof $script_class) {
             $script->setUpgrader($this);
             $scripts[] = $script;
           } // if
@@ -152,7 +152,7 @@
       } // while
       $d->close();
       
-      if(count($scripts)) {
+      if (count($scripts)) {
         usort($scripts, 'compare_scripts_by_version_from');
         $this->scripts = $scripts;
       } // if
@@ -252,7 +252,7 @@
     * @return null
     */
     function addChecklistItem($group, $text, $checked = false) {
-      if(!isset($this->checklist_items[$group]) || !is_array($this->checklist_items[$group])) {
+      if (!isset($this->checklist_items[$group]) || !is_array($this->checklist_items[$group])) {
         $this->checklist_items[$group] = array();
       } // if
       $this->checklist_items[$group][] = new ChecklistItem($text, $checked);

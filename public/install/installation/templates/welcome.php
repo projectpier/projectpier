@@ -20,7 +20,7 @@ proceeding.</p>
 
 <h2>Installation steps:</h2>
 <ol>
-<?php foreach($installer->getSteps() as $this_step) { ?>
+<?php foreach ($installer->getSteps() as $this_step) { ?>
   <li><?php echo clean($this_step->getName()) ?></li>
 <?php } // foreach ?>
 </ol>

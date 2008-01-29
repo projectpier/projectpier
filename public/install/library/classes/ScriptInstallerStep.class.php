@@ -154,7 +154,9 @@
     * @return null
     */
     function goToStep($step) {
-      if(!($this->installer instanceof ScriptInstaller)) return false;
+      if (!($this->installer instanceof ScriptInstaller)) {
+        return false;
+      }
       return $this->installer->goToStep($step);
     } // goToStep
     
@@ -166,7 +168,9 @@
     * @return null
     */
     function addToChecklist($message, $checked = false) {
-      if(!($this->installer instanceof ScriptInstaller)) return false;
+      if (!($this->installer instanceof ScriptInstaller)) {
+        return false;
+      }
       return $this->installer->addToChecklist($message, $checked);
     } // addToChecklist
     
@@ -177,7 +181,9 @@
     * @return boolean
     */
     function addError($error) {
-      if(!($this->installer instanceof ScriptInstaller)) return false;
+      if (!($this->installer instanceof ScriptInstaller)) {
+        return false;
+      }
       return $this->installer->addError($error);
     } // addError
     
@@ -188,7 +194,9 @@
     * @return boolean
     */
     function hasErrors() {
-      if(!($this->installer instanceof ScriptInstaller)) return false;
+      if (!($this->installer instanceof ScriptInstaller)) {
+        return false;
+      }
       return $this->installer->hasErrors();
     } // hasErrors
     
@@ -201,7 +209,9 @@
     * @return boolean
     */
     function addToStorage($variable_name, $value) {
-      if(!($this->installer instanceof ScriptInstaller)) return false;
+      if (!($this->installer instanceof ScriptInstaller)) {
+        return false;
+      }
       return $this->installer->addToStorage($variable_name, $value);
     } // addToStorage
     
@@ -215,7 +225,9 @@
     * @return mixed
     */
     function getFromStorage($variable_name, $default = null) {
-      if(!($this->installer instanceof ScriptInstaller)) return $default;
+      if (!($this->installer instanceof ScriptInstaller)) {
+        return $default;
+      }
       return $this->installer->getFromStorage($variable_name, $default);
     } // getFromStorage
     
@@ -253,7 +265,7 @@
     * @return null
     */
     function setInstaller(&$installer) {
-      if($installer instanceof ScriptInstaller) {
+      if ($installer instanceof ScriptInstaller) {
         $this->installer = $installer;
       } // if
     } // setInstaller
@@ -321,7 +333,7 @@
     * @return null
     */
     function setPreviousStep(&$value) {
-      if($value instanceof ScriptInstallerStep) {
+      if ($value instanceof ScriptInstallerStep) {
         $this->previous_step = $value;
       } // if
     } // setPreviousStep
@@ -345,7 +357,7 @@
     * @return null
     */
     function setNextStep(&$value) {
-      if($value instanceof ScriptInstallerStep) {
+      if ($value instanceof ScriptInstallerStep) {
         $this->next_step = $value;
       } // if 
     } // setNextStep

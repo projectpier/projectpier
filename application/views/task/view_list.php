@@ -6,7 +6,7 @@
     array(lang('tasks'), get_url('task')),
     array($task_list->getName())
   ));
-  if(ProjectTaskList::canAdd(logged_user(), active_project())) {
+  if (ProjectTaskList::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add task list'), get_url('task', 'add_list'));
   } // if
   

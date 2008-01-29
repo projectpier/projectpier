@@ -23,7 +23,9 @@
     * @return FileNotImageError
     */
     function __construct($file_path, $message = null) {
-      if(is_null($message)) $message = "Failed to load image from '$file_path'";
+      if (is_null($message)) {
+      	$message = "Failed to load image from '$file_path'";
+      }
       parent::__construct($message);
       $this->setFilePath($file_path);
     } // __construct

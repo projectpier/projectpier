@@ -40,9 +40,9 @@
     * @return Project
     */
     function getProject() {
-      if(is_null($this->project)) {
+      if (is_null($this->project)) {
         $object = $this->getObject();
-        if($object instanceof ProjectDataobject) {
+        if ($object instanceof ProjectDataobject) {
           $project = $object->getproject();
           $this->project = $project instanceof Project ? $project : null;
         } // if
@@ -68,7 +68,7 @@
     * @return integer
     */
     function getCommentNum() {
-      if(is_null($this->comment_num)) {
+      if (is_null($this->comment_num)) {
         $object = $this->getObject();
         $this->comment_num = $object instanceof ProjectDataObject ? $object->getCommentNum($this) : 0;
       } // if
@@ -136,11 +136,11 @@
     */
     function canView(User $user) {
       $project = $this->getProject();
-      if(!($project instanceof Project) || !$user->isProjectUser($this->getProject())) {
+      if (!($project instanceof Project) || !$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       $object = $this->getObject();
-      if($object instanceof ProjectDataObject) {
+      if ($object instanceof ProjectDataObject) {
         return $object->canView($user);
       } else {
         return false;
@@ -170,21 +170,21 @@
     */
     function canEdit(User $user) {
       $project = $this->getProject();
-      if(!($project instanceof Project) || !$user->isProjectUser($this->getProject())) {
+      if (!($project instanceof Project) || !$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       $object = $this->getObject();
-      if($object instanceof ProjectDataObject) {
-        if($user->isAdministrator()) {
+      if ($object instanceof ProjectDataObject) {
+        if ($user->isAdministrator()) {
           return true;
         } // if
-        if(!$user->isMemberOfOwnerCompany() && $this->isPrivate()) {
+        if (!$user->isMemberOfOwnerCompany() && $this->isPrivate()) {
           return false; // private object
         } // if
         
         $edit_limit = DateTimeValueLib::now();
         $edit_limit->advance(180);
-        if(($this->getCreatedById() == $user->getId()) && ($this->getCreatedOn()->getTimestamp() < $edit_limit->getTimestamp())) {
+        if (($this->getCreatedById() == $user->getId()) && ($this->getCreatedOn()->getTimestamp() < $edit_limit->getTimestamp())) {
           return true; // author withing three minutes
         } // if
       } // if
@@ -200,11 +200,11 @@
     */
     function canDelete(User $user) {
       $project = $this->getProject();
-      if(!($project instanceof Project) || !$user->isProjectUser($this->getProject())) {
+      if (!($project instanceof Project) || !$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       $object = $this->getObject();
-      if($object instanceof ProjectDataObject) {
+      if ($object instanceof ProjectDataObject) {
         return $user->isAdministrator();
       } // if
       return false;
@@ -221,7 +221,7 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('text')) {
+      if (!$this->validatePresenceOf('text')) {
         $errors[] = lang('comment text required');
       } // if
     } // validate
@@ -235,10 +235,10 @@
     function save() {
       $is_new = $this->isNew();
       $saved = parent::save();
-      if($saved) {
+      if ($saved) {
         $object = $this->getObject();
-        if($object instanceof ProjectDataObject) {
-          if($is_new) {
+        if ($object instanceof ProjectDataObject) {
+          if ($is_new) {
             $object->onAddComment($this);
           } else {
             $object->onEditComment($this);
@@ -256,9 +256,9 @@
     */
     function delete() {
       $deleted = parent::delete();
-      if($deleted) {
+      if ($deleted) {
         $object = $this->getObject();
-        if($object instanceof ProjectDataObject) {
+        if ($object instanceof ProjectDataObject) {
           $object->onDeleteComment($this);
         } // if
       } // if

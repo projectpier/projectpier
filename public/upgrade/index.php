@@ -7,7 +7,7 @@
       
   tpl_assign('upgrader', $upgrader);
   tpl_assign('form_data', $form_data);
-  if(is_array($form_data)) {
+  if (is_array($form_data)) {
     ob_start();
     $upgrader->executeScript(trim(array_var($form_data, 'script_class')));
     $status_messages = explode("\n", trim(ob_get_clean()));

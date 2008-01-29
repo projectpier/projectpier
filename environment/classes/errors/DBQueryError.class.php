@@ -39,7 +39,9 @@
     function __construct($sql, $error_number, $error_message, $message = null) {
       
       // Prepare message
-      if(is_null($message)) $message = "Query failed with message '$error_message'";
+      if (is_null($message)) {
+        $message = "Query failed with message '$error_message'";
+      } // if
       
       // Construct
       parent::__construct($message);

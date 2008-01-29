@@ -70,7 +70,9 @@
     * @return SimpleGdImage
     */
     function __construct($load_from_file = null) {
-      if(!is_null($load_from_file)) $this->loadFromFile($load_from_file);
+      if (!is_null($load_from_file)) {
+        $this->loadFromFile($load_from_file);
+      }
     } // __construct
     
     /**
@@ -80,7 +82,9 @@
     * @return null
     */
     function __destruct() {
-      if(is_resource($this->resource)) imagedestroy($this->resource);
+      if (is_resource($this->resource)) {
+        imagedestroy($this->resource);
+      }
     } // __destruct
     
     // ---------------------------------------------------
@@ -94,18 +98,24 @@
     * @return null
     */
     function loadFromFile($file_path) {
-      if(!is_readable($file_path)) throw new FileDnxError($file_path);
+      if (!is_readable($file_path)) {
+        throw new FileDnxError($file_path);
+      }
       $image_type = false;
-      if(function_exists('exif_imagetype')) {
+      if (function_exists('exif_imagetype')) {
         $image_type = exif_imagetype($file_path);
       } else {
         $image_size = getimagesize($file_path);
-        if(is_array($image_size) && isset($image_size[2])) $image_type = $image_size[2];
+        if (is_array($image_size) && isset($image_size[2])) {
+          $image_type = $image_size[2];
+        }
       } // if
       
-      if($image_type === false) throw new FileNotImageError($file_path);
+      if ($image_type === false) {
+        throw new FileNotImageError($file_path);
+      }
       
-      switch($image_type) {
+      switch ($image_type) {
         case IMAGETYPE_PNG:
           $this->resource = imagecreatefrompng($file_path);
           break;
@@ -119,7 +129,7 @@
           throw new ImageTypeNotSupportedError($file_path, $image_type);
       } // switch
       
-      if(!is_resource($this->resource)) {
+      if (!is_resource($this->resource)) {
         $this->resource = null;
         throw new FailedToLoadImageError($file_path);
       } // if
@@ -140,13 +150,13 @@
     * @throws FileNotWriableError
     */
     function save() {
-      if(!$this->isLoaded() || !is_file($this->getSource())) {
+      if (!$this->isLoaded() || !is_file($this->getSource())) {
         throw new Error('This image was not loaded from the file. Use saveAs() function instead of save() - there you\'ll be able to specify output file and type');
       } // if
-      if(!file_is_writable($this->getSource())) {
+      if (!file_is_writable($this->getSource())) {
         throw new FileNotWriableError($this->getSource());
       } // if
-      switch($this->getImageType()) {
+      switch ($this->getImageType()) {
         case IMAGETYPE_PNG:
           imagepng($this->resource, $this->getSource());
           break;
@@ -173,12 +183,16 @@
     */
     function saveAs($file_path, $as_type = null) {
       // Use internal value if we called convertType with new object
-      if(is_null($as_type)) $as_type = $this->getImageType();
+      if (is_null($as_type)) {
+        $as_type = $this->getImageType();
+      }
       
       $as_type = (integer) $as_type;
-      if(($as_type < IMAGETYPE_GIF) || ($as_type > IMAGETYPE_PNG)) $as_type = IMAGETYPE_PNG;
+      if (($as_type < IMAGETYPE_GIF) || ($as_type > IMAGETYPE_PNG)) {
+        $as_type = IMAGETYPE_PNG;
+      }
       
-      switch($as_type) {
+      switch ($as_type) {
         case IMAGETYPE_PNG:
           $write = imagepng($this->resource, $file_path);
           break;
@@ -192,7 +206,9 @@
           throw new ImageTypeNotSupportedError(null, $this->getImageType());
       } // switch
       
-      if(!$write) throw new FailedToWriteFileError($file_path);
+      if (!$write) {
+        throw new FailedToWriteFileError($file_path);
+      }
       return true;
     } // saveAs
     
@@ -203,7 +219,7 @@
     * @return null
     */
     function createFromResource($resource) {
-      if(is_resource($resource) && (get_resource_type($resource) == 'gd')) {
+      if (is_resource($resource) && (get_resource_type($resource) == 'gd')) {
         $this->reset();
         $this->resource = $resource;
       } else {
@@ -244,7 +260,7 @@
     * @return string
     */
     function getExtension() {
-      if($this->isLoaded()) {
+      if ($this->isLoaded()) {
         return get_file_extension($this->getSource());
       } else {
         return image_type_to_extension($this->getImageType());
@@ -267,19 +283,21 @@
     * @return boolean
     */
     function resize($width, $height, $mutate = true) {
-      if(!is_resource($this->resource) || (get_resource_type($this->resource) <> 'gd')) return false;
+      if (!is_resource($this->resource) || (get_resource_type($this->resource) <> 'gd')) {
+        return false;
+      }
       
       $width = (integer) $width > 0 ? (integer) $width : 1;
       $height = (integer) $height > 0 ? (integer) $height : 1;
       
-      if($this->getImageType() == IMAGETYPE_GIF) {
+      if ($this->getImageType() == IMAGETYPE_GIF) {
         $new_resource = imagecreate($width, $height);
       } else {
         $new_resource = imagecreatetruecolor($width, $height);
       } // if
       
       imagecopyresampled($new_resource, $this->resource, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
-      if($mutate) {
+      if ($mutate) {
         // Destroy old resrouce, set new one and reset cached values
         imagedestroy($this->resource); 
         $this->resource = $new_resource;
@@ -306,16 +324,18 @@
     * @return SimpleGdImage
     */
     function scale($width, $height, $boundary = null, $mutate = true) {
-      if(!is_resource($this->resource) || (get_resource_type($this->resource) <> 'gd')) return false;
+      if (!is_resource($this->resource) || (get_resource_type($this->resource) <> 'gd')) {
+        return false;
+      }
       
       $width = (integer) $width > 0 ? (integer) $width : 1;
       $height = (integer) $height > 0 ? (integer) $height : 1;
       
       $scale = min($width / $this->getWidth(), $height / $this->getHeight());
       
-      if($boundary == self::BOUNDARY_DECREASE_ONLY) {
-        if($scale > 1) {
-          if($mutate) {
+      if ($boundary == self::BOUNDARY_DECREASE_ONLY) {
+        if ($scale > 1) {
+          if ($mutate) {
             return;
           } else {
             $new_image = new SimpleGdImage();
@@ -323,9 +343,9 @@
             return $new_image;
           } // if
         } // if
-      } elseif($boundary == self::BOUNDARY_INCREASE_ONLY) {
-        if($scale < 1) {
-          if($mutate) {
+      } elseif ($boundary == self::BOUNDARY_INCREASE_ONLY) {
+        if ($scale < 1) {
+          if ($mutate) {
             return;
           } else {
             $new_image = new SimpleGdImage();
@@ -338,14 +358,14 @@
       $new_width = floor($scale * $this->getWidth());
       $new_height = floor($scale * $this->getHeight());
       
-      if($this->getImageType() == IMAGETYPE_GIF) {
+      if ($this->getImageType() == IMAGETYPE_GIF) {
         $new_resource = imagecreate($new_width, $new_height);
       } else {
         $new_resource = imagecreatetruecolor($new_width, $new_height);
       } // if
       
       imagecopyresampled($new_resource, $this->resource, 0, 0, 0, 0, $new_width, $new_height, $this->getWidth(), $this->getHeight());
-      if($mutate) {
+      if ($mutate) {
         imagedestroy($this->resource); 
         $this->resource = $new_resource;
         $this->width = $new_width;
@@ -366,8 +386,10 @@
     * @return null
     */
     function convertType($to_type) {
-      if($this->getImageType() == $to_type) return;
-      if($to_type == IMAGETYPE_PNG || $to_type == IMAGETYPE_JPEG || $to_type == IMAGETYPE_GIF) {
+      if ($this->getImageType() == $to_type) {
+        return;
+      }
+      if ($to_type == IMAGETYPE_PNG || $to_type == IMAGETYPE_JPEG || $to_type == IMAGETYPE_GIF) {
         $this->setImageType($to_type);
       } else {
         throw new ImageTypeNotSupportedError(null, $to_type);
@@ -471,7 +493,9 @@
     * @return integer
     */
     function getWidth() {
-      if(is_null($this->width)) $this->width = imagesx($this->resource);
+      if (is_null($this->width)) {
+      	$this->width = imagesx($this->resource);
+      }
       return $this->width;
     } // getWidth
     
@@ -492,7 +516,9 @@
     * @return integer
     */
     function getHeight() {
-      if(is_null($this->height)) $this->height = imagesy($this->resource);
+      if (is_null($this->height)) {
+      	$this->height = imagesy($this->resource);
+      }
       return $this->height;
     } // getHeight
     

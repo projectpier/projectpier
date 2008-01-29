@@ -152,7 +152,9 @@
     * @return SearchableObjects 
     */
     function manager() {
-      if(!($this->manager instanceof SearchableObjects)) $this->manager = SearchableObjects::instance();
+      if (!($this->manager instanceof SearchableObjects)) {
+        $this->manager = SearchableObjects::instance();
+      }
       return $this->manager;
     } // manager
   

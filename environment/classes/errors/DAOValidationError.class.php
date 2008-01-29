@@ -33,7 +33,7 @@
     * @return DAOValidationError
     */
     function __construct($object, $errors, $message = null) {
-      if(is_null($message)) {
+      if (is_null($message)) {
         $message = 'Failed to save object because some of its properties are not valid';
       } // if
       

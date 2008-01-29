@@ -48,7 +48,7 @@
     * @return string
     */
     function getColumnType($column_name) {
-      if(isset(self::$columns[$column_name])) {
+      if (isset(self::$columns[$column_name])) {
         return self::$columns[$column_name];
       } else {
         return DATA_TYPE_STRING;
@@ -100,7 +100,7 @@
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::find($arguments);
       } else {
         return UserImValues::instance()->find($arguments);
@@ -117,7 +117,7 @@
     * @return one or UserImValues objects
     */
     function findAll($arguments = null) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::findAll($arguments);
       } else {
         return UserImValues::instance()->findAll($arguments);
@@ -134,7 +134,7 @@
     * @return UserImValue 
     */
     function findOne($arguments = null) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::findOne($arguments);
       } else {
         return UserImValues::instance()->findOne($arguments);
@@ -152,7 +152,7 @@
     * @return UserImValue 
     */
     function findById($id, $force_reload = false) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::findById($id, $force_reload);
       } else {
         return UserImValues::instance()->findById($id, $force_reload);
@@ -169,7 +169,7 @@
     * @return integer
     */
     function count($condition = null) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::count($condition);
       } else {
         return UserImValues::instance()->count($condition);
@@ -186,7 +186,7 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::delete($condition);
       } else {
         return UserImValues::instance()->delete($condition);
@@ -210,7 +210,7 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'UserImValues')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
         return UserImValues::instance()->paginate($arguments, $items_per_page, $current_page);
@@ -226,7 +226,7 @@
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'UserImValues')) {
+      if (!instance_of($instance, 'UserImValues')) {
         $instance = new UserImValues();
       } // if
       return $instance;

@@ -48,7 +48,7 @@
     * @return string
     */
     function getColumnType($column_name) {
-      if(isset(self::$columns[$column_name])) {
+      if (isset(self::$columns[$column_name])) {
         return self::$columns[$column_name];
       } else {
         return DATA_TYPE_STRING;
@@ -100,7 +100,7 @@
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::find($arguments);
       } else {
         return ProjectUsers::instance()->find($arguments);
@@ -117,7 +117,7 @@
     * @return one or ProjectUsers objects
     */
     function findAll($arguments = null) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::findAll($arguments);
       } else {
         return ProjectUsers::instance()->findAll($arguments);
@@ -134,7 +134,7 @@
     * @return ProjectUser 
     */
     function findOne($arguments = null) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::findOne($arguments);
       } else {
         return ProjectUsers::instance()->findOne($arguments);
@@ -152,7 +152,7 @@
     * @return ProjectUser 
     */
     function findById($id, $force_reload = false) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::findById($id, $force_reload);
       } else {
         return ProjectUsers::instance()->findById($id, $force_reload);
@@ -169,7 +169,7 @@
     * @return integer
     */
     function count($condition = null) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::count($condition);
       } else {
         return ProjectUsers::instance()->count($condition);
@@ -186,7 +186,7 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::delete($condition);
       } else {
         return ProjectUsers::instance()->delete($condition);
@@ -210,7 +210,7 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(isset($this) && instance_of($this, 'ProjectUsers')) {
+      if (isset($this) && instance_of($this, 'ProjectUsers')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
         return ProjectUsers::instance()->paginate($arguments, $items_per_page, $current_page);
@@ -226,7 +226,7 @@
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'ProjectUsers')) {
+      if (!instance_of($instance, 'ProjectUsers')) {
         $instance = new ProjectUsers();
       } // if
       return $instance;

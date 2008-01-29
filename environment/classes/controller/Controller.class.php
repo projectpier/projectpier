@@ -64,7 +64,7 @@
       $action = trim(strtolower($action));
       
       // If we have valid action execute and done... Else throw exception
-      if($this->validAction($action)) {
+      if ($this->validAction($action)) {
         $this->setAction($action);
         $this->$action();
         return true;
@@ -98,13 +98,17 @@
       
       // Get reserved names and check action name...
       $reserved_names = Controller::getReservedActionNames();
-      if(is_array($reserved_names) && in_array($action, $reserved_names)) return false;
+      if (is_array($reserved_names) && in_array($action, $reserved_names)) {
+        return false;
+      }
       
       // Get methods of this class...
       $methods = get_class_methods(get_class($this));
       
       // If we don't have defined action return false
-      if(!in_array($action, $methods)) return false;
+      if (!in_array($action, $methods)) {
+        return false;
+      }
       
       // All fine...
       return true;
@@ -193,12 +197,16 @@
       
       // Get and check controller class
       $controller_class = $this->getSystemControllerClass();
-      if(!class_exists($controller_class)) throw new Error("Controller class '$controller_class' does not exists");
+      if (!class_exists($controller_class)) {
+        throw new Error("Controller class '$controller_class' does not exists");
+      } // if
       
       // If we don't have names get them
-      if(is_null($names)) {
+      if (is_null($names)) {
         $names = get_class_methods($controller_class);
-        foreach($names as $k => $v) $names[$k] = strtolower($v);
+        foreach ($names as $k => $v) {
+          $names[$k] = strtolower($v);
+        }
       } // if
       
       // And return...

@@ -306,7 +306,9 @@
     * @return Comments 
     */
     function manager() {
-      if(!($this->manager instanceof Comments)) $this->manager = Comments::instance();
+      if (!($this->manager instanceof Comments)) {
+        $this->manager = Comments::instance();
+      }
       return $this->manager;
     } // manager
   

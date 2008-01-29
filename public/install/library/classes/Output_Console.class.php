@@ -15,7 +15,7 @@
     * @return void
     */
     function printMessage($message, $is_error = false) {
-      if($is_error) {
+      if ($is_error) {
         print 'Error: ';
       } // if
       

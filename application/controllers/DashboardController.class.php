@@ -29,12 +29,12 @@
       
       $active_projects = $logged_user->getActiveProjects();
       $activity_log = null;
-      if(is_array($active_projects) && count($active_projects)) {
+      if (is_array($active_projects) && count($active_projects)) {
         $include_private = $logged_user->isMemberOfOwnerCompany();
         $include_silent = $logged_user->isAdministrator();
         
         $project_ids = array();
-        foreach($active_projects as $active_project) {
+        foreach ($active_projects as $active_project) {
           $project_ids[] = $active_project->getId();
         } // if
         

@@ -75,7 +75,9 @@
     * @return void
     */
     function removeVariable($var) {
-      if(isset($this->next[trim($var)])) unset($this->next[trim($var)]);
+      if (isset($this->next[trim($var)])) {
+        unset($this->next[trim($var)]);
+      } // if
       $this->writeFlash();
     } // end func removeVariable
     
@@ -106,8 +108,10 @@
       $flash_data = array_var($_SESSION, 'flash_data');
       
       // If we have flash data set it to previous array and forget it :)
-      if(!is_null($flash_data)) {
-        if(is_array($flash_data)) $this->previous = $flash_data;
+      if (!is_null($flash_data)) {
+        if (is_array($flash_data)) {
+          $this->previous = $flash_data;
+        } // if
         unset($_SESSION['flash_data']);
       } // if
       
@@ -135,7 +139,7 @@
       static $instance;
       
       // Check instance...
-      if(!instance_of($instance, 'Flash')) {
+      if (!instance_of($instance, 'Flash')) {
         $instance = new Flash();
       } // if
       

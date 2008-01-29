@@ -39,7 +39,9 @@
     function __construct($var_name, $var_value, $expected_class, $message = null) {
       
       // Prepare message...
-      if(is_null($message)) $message = "$$var_name is not valid $expected_class instance";
+      if (is_null($message)) {
+        $message = "$$var_name is not valid $expected_class instance";
+      } // if
       
       // Inherit...
       parent::__construct($message);

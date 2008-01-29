@@ -130,7 +130,9 @@
     * @return AdministrationTools 
     */
     function manager() {
-      if(!($this->manager instanceof AdministrationTools)) $this->manager = AdministrationTools::instance();
+      if (!($this->manager instanceof AdministrationTools)) {
+        $this->manager = AdministrationTools::instance();
+      }
       return $this->manager;
     } // manager
   

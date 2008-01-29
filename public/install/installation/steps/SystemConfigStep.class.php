@@ -37,21 +37,21 @@
     * @return boolean
     */
     function execute() {
-      if((strtolower(array_var($_SERVER, 'HTTPS')) == 'on') || (array_var($_SERVER, 'SERVER_PORT') == 443)) {
+      if ((strtolower(array_var($_SERVER, 'HTTPS')) == 'on') || (array_var($_SERVER, 'SERVER_PORT') == 443)) {
         $protocol = 'https://';
       } else {
         $protocol = 'http://';
       } // if
       
       $request_url = without_slash($protocol . dirname($_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']));
-      if(($rpos = strrpos($request_url, '/')) !== false) {
+      if (($rpos = strrpos($request_url, '/')) !== false) {
         $installation_url = substr($request_url, 0, $rpos - 7); // remove /public ;)
       } else {
         $installation_url = '';
       } // if
       
       $config_form_data = array_var($_POST, 'config_form');
-      if(!is_array($config_form_data)) {
+      if (!is_array($config_form_data)) {
         $config_form_data = array(
           'database_type'   => $this->getFromStorage('database_type'),
           'database_host'   => $this->getFromStorage('database_host', 'localhost'),
@@ -65,7 +65,7 @@
       tpl_assign('installation_url', $installation_url);
       tpl_assign('config_form_data', $config_form_data);
       
-      if($this->isSubmited()) {
+      if ($this->isSubmited()) {
         $database_type   = (string) array_var($config_form_data, 'database_type');
         $database_host   = (string) array_var($config_form_data, 'database_host');
         $database_user   = (string) array_var($config_form_data, 'database_user');
@@ -75,11 +75,11 @@
         $absolute_url    = (string) array_var($config_form_data, 'absolute_url');
         
         $connected = false;
-        if($this->database_connection = @mysql_connect($database_host, $database_user, $database_pass)) {
+        if ($this->database_connection = @mysql_connect($database_host, $database_user, $database_pass)) {
           $connected = @mysql_select_db(array_var($config_form_data, 'database_name'), $this->database_connection);
         } // if
         
-        if($connected) {
+        if ($connected) {
           $this->addToStorage('database_type', $database_type);
           $this->addToStorage('database_host', $database_host);
           $this->addToStorage('database_user', $database_user);
@@ -106,7 +106,9 @@
     */
     function breakExecution($error_message) {
       $this->addToChecklist($error_message, false);
-      if(is_resource($this->database_connection)) @mysql_query('ROLLBACK', $this->database_connection);
+      if (is_resource($this->database_connection)) {
+        @mysql_query('ROLLBACK', $this->database_connection);
+      }
       $this->setContentFromTemplate('finish.php');
       return false;
     } // breakExecution
@@ -139,7 +141,7 @@
     * @return boolean
     */
     function executeMultipleQueries($sql, &$total_queries, &$executed_queries) {
-      if(!trim($sql)) {
+      if (!trim($sql)) {
         $total_queries = 0;
         $executed_queries = 0;
         return true;
@@ -149,16 +151,16 @@
       $sql = str_replace(array("\r\n", "\r"), array("\n", "\n"), $sql);
       
       $queries = explode(";\n", $sql);
-      if(!is_array($queries) || !count($queries)) {
+      if (!is_array($queries) || !count($queries)) {
         $total_queries = 0;
         $executed_queries = 0;
         return true;
       } // if
       
       $total_queries = count($queries);
-      foreach($queries as $query) {
-        if(trim($query)) {
-          if(@mysql_query(trim($query))) {
+      foreach ($queries as $query) {
+        if (trim($query)) {
+          if (@mysql_query(trim($query))) {
             $executed_queries++;
           } else {
             return false;

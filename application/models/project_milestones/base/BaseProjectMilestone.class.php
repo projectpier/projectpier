@@ -328,7 +328,9 @@
     * @return ProjectMilestones 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectMilestones)) $this->manager = ProjectMilestones::instance();
+      if (!($this->manager instanceof ProjectMilestones)) {
+        $this->manager = ProjectMilestones::instance();
+      }
       return $this->manager;
     } // manager
   

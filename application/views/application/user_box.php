@@ -2,10 +2,10 @@
   <?php echo lang('welcome back', $_userbox_user->getDisplayName()) ?> (<a href="<?php echo get_url('access', 'logout') ?>" onclick="return confirm('<?php echo lang('confirm logout') ?>')"><?php echo lang('logout') ?></a>),
   <ul>
     <li><a href="<?php echo logged_user()->getAccountUrl() ?>"><?php echo lang('account') ?></a> <?php echo render_icon('bullet_drop_down.gif', '', array('id' => 'account_more_icon', 'class' => 'PopupMenuWidgetAttachTo', 'title' => lang('enable javascript'))) ?></li>
-<?php if(isset($_userbox_projects) && is_array($_userbox_projects) && count($_userbox_projects)) { ?>
+<?php if (isset($_userbox_projects) && is_array($_userbox_projects) && count($_userbox_projects)) { ?>
     <li><a href="<?php echo get_url('dashboard', 'my_projects') ?>"><?php echo lang('projects') ?></a> <?php echo render_icon('bullet_drop_down.gif', '', array('id' => 'projects_more_icon', 'class' => 'PopupMenuWidgetAttachTo', 'title' => lang('enable javascript'))) ?></li>
 <?php } // if ?>
-<?php if(logged_user()->isAdministrator()) { ?>
+<?php if (logged_user()->isAdministrator()) { ?>
     <li><a href="<?php echo get_url('administration') ?>"><?php echo lang('administration') ?></a> <?php echo render_icon('bullet_drop_down.gif', '', array('id' => 'administration_more_icon', 'class' => 'PopupMenuWidgetAttachTo', 'title' => lang('enable javascript'))) ?></li>
 <?php } // if ?>
   </ul>
@@ -28,11 +28,11 @@
     account_drop_down.build();
   </script>
   
-<?php if(isset($_userbox_projects) && is_array($_userbox_projects) && count($_userbox_projects)) { ?>
+<?php if (isset($_userbox_projects) && is_array($_userbox_projects) && count($_userbox_projects)) { ?>
   <div class="PopupMenuWidgetDiv" id="projects_more_menu">
     <p><?php echo lang('projects') ?>:</p>
     <ul>
-<?php foreach($_userbox_projects as $_userbox_project) { ?>
+<?php foreach ($_userbox_projects as $_userbox_project) { ?>
       <li><a href="<?php echo $_userbox_project->getOverviewUrl() ?>"><?php echo clean($_userbox_project->getName()) ?></a></li>
 <?php } // if ?>
     </ul>
@@ -43,7 +43,7 @@
   </script>
 <?php } // if ?>
   
-<?php if(logged_user()->isAdministrator()) { ?>
+<?php if (logged_user()->isAdministrator()) { ?>
   <div class="PopupMenuWidgetDiv" id="administration_more_menu">
     <p><?php echo lang('administration') ?>:</p>
     <ul>

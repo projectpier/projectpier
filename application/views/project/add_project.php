@@ -1,6 +1,6 @@
 <?php 
 
-  if($project->isNew()) {
+  if ($project->isNew()) {
     set_page_title(lang('add project'));
     administration_tabbed_navigation(ADMINISTRATION_TAB_PROJECTS);
     administration_crumbs(array(
@@ -17,7 +17,7 @@
   } // if
   
 ?>
-<?php if($project->isNew()) { ?>
+<?php if ($project->isNew()) { ?>
 <form action="<?php echo get_url('project', 'add') ?>" method="post">
 <?php } else { ?>
 <form action="<?php echo $project->getEditUrl() ?>" method="post">

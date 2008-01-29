@@ -22,7 +22,7 @@
       
       $sql = "SELECT $im_types_table.* FROM $im_types_table, $user_im_values_table WHERE $im_types_table.`id` = $user_im_values_table.`im_type_id` AND $user_im_values_table.`is_default` = '1' AND $user_im_values_table.`user_id` = ?";
       $row = DB::executeOne($sql, $user->getId());
-      if(is_array($row)) {
+      if (is_array($row)) {
         return ImTypes::instance()->loadFromRow($row);
       } // if
       

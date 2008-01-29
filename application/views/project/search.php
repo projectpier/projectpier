@@ -16,15 +16,15 @@
   </form>
 </div>
 
-<?php if(isset($search_results) && is_array($search_results) && count($search_results)) { ?>
+<?php if (isset($search_results) && is_array($search_results) && count($search_results)) { ?>
 <p><?php echo lang('search result description', $pagination->countItemsOnPage($current_page), $pagination->getTotalItems(), clean($search_string)) ?>:</p>
 <ul>
-<?php foreach($search_results as $search_result) { ?>
+<?php foreach ($search_results as $search_result) { ?>
   <li><?php echo clean($search_result->getObjectTypeName()) ?>: <a href="<?php echo $search_result->getObjectUrl() ?>"><?php echo clean($search_result->getObjectName()) ?></a></li>
 <?php } // foreach ?>
 </ul>
 
-<?php if(isset($pagination) && ($pagination instanceof DataPagination)) { ?>
+<?php if (isset($pagination) && ($pagination instanceof DataPagination)) { ?>
 <?php echo advanced_pagination($pagination, active_project()->getSearchUrl($search_string, '#PAGE#')); ?>
 <?php } // if ?>
 

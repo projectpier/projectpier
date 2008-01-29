@@ -29,12 +29,12 @@
       $this->setLayout('dashboard');
       
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(ROOT_URL);
       } // if
       
-      if(!logged_user()->canSeeCompany($company)) {
+      if (!logged_user()->canSeeCompany($company)) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(ROOT_URL);
       } // if
@@ -51,13 +51,13 @@
     function view_client() {
       $this->setTemplate('view_company');
       
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectTo('administration');
       } // if
@@ -78,7 +78,7 @@
     function edit() {
       $this->setTemplate('add_company');
       
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -87,7 +87,7 @@
       $company = owner_company();
       
       $company_data = array_var($_POST, 'company');
-      if(!is_array($company_data)) {
+      if (!is_array($company_data)) {
         $company_data = array(
           'name' => $company->getName(),
           'timezone' => $company->getTimezone(),
@@ -107,7 +107,7 @@
       tpl_assign('company', $company);
       tpl_assign('company_data', $company_data);
       
-      if(is_array(array_var($_POST, 'company'))) {
+      if (is_array(array_var($_POST, 'company'))) {
         $company->setFromAttributes($company_data);
         $company->setClientOfId(0);
         $company->setHomepage(array_var($company_data, 'homepage'));
@@ -138,7 +138,7 @@
     function add_client() {
       $this->setTemplate('add_company');
       
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -148,7 +148,7 @@
       tpl_assign('company', $company);
       tpl_assign('company_data', $company_data);
       
-      if(is_array($company_data)) {
+      if (is_array($company_data)) {
         $company->setFromAttributes($company_data);
         $company->setClientOfId(owner_company()->getId());
         
@@ -178,19 +178,19 @@
     function edit_client() {
       $this->setTemplate('add_company');
       
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('client dnx'));
         $this->redirectTo('administration', 'clients');
       } // if
       
       $company_data = array_var($_POST, 'company');
-      if(!is_array($company_data)) {
+      if (!is_array($company_data)) {
         $company_data = array(
           'name' => $company->getName(),
           'timezone' => $company->getTimezone(),
@@ -210,7 +210,7 @@
       tpl_assign('company', $company);
       tpl_assign('company_data', $company_data);
       
-      if(is_array(array_var($_POST, 'company'))) {
+      if (is_array(array_var($_POST, 'company'))) {
         $company->setFromAttributes($company_data);
         $company->setClientOfId(owner_company()->getId());
         $company->setHomepage(array_var($company_data, 'homepage'));
@@ -238,13 +238,13 @@
     * @return null
     */
     function delete_client() {
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
     
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('client dnx'));
         $this->redirectTo('administration', 'clients');
       } // if
@@ -271,24 +271,24 @@
     * @return null
     */
     function update_permissions() {
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('administration'));
       } // if
       
-      if($company->isOwner()) {
+      if ($company->isOwner()) {
         flash_error(lang('error owner company has all permissions'));
         $this->redirectToReferer(get_url('administration'));
       } // if
       
       $projects = Projects::getAll(Projects::ORDER_BY_NAME);
-      if(!is_array($projects) || !count($projects)) {
+      if (!is_array($projects) || !count($projects)) {
         flash_error(lang('no projects in db'));
         $this->redirectToUrl($company->getViewUrl());
       } // if
@@ -296,12 +296,12 @@
       tpl_assign('projects', $projects);
       tpl_assign('company', $company);
       
-      if(array_var($_POST, 'submitted') == 'submitted') {
+      if (array_var($_POST, 'submitted') == 'submitted') {
         $counter = 0;
         $logged_user = logged_user(); // reuse...
         
-        foreach($projects as $project) {
-          if(!$logged_user->isProjectUser($project)) {
+        foreach ($projects as $project) {
+          if (!$logged_user->isProjectUser($project)) {
             continue;
           } // if
           
@@ -313,8 +313,8 @@
           $current_value = $relation instanceof ProjectCompany;
           
           try {
-            if($current_value <> $new_value) {
-              if($new_value) {
+            if ($current_value <> $new_value) {
+              if ($new_value) {
                 $relation = new ProjectCompany();
                 $relation->setProjectId($project->getId());
                 $relation->setCompanyId($company->getId());
@@ -341,13 +341,13 @@
     * @return null
     */
     function edit_logo() {
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('administration', 'clients'));
       } // if
@@ -355,9 +355,9 @@
       tpl_assign('company', $company);
       
       $logo = array_var($_FILES, 'new_logo');
-      if(is_array($logo)) {
+      if (is_array($logo)) {
         try {
-          if(!isset($logo['name']) || !isset($logo['type']) || !isset($logo['size']) || !isset($logo['tmp_name']) || !is_readable($logo['tmp_name'])) {
+          if (!isset($logo['name']) || !isset($logo['type']) || !isset($logo['size']) || !isset($logo['tmp_name']) || !is_readable($logo['tmp_name'])) {
             throw new InvalidUploadError($logo, lang('error upload file'));
           } // if
           
@@ -365,7 +365,7 @@
           $max_width   = config_option('max_logo_width', 50);
           $max_height  = config_option('max_logo_height', 50);
           
-          if(!in_array($logo['type'], $valid_types) || !($image = getimagesize($logo['tmp_name']))) {
+          if (!in_array($logo['type'], $valid_types) || !($image = getimagesize($logo['tmp_name']))) {
             throw new InvalidUploadError($logo, lang('invalid upload type', 'JPG, GIF, PNG'));
           } // if
           
@@ -373,7 +373,7 @@
           
           DB::beginWork();
           
-          if(!$company->setLogo($logo['tmp_name'], $max_width, $max_height, true)) {
+          if (!$company->setLogo($logo['tmp_name'], $max_width, $max_height, true)) {
             DB::rollback();
             flash_error(lang('error edit company logo'));
             $this->redirectToUrl($company->getEditLogoUrl());
@@ -384,7 +384,7 @@
           flash_success(lang('success edit company logo'));
           DB::commit();
           
-          if(is_file($old_file)) {
+          if (is_file($old_file)) {
             @unlink($old_file);
           } // uf
           
@@ -404,13 +404,13 @@
     * @return null
     */
     function delete_logo() {
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $company = Companies::findById(get_id());
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('administration', 'clients'));
       } // if
@@ -438,7 +438,7 @@
     * @return null
     */
     function hide_welcome_info() {
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if

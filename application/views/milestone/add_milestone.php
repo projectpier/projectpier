@@ -5,7 +5,7 @@
   project_crumbs(lang('add milestone'));
   
 ?>
-<?php if($milestone->isNew()) { ?>
+<?php if ($milestone->isNew()) { ?>
 <form action="<?php echo get_url('milestone', 'add') ?>" method="post">
 <?php } else { ?>
 <form action="<?php echo $milestone->getEditUrl() ?>" method="post">
@@ -28,7 +28,7 @@
     <?php echo pick_date_widget('milestone_due_date', array_var($milestone_data, 'due_date')) ?>
   </div>
   
-<?php if(logged_user()->isMemberOfOwnerCompany()) { ?>
+<?php if (logged_user()->isMemberOfOwnerCompany()) { ?>
   <div class="formBlock">
     <label><?php echo lang('private milestone') ?>: <span class="desc">(<?php echo lang('private milestone desc') ?>)</span></label>
     <?php echo yes_no_widget('milestone[is_private]', 'milestoneFormIsPrivate', array_var($milestone_data, 'is_private'), lang('yes'), lang('no')) ?>

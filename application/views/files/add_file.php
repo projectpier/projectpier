@@ -5,17 +5,17 @@
     array(lang('files'), get_url('files')),
     array($file->isNew() ? lang('add file') : lang('edit file'))
   ));
-  if(ProjectFile::canAdd(logged_user(), active_project())) {
+  if (ProjectFile::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add file'), get_url('files', 'add_file'));
   } // if
-  if(ProjectFolder::canAdd(logged_user(), active_project())) {
+  if (ProjectFolder::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add folder'), get_url('files', 'add_folder'));
   } // if
   
   add_stylesheet_to_page('project/files.css');
 ?>
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/addFileForm.js') ?>"></script>
-<?php if($file->isNew()) { ?>
+<?php if ($file->isNew()) { ?>
 <form action="<?php echo get_url('files', 'add_file') ?>" method="post" enctype="multipart/form-data">
 <?php } else { ?>
 <form action="<?php echo $file->getEditUrl() ?>" method="post" enctype="multipart/form-data">
@@ -23,7 +23,7 @@
 
 <?php tpl_display(get_template_path('form_errors')) ?>
 
-<?php if($file->isNew()) { ?>
+<?php if ($file->isNew()) { ?>
   <div class="hint">
     <div class="content">
       <div id="selectFileControl">
@@ -72,7 +72,7 @@
   </div>
 <?php } // if ?>
 
-<?php if(!$file->isNew()) { ?>
+<?php if (!$file->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('folder'), 'fileFormFolder', true) ?>
     <?php echo select_project_folder('file[folder_id]', active_project(), array_var($file_data, 'folder_id'), array('id' => 'fileFormFolder')) ?>
@@ -89,7 +89,7 @@
     <?php echo textarea_field('file[description]', array_var($file_data, 'description'), array('class' => 'short', 'id' => 'fileFormDescription')) ?>
   </div> -->
   
-<?php if(logged_user()->isMemberOfOwnerCompany()) { ?>
+<?php if (logged_user()->isMemberOfOwnerCompany()) { ?>
   <fieldset>
     <legend><?php echo lang('options') ?></legend>
     

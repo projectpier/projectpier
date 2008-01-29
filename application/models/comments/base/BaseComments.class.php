@@ -48,7 +48,7 @@
     * @return string
     */
     function getColumnType($column_name) {
-      if(isset(self::$columns[$column_name])) {
+      if (isset(self::$columns[$column_name])) {
         return self::$columns[$column_name];
       } else {
         return DATA_TYPE_STRING;
@@ -97,7 +97,7 @@
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::find($arguments);
       } else {
         return Comments::instance()->find($arguments);
@@ -114,7 +114,7 @@
     * @return one or Comments objects
     */
     function findAll($arguments = null) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::findAll($arguments);
       } else {
         return Comments::instance()->findAll($arguments);
@@ -131,7 +131,7 @@
     * @return Comment 
     */
     function findOne($arguments = null) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::findOne($arguments);
       } else {
         return Comments::instance()->findOne($arguments);
@@ -149,7 +149,7 @@
     * @return Comment 
     */
     function findById($id, $force_reload = false) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::findById($id, $force_reload);
       } else {
         return Comments::instance()->findById($id, $force_reload);
@@ -166,7 +166,7 @@
     * @return integer
     */
     function count($condition = null) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::count($condition);
       } else {
         return Comments::instance()->count($condition);
@@ -183,7 +183,7 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::delete($condition);
       } else {
         return Comments::instance()->delete($condition);
@@ -207,7 +207,7 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(isset($this) && instance_of($this, 'Comments')) {
+      if (isset($this) && instance_of($this, 'Comments')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
         return Comments::instance()->paginate($arguments, $items_per_page, $current_page);
@@ -223,7 +223,7 @@
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'Comments')) {
+      if (!instance_of($instance, 'Comments')) {
         $instance = new Comments();
       } // if
       return $instance;

@@ -63,7 +63,7 @@
       // ---------------------------------------------------
       
       $config_is_set = require_once INSTALLATION_PATH . '/config/config.php';
-      if(!$config_is_set) {
+      if (!$config_is_set) {
         $this->printMessage('Valid config files was not found!', true);
         return false;
       } else {
@@ -74,17 +74,17 @@
       //  Check if files and folders are writable
       // ---------------------------------------------------
       
-      foreach($this->check_is_writable as $relative_path) {
+      foreach ($this->check_is_writable as $relative_path) {
         $path = ROOT . $relative_path;
-        if(is_file($path)) {
-          if(file_is_writable($path)) {
+        if (is_file($path)) {
+          if (file_is_writable($path)) {
             $this->printMessage("File '$relative_path' exists and is writable");
           } else {
             $this->printMessage("File '$relative_path' is not writable", true);
             return false;
           } // if
-        } elseif(is_dir($path)) {
-          if(folder_is_writable($path)) {
+        } elseif (is_dir($path)) {
+          if (folder_is_writable($path)) {
             $this->printMessage("Folder '$relative_path' exists and is writable");
           } else {
             $this->printMessage("Folder '$relative_path' is not writable", true);
@@ -100,8 +100,8 @@
       //  Check if extensions are loaded
       // ---------------------------------------------------
       
-      foreach($this->check_extensions as $extension_name) {
-        if(extension_loaded($extension_name)) {
+      foreach ($this->check_extensions as $extension_name) {
+        if (extension_loaded($extension_name)) {
           $this->printMessage("Extension '$extension_name' is loaded");
         } else {
           $this->printMessage("Extension '$extension_name' is not loaded", true);
@@ -113,8 +113,8 @@
       //  Connect to database
       // ---------------------------------------------------
       
-      if($this->database_connection = mysql_connect(DB_HOST, DB_USER, DB_PASS)) {
-        if(mysql_select_db(DB_NAME, $this->database_connection)) {
+      if ($this->database_connection = mysql_connect(DB_HOST, DB_USER, DB_PASS)) {
+        if (mysql_select_db(DB_NAME, $this->database_connection)) {
           $this->printMessage('Upgrade script has connected to the database.');
         } else {
           $this->printMessage('Failed to select database ' . DB_NAME);
@@ -130,7 +130,7 @@
       // ---------------------------------------------------
       
       $mysql_version = mysql_get_server_info($this->database_connection);
-      if($mysql_version && version_compare($mysql_version, '4.1', '>=')) {
+      if ($mysql_version && version_compare($mysql_version, '4.1', '>=')) {
         $constants['DB_CHARSET'] = 'utf8';
         @mysql_query("SET NAMES 'utf8'", $this->database_connection);
         tpl_assign('default_collation', $default_collation = 'collate utf8_unicode_ci');
@@ -153,7 +153,7 @@
         PRIMARY KEY  (`id`)
       ) ENGINE=InnoDB $default_charset;";
       
-      if(@mysql_query($test_table_sql, $this->database_connection)) {
+      if (@mysql_query($test_table_sql, $this->database_connection)) {
         $this->printMessage('Test query has been executed. Its safe to proceed with database migration.');
         @mysql_query("DROP TABLE `$test_table_name`", $this->database_connection);
       } else {
@@ -171,17 +171,17 @@
       $executed_queries = 0;
       $upgrade_script = tpl_fetch(get_template_path('db_migration/onion'));
       
-      if($this->executeMultipleQueries($upgrade_script, $total_queries, $executed_queries, $this->database_connection)) {
+      if ($this->executeMultipleQueries($upgrade_script, $total_queries, $executed_queries, $this->database_connection)) {
         $this->printMessage("Database schema transformations executed (total queries: $total_queries)");
       } else {
         $this->printMessage('Failed to execute DB schema transformations. MySQL said: ' . mysql_error(), true);
         return false;
       } // if
       
-      if(!$this->importMessageComments()) {
+      if (!$this->importMessageComments()) {
         return false;
       } // if
-      if(!$this->importProjectDocuments()) {
+      if (!$this->importProjectDocuments()) {
         return false;
       } // if
       $this->cleanApplicationLogs();
@@ -199,14 +199,14 @@
     private function importMessageComments() {
       $this->printMessage('Starting to import comments...');
       
-      if($result = mysql_query('SELECT * FROM `' . TABLE_PREFIX . 'message_comments', $this->database_connection)) {
+      if ($result = mysql_query('SELECT * FROM `' . TABLE_PREFIX . 'message_comments', $this->database_connection)) {
         mysql_query('BEGIN WORK', $this->database_connection);
         
         $counter = 0;
-        while($row = mysql_fetch_assoc($result)) {
+        while ($row = mysql_fetch_assoc($result)) {
           $sql = sprintf("INSERT INTO `%scomments` (`rel_object_id`, `rel_object_manager`, `text`, `is_private`, `created_on`, `created_by_id`, `updated_on`, `updated_by_id`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
             TABLE_PREFIX, $row['message_id'], 'ProjectMessages', mysql_real_escape_string($row['text']), $row['is_private'], $row['created_on'], $row['created_by_id'], $row['updated_on'], $row['updated_by_id']);
-          if(!mysql_query($sql, $this->database_connection)) {
+          if (!mysql_query($sql, $this->database_connection)) {
             mysql_query('ROLLBACK', $this->database_connection);
             $this->printMessage('Failed to move message comments. MySQL said: ' . mysql_error(), true);
             return false;
@@ -217,7 +217,7 @@
         mysql_query('COMMIT');
         $this->printMessage("$counter message comments moved");
         
-        if(mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'message_comments', $this->database_connection)) {
+        if (mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'message_comments', $this->database_connection)) {
           $this->printMessage('`' . TABLE_PREFIX . 'message_comments` table dropped');
         } else {
           $this->printMessage('Warning: Failed to drop old message comments table. MySQL said: ' . mysql_error(), true);
@@ -236,15 +236,15 @@
     function importProjectDocuments() {
       $this->printMessage('Starting to import documents...');
       
-      if($result = mysql_query('SELECT * FROM `' . TABLE_PREFIX . 'project_documents`')) {
+      if ($result = mysql_query('SELECT * FROM `' . TABLE_PREFIX . 'project_documents`')) {
         mysql_query('BEGIN WORK', $this->database_connection);
         
         $counter = 0;
-        while($row = mysql_fetch_assoc($result)) {
+        while ($row = mysql_fetch_assoc($result)) {
           $sql = sprintf("INSERT INTO `%sproject_files` (`project_id`, `filename`, `description`, `is_private`, `is_visible`, `created_on`, `created_by_id`, `updated_on`, `updated_by_id`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
             TABLE_PREFIX, $row['project_id'], mysql_real_escape_string($row['filename']), mysql_real_escape_string($row['description']), $row['is_private'], 1, $row['created_on'], $row['created_by_id'], $row['updated_on'], $row['updated_by_id']);
           
-          if(!mysql_query($sql, $this->database_connection)) {
+          if (!mysql_query($sql, $this->database_connection)) {
             mysql_query('ROLLBACK', $this->database_connection);
             $this->printMessage('Failed to move project documents. MySQL said: ' . mysql_error(), true);
             return false;
@@ -253,29 +253,29 @@
           $file_id = mysql_insert_id($this->database_connection);
           $file_type_id = 0;
           $sql = sprintf("SELECT `id` FROM `%sfile_types` WHERE `extension` = '%s'", TABLE_PREFIX, mysql_real_escape_string(strtolower(get_file_extension($row['filename']))));
-          if($file_type_result = mysql_query($sql)) {
-            if($file_type_row = mysql_fetch_assoc($file_type_result)) {
+          if ($file_type_result = mysql_query($sql)) {
+            if ($file_type_row = mysql_fetch_assoc($file_type_result)) {
               $file_type_id = (integer) $file_type_row['id'];
             } // if
           } // if
           
           $repository_id = '';
           $file_path = INSTALLATION_PATH . '/public/files/project_documents/' . $row['project_id'] . '/' . $row['filename'];
-          if(is_file($file_path)) {
+          if (is_file($file_path)) {
             do {
               $repository_id = sha1(uniqid(rand(), true));
               $repository_entry_exists = false;
-              if($check_repository_id_result = mysql_query(sprintf(("SELECT COUNT (`id`) AS 'row_count' FROM `%sfile_repo` WHERE `id` = '%s'"), TABLE_PREFIX, $repository_id))) {
-                if($check_repository_id_row = mysql_fetch_assoc($check_repository_id_result)) {
+              if ($check_repository_id_result = mysql_query(sprintf(("SELECT COUNT (`id`) AS 'row_count' FROM `%sfile_repo` WHERE `id` = '%s'"), TABLE_PREFIX, $repository_id))) {
+                if ($check_repository_id_row = mysql_fetch_assoc($check_repository_id_result)) {
                   $repository_entry_exists = (boolean) $check_repository_id_row['row_count'];
                 } // if
               } // if
-            } while($repository_entry_exists);
+            } while ($repository_entry_exists);
             
             $sql = sprintf("INSERT INTO `%sfile_repo` (`id`, `content`) VALUES ('%s', '%s')",
               TABLE_PREFIX, $repository_id, mysql_real_escape_string(file_get_contents($file_path), $this->database_connection)
             ); // sprintf
-            if(!mysql_query($sql, $this->database_connection)) {
+            if (!mysql_query($sql, $this->database_connection)) {
               mysql_query('ROLLBACK', $this->database_connection);
               $this->printMessage('Failed to insert file content into file repository. MySQL said: ' . mysql_error(), true);
               return false;
@@ -286,19 +286,19 @@
             TABLE_PREFIX, $file_id, $file_type_id, $repository_id, 1, $row['type'], $row['size'], $row['created_on'], $row['created_by_id'], $row['updated_on'], $row['updated_by_id']
           ); // sprintf
           
-          if(!mysql_query($sql, $this->database_connection)) {
+          if (!mysql_query($sql, $this->database_connection)) {
             mysql_query('ROLLBACK', $this->database_connection);
             $this->printMessage('Failed to move project documents. MySQL said: ' . mysql_error(), true);
             return false;
           } // if
           
           // Now, relations with messages...
-          if($related_messages_result = mysql_query(sprintf("SELECT * FROM `%smessage_documents` WHERE `document_id` = '%s'", TABLE_PREFIX, $row['id']), $this->database_connection)) {
-            while($related_messages_row = mysql_fetch_assoc($related_messages_result)) {
+          if ($related_messages_result = mysql_query(sprintf("SELECT * FROM `%smessage_documents` WHERE `document_id` = '%s'", TABLE_PREFIX, $row['id']), $this->database_connection)) {
+            while ($related_messages_row = mysql_fetch_assoc($related_messages_result)) {
               $sql = sprintf("INSERT INTO `%sattached_files` (`rel_object_manager`, `rel_object_id`, `file_id`, `created_on`, `created_by_id`) VALUES ('%s', '%s', '%s', '%s', '%s')",
                 TABLE_PREFIX, 'ProjectMessages', $related_messages_row['message_id'], $file_id, $row['created_on'], $row['created_by_id']
               ); // sprintf
-              if(!mysql_query($sql, $this->database_connection)) {
+              if (!mysql_query($sql, $this->database_connection)) {
                 mysql_query('ROLLBACK', $this->database_connection);
                 $this->printMessage('Failed to add message - file relation. MySQL said: ' . mysql_error(), true);
                 return false;
@@ -313,19 +313,19 @@
         $this->printMessage("$counter documents moved");
         
         // Drop tables
-        if(mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'project_documents', $this->database_connection)) {
+        if (mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'project_documents', $this->database_connection)) {
           $this->printMessage('`' . TABLE_PREFIX . 'project_documents` table dropped');
         } else {
           $this->printMessage('Warning: Failed to drop old documents table. MySQL said: ' . mysql_error(), true);
         } // if
         
-        if(mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'document_downloads', $this->database_connection)) {
+        if (mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'document_downloads', $this->database_connection)) {
           $this->printMessage('`' . TABLE_PREFIX . 'document_downloads` table dropped');
         } else {
           $this->printMessage('Warning: Failed to drop old document downloads table. MySQL said: ' . mysql_error(), true);
         } // if
         
-        if(mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'message_documents', $this->database_connection)) {
+        if (mysql_query('DROP TABLE IF EXISTS `' . TABLE_PREFIX . 'message_documents', $this->database_connection)) {
           $this->printMessage('`' . TABLE_PREFIX . 'message_documents` table dropped');
         } else {
           $this->printMessage('Warning: Failed to drop old message - documents table. MySQL said: ' . mysql_error(), true);
@@ -371,7 +371,7 @@
         'PRODUCT_VERSION'      => require INSTALLATION_PATH . '/version.php',
       ); // array
       tpl_assign('config_file_constants', $constants);
-      if(file_put_contents(INSTALLATION_PATH . '/config/config.php', tpl_fetch(get_template_path('config_file')))) {
+      if (file_put_contents(INSTALLATION_PATH . '/config/config.php', tpl_fetch(get_template_path('config_file')))) {
         $this->printMessage('Configuration file updated');
         return true;
       } else {

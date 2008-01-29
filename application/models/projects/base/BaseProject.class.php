@@ -240,7 +240,9 @@
     * @return Projects 
     */
     function manager() {
-      if(!($this->manager instanceof Projects)) $this->manager = Projects::instance();
+      if (!($this->manager instanceof Projects)) {
+        $this->manager = Projects::instance();
+      }
       return $this->manager;
     } // manager
   

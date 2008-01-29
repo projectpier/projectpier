@@ -17,12 +17,16 @@
     ); // array
     
     // Loop units bigger than byte
-    foreach($units as $current_unit => $unit_min_value) {
-      if($in_bytes > $unit_min_value) {
+    foreach ($units as $current_unit => $unit_min_value) {
+      if ($in_bytes > $unit_min_value) {
         $formated_number = number_format($in_bytes / $unit_min_value, 2);
         
-        while(str_ends_with($formated_number, '0')) $formated_number = substr($formated_number, 0, strlen($formated_number) - 1); // remove zeros from the end
-        if(str_ends_with($formated_number, '.')) $formated_number = substr($formated_number, 0, strlen($formated_number) - 1); // remove dot from the end
+        while (str_ends_with($formated_number, '0')) {
+          $formated_number = substr($formated_number, 0, strlen($formated_number) - 1); // remove zeros from the end
+        }
+        if (str_ends_with($formated_number, '.')) {
+          $formated_number = substr($formated_number, 0, strlen($formated_number) - 1); // remove dot from the end
+        }
         
         return $formated_number . $current_unit;
       } // if
@@ -44,7 +48,7 @@
   * @return string
   */
   function format_datetime($value = null, $format = null, $timezone = null) {
-    if(is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
+    if (is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
       $timezone = logged_user()->getTimezone();
     } // if
     $datetime = $value instanceof DateTimeValue ? $value : new DateTimeValue($value);
@@ -62,7 +66,7 @@
   * @return string
   */
   function format_date($value = null, $format = null, $timezone = null) {
-    if(is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
+    if (is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
       $timezone = logged_user()->getTimezone();
     } // if
     $datetime = $value instanceof DateTimeValue ? $value : new DateTimeValue($value);
@@ -78,7 +82,7 @@
   * @return string
   */
   function format_descriptive_date($value = null, $timezone = null) {
-    if(is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
+    if (is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
       $timezone = logged_user()->getTimezone();
     } // if
     $datetime = $value instanceof DateTimeValue ? $value : new DateTimeValue($value);
@@ -96,7 +100,7 @@
   * @return string
   */
   function format_time($value = null, $format = null, $timezone = null) {
-    if(is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
+    if (is_null($timezone) && function_exists('logged_user') && (logged_user() instanceof User)) {
       $timezone = logged_user()->getTimezone();
     } // if
     $datetime = $value instanceof DateTimeValue ? $value : new DateTimeValue($value);

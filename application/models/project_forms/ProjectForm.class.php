@@ -25,10 +25,10 @@
     * @return ApplicationDataObject
     */
     function getInObject() {
-      if(is_null($this->in_object)) {
-        if($this->getAction() == self::ADD_COMMENT_ACTION) {
+      if (is_null($this->in_object)) {
+        if ($this->getAction() == self::ADD_COMMENT_ACTION) {
           $this->in_object = ProjectMessages::findById($this->getInObjectId());
-        } elseif($this->getAction() == self::ADD_TASK_ACTION) {
+        } elseif ($this->getAction() == self::ADD_TASK_ACTION) {
           $this->in_object = ProjectTaskLists::findById($this->getInObjectId());
         } // if
       } // if
@@ -124,8 +124,12 @@
     * @return booelean
     */
     function canAdd(User $user, Project $project) {
-      if(!$user->isProjectUser($project)) return false; // user is on project
-      if($user->isAdministrator()) return true; // user is administrator or root
+      if (!$user->isProjectUser($project)) {
+        return false; // user is on project
+      }
+      if ($user->isAdministrator()) {
+        return true; // user is administrator or root
+      }
       return false; // no no
     } // canAdd
     
@@ -137,8 +141,12 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false; // user is on project
-      if($user->isAdministrator()) return true; // user is administrator or root
+      if (!$user->isProjectUser($this->getProject())) {
+        return false; // user is on project
+      }
+      if ($user->isAdministrator()) {
+        return true; // user is administrator or root
+      }
       return false; // no no
     } // canEdit
     
@@ -150,8 +158,12 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false; // user is on project
-      if($user->isAdministrator()) return true; // user is administrator or root
+      if (!$user->isProjectUser($this->getProject())) {
+        return false; // user is on project
+      }
+      if ($user->isAdministrator()) {
+        return true; // user is administrator or root
+      }
       return false; // no no
     } // canDelete
     
@@ -167,13 +179,19 @@
     * @return null
     */
     function validate(&$errors) {
-      if($this->validatePresenceOf('name')) {
-        if(!$this->validateUniquenessOf('name', 'project_id')) $errors[] = lang('form name unique');
+      if ($this->validatePresenceOf('name')) {
+        if (!$this->validateUniquenessOf('name', 'project_id')) {
+          $errors[] = lang('form name unique');
+        }
       } else {
         $errors[] = lang('form name required');
       } // if
-      if(!$this->validatePresenceOf('success_message')) $errors[] = lang('form success message required');
-      if(!$this->validatePresenceOf('action')) $errors[] = lang('form action required');
+      if (!$this->validatePresenceOf('success_message')) {
+        $errors[] = lang('form success message required');
+      }
+      if (!$this->validatePresenceOf('action')) {
+        $errors[] = lang('form action required');
+      }
     } // validate
     
     // ---------------------------------------------------

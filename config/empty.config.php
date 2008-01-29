@@ -20,11 +20,11 @@
   define('TABLE_PREFIX', 'ac_'); 
   define('ROOT_URL', 'http://projectpier.dev'); 
   define('DEFAULT_LOCALIZATION', 'en_us'); 
-	// define('DEFAULT_LOCALIZATION', 'de_de'); //German
+  // define('DEFAULT_LOCALIZATION', 'de_de'); //German
   define('DEBUG', true); 
   define('DB_CHARSET', 'utf8'); 
   //Define if notification messages should include the message body for these three
-	// types of messages.  To disable this feature, change the word "true" to "false" (no quotes)
+  // types of messages.  To disable this feature, change the word "true" to "false" (no quotes)
   define('SHOW_MESSAGE_BODY', true);
   define('SHOW_COMMENT_BODY', true);
   define('SHOW_MILESTONE_BODY', true);

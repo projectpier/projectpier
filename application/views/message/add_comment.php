@@ -9,7 +9,7 @@
   ));
   
 ?>
-<?php if($comment->isNew()) { ?>
+<?php if ($comment->isNew()) { ?>
 <form action="<?php echo $message->getAddCommentUrl() ?>" method="post">
 <?php } else { ?>
 <form action="<?php echo $comment->getEditUrl() ?>" method="post">
@@ -22,7 +22,7 @@
       <?php echo textarea_field("comment[text]", array_var($comment_data, 'text'), array('class' => 'comment', 'id' => 'addCommentText')) ?>
     </div>
     
-<?php if(logged_user()->isMemberOfOwnerCompany()) { ?>
+<?php if (logged_user()->isMemberOfOwnerCompany()) { ?>
   <div class="formBlock">
     <label><?php echo lang('private comment') ?>: <span class="desc">(<?php echo lang('private comment desc') ?>)</span></label>
     <?php echo yes_no_widget('comment[is_private]', 'addCommentIsPrivate', array_var($comment_data, 'is_private'), lang('yes'), lang('no')) ?>

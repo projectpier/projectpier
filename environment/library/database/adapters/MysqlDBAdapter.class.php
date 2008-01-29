@@ -28,11 +28,11 @@
         @mysql_pconnect($host, $user, $pass) :
         @mysql_connect($host, $user, $pass);
         
-      if(!is_resource($link)) {
+      if (!is_resource($link)) {
         throw new DBConnectError($host, $user, $pass, $database);
       } // if
       
-      if(!@mysql_select_db($database, $link)) {
+      if (!@mysql_select_db($database, $link)) {
         throw new DBConnectError($host, $user, $pass, $database);
       } // if
       
@@ -142,8 +142,8 @@
     function listTables() {
       $extracted_table_names = $this->executeAll('SHOW TABLES');
       $table_names = array();
-      if(count($extracted_table_names)) {
-        foreach($extracted_table_names as $extracted_table_name) {
+      if (count($extracted_table_names)) {
+        foreach ($extracted_table_names as $extracted_table_name) {
           $table_names[] = array_var($extracted_table_name, 'Tables_in_' . $this->getDatabaseName());
         } // foreach
       } // if
@@ -159,11 +159,17 @@
     */
     function dropTables($table_names) {
       
-      if(empty($table_names)) return true;
-      if(!is_array($table_names)) $table_names = array($table_names);
+      if (empty($table_names)) {
+        return true;
+      } // if
+      if (!is_array($table_names)) {
+        $table_names = array($table_names);
+      } // if
       
       $escaped_table_names = array();
-      foreach($table_names as $table_name) $escaped_table_names[] = $this->escapeField($table_name);
+      foreach ($table_names as $table_name) {
+        $escaped_table_names[] = $this->escapeField($table_name);
+      }
       return count($escaped_table_names) ? 
         $this->execute('DROP TABLE ' .  implode(', ', $escaped_table_names)) :
         true;
@@ -179,10 +185,14 @@
     */
     function emptyTables($table_names) {
       
-      if(empty($table_names)) return true;
-      if(!is_array($table_names)) $table_names = array($table_names);
+      if (empty($table_names)) {
+        return true;
+      } // if
+      if (!is_array($table_names)) {
+        $table_names = array($table_names);
+      } // if
       
-      foreach($table_names as $table_name) {
+      foreach ($table_names as $table_name) {
         $this->execute('TRUNCATE ' . $this->escapeField($table_name));
       } // foreach
       
@@ -199,11 +209,15 @@
     */
     function exportDatabaseStructure() {
       $tables = $this->listTables();
-      if(!is_array($tables) || !count($tables)) return null;
+      if (!is_array($tables) || !count($tables)) {
+        return null;
+      } // if
       $create_commands = array();
-      foreach($tables as $table) {
+      foreach ($tables as $table) {
         $create_command = $this->exportTableStructure($table);
-        if(trim($create_command) <> '') $create_commands[$table] = $create_command;
+        if (trim($create_command) <> '') {
+          $create_commands[$table] = $create_command;
+        } // if
       } // foreach
       return count($create_commands) ? $create_commands : null;
     } // exportDatabaseStructure
@@ -217,10 +231,14 @@
     * @return boolean
     */
     function importDatabaseStructure(AbstractDBAdapter $adapter, $clear = false) {
-      if($clear) $this->clearDatabase();
+      if ($clear) {
+        $this->clearDatabase();
+      } // if
       $structure = $adapter->exportDatabaseStructure();
-      if(is_array($structure)) {
-        foreach($structure as $table_name => $table_construction) $this->execute($table_construction);
+      if (is_array($structure)) {
+        foreach ($structure as $table_name => $table_construction) {
+          $this->execute($table_construction);
+        } // foreach
       } // if
     } // importDatabaseStructure
     
@@ -256,21 +274,23 @@
     * @return string
     */
     function escapeValue($unescaped) {
-      if(is_null($unescaped)) {
+      if (is_null($unescaped)) {
         return 'NULL';
       } // if
       
-      if(is_bool($unescaped)) {
+      if (is_bool($unescaped)) {
         return $unescaped ? "'1'" : "'0'";
       } // if
       
-      if(is_array($unescaped)) {
+      if (is_array($unescaped)) {
         $escaped_array = array();
-        foreach($unescaped as $unescaped_value) $escaped_array[] = self::escapeValue($unescaped_value);
+        foreach ($unescaped as $unescaped_value) {
+          $escaped_array[] = self::escapeValue($unescaped_value);
+        }
         return implode(', ', $escaped_array);
       } // if
       
-      if(is_object($unescaped) && ($unescaped instanceof DateTimeValue)) {
+      if (is_object($unescaped) && ($unescaped instanceof DateTimeValue)) {
         return "'" . mysql_real_escape_string($unescaped->toMySQL()) . "'";
       } // if
       

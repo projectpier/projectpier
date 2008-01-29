@@ -15,7 +15,9 @@
     * @return OwnerCompanyDnxError
     */
     function __construct($message = null) {
-      if(is_null($message)) $message = 'Owner company is not defined';
+      if (is_null($message)) {
+        $message = 'Owner company is not defined';
+      }
       parent::__construct($message);
     } // __construct
   

@@ -25,16 +25,24 @@
     */
     static function useLibrary($library) {
       static $included = array();
-      if(isset($included[$library]) && $included[$library]) return;
+      if (isset($included[$library]) && $included[$library]) {
+        return;
+      } // if
       
       $library_path = ENVIRONMENT_PATH . "/library/$library/";
-      if(!file_exists($library_path)) $library_path = ROOT . "/library/$library/";
+      if (!file_exists($library_path)) {
+        $library_path = ROOT . "/library/$library/";
+      } // if
       
-      if(!is_dir($library_path)) throw new LibraryDnxError($library);
+      if (!is_dir($library_path)) {
+        throw new LibraryDnxError($library);
+      } // if
       
       // Call init library file if it exists
       $library_init_file = $library_path . $library . '.php';
-      if(is_file($library_init_file)) include_once $library_init_file;
+      if (is_file($library_init_file)) {
+        include_once $library_init_file;
+      } // if
       
       $included[$library] = true;
     } // useLibrary
@@ -48,10 +56,12 @@
     * @return boolean
     */
     static function useLibraryError($error_class, $library) {
-      if(class_exists($error_class)) return true;
+      if (class_exists($error_class)) {
+        return true;
+      } // if
       
       $expected_path = ENVIRONMENT_PATH . "/library/$library/errors/$error_class.class.php";
-      if(is_file($expected_path)) {
+      if (is_file($expected_path)) {
         include_once $expected_path;
         return true;
       } else {
@@ -71,7 +81,7 @@
       static $css_rendered = false;
       
       // Check error instance...
-      if(!instance_of($error, 'Error')) {
+      if (!instance_of($error, 'Error')) {
         print '$error is not valid <i>Error</i> instance!';
         return;
       } // if
@@ -80,7 +90,7 @@
       include ENVIRONMENT_PATH . '/templates/dump_error.php';
       
       // Die?
-      if($die) {
+      if ($die) {
         die();
       } // if
     } // dumpError
@@ -97,12 +107,12 @@
       Env::useController($controller_name);
       
       $controller_class = Env::getControllerClass($controller_name);
-      if(!class_exists($controller_class, false)) {
+      if (!class_exists($controller_class, false)) {
         throw new ControllerDnxError($controller_name);
       } // if
       
       $controller = new $controller_class();
-      if(!instance_of($controller, 'Controller')) {
+      if (!instance_of($controller, 'Controller')) {
         throw new ControllerDnxError($controller_name);
       } // if
       
@@ -119,10 +129,12 @@
     */
     static function useController($controller_name) {
       $controller_class = Env::getControllerClass($controller_name);
-      if(class_exists($controller_class, false)) return true;
+      if (class_exists($controller_class, false)) {
+        return true;
+      } // if
       
       $controller_file = APPLICATION_PATH . "/controllers/$controller_class.class.php";
-      if(is_file($controller_file)) {
+      if (is_file($controller_file)) {
         include_once $controller_file;
         return true;
       } else {
@@ -142,7 +154,7 @@
       $helper_file = Env::getHelperPath($helper);
       
       // If we have it include, else throw exception
-      if(is_file($helper_file)) {
+      if (is_file($helper_file)) {
         include_once $helper_file;
         return true;
       } else {
@@ -192,7 +204,7 @@
     * @return string
     */
     static function getTemplatePath($template, $controller_name = null) {
-      if($controller_name) {
+      if ($controller_name) {
         return APPLICATION_PATH . "/views/$controller_name/$template.php";
       } else {
         return APPLICATION_PATH . "/views/$template.php";

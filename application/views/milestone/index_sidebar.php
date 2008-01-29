@@ -7,14 +7,14 @@
   </div>
 </div>
 
-<?php if(isset($completed_milestones) && is_array($completed_milestones) && count($completed_milestones)) { ?>
+<?php if (isset($completed_milestones) && is_array($completed_milestones) && count($completed_milestones)) { ?>
 <div class="sidebarBlock">
   <h2><?php echo lang('completed milestones') ?></h2>
   <div class="blockContent">
     <ul class="listWithDetails">
-<?php foreach($completed_milestones as $milestone) { ?>
+<?php foreach ($completed_milestones as $milestone) { ?>
       <li><a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a>
-<?php if($milestone->getCompletedBy() instanceof User) { ?>
+<?php if ($milestone->getCompletedBy() instanceof User) { ?>
         <br /><span class="desc"><?php echo lang('completed on by', format_datetime($milestone->getCompletedOn()), $milestone->getCompletedBy()->getCardUrl(), $milestone->getCompletedBy()->getDisplayName()) ?></span>
 <?php } // if ?>
       </li>

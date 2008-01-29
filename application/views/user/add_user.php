@@ -1,7 +1,7 @@
 <?php
 
   set_page_title($user->isNew() ? lang('add user') : lang('edit user'));
-  if($company->isOwner()) {
+  if ($company->isOwner()) {
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(array(
       array(lang('company'), $company->getViewUrl()),
@@ -29,7 +29,7 @@
     <?php echo text_field('user[username]', array_var($user_data, 'username'), array('class' => 'medium', 'id' => 'userFormName')) ?>
   </div>
   
-<?php if(!$user->isNew() && logged_user()->isAdministrator()) { ?>
+<?php if (!$user->isNew() && logged_user()->isAdministrator()) { ?>
   <div>
     <?php echo label_tag(lang('company'), 'userFormCompany', true) ?>
     <?php echo select_company('user[company_id]', array_var($user_data, 'company_id'), array('id' => 'userFormCompany')) ?>
@@ -53,7 +53,7 @@
     <?php echo select_timezone_widget('user[timezone]', array_var($user_data, 'timezone'), array('id' => 'userFormTimezone', 'class' => 'long')) ?>
   </div>
   
-<?php if($user->isNew() || logged_user()->isAdministrator()) { ?>
+<?php if ($user->isNew() || logged_user()->isAdministrator()) { ?>
   <fieldset>
     <legend><?php echo lang('password') ?></legend>
     <div>
@@ -79,7 +79,7 @@
   </script>
 <?php } // if ?>
 
-<?php if($company->isOwner()) { ?>
+<?php if ($company->isOwner()) { ?>
   <div class="formBlock">
     <div>
       <?php echo label_tag(lang('is administrator'), null, true) ?>
@@ -96,20 +96,20 @@
   <input type="hidden" name="user[auto_assign]" value="0" />
 <?php } // if ?>
   
-<?php if($user->isNew()) { ?>
+<?php if ($user->isNew()) { ?>
   <div class="formBlock">
     <?php echo label_tag(lang('send new account notification'), null, true) ?>
     <?php echo yes_no_widget('user[send_email_notification]', 'userFormEmailNotification', array($user_data, 'send_email_notification'), lang('yes'), lang('no')) ?>
     <br /><span class="desc"><?php echo lang('send new account notification desc') ?></span>
   </div>
   
-<?php if(isset($projects) && is_array($projects) && count($projects)) { ?>
+<?php if (isset($projects) && is_array($projects) && count($projects)) { ?>
   <fieldset>
     <legend><?php echo lang('permissions') ?></legend>
 
 <?php
   $quoted_permissions = array();
-  foreach($permissions as $permission_id => $permission_text) {
+  foreach ($permissions as $permission_id => $permission_text) {
     $quoted_permissions[] = "'$permission_id'";
   } // foreach
 ?>
@@ -120,19 +120,19 @@
     
     <div id="userPermissions">
       <div id="userProjects">
-<?php foreach($projects as $project) { ?>
+<?php foreach ($projects as $project) { ?>
         <table class="blank">
           <tr>
             <td class="projectName">
               <?php echo checkbox_field('user[project_permissions_' . $project->getId() . ']', array_var($user_data, 'project_permissions_' . $project->getId()), array('id' => 'projectPermissions' . $project->getId(), 'onclick' => 'App.modules.updateUserPermissions.projectCheckboxClick(' . $project->getId() . ')')) ?> 
-<?php if($project->isCompleted()) { ?>
+<?php if ($project->isCompleted()) { ?>
               <label for="projectPermissions<?php echo $project->getId() ?>" class="checkbox"><del class="help" title="<?php echo lang('project completed on by', format_date($project->getCompletedOn()), $project->getCompletedByDisplayName()) ?>"><?php echo clean($project->getName()) ?></del></label>
 <?php } else { ?>
               <label for="projectPermissions<?php echo $project->getId() ?>" class="checkbox"><?php echo clean($project->getName()) ?></label>
 <?php } // if ?>
             </td>
             <td class="permissionsList">
-<?php if(array_var($user_data, 'project_permissions_' . $project->getId())) { ?>
+<?php if (array_var($user_data, 'project_permissions_' . $project->getId())) { ?>
               <div id="projectPermissionsBlock<?php echo $project->getId() ?>">
 <?php } else { ?>
               <div id="projectPermissionsBlock<?php echo $project->getId() ?>" style="display: none">
@@ -140,7 +140,7 @@
                 <div class="projectPermission">
                   <?php echo checkbox_field('user[project_permissions_' . $project->getId() . '_all]', array_var($user_data, 'project_permissions_' . $project->getId()), array('id' => 'projectPermissions' . $project->getId() . 'All', 'onclick' => 'App.modules.updateUserPermissions.projectAllCheckboxClick(' . $project->getId() . ')')) ?> <label for="projectPermissions<?php echo $project->getId() ?>All" class="checkbox"><?php echo lang('all') ?></label>
                 </div>
-<?php foreach($permissions as $permission_name => $permission_text) { ?>
+<?php foreach ($permissions as $permission_name => $permission_text) { ?>
                 <div class="projectPermission">
                   <?php echo checkbox_field('user[project_permission_' . $project->getId() . '_' . $permission_name . ']', array_var($user_data, 'project_permission_' . $project->getId() . '_' . $permission_name), array('id' => 'projectPermission' . $project->getId() . $permission_name, 'onclick' => 'App.modules.updateUserPermissions.projectPermissionCheckboxClick(' . $project->getId() . ')')) ?> <label for="projectPermission<?php echo $project->getId() . $permission_name ?>" class="checkbox normal"><?php echo clean($permission_text) ?></label>
                 </div>

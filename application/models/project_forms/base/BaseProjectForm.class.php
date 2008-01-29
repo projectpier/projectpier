@@ -328,7 +328,9 @@
     * @return ProjectForms 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectForms)) $this->manager = ProjectForms::instance();
+      if (!($this->manager instanceof ProjectForms)) {
+        $this->manager = ProjectForms::instance();
+      }
       return $this->manager;
     } // manager
   

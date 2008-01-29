@@ -51,7 +51,9 @@
     * @return array
     */
     static function getWhoIsOnline($active_in = 15) {
-      if((integer) $active_in < 1) $active_in = 15;
+      if ((integer) $active_in < 1) {
+        $active_in = 15;
+      }
       
       $datetime = DateTimeValueLib::now();
       $datetime->advance(-1 * $active_in * 60);
@@ -90,14 +92,14 @@
     */
     static function getGroupedByCompany() {
       $companies = Companies::getAll();
-      if(!is_array($companies) || !count($companies)) {
+      if (!is_array($companies) || !count($companies)) {
         return null;
       } // if
       
       $result = array();
-      foreach($companies as $company) {
+      foreach ($companies as $company) {
         $users = $company->getUsers();
-        if(is_array($users) && count($users)) {
+        if (is_array($users) && count($users)) {
           $result[$company->getName()] = array(
             'details' => $company,
             'users' => $users,

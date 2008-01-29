@@ -25,7 +25,9 @@
     function __construct($controller, $message = null) {
       
       // Prepare message
-      if(is_null($message)) $message = "Controller '$controller' is missing";
+      if (is_null($message)) {
+        $message = "Controller '$controller' is missing";
+      } // if
       
       // Inherit...
       parent::__construct($message);

@@ -16,7 +16,7 @@
     * @return array
     */
     static function getProjectMessages(Project $project, $include_private = false) {
-      if($include_private) {
+      if ($include_private) {
         $conditions = array('`project_id` = ?', $project->getId());
       } else {
         $conditions = array('`project_id` = ? AND `is_private` = ?', $project->getId(), false);
@@ -36,7 +36,7 @@
     * @return array
     */
     static function getImportantProjectMessages(Project $project, $include_private = false) {
-      if($include_private) {
+      if ($include_private) {
         $conditions = array('`project_id` = ? AND `is_important` = ?', $project->getId(), true);
       } else {
         $conditions = array('`project_id` = ? AND `is_important` = ? AND `is_private` = ?', $project->getId(), true, false);

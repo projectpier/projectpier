@@ -108,7 +108,9 @@
     * @return UserImValues 
     */
     function manager() {
-      if(!($this->manager instanceof UserImValues)) $this->manager = UserImValues::instance();
+      if (!($this->manager instanceof UserImValues)) {
+        $this->manager = UserImValues::instance();
+      }
       return $this->manager;
     } // manager
   

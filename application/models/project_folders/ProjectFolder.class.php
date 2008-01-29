@@ -29,7 +29,7 @@
     * @return array
     */
     function getAllFiles() {
-      if(is_null($this->all_files)) {
+      if (is_null($this->all_files)) {
         $this->all_files = ProjectFiles::getByFolder($this, true);
       } // if
       return $this->all_files;
@@ -42,7 +42,7 @@
     * @return array
     */
     function getFiles() {
-      if(is_null($this->files)) {
+      if (is_null($this->files)) {
         $this->files = ProjectFiles::getByFolder($this, logged_user()->isMemberOfOwnerCompany());
       } // if
       return $this->files;
@@ -62,12 +62,12 @@
     function getBrowseUrl($order_by = null, $page = null) {
       
       // If page and order are not set use defaults
-      if(($order_by <> ProjectFiles::ORDER_BY_NAME) && ($order_by <> ProjectFiles::ORDER_BY_POSTTIME)) {
+      if (($order_by <> ProjectFiles::ORDER_BY_NAME) && ($order_by <> ProjectFiles::ORDER_BY_POSTTIME)) {
         $order_by = ProjectFiles::ORDER_BY_POSTTIME;
       } // if
       
       // #PAGE# is reserved as a placeholder
-      if($page <> '#PAGE#') {
+      if ($page <> '#PAGE#') {
         $page = (integer) $page > 0 ? (integer) $page : 1;
       } // if
       
@@ -124,7 +124,9 @@
     * @return boolean
     */
     function canManage(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
       return $user->getProjectPermission($this->getProject(), ProjectUsers::CAN_MANAGE_FILES);
     } // canManage
     
@@ -146,7 +148,9 @@
     * @return null
     */
     function canAdd(User $user, Project $project) {
-      if(!$user->isProjectUser($project)) return false;
+      if (!$user->isProjectUser($project)) {
+        return false;
+      }
       return $user->getProjectPermission($project, ProjectUsers::CAN_MANAGE_FILES);
     } // canAdd
     
@@ -158,7 +162,9 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
       return $user->isAdministrator() || $this->canManage($user);
     } // canEdit
     
@@ -170,7 +176,9 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
       return $user->isAdministrator() || $this->canManage($user);
     } // canDelete
     
@@ -185,8 +193,10 @@
     * @return null
     */
     function validate(&$errors) {
-      if($this->validatePresenceOf('name')) {
-        if(!$this->validateUniquenessOf('name', 'project_id')) $errors[] = lang('folder name unique');
+      if ($this->validatePresenceOf('name')) {
+        if (!$this->validateUniquenessOf('name', 'project_id')) {
+          $errors[] = lang('folder name unique');
+        }
       } else {
         $errors[] = lang('folder name required');
       } // if
@@ -200,8 +210,10 @@
     */
     function delete() {
       $files = $this->getAllFiles();
-      if(is_array($files)) {
-        foreach($files as $file) $file->delete();
+      if (is_array($files)) {
+        foreach ($files as $file) {
+          $file->delete();
+        }
       } // if
       return parent::delete();
     } // delete

@@ -460,7 +460,9 @@
     * @return Companies 
     */
     function manager() {
-      if(!($this->manager instanceof Companies)) $this->manager = Companies::instance();
+      if (!($this->manager instanceof Companies)) {
+        $this->manager = Companies::instance();
+      }
       return $this->manager;
     } // manager
   

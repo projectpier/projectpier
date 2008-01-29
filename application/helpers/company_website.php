@@ -15,7 +15,9 @@
     add_bread_crumb(lang('dashboard'), get_url('dashboard'));
     
     $args = func_get_args();
-    if(!count($args)) return;
+    if (!count($args)) {
+      return;
+    }
     BreadCrumbs::instance()->addByFunctionArguments($args);
     
   } // dashboard_crumbs
@@ -68,7 +70,9 @@
     add_bread_crumb(lang('administration'), get_url('administration'));
     
     $args = func_get_args();
-    if(!count($args)) return;
+    if (!count($args)) {
+      return;
+    }
     BreadCrumbs::instance()->addByFunctionArguments($args);
     
   } // administration_crumbs
@@ -150,7 +154,9 @@
     add_bread_crumb(lang('account'), get_url('account'));
     
     $args = func_get_args();
-    if(!count($args)) return;
+    if (!count($args)) {
+      return;
+    }
     BreadCrumbs::instance()->addByFunctionArguments($args);
     
   } // account_crumbs

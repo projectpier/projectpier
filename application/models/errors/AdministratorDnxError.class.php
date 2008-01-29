@@ -15,7 +15,9 @@
     * @return AdministratorDnxError
     */
     function __construct($message = null) {
-      if(is_null($message)) $message = 'Administrator account is not defined';
+      if (is_null($message)) {
+        $message = 'Administrator account is not defined';
+      }
       parent::__construct($message);
     } // __construct
   

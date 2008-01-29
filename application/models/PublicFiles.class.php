@@ -29,12 +29,14 @@
     * @return string
     */
     static function addFile($source, $extension = null) {
-      if(!is_readable($source)) return false;
+      if (!is_readable($source)) {
+        return false;
+      }
       
       $attach_extension = trim($extension) == '' ? '' : '.' . trim($extension);
       do {
         $destination = self::getFilePath(sha1(uniqid(rand(), true)) . $attach_extension);
-      } while(is_file($destination));
+      } while (is_file($destination));
       
       return copy($source, $destination) ? basename($destination) : false;
     } // addFile
@@ -49,10 +51,10 @@
     static function updateFile($source, $update_file) {
       $destination = self::getFilePath($update_file);
       
-      if(!is_readable($source)) {
+      if (!is_readable($source)) {
         return false;
       } // if
-      if(!file_is_writable($destination)) {
+      if (!file_is_writable($destination)) {
         return false;
       } // if
       

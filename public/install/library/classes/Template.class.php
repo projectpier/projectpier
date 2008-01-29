@@ -26,7 +26,9 @@
     * @return boolean
     */
     function assign($name, $value) {
-      if(!$trimmed = trim($name)) return false;
+      if (!$trimmed = trim($name)) {
+        return false;
+      }
       $this->vars[$trimmed] = $value;
       return true;
     } // assign
@@ -41,7 +43,7 @@
     function fetch($template) {
       ob_start();
       $inc = $this->includeTemplate($template);
-      if($inc === false) {
+      if ($inc === false) {
         ob_end_clean();
         return '';
       } else {
@@ -67,7 +69,7 @@
     * @return null
     */
     function includeTemplate($template) {
-      if(file_exists($template)) {
+      if (file_exists($template)) {
         extract($this->vars, EXTR_SKIP);
         include $template;
         return true;
@@ -83,7 +85,9 @@
     */
     static function instance() {
       static $instance;
-      if(!($instance instanceof Template)) $instance = new Template();
+      if (!($instance instanceof Template)) {
+        $instance = new Template();
+      }
       return $instance;
     } // instance
   

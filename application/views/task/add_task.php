@@ -10,7 +10,7 @@
   add_page_action(lang('add task list'), get_url('task', 'add_list'));
 
 ?>
-<?php if($task->isNew()) { ?>
+<?php if ($task->isNew()) { ?>
 <form action="<?php echo $task_list->getAddTaskUrl($back_to_list) ?>" method="post">
 <?php } else { ?>
 <form action="<?php echo $task->getEditUrl() ?>" method="post">
@@ -18,7 +18,7 @@
 
 <?php tpl_display(get_template_path('form_errors')) ?>
 
-<?php if(!$task->isNew()) { ?>
+<?php if (!$task->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('task list'), 'addTaskTaskList', true) ?>
     <?php echo select_task_list('task[task_list_id]', active_project(), array_var($task_data, 'task_list_id'), false, array('id' => 'addTaskTaskList')) ?>

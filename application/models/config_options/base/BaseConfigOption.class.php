@@ -196,7 +196,9 @@
     * @return ConfigOptions 
     */
     function manager() {
-      if(!($this->manager instanceof ConfigOptions)) $this->manager = ConfigOptions::instance();
+      if (!($this->manager instanceof ConfigOptions)) {
+        $this->manager = ConfigOptions::instance();
+      }
       return $this->manager;
     } // manager
   

@@ -7,16 +7,16 @@
   * @return boolean
   */
   function folder_is_writable($path) {
-    if(!is_dir($path)) {
+    if (!is_dir($path)) {
       return false;
     } // if
     
     do {
       $test_file = with_slash($path) . sha1(uniqid(rand(), true));
-    } while(is_file($test_file));
+    } while (is_file($test_file));
     
     $put = @file_put_contents($test_file, 'test');
-    if($put === false) {
+    if ($put === false) {
       return false;
     } // if
     
@@ -31,12 +31,12 @@
   * @return boolean
   */
   function file_is_writable($path) {
-    if(!is_file($path)) {
+    if (!is_file($path)) {
       return false;
     } // if
     
     $open = @fopen($path, 'a+');
-    if($open === false) {
+    if ($open === false) {
       return false;
     } // if
     
@@ -54,7 +54,7 @@
   * @return string
   */
   function get_file_line($file, $line, $default = null) {
-    if(is_file($file)) {
+    if (is_file($file)) {
       $lines = file($file);
       return isset($file[$line]) ? $file[$line] : $default;
     } else {
@@ -78,72 +78,78 @@
   function get_files($dir, $extension = null, $base_name_only = false) {
   	
     // Check dir...
-    if(!is_dir($dir)) return false;
+    if (!is_dir($dir)) {
+      return false;
+    } // if
     
   	// Prepare input data...
   	$dir = with_slash($dir);
-  	if(!is_null($extension)) {
-  	  if(is_array($extension)) {
-  	    foreach($extension as $k => $v) $extension[$k] = strtolower($v);
+  	if (!is_null($extension)) {
+  	  if (is_array($extension)) {
+  	    foreach ($extension as $k => $v) {
+  	      $extension[$k] = strtolower($v);
+  	    } // foreach
   	  } else {
   	    $extension = strtolower($extension);
   	  } // if
   	} // if
   	
   	// We have a dir...
-  	if(!is_dir($dir)) return null;
+  	if (!is_dir($dir)) {
+  	  return null;
+  	} // if
   	
   	// Open dir and prepare result
-		$d = dir($dir);
-		$files = array();
-		
-		// Loop dir entries
-		while(false !== ($entry = $d->read())) {
-			
-			// Valid entry?
-		  if(($entry <> '.') && ($entry <> '..')) {
-		  	
-		  	// Get file path...
-		    $path = $dir . $entry;
-		    
-		    // If we have valid file that do the checks
-		    if(is_file($path)) {
-		    	
-		    	if(is_null($extension)) {
-		    	  $files[] = $base_name_only ? basename($path) : $path;
-		    	} else {
-		    	
-		    		// Match multiple extensions?
-		    		if(is_array($extension)) {
-		    			
-		    			// If in array add...
-		    		  if(in_array( strtolower(get_file_extension($path)), $extension )) {
-		    		    $files[] = $base_name_only ? basename($path) : $path;
-		    		  } // if
-		    		  
-		    		// Match single extension
-		    		} else {
-		    			
-		    			// If extensions match add...
-		    		  if(strtolower(get_file_extension($path)) == $extension) {
-		    		    $files[] = $base_name_only ? basename($path) : $path;
-		    		  } // if
-		    		  
-		    		} // if
-		    		
-		    	} // if
-		    
-		    } // if
-		    
-		  } // if
-		  
-		} // while
-		
-		// Done... close dir...
-		$d->close();
-		
-		// And return...
-		return count($files) > 0 ? $files : null;
+    $d = dir($dir);
+    $files = array();
+    
+    // Loop dir entries
+    while (false !== ($entry = $d->read())) {
+      
+      // Valid entry?
+      if (($entry <> '.') && ($entry <> '..')) {
+      	
+      	// Get file path...
+        $path = $dir . $entry;
+        
+        // If we have valid file that do the checks
+        if (is_file($path)) {
+        	
+        	if (is_null($extension)) {
+        	  $files[] = $base_name_only ? basename($path) : $path;
+        	} else {
+        	
+        		// Match multiple extensions?
+        		if (is_array($extension)) {
+        			
+        			// If in array add...
+        		  if (in_array( strtolower(get_file_extension($path)), $extension )) {
+        		    $files[] = $base_name_only ? basename($path) : $path;
+        		  } // if
+        		  
+        		// Match single extension
+        		} else {
+        			
+        			// If extensions match add...
+        		  if (strtolower(get_file_extension($path)) == $extension) {
+        		    $files[] = $base_name_only ? basename($path) : $path;
+        		  } // if
+        		  
+        		} // if
+        		
+        	} // if
+        
+        } // if
+        
+      } // if
+      
+    } // while
+    
+    // Done... close dir...
+    $d->close();
+    
+    // And return...
+    return count($files) > 0 ? $files : null;
   
   } // get_files
   
@@ -159,7 +165,7 @@
   	$filename = basename($path);
   	$dot_offset = (boolean) $leading_dot ? 0 : 1;
   	
-    if( ($pos = strrpos($filename, '.')) !== false ) {
+    if ( ($pos = strrpos($filename, '.')) !== false ) {
       return substr($filename, $pos + $dot_offset, strlen($filename));
     } // if
     
@@ -199,11 +205,11 @@
   */
   function delete_dir($dir) {
   	$dh = opendir($dir);
-  	while($file = readdir($dh)) {
-  		if(($file != ".") && ($file != "..")) {
+  	while ($file = readdir($dh)) {
+  		if (($file != ".") && ($file != "..")) {
   			$fullpath = $dir . "/" . $file;
   			
-  			if(!is_dir($fullpath)) {
+  			if (!is_dir($fullpath)) {
   				unlink($fullpath);
   			} else {
   				delete_dir($fullpath);
@@ -223,26 +229,32 @@
   * @return null
   */
   function force_mkdir($path, $chmod = null) {
-    if(is_dir($path)) return true;
+    if (is_dir($path)) {
+      return true;
+    } // if
     $real_path = str_replace('\\', '/', $path);
     $parts = explode('/', $real_path);
     
     $forced_path = '';
-    foreach($parts as $part) {
+    foreach ($parts as $part) {
       
       // Skip first on windows
-      if($forced_path == '') {
+      if ($forced_path == '') {
         $start = substr(__FILE__, 0, 1) == '/' ? '/' : '';
         $forced_path = $start . $part;
       } else {
         $forced_path .= '/' . $part;
       } // if
       
-      if(!is_dir($forced_path)) {
-        if(!is_null($chmod)) {
-          if(!mkdir($forced_path)) return false;
+      if (!is_dir($forced_path)) {
+        if (!is_null($chmod)) {
+          if (!mkdir($forced_path)) {
+            return false;
+          } // if
         } else {
-          if(!mkdir($forced_path, $chmod)) return false;
+          if (!mkdir($forced_path, $chmod)) {
+            return false;
+          } // if
         } // if
       } // if
     } // foreach
@@ -257,14 +269,16 @@
   * @return boolean
   */
   function is_dir_empty($dir_path) {
-		$d = dir($dir_path);
-    if($d) {
-  		while(false !== ($entry = $d->read())) {
-  		  if(($entry == '.') || ($entry == '..')) continue;
+    $d = dir($dir_path);
+    if ($d) {
+  		while (false !== ($entry = $d->read())) {
+  		  if (($entry == '.') || ($entry == '..')) {
+  		    continue;
+  		  } // if
   		  return false;
   		} // while
-		} // if
-		return true;
+    } // if
+    return true;
   } // is_dir_empty
   
   /**
@@ -278,11 +292,13 @@
   */
   function get_unique_filename($in, $desired_filename) {
     
-    if(!is_dir($in)) false;
+    if (!is_dir($in)) {
+      false;
+    } // if
     
     $file_path = $in . '/' . $desired_filename;
     $counter = 0;
-    while(is_file($file_path)) {
+    while (is_file($file_path)) {
       $counter++;
       $file_path = insert_before_file_extension($file_path, '(' . $counter . ')');
     } // if
@@ -314,7 +330,9 @@
   * @return boolean
   */
   function download_file($path, $type = 'application/octet-stream', $name = '', $force_download = false) {
-    if (!is_readable($path)) return false;
+    if (!is_readable($path)) {
+      return false;
+    } // if
     
     $filename = trim($name) == '' ? basename($path) : trim($name);
     return download_contents(file_get_contents($path), $type, $filename, filesize($path), $force_download);
@@ -330,16 +348,16 @@
   * @param boolean $force_download Send Content-Disposition: attachment to force save dialog
   * @return boolean
   */
-  /**  
+  /**
   * SAVR 10/20/06 : force file download over SSL for IE
   * BIP  09/17/07 : inserted and tested for ProjectPier 
   * Was:
   * function download_contents($content, $type, $name, $size, $force_download = false) {
   */
   function download_contents($content, $type, $name, $size, $force_download = true) {
-  if(connection_status() != 0) return false; // check connection
+  if (connection_status() != 0) return false; // check connection
 
-  if($force_download) {
+  if ($force_download) {
 
   /** SAVR 10/20/06
   * Was:
@@ -407,24 +425,34 @@
     $sort_with = trim($sort_with);
     
     // Check the input data...
-    if(!is_array($files)) return false;
-    if(!function_exists($extractor)) return false;
-    if(!function_exists($sort_with)) return false;
+    if (!is_array($files)) {
+      return false;
+    } // if
+    if (!function_exists($extractor)) {
+      return false;
+    } // if
+    if (!function_exists($sort_with)) {
+      return false;
+    } // if
     
     // Prepare the tmp array...
     $tmp = array();
     
     // OK, now get the files...
-    foreach($files as $file) {
+    foreach ($files as $file) {
     
       // Pass this one?
-      if(!is_file($file)) continue;
+      if (!is_file($file)) {
+        continue;
+      } // if
       
       // Get data...
       $data = call_user_func($extractor, $file);
       
       // Prepare array...
-      if(!isset($tmp[$data])) $tmp[$data] = array();
+      if (!isset($tmp[$data])) {
+        $tmp[$data] = array();
+      } // if
       
       // Add filename to the extracted param...
       $tmp[$data][] = $file;
@@ -432,23 +460,27 @@
     } // foreach
     
     // OK, now sort subarrays
-    foreach($tmp as &$subarray) {
-      if(count($subarray) > 0) sort($subarray);
-    } // if
+    foreach ($tmp as &$subarray) {
+      if (count($subarray) > 0) {
+        sort($subarray);
+      } // if
+    } // foreach
     
     // OK, do the sort thing...
-    if(is_null($sort_method)) {
+    if (is_null($sort_method)) {
       $sorted = call_user_func($sort_with, $tmp);
     } else {
       $sorted = call_user_func_array($sort_with, array($tmp, $sort_method));
     } // if
     
     // Check sorted array
-    if(!is_array($sorted)) return false;
+    if (!is_array($sorted)) {
+      return false;
+    } // if
     
     // OK, flatten...
     $result = array();
-    foreach($sorted as &$subarray) {
+    foreach ($sorted as &$subarray) {
       $result = array_merge($result, $subarray);
     } // foreach
     

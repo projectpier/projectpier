@@ -43,25 +43,25 @@
     * @return boolean
     */
     public function saveSessionSet($sessions) {
-      if(!is_array($sessions)) {
+      if (!is_array($sessions)) {
         return false;
       } // if
       
       $session_names = array();
       $session_outputs = array();
-      foreach($sessions as $session) {
-        if($session instanceof Logger_Session) {
+      foreach ($sessions as $session) {
+        if ($session instanceof Logger_Session) {
           $session_names[] = $session->getName();
           $session_outputs[] = $this->renderSessionContent($session);
         } // if
       } // if
       
-      if(!count($session_names) || !count($session_outputs)) {
+      if (!count($session_names) || !count($session_outputs)) {
         return false;
       } // if
       
       $output = self::SET_SEPARATOR . self::NEW_LINE . 'Session set: ' . implode(', ', $session_names) . self::NEW_LINE . self::SET_SEPARATOR;
-      foreach($session_outputs as $session_output) {
+      foreach ($session_outputs as $session_output) {
         $output .= self::NEW_LINE . $session_output;
       } // foreach
       
@@ -91,10 +91,10 @@
       $counter = 0;
       
       $output = 'Session "' . $session->getName() . '" started at ' . gmdate(DATE_ISO8601, floor($session->getSessionStart())) . "\n";
-      if($session->isEmpty()) {
+      if ($session->isEmpty()) {
         $output .= 'Empty session';
       } else {
-        foreach($session->getEntries() as $entry) {
+        foreach ($session->getEntries() as $entry) {
           $counter++;
           $output .= "#$counter " . Logger::severityToString($entry->getSeverity()) . ': ' . $entry->getFormattedMessage('    ') . "\n";
         } // foreach
@@ -115,7 +115,7 @@
     * @return string
     */
     function getLogFile() {
-      if(trim($this->log_file) && !is_file($this->log_file)) {
+      if (trim($this->log_file) && !is_file($this->log_file)) {
         file_put_contents($this->log_file, '<?php die(); ?>');
       } // if
       return $this->log_file;
@@ -132,16 +132,16 @@
     */
     function setLogFile($value) {
       $file_path = $value;
-      if(is_file($file_path)) {
-        if(!file_is_writable($file_path)) {
+      if (is_file($file_path)) {
+        if (!file_is_writable($file_path)) {
           throw new FileNotWriableError($file_path);
         } // if
       } else {
         $folder_path = dirname($file_path);
-        if(!is_dir($folder_path)) {
+        if (!is_dir($folder_path)) {
           throw new DirDnxError($folder_path);
         } // if
-        if(!folder_is_writable($folder_path)) {
+        if (!folder_is_writable($folder_path)) {
           throw new DirNotWritableError($folder_path);
         } // if
       } // if

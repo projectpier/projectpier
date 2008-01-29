@@ -7,9 +7,13 @@
     array($milestone->getName())
   ));
   
-  if(!$milestone->isCompleted()) {    
-    if(ProjectMessage::canAdd(logged_user(), $milestone->getProject())) add_page_action(lang('add message'), $milestone->getAddMessageUrl());
-    if(ProjectTaskList::canAdd(logged_user(), $milestone->getProject())) add_page_action(lang('add task list'), $milestone->getAddTaskListUrl());
+  if (!$milestone->isCompleted()) {
+    if (ProjectMessage::canAdd(logged_user(), $milestone->getProject())) {
+      add_page_action(lang('add message'), $milestone->getAddMessageUrl());
+    } // if
+    if (ProjectTaskList::canAdd(logged_user(), $milestone->getProject())) {
+      add_page_action(lang('add task list'), $milestone->getAddTaskListUrl());
+    } //if
   } // if
 
 ?>

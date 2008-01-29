@@ -65,8 +65,10 @@
     * @return boolean
     */
     function goToStep($step) {
-      if(!($step instanceof ScriptInstallerStep)) $step = $this->getStep($step);
-      if(!($step instanceof ScriptInstallerStep)) {
+      if (!($step instanceof ScriptInstallerStep)) {
+        $step = $this->getStep($step);
+      }
+      if (!($step instanceof ScriptInstallerStep)) {
         die("Step '$step_number' does not exist in the installation process");
       } // if
       redirect_to($step->getStepUrl());
@@ -81,7 +83,7 @@
     */
     function executeStep($step_number) {
       $step = $this->getStep($step_number);
-      if(!($step instanceof ScriptInstallerStep)) {
+      if (!($step instanceof ScriptInstallerStep)) {
         die("Step '$step_number' does not exist in the installation process");
       } // if
       
@@ -93,11 +95,11 @@
       $execution_result = $step->execute();
       
       // If execute() returns true redirect to next step (if exists)
-      if($execution_result) {
+      if ($execution_result) {
         $this->addExecutedStep($step_number);
         
         $next_step = $step->getNextStep();
-        if($next_step instanceof ScriptInstallerStep) {
+        if ($next_step instanceof ScriptInstallerStep) {
           $this->goToStep($next_step->getStepNumber());
         } // if
       } else {
@@ -186,7 +188,9 @@
     * @return integer
     */
     function addStep($step) {
-      if(!($step instanceof ScriptInstallerStep)) return false;
+      if (!($step instanceof ScriptInstallerStep)) {
+        return false;
+      }
       
       $step_number = count($this->steps) + 1;
       
@@ -194,7 +198,7 @@
       $step->setStepNumber($step_number);
       
       $previous_step = $this->getStep($step_number - 1);
-      if($previous_step instanceof ScriptInstallerStep) {
+      if ($previous_step instanceof ScriptInstallerStep) {
         $step->setPreviousStep($previous_step);
         $previous_step->setNextStep($step);
       } // if
@@ -212,8 +216,12 @@
     * @return boolean
     */
     function addToStorage($variable_name, $value) {
-      if(!$trimmed = trim($variable_name)) return false;
-      if(!isset($_SESSION[STORAGE_SESSION_VARIABLE])) $_SESSION[STORAGE_SESSION_VARIABLE] = array();
+      if (!$trimmed = trim($variable_name)) {
+        return false;
+      }
+      if (!isset($_SESSION[STORAGE_SESSION_VARIABLE])) {
+        $_SESSION[STORAGE_SESSION_VARIABLE] = array();
+      }
       $_SESSION[STORAGE_SESSION_VARIABLE][$trimmed] = $value;
     } // addToStorage
     
@@ -227,7 +235,7 @@
     * @return null
     */
     function getFromStorage($variable_name, $default = null) {
-      if(isset($_SESSION[STORAGE_SESSION_VARIABLE]) && isset($_SESSION[STORAGE_SESSION_VARIABLE][$variable_name])) {
+      if (isset($_SESSION[STORAGE_SESSION_VARIABLE]) && isset($_SESSION[STORAGE_SESSION_VARIABLE][$variable_name])) {
         return $_SESSION[STORAGE_SESSION_VARIABLE][$variable_name];
       } // if
       return $default;
@@ -240,7 +248,7 @@
     * @return null
     */
     function clearStorage() {
-      if(isset($_SESSION[STORAGE_SESSION_VARIABLE])) {
+      if (isset($_SESSION[STORAGE_SESSION_VARIABLE])) {
         unset($_SESSION[STORAGE_SESSION_VARIABLE]);
       } // if
     } // clearStorage
@@ -262,7 +270,7 @@
     * @return null
     */
     function addError($error) {
-      if(trim($error)) {
+      if (trim($error)) {
         $this->errors[] = $error;
         return true;
       } else {
@@ -311,7 +319,9 @@
     * @return boolean
     */
     function isExecutedStep($step) {
-      if(!isset($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE]) || !is_array($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE])) $_SESSION[EXECUTED_STEPS_SESSION_VARIABLE] = array();
+      if (!isset($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE]) || !is_array($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE])) {
+        $_SESSION[EXECUTED_STEPS_SESSION_VARIABLE] = array();
+      }
       return in_array($step, $_SESSION[EXECUTED_STEPS_SESSION_VARIABLE]);
     } // isExecutedStep
     
@@ -324,9 +334,13 @@
     */
     function addExecutedStep($step) {
       $step = (integer) $step;
-      if(!isset($this->steps[$step])) return false;
+      if (!isset($this->steps[$step])) {
+        return false;
+      }
       
-      if(!isset($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE]) || !is_array($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE])) $_SESSION[EXECUTED_STEPS_SESSION_VARIABLE] = array();
+      if (!isset($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE]) || !is_array($_SESSION[EXECUTED_STEPS_SESSION_VARIABLE])) {
+        $_SESSION[EXECUTED_STEPS_SESSION_VARIABLE] = array();
+      }
       $_SESSION[EXECUTED_STEPS_SESSION_VARIABLE][] = $step;
       return true;
     } // addExecutedStep

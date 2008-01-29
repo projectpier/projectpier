@@ -132,7 +132,7 @@
     * @return null
     */
     function addEntry(Logger_Entry $entry) {
-      if($entry->getSeverity() >= $this->getMinSeverity()) {
+      if ($entry->getSeverity() >= $this->getMinSeverity()) {
         $this->entries[] = $entry;
         return true;
       } // if

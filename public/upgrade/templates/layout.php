@@ -22,7 +22,7 @@
             <td class="optionLabel"><label for="upgradeFormScript">Script</label></td>
             <td>
               <select name="form_data[script_class]" id="upgradeFormScript">
-<?php foreach($upgrader->getScripts() as $script) { ?>
+<?php foreach ($upgrader->getScripts() as $script) { ?>
                 <option value="<?php echo clean(get_class($script)) ?>"><?php echo clean($script->getScriptName()) ?></option>
 <?php } // foreach ?>
               </select>
@@ -32,9 +32,9 @@
         <button type="submit" accesskey="s">Upgrade (Alt+S)</button>
       </div>
       <div id="content">
-<?php if(isset($status_messages) && count($status_messages)) { ?>
+<?php if (isset($status_messages) && count($status_messages)) { ?>
         <ul>
-<?php foreach($status_messages as $status_message) { ?>
+<?php foreach ($status_messages as $status_message) { ?>
           <li><?php echo $status_message ?></li>
 <?php } // foreach ?>
         </ul>

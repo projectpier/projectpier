@@ -64,13 +64,17 @@
     * @return array
     */
     static function getFilesByRelations($relations, $exclude_private = false) {
-      if(!is_array($relations)) return null;
+      if (!is_array($relations)) {
+        return null;
+      }
       
       $files = array();
-      foreach($relations as $relation) {
+      foreach ($relations as $relation) {
         $file = $relation->getFile();
-        if($file instanceof ProjectFile) {
-          if(!($exclude_private && $file->isPrivate())) $files[] = $file;
+        if ($file instanceof ProjectFile) {
+          if (!($exclude_private && $file->isPrivate())) {
+            $files[] = $file;
+          } // if
         } // if
       } // if
       return count($files) ? $files : null;
@@ -84,13 +88,17 @@
     * @return array
     */
     static function getObjectsByRelations($relations, $exclude_private = false) {
-      if(!is_array($relations)) return null;
+      if (!is_array($relations)) {
+        return null;
+      }
       
       $objects = array();
-      foreach($relations as $relation) {
+      foreach ($relations as $relation) {
         $object = $relation->getObject();
-        if($object instanceof ProjectDataObject) {
-          if(!($exclude_private && $object->isPrivate())) $objects[] = $object;
+        if ($object instanceof ProjectDataObject) {
+          if (!($exclude_private && $object->isPrivate())) {
+            $objects[] = $object;
+          } // if
         } // if
       } // if
       return count($objects) ? $objects : null;

@@ -26,13 +26,15 @@
   function add_page_action() {
     
     $args = func_get_args();
-    if(!is_array($args) || !count($args)) return;
+    if (!is_array($args) || !count($args)) {
+      return;
+    }
     
     // Array of data as first param mapped like $title => $url
-    if(is_array(array_var($args, 0))) {
+    if (is_array(array_var($args, 0))) {
       
-      foreach(array_var($args, 0) as $title => $url) {
-        if(!empty($title) && !empty($url)) {
+      foreach (array_var($args, 0) as $title => $url) {
+        if (!empty($title) && !empty($url)) {
           PageActions::instance()->addAction( new PageAction($title, $url) );
         } // if
       } // foreach
@@ -43,7 +45,7 @@
       $title = array_var($args, 0);
       $url = array_var($args, 1);
       
-      if(!empty($title) && !empty($url)) {
+      if (!empty($title) && !empty($url)) {
         PageActions::instance()->addAction( new PageAction($title, $url) );
       } // if
       
@@ -184,7 +186,7 @@
       static $instance;
       
       // Check instance
-      if(!($instance instanceof PageActions)) {
+      if (!($instance instanceof PageActions)) {
         $instance = new PageActions();
       } // if
       

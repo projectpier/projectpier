@@ -74,9 +74,9 @@
     * @return ApplicationDataObject
     */
     function getAssignedTo() {
-      if($this->getAssignedToUserId() > 0) {
+      if ($this->getAssignedToUserId() > 0) {
         return $this->getAssignedToUser();
-      } elseif($this->getAssignedToCompanyId() > 0) {
+      } elseif ($this->getAssignedToCompanyId() > 0) {
         return $this->getAssignedToCompany();
       } else {
         return null;
@@ -171,20 +171,20 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
       
       $assigned_to = $this->getAssignedTo();
-      if($assigned_to instanceof User) {
-        if($user->getId() == $assigned_to->getId()) {
+      if ($assigned_to instanceof User) {
+        if ($user->getId() == $assigned_to->getId()) {
           return true;
         } // if
-      } elseif($assigned_to instanceof Company) {
-        if($user->getCompanyId() == $assigned_to->getId()) {
+      } elseif ($assigned_to instanceof Company) {
+        if ($user->getCompanyId() == $assigned_to->getId()) {
           return true;
         } // if
       } else {
@@ -192,10 +192,10 @@
       } // if
       
       // Client who created the task can edit it for the next 3 minutes
-      if($this->getCreatedById() == logged_user()->getId()) {
+      if ($this->getCreatedById() == logged_user()->getId()) {
         $valid_time = DateTimeValueLib::now();
         $valid_time->advance(180);
-        if($this->getCreatedOn()->getTimestamp() < $valid_time->getTimestamp()) {
+        if ($this->getCreatedOn()->getTimestamp() < $valid_time->getTimestamp()) {
           return true;
         } // if
       } // if
@@ -212,15 +212,19 @@
     * @return boolean
     */
     function canChangeStatus(User $user) {
-      if($this->canEdit($user)) {
+      if ($this->canEdit($user)) {
         return true; // can edit? cool...
       } // if
       
       // Additional check - is this task assigned to this user or its company
-      if($this->getAssignedTo() instanceof User) {
-        if($user->getId() == $this->getAssignedTo()->getObjectId()) return true;
-      } elseif($this->getAssignedTo() instanceof Company) {
-        if($user->getCompanyId() == $this->getAssignedTo()->getObjectId()) return true;
+      if ($this->getAssignedTo() instanceof User) {
+        if ($user->getId() == $this->getAssignedTo()->getObjectId()) {
+          return true;
+        }
+      } elseif ($this->getAssignedTo() instanceof Company) {
+        if ($user->getCompanyId() == $this->getAssignedTo()->getObjectId()) {
+          return true;
+        }
       } // if
       return false;
     } // canChangeStatus
@@ -233,10 +237,10 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
       
@@ -261,9 +265,11 @@
       $this->save();
       
       $task_list = $this->getTaskList();
-      if(($task_list instanceof ProjectTaskList) && $task_list->isOpen()) {
+      if (($task_list instanceof ProjectTaskList) && $task_list->isOpen()) {
         $open_tasks = $task_list->getOpenTasks();
-        if(empty($open_tasks)) $task_list->complete(DateTimeValueLib::now(), logged_user());
+        if (empty($open_tasks)) {
+          $task_list->complete(DateTimeValueLib::now(), logged_user());
+        }
       } // if
     } // completeTask
     
@@ -280,9 +286,11 @@
       $this->save();
       
       $task_list = $this->getTaskList();
-      if(($task_list instanceof ProjectTaskList) && $task_list->isCompleted()) {
+      if (($task_list instanceof ProjectTaskList) && $task_list->isCompleted()) {
         $open_tasks = $task_list->getOpenTasks();
-        if(!empty($open_tasks)) $task_list->open();
+        if (!empty($open_tasks)) {
+          $task_list->open();
+        }
       } // if
     } // openTask
     
@@ -325,7 +333,7 @@
         'active_project' => $this->getProjectId()
       ); // array
       
-      if(trim($redirect_to)) {
+      if (trim($redirect_to)) {
         $params['redirect_to'] = $redirect_to;
       } // if
       
@@ -345,7 +353,7 @@
         'active_project' => $this->getProjectId()
       ); // array
       
-      if(trim($redirect_to)) {
+      if (trim($redirect_to)) {
         $params['redirect_to'] = $redirect_to;
       } // if
       
@@ -364,7 +372,9 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('text')) $errors[] = lang('task text required');
+      if (!$this->validatePresenceOf('text')) {
+        $errors[] = lang('task text required');
+      }
     } // validate
     
     /**
@@ -376,7 +386,9 @@
     */
     function delete() {
       $task_list = $this->getTaskList();
-      if($task_list instanceof ProjectTaskList) $task_list->detachTask($this);
+      if ($task_list instanceof ProjectTaskList) {
+        $task_list->detachTask($this);
+      }
       return parent::delete();
     } // delete
     

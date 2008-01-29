@@ -18,8 +18,8 @@
     
     $page_urls = array();
     
-    for($i = 1; $i <= $pagination->getTotalPages(); $i++) {
-      if($i == $pagination->getCurrentPage()) {
+    for ($i = 1; $i <= $pagination->getTotalPages(); $i++) {
+      if ($i == $pagination->getCurrentPage()) {
         $page_urls[] = "($i)";
       } else {
         $page_urls[] = '<a href="' . str_replace($page_placeholder, $i, $url_base) . '">' . $i . '</a>';

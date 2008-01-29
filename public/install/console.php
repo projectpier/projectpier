@@ -2,7 +2,7 @@
 
   require_once dirname(__FILE__) . '/include.php';
 
-  if(!isset($argv) || !is_array($argv)) {
+  if (!isset($argv) || !is_array($argv)) {
     die('There is no input arguments');
   } // if
   

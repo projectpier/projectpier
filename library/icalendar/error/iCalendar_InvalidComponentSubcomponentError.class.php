@@ -32,7 +32,7 @@
     * @return iCalendar_InvalidComponentSubcomponentError
     */
     function __construct($component_name, $subcomponent_name, $message = null) {
-      if(is_null($message)) $message = "'$subcomponent_name' is not valid subcomponent of '$component_name'";
+      if (is_null($message)) $message = "'$subcomponent_name' is not valid subcomponent of '$component_name'";
       parent::__construct($message);
       $this->setComponentName($component_name);
       $this->setSubcomponentName($subcomponent_name);

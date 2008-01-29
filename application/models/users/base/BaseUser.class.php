@@ -526,7 +526,9 @@
     * @return Users 
     */
     function manager() {
-      if(!($this->manager instanceof Users)) $this->manager = Users::instance();
+      if (!($this->manager instanceof Users)) {
+        $this->manager = Users::instance();
+      }
       return $this->manager;
     } // manager
   

@@ -111,7 +111,7 @@
     * @return integer
     */
     function countProjects() {
-      if($this->isOwner()) {
+      if ($this->isOwner()) {
         return Projects::count(); // all
       } else {
         return ProjectCompanies::count('`company_id` = ' . DB::escape($this->getId()));
@@ -125,8 +125,8 @@
     * @return null
     */
     function getActiveProjects() {
-      if(is_null($this->active_projects)) {
-        if($this->isOwner()) {
+      if (is_null($this->active_projects)) {
+        if ($this->isOwner()) {
           $this->active_projects = Projects::findAll(array(
             'conditions' => '`completed_on` = ' . DB::escape(EMPTY_DATETIME)
           )); // findAll
@@ -144,8 +144,8 @@
     * @return null
     */
     function getCompletedProjects() {
-      if(is_null($this->completed_projects)) {
-        if($this->isOwner()) {
+      if (is_null($this->completed_projects)) {
+        if ($this->isOwner()) {
           $this->completed_projects = Projects::findAll(array(
             'conditions' => '`completed_on` > ' . DB::escape(EMPTY_DATETIME)
           )); // findAll
@@ -183,7 +183,7 @@
     * @return boolean
     */
     function isOwner() {
-      if($this->isNew()) {
+      if ($this->isNew()) {
         return false;
       } else {
         return $this->getClientOfId() == 0;
@@ -197,7 +197,7 @@
     * @return boolean
     */
     function isProjectCompany(Project $project) {
-      if($this->isOwner() && ($project->getCompanyId() == $this->getId())) {
+      if ($this->isOwner() && ($project->getCompanyId() == $this->getId())) {
         return true;
       } // uf
       return ProjectCompanies::findById(array('project_id' => $project->getId(), 'company_id' => $this->getId())) instanceof ProjectCompany;
@@ -261,12 +261,12 @@
     * @return null
     */
     function setHomepage($value) {
-      if(trim($value) == '') {
+      if (trim($value) == '') {
         return parent::setHomepage('');
       } // if
       
       $check_value = strtolower($value);
-      if(!str_starts_with($check_value, 'http://') && !str_starts_with($check_value, 'https://')) {
+      if (!str_starts_with($check_value, 'http://') && !str_starts_with($check_value, 'https://')) {
         return parent::setHomepage('http://' . $value);
       } else {
         return parent::setHomepage($value);
@@ -307,7 +307,9 @@
     * @return boolean
     */
     function canAddClient(User $user) {
-      if(!$user->isMemberOf($this)) return false;
+      if (!$user->isMemberOf($this)) {
+        return false;
+      }
       return $user->isAccountOwner() || $user->isAdministrator($this);
     } // canAddClient
     
@@ -329,7 +331,7 @@
     * @return boolean
     */
     function canUpdatePermissions(User $user) {
-      if($this->isOwner()) {
+      if ($this->isOwner()) {
         return false; // owner company!
       } // if
       return $user->isAdministrator();
@@ -358,7 +360,7 @@
     * @return string
     */
     function getViewUrl() {
-      if($this->getId() == owner_company()->getId()) {
+      if ($this->getId() == owner_company()->getId()) {
         return get_url('administration', 'company');
       } else {
         return get_url('company', 'view_client', $this->getId());
@@ -444,11 +446,13 @@
     * @return null
     */
     function setLogo($source, $max_width = 50, $max_height = 50, $save = true) {
-      if(!is_readable($source)) return false;
+      if (!is_readable($source)) {
+        return false;
+      }
       
       do {
         $temp_file = ROOT . '/cache/' . sha1(uniqid(rand(), true));
-      } while(is_file($temp_file));
+      } while (is_file($temp_file));
       
       try {
         Env::useLibrary('simplegd');
@@ -458,9 +462,9 @@
         $thumb->saveAs($temp_file, IMAGETYPE_PNG);
         
         $public_filename = PublicFiles::addFile($temp_file, 'png');
-        if($public_filename) {
+        if ($public_filename) {
           $this->setLogoFile($public_filename);
-          if($save) {
+          if ($save) {
             $this->save();
           } // if
         } // if
@@ -471,7 +475,7 @@
       } // try
       
       // Cleanup
-      if(!$result && $public_filename) {
+      if (!$result && $public_filename) {
         PublicFiles::deleteFile($public_filename);
       } // if
       @unlink($temp_file);
@@ -486,7 +490,7 @@
     * @return null
     */
     function deleteLogo() {
-      if($this->hasLogo()) {
+      if ($this->hasLogo()) {
         PublicFiles::deleteFile($this->getLogoFile());
         $this->setLogoFile('');
       } // if
@@ -536,18 +540,18 @@
     * @return boolean
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('name')) {
+      if (!$this->validatePresenceOf('name')) {
         $errors[] = lang('company name required');
       } // if
       
-      if($this->validatePresenceOf('email')) {
-        if(!is_valid_email($this->getEmail())) {
+      if ($this->validatePresenceOf('email')) {
+        if (!is_valid_email($this->getEmail())) {
           $errors[] = lang('invalid email address');
         } // if
       } // if
       
-      if($this->validatePresenceOf('homepage')) {
-        if(!is_valid_url($this->getHomepage())) {
+      if ($this->validatePresenceOf('homepage')) {
+        if (!is_valid_url($this->getHomepage())) {
           $errors[] = lang('company homepage invalid');
         } // if
       } // if
@@ -562,13 +566,15 @@
     * @throws Error
     */
     function delete() {
-      if($this->isOwner()) {
+      if ($this->isOwner()) {
         throw new Error(lang('error delete owner company'));
       } // if
       
       $users = $this->getUsers();
-      if(is_array($users) && count($users)) {
-        foreach($users as $user) $user->delete();
+      if (is_array($users) && count($users)) {
+        foreach ($users as $user) {
+          $user->delete();
+        }
       } // if
       
       ProjectCompanies::clearByCompany($this);

@@ -203,7 +203,7 @@
     * @return null
     */
     function setSelectedTab($id) {
-      foreach($this->items as &$item) {
+      foreach ($this->items as &$item) {
         $item->setSelected( $item->getID() == $id );
       } // foreach
     } // setSelectedTab
@@ -216,7 +216,11 @@
     * @return TabbedNavigationItem
     */
     function getSelectedTab() {
-      foreach($this->items as &$item) if($item->getSelected()) return $item;
+      foreach ($this->items as &$item) {
+        if ($item->getSelected()) {
+          return $item;
+        }
+      }
       return null;
     } // getSelectedTab
     
@@ -236,7 +240,7 @@
     } // getItems
     
     /**
-    * Add signle tabbed navigation item
+    * Add single tabbed navigation item
     *
     * @access public
     * @param TabbedNavigationItem $item
@@ -258,7 +262,7 @@
       static $instance;
       
       // Check instance
-      if(!($instance instanceof TabbedNavigation)) {
+      if (!($instance instanceof TabbedNavigation)) {
         $instance = new TabbedNavigation();
       } // if
       

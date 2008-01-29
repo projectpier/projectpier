@@ -130,7 +130,9 @@
     * @return FileTypes 
     */
     function manager() {
-      if(!($this->manager instanceof FileTypes)) $this->manager = FileTypes::instance();
+      if (!($this->manager instanceof FileTypes)) {
+        $this->manager = FileTypes::instance();
+      }
       return $this->manager;
     } // manager
   

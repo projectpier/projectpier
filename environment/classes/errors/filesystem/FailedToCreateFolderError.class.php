@@ -24,7 +24,9 @@
     * @return FailedToCreateFolderError
     */
     function __construct($folder_path, $message = null) {
-      if(is_null($message)) $message = "Failed to create folder '$folder_path'";
+      if (is_null($message)) {
+        $message = "Failed to create folder '$folder_path'";
+      } // if
       parent::__construct($message);
       $this->setFolderPath($folder_path);
     } // __construct

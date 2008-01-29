@@ -34,7 +34,9 @@
     * @return FailedToMoveFileError
     */
     function __construct($from_path, $to_path, $message = null) {
-      if(is_null($message)) $message = "Failed to move file '$from_path' to '$to_path'";
+      if (is_null($message)) {
+        $message = "Failed to move file '$from_path' to '$to_path'";
+      } // if
       parent::__construct($message);
       
       $this->setFromPath($from_path);

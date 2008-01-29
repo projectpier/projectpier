@@ -30,42 +30,44 @@
     function login() {
       $this->addHelper('form');
       
-      if(function_exists('logged_user') && (logged_user() instanceof User)) {
+      if (function_exists('logged_user') && (logged_user() instanceof User)) {
         $this->redirectTo('dashboard');
       } // if
       
       $login_data = array_var($_POST, 'login');
-      if(!is_array($login_data)) {
+      if (!is_array($login_data)) {
         $login_data = array();
-        foreach($_GET as $k => $v) {
-          if(str_starts_with($k, 'ref_')) $login_data[$k] = $v;
+        foreach ($_GET as $k => $v) {
+          if (str_starts_with($k, 'ref_')) {
+            $login_data[$k] = $v;
+          }
         } // foreach
       } // if
       
       tpl_assign('login_data', $login_data);
       
-      if(is_array(array_var($_POST, 'login'))) {
+      if (is_array(array_var($_POST, 'login'))) {
         $username = array_var($login_data, 'username');
         $password = array_var($login_data, 'password');
         $remember = array_var($login_data, 'remember') == 'checked';
         
-        if(trim($username == '')) {
+        if (trim($username == '')) {
           tpl_assign('error', new Error(lang('username value missing')));
           $this->render();
         } // if
         
-        if(trim($password) == '') {
+        if (trim($password) == '') {
           tpl_assign('error', new Error(lang('password value missing')));
           $this->render();
         } // if
         
         $user = Users::getByUsername($username, owner_company());
-        if(!($user instanceof User)) {
+        if (!($user instanceof User)) {
           tpl_assign('error', new Error(lang('invalid login data')));
           $this->render();
         } // if
         
-        if(!$user->isValidPassword($password)) {
+        if (!$user->isValidPassword($password)) {
           tpl_assign('error', new Error(lang('invalid login data')));
           $this->render();
         } // if
@@ -81,8 +83,8 @@
         $ref_action = null;
         $ref_params = array();
         
-        foreach($login_data as $k => $v) {
-          if(str_starts_with($k, 'ref_')) {
+        foreach ($login_data as $k => $v) {
+          if (str_starts_with($k, 'ref_')) {
             $ref_var_name = trim(substr($k, 4, strlen($k)));
             switch ($ref_var_name) {
               case 'c':
@@ -96,9 +98,11 @@
             } // switch
           } // if
         } // if
-        if(!count($ref_params)) $ref_params = null;
+        if (!count($ref_params)) {
+          $ref_params = null;
+        }
         
-        if($ref_controller && $ref_action) {
+        if ($ref_controller && $ref_action) {
           $this->redirectTo($ref_controller, $ref_action, $ref_params);
         } else {
           $this->redirectTo('dashboard');
@@ -128,14 +132,14 @@
       $your_email = trim(array_var($_POST, 'your_email'));
       tpl_assign('your_email', $your_email);
       
-      if(array_var($_POST, 'submited') == 'submited') {
-        if(!is_valid_email($your_email)) {
+      if (array_var($_POST, 'submited') == 'submited') {
+        if (!is_valid_email($your_email)) {
           tpl_assign('error', new InvalidEmailAddressError($your_email, lang('invalid email address')));
           $this->render();
         } // if
         
         $user = Users::getByEmail($your_email);
-        if(!($user instanceof User)) {
+        if (!($user instanceof User)) {
           flash_error(lang('email address not in use', $your_email));
           $this->redirectTo('access', 'forgot_password');
         } // if
@@ -158,23 +162,23 @@
     * @return null
     */
     function complete_installation() {
-      if(Companies::getOwnerCompany() instanceof Company) {
+      if (Companies::getOwnerCompany() instanceof Company) {
         die('Owner company already exists'); // Somebody is trying to access this method even if the user already exists
       } // if
-			$this->setLayout('complete_install');
+      $this->setLayout('complete_install');
       $form_data = array_var($_POST, 'form');
       tpl_assign('form_data', $form_data);
       
-      if(array_var($form_data, 'submited') == 'submited') {
+      if (array_var($form_data, 'submited') == 'submited') {
         try {
           $admin_password = trim(array_var($form_data, 'admin_password'));
           $admin_password_a = trim(array_var($form_data, 'admin_password_a'));
           
-          if(trim($admin_password) == '') {
+          if (trim($admin_password) == '') {
             throw new Error(lang('password value required'));
           } // if
           
-          if($admin_password <> $admin_password_a) {
+          if ($admin_password <> $admin_password_a) {
             throw new Error(lang('passwords dont match'));
           } // if
           

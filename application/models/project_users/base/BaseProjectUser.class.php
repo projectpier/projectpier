@@ -262,7 +262,9 @@
     * @return ProjectUsers 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectUsers)) $this->manager = ProjectUsers::instance();
+      if (!($this->manager instanceof ProjectUsers)) {
+        $this->manager = ProjectUsers::instance();
+      }
       return $this->manager;
     } // manager
   

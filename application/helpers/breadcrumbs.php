@@ -49,10 +49,10 @@
     function addByFunctionArguments($args) {
       
       // First element is array
-      if(is_array($args[0])) {
+      if (is_array($args[0])) {
         
-        foreach($args[0] as $arg) {
-          if(is_array($arg)) {
+        foreach ($args[0] as $arg) {
+          if (is_array($arg)) {
             
             // Get data...
             $title = $arg[0];
@@ -62,13 +62,13 @@
             // And add
             $this->addCrumb($title, $url, $attributes);
             
-          } elseif(is_string($arg)) {
+          } elseif (is_string($arg)) {
             $this->addCrumb($arg);
           } // if
         } // foreach
         
       // Its string
-      } elseif(is_string($args[0])) {
+      } elseif (is_string($args[0])) {
         
         // Get data...
         $title = $args[0];
@@ -108,10 +108,12 @@
     */
     function addCrumb() {
       $args = func_get_args();
-      if(!is_array($args) || !count($args)) return null;
+      if (!is_array($args) || !count($args)) {
+        return null;
+      }
       
       // First apram is crumb
-      if(array_var($args, 0) instanceof BreadCrumb) {
+      if (array_var($args, 0) instanceof BreadCrumb) {
         $crumb = array_var($args, 0);
         
       // Collect vars and construct crumb
@@ -120,14 +122,16 @@
         $url = array_var($args, 1, false) ? array_var($args, 1) : null;
         $attributes = array_var($args, 2, false) ? array_var($args, 2) : null;
         
-        if(trim($title)) {
+        if (trim($title)) {
           $crumb = new BreadCrumb($title, $url, $attributes);
         } else {
           $crumb = null;
         } // if
       } // if
       
-      if($crumb instanceof BreadCrumb) $this->crumbs[] = $crumb;
+      if ($crumb instanceof BreadCrumb) {
+        $this->crumbs[] = $crumb;
+      }
       return $crumb;
     } // addCrumb
     
@@ -142,7 +146,7 @@
       static $instance;
       
       // Check instance
-      if(!($instance instanceof BreadCrumbs)) {
+      if (!($instance instanceof BreadCrumbs)) {
         $instance = new BreadCrumbs();
       } // if
       

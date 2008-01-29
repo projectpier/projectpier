@@ -17,9 +17,9 @@
     <label class="checkbox" for="loginRememberMe"><?php echo lang('remember me') ?></label>
   </div>
   
-<?php if(isset($login_data) && is_array($login_data) && count($login_data)) { ?>
-<?php foreach($login_data as $k => $v) { ?>
-<?php if(str_starts_with($k, 'ref_')) { ?>
+<?php if (isset($login_data) && is_array($login_data) && count($login_data)) { ?>
+<?php foreach ($login_data as $k => $v) { ?>
+<?php if (str_starts_with($k, 'ref_')) { ?>
   <input type="hidden" name="login[<?php echo $k ?>]" value="<?php echo $login_data[$k] ?>" />
 <?php } // if ?>
 <?php } // foreach ?>

@@ -51,7 +51,9 @@
     * @return InvalidUploadError
     */
     function __construct($file, $message = null) {
-      if(is_null($message)) $message = 'Failed to upload file.';
+      if (is_null($message)) {
+        $message = 'Failed to upload file.';
+      } // if
       parent::__construct($message);
       
       $this->setName(array_var($file, 'name'));

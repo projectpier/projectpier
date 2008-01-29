@@ -27,7 +27,9 @@
     * @throws InvalidParamError
     */
     function assign($name, $value) {
-      if(!$trimmed = trim($name)) throw new InvalidParamError('$name', $name, "Variable name can't be empty");
+      if (!$trimmed = trim($name)) {
+        throw new InvalidParamError('$name', $name, "Variable name can't be empty");
+      } // if
       $this->vars[$trimmed] = $value;
       return true;
     } // assign
@@ -69,7 +71,7 @@
     * @return null
     */
     function includeTemplate($template) {
-      if(file_exists($template)) {
+      if (file_exists($template)) {
         extract($this->vars, EXTR_SKIP);
         include $template;
         return true;
@@ -86,7 +88,9 @@
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'Template')) $instance = new Template();
+      if (!instance_of($instance, 'Template')) {
+        $instance = new Template();
+      } // if
       return $instance;
     } // instance
   

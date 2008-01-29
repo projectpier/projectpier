@@ -51,7 +51,7 @@
     */
     function fetchRow() {
       $row = $this->getAdapter()->fetchRow($this->resource);
-      if($row) {
+      if ($row) {
         $this->rows[] = $row;
         return $row;
       } // if
@@ -66,7 +66,7 @@
     * @return array
     */
     function fetchAll() {
-      while($this->fetchRow()) {}
+      while ($this->fetchRow()) {}
       return $this->rows;
     } // fetchAll
     
@@ -127,7 +127,9 @@
     * @return null
     */
     function setResource($resource) {
-      if(is_resource($resource)) $this->resource = $resource;
+      if (is_resource($resource)) {
+        $this->resource = $resource;
+      } // if
     } // setResource
   
   } // DBResult

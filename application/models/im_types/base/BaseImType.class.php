@@ -86,7 +86,9 @@
     * @return ImTypes 
     */
     function manager() {
-      if(!($this->manager instanceof ImTypes)) $this->manager = ImTypes::instance();
+      if (!($this->manager instanceof ImTypes)) {
+        $this->manager = ImTypes::instance();
+      }
       return $this->manager;
     } // manager
   

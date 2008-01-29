@@ -130,7 +130,9 @@
     * @return boolean
     */
     function isMemberOfOwnerCompany() {
-      if(is_null($this->is_member_of_owner_company)) $this->is_member_of_owner_company = $this->isMemberOf(owner_company());
+      if (is_null($this->is_member_of_owner_company)) {
+        $this->is_member_of_owner_company = $this->isMemberOf(owner_company());
+      }
       return $this->is_member_of_owner_company;
     } // isMemberOfOwnerCompany
     
@@ -141,7 +143,7 @@
     * @return boolean
     */
     function isProjectUser(Project $project) {
-      if(!isset($this->is_project_user_cache[$project->getId()])) {
+      if (!isset($this->is_project_user_cache[$project->getId()])) {
         $project_user = ProjectUsers::findById(array(
           'project_id' => $project->getId(), 
           'user_id' => $this->getId())
@@ -158,7 +160,7 @@
     * @return boolean
     */
     function isAdministrator() {
-      if(is_null($this->is_administrator)) {
+      if (is_null($this->is_administrator)) {
         $this->is_administrator = $this->isAccountOwner() || ($this->isMemberOfOwnerCompany() && $this->getIsAdmin());
       } // if
       return $this->is_administrator;
@@ -171,7 +173,7 @@
     * @return boolean
     */
     function isAccountOwner() {
-      if(is_null($this->is_account_owner)) {
+      if (is_null($this->is_account_owner)) {
         $this->is_account_owner = $this->isMemberOfOwnerCompany() && (owner_company()->getCreatedById() == $this->getId());
       } // if
       return $this->is_account_owner;
@@ -186,15 +188,15 @@
     * @return boolean
     */
     function hasProjectPermission(Project $project, $permission, $use_cache = true) {
-      if($use_cache) {
-        if(isset($this->project_permissions_cache[$project->getId()]) && isset($this->project_permissions_cache[$project->getId()][$permission])) {
+      if ($use_cache) {
+        if (isset($this->project_permissions_cache[$project->getId()]) && isset($this->project_permissions_cache[$project->getId()][$permission])) {
           return $this->project_permissions_cache[$project->getId()][$permission];
         } // if
       } // if
       
       $project_user = ProjectUsers::findById(array('project_id' => $project->getId(), 'user_id' => $this->getId()));
-      if(!($project_user instanceof ProjectUser)) {
-        if($use_cache) {
+      if (!($project_user instanceof ProjectUser)) {
+        if ($use_cache) {
           $this->project_permissions_cache[$project->getId()][$permission] = false;
         } // if
         return false;
@@ -205,7 +207,9 @@
       
       $value = in_array($getter_method, $project_user_methods) ? $project_user->$getter_method() : false;
       
-      if($use_cache) $this->project_permissions_cache[$project->getId()][$permission] = $value;
+      if ($use_cache) {
+        $this->project_permissions_cache[$project->getId()][$permission] = $value;
+      }
       return $value;
     } // hasProjectPermission
     
@@ -218,9 +222,11 @@
     */
     function hasAllProjectPermissions(Project $project, $use_cache = true) {
       $permissions = ProjectUsers::getPermissionColumns();
-      if(is_array($permissions)) {
-        foreach($permissions as $permission) {
-          if(!$this->hasProjectPermission($project, $permission, $use_cache)) return false;
+      if (is_array($permissions)) {
+        foreach ($permissions as $permission) {
+          if (!$this->hasProjectPermission($project, $permission, $use_cache)) {
+            return false;
+          }
         } // foreach
       } // if
       return true;
@@ -249,7 +255,7 @@
     * @return array
     */
     function getProjects() {
-      if(is_null($this->projects)) {
+      if (is_null($this->projects)) {
         $this->projects = ProjectUsers::getProjectsByUser($this);
       } // if
       return $this->projects;
@@ -263,7 +269,7 @@
     * @return array
     */
     function getActiveProjects() {
-      if(is_null($this->active_projects)) {
+      if (is_null($this->active_projects)) {
         $this->active_projects = ProjectUsers::getProjectsByUser($this, '`completed_on` = ' . DB::escape(EMPTY_DATETIME));
       } // if
       return $this->active_projects;
@@ -277,7 +283,7 @@
     * @return array
     */
     function getFinishedProjects() {
-      if(is_null($this->finished_projects)) {
+      if (is_null($this->finished_projects)) {
         $this->finished_projects = ProjectUsers::getProjectsByUser($this, '`completed_on` > ' . DB::escape(EMPTY_DATETIME));
       } // if
       return $this->finished_projects;
@@ -290,7 +296,7 @@
     * @return array
     */
     function getActiveMilestones() {
-      if(is_null($this->all_active_milestons)) {
+      if (is_null($this->all_active_milestons)) {
         $this->all_active_milestons = ProjectMilestones::getActiveMilestonesByUser($this);
       } // if
       return $this->all_active_milestons;
@@ -304,7 +310,7 @@
     * @return array
     */
     function getLateMilestones() {
-      if(is_null($this->late_milestones)) {
+      if (is_null($this->late_milestones)) {
         $this->late_milestones = ProjectMilestones::getLateMilestonesByUser($this);
       } // if
       return $this->late_milestones;
@@ -318,7 +324,7 @@
     * @return array
     */
     function getTodayMilestones() {
-      if(is_null($this->today_milestones)) {
+      if (is_null($this->today_milestones)) {
         $this->today_milestones = ProjectMilestones::getTodayMilestonesByUser($this);
       } // if
       return $this->today_milestones;
@@ -433,11 +439,13 @@
     * @return string
     */
     function setAvatar($source, $max_width = 50, $max_height = 50, $save = true) {
-      if(!is_readable($source)) return false;
+      if (!is_readable($source)) {
+        return false;
+      }
       
       do {
         $temp_file = ROOT . '/cache/' . sha1(uniqid(rand(), true));
-      } while(is_file($temp_file));
+      } while (is_file($temp_file));
       
       try {
         Env::useLibrary('simplegd');
@@ -447,9 +455,9 @@
         $thumb->saveAs($temp_file, IMAGETYPE_PNG);
         
         $public_filename = PublicFiles::addFile($temp_file, 'png');
-        if($public_filename) {
+        if ($public_filename) {
           $this->setAvatarFile($public_filename);
-          if($save) {
+          if ($save) {
             $this->save();
           } // if
         } // if
@@ -460,7 +468,7 @@
       } // try
       
       // Cleanup
-      if(!$result && $public_filename) {
+      if (!$result && $public_filename) {
         PublicFiles::deleteFile($public_filename);
       } // if
       @unlink($temp_file);
@@ -475,7 +483,7 @@
     * @return null
     */
     function deleteAvatar() {
-      if($this->hasAvatar()) {
+      if ($this->hasAvatar()) {
         PublicFiles::deleteFile($this->getAvatarFile());
         $this->setAvatarFile('');
       } // if
@@ -527,7 +535,7 @@
     function resetPassword($save = true) {
       $new_password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
       $this->setPassword($new_password);
-      if($save) {
+      if ($save) {
         $this->save();
       } // if
       return $new_password;
@@ -543,7 +551,7 @@
       do {
         $salt = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
         $token = sha1($salt . $value);
-      } while(Users::tokenExists($token));
+      } while (Users::tokenExists($token));
       
       $this->setToken($token);
       $this->setSalt($salt);
@@ -567,7 +575,7 @@
     * @return boolean
     */
     function isValidPassword($check_password) {
-      return  sha1($this->getSalt() . $check_password) == $this->getToken();
+      return sha1($this->getSalt() . $check_password) == $this->getToken();
     } // isValidPassword
     
     /**
@@ -593,7 +601,7 @@
     * @return boolean
     */
     function canAdd(User $user, Company $to) {
-      if($user->isAccountOwner()) {
+      if ($user->isAccountOwner()) {
         return true;
       } // if
       return $user->isAdministrator();
@@ -607,10 +615,10 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if($user->getId() == $this->getId()) {
+      if ($user->getId() == $this->getId()) {
         return true; // account owner
       } // if
-      if($user->isAccountOwner()) {
+      if ($user->isAccountOwner()) {
         return true;
       } // if
       return $user->isAdministrator();
@@ -623,11 +631,11 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if($this->isAccountOwner()) {
+      if ($this->isAccountOwner()) {
         return false; // can't delete accountowner
       } // if
       
-      if($this->getId() == $user->getId()) {
+      if ($this->getId() == $user->getId()) {
         return false; // can't delete self
       } // if
       
@@ -641,13 +649,13 @@
     * @return boolean
     */
     function canSeeUser(User $user) {
-      if($this->isMemberOfOwnerCompany()) {
+      if ($this->isMemberOfOwnerCompany()) {
         return true; // see all
       } // if
-      if($user->getCompanyId() == $this->getCompanyId()) {
+      if ($user->getCompanyId() == $this->getCompanyId()) {
         return true; // see members of your own company
       } // if
-      if($user->isMemberOfOwnerCompany()) {
+      if ($user->isMemberOfOwnerCompany()) {
         return true; // see members of owner company
       } // if
       return false;
@@ -662,20 +670,20 @@
     * @return boolean
     */
     function canSeeCompany(Company $company) {
-      if($this->isMemberOfOwnerCompany()) {
+      if ($this->isMemberOfOwnerCompany()) {
         return true;
       } // if
       
-      if(isset($this->visible_companies[$company->getId()])) {
+      if (isset($this->visible_companies[$company->getId()])) {
         return $this->visible_companies[$company->getId()];
       } // if
       
-      if($company->isOwner()) {
+      if ($company->isOwner()) {
         $this->visible_companies[$company->getId()] = true;
         return true;
       } // if
       
-      if($this->getCompanyId() == $company->getId()) {
+      if ($this->getCompanyId() == $company->getId()) {
         $this->visible_companies[$company->getId()] = true;
         return true;
       } // if
@@ -685,13 +693,13 @@
       $projects_1 = DB::executeAll("SELECT `project_id` FROM " . ProjectCompanies::instance()->getTableName(true) . " WHERE `company_id` = ?", $this->getCompanyId());
       $projects_2 = DB::executeAll("SELECT `project_id` FROM " . ProjectCompanies::instance()->getTableName(true) . " WHERE `company_id` = ?", $company->getId());
       
-      if(!is_array($projects_1) || !is_array($projects_2)) {
+      if (!is_array($projects_1) || !is_array($projects_2)) {
         $this->visible_companies[$company->getId()] = false;
         return false;
       } // if
       
-      foreach($projects_1 as $project_id) {
-        if(in_array($project_id, $projects_2)) {
+      foreach ($projects_1 as $project_id) {
+        if (in_array($project_id, $projects_2)) {
           $this->visible_companies[$company->getId()] = true;
           return true;
         } // if
@@ -708,10 +716,10 @@
     * @return boolean
     */
     function canUpdateProfile(User $user) {
-      if($this->getId() == $user->getId()) {
+      if ($this->getId() == $user->getId()) {
         return true;
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
       return false;
@@ -724,7 +732,7 @@
     * @return boolean
     */
     function canUpdatePermissions(User $user) {
-      if($this->isAccountOwner()) {
+      if ($this->isAccountOwner()) {
         return false; // noone will touch this
       } // if
       return $user->isAdministrator();
@@ -752,12 +760,12 @@
     * @return boolean
     */
     function getProjectPermission(Project $project, $permission, $default = false) {
-      static $valid_permissions = null;      
-      if(is_null($valid_permissions)) {
+      static $valid_permissions = null;
+      if (is_null($valid_permissions)) {
         $valid_permissions = ProjectUsers::getPermissionColumns();
       } // if
       
-      if(!in_array($permission, $valid_permissions)) {
+      if (!in_array($permission, $valid_permissions)) {
         return $default;
       } // if
       
@@ -765,7 +773,7 @@
         'project_id' => $project->getId(),
         'user_id' => $this->getId()
       )); // findById
-      if(!($project_user instanceof ProjectUser)) {
+      if (!($project_user instanceof ProjectUser)) {
         return $default;
       } // if
       
@@ -829,7 +837,7 @@
     */
     function getEditProfileUrl($redirect_to = null) {
       $attributes = array('id' => $this->getId());
-      if(trim($redirect_to) <> '') {
+      if (trim($redirect_to) <> '') {
         $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
       } // if
       
@@ -844,7 +852,7 @@
     */
     function getEditPasswordUrl($redirect_to = null) {
       $attributes = array('id' => $this->getId());
-      if(trim($redirect_to) <> '') {
+      if (trim($redirect_to) <> '') {
         $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
       } // if
       
@@ -859,7 +867,7 @@
     */
     function getUpdatePermissionsUrl($redirect_to = null) {
       $attributes = array('id' => $this->getId());
-      if(trim($redirect_to) <> '') {
+      if (trim($redirect_to) <> '') {
         $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
       } // if
       
@@ -874,7 +882,7 @@
     */
     function getUpdateAvatarUrl($redirect_to = null) {
       $attributes = array('id' => $this->getId());
-      if(trim($redirect_to) <> '') {
+      if (trim($redirect_to) <> '') {
         $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
       } // if
       
@@ -889,7 +897,7 @@
     */
     function getDeleteAvatarUrl($redirect_to = null) {
       $attributes = array('id' => $this->getId());
-      if(trim($redirect_to) <> '') {
+      if (trim($redirect_to) <> '') {
         $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
       } // if
       
@@ -911,7 +919,7 @@
         'token' => $this->getTwistedToken(),
       ); // array
       
-      if($project instanceof Project) {
+      if ($project instanceof Project) {
         $params['project'] = $project->getId();
         return get_url('feed', 'project_activities', $params, null, false);
       } else {
@@ -934,7 +942,7 @@
         'token' => $this->getTwistedToken(),
       ); // array
       
-      if($project instanceof Project) {
+      if ($project instanceof Project) {
         $params['project'] = $project->getId();
         return get_url('feed', 'project_ical', $params, null, false);
       } else {
@@ -956,24 +964,34 @@
     function validate(&$errors) {
       
       // Validate username if present
-      if($this->validatePresenceOf('username')) {
-        if(!$this->validateUniquenessOf('username')) $errors[] = lang('username must be unique');
+      if ($this->validatePresenceOf('username')) {
+        if (!$this->validateUniquenessOf('username')) {
+          $errors[] = lang('username must be unique');
+        }
       } else {
         $errors[] = lang('username value required');
       } // if
       
-      if(!$this->validatePresenceOf('token')) $errors[] = lang('password value required');
+      if (!$this->validatePresenceOf('token')) {
+        $errors[] = lang('password value required');
+      }
       
       // Validate email if present
-      if($this->validatePresenceOf('email')) {
-        if(!$this->validateFormatOf('email', EMAIL_FORMAT)) $errors[] = lang('invalid email address');
-        if(!$this->validateUniquenessOf('email')) $errors[] = lang('email address must be unique');
+      if ($this->validatePresenceOf('email')) {
+        if (!$this->validateFormatOf('email', EMAIL_FORMAT)) {
+          $errors[] = lang('invalid email address');
+        }
+        if (!$this->validateUniquenessOf('email')) {
+          $errors[] = lang('email address must be unique');
+        }
       } else {
         $errors[] = lang('email value is required');
       } // if
       
       // Company ID
-      if(!$this->validatePresenceOf('company_id')) $errors[] = lang('company value required');
+      if (!$this->validatePresenceOf('company_id')) {
+        $errors[] = lang('company value required');
+      }
       
     } // validate
     
@@ -984,7 +1002,7 @@
     * @return boolean
     */
     function delete() {
-      if($this->isAccountOwner()) {
+      if ($this->isAccountOwner()) {
         return false;
       } // if
       

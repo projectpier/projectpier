@@ -7,16 +7,16 @@
   ));
   add_stylesheet_to_page('admin/config.css');
 ?>
-<?php if(isset($options) && is_array($options) && count($options)) { ?>
+<?php if (isset($options) && is_array($options) && count($options)) { ?>
 <form action="<?php echo $category->getUpdateUrl() ?>" method="post" onreset="return confirm('<?php echo lang('confirm reset form') ?>')">
   <div id="configCategoryOptions">
 <?php $counter = 0; ?>
-<?php foreach($options as $option) { ?>
+<?php foreach ($options as $option) { ?>
 <?php $counter++; ?>
     <div class="configCategoryOtpion <?php echo $counter % 2 ? 'odd' : 'even' ?>" id="configCategoryOption_<?php echo $option->getName() ?>">
       <div class="configOptionInfo">
         <div class="configOptionLabel"><label><?php echo $option->getDisplayName() ?>:</label></div>
-<?php if(trim($option_description = $option->getDisplayDescription())) { ?>
+<?php if (trim($option_description = $option->getDisplayDescription())) { ?>
         <div class="configOptionDescription desc"><?php echo $option_description ?></div>
 <?php } // if ?>
       </div>

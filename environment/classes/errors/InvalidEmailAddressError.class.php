@@ -23,7 +23,9 @@
     * @return InvalidEmailAddress
     */
     function __construct($email, $message = null) {
-      if(is_null($message)) $message = "Email address '$email' is not valid";
+      if (is_null($message)) {
+        $message = "Email address '$email' is not valid";
+      } // if
       parent::__construct($message);
       $this->setEmail($email);
     } // __construct

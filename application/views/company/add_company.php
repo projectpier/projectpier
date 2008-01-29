@@ -1,6 +1,6 @@
 <?php
 
-  if($company->isOwner()) {
+  if ($company->isOwner()) {
     set_page_title(lang('edit company'));
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(array(
@@ -17,7 +17,7 @@
   } // if
 
 ?>
-<?php if($company->isNew()) { ?>
+<?php if ($company->isNew()) { ?>
 <form action="<?php echo get_url('company', 'add_client') ?>" method="post">
 <?php } else { ?>
 <form action="<?php echo $company->getEditUrl() ?>" method="post">
@@ -99,7 +99,7 @@
     
   </fieldset>
   
-<?php if(!$company->isNew() && $company->isOwner()) { ?>
+<?php if (!$company->isNew() && $company->isOwner()) { ?>
   <?php echo submit_button(lang('edit company')) ?>
 <?php } else { ?>
   <?php echo submit_button($company->isNew() ? lang('add client') : lang('edit company')) ?>

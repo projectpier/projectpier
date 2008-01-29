@@ -20,7 +20,7 @@
       prepare_company_website_controller($this, 'administration');
       
       // Access permissios
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -114,7 +114,7 @@
       $this->addHelper('textile');
       
       $version_feed = VersionChecker::check(true);
-      if(!($version_feed instanceof VersionsFeed)) {
+      if (!($version_feed instanceof VersionsFeed)) {
         flash_error(lang('error check for upgrade'));
         $this->redirectTo('administration', 'upgrade');
       } // if
@@ -134,7 +134,7 @@
     */
     function tool_test_email() {
       $tool = AdministrationTools::getByName('test_mail_settings');
-      if(!($tool instanceof AdministrationTool)) {
+      if (!($tool instanceof AdministrationTool)) {
         flash_error(lang('administration tool dnx', 'test_mail_settings'));
         $this->redirectTo('administration', 'tools');
       } // if
@@ -144,31 +144,31 @@
       tpl_assign('tool', $tool);
       tpl_assign('test_mail_data', $test_mail_data);
       
-      if(is_array($test_mail_data)) {
+      if (is_array($test_mail_data)) {
         try {
-          $recepient = trim(array_var($test_mail_data, 'recepient'));
+          $recipient = trim(array_var($test_mail_data, 'recipient'));
           $message = trim(array_var($test_mail_data, 'message'));
           
           $errors = array();
           
-          if($recepient == '') {
+          if ($recipient == '') {
             $errors[] = lang('test mail recipient required');
           } else {
-            if(!is_valid_email($recepient)) {
+            if (!is_valid_email($recipient)) {
               $errors[] = lang('test mail recipient invalid format');
             } // if
           } // if
           
-          if($message == '') {
+          if ($message == '') {
             $errors[] = lang('test mail message required');
           } // if
           
-          if(count($errors)) {
+          if (count($errors)) {
             throw new FormSubmissionErrors($errors);
           } // if
           
-          $success = Notifier::sendEmail($recepient, logged_user()->getEmail(), lang('test mail message subject'), $message);
-          if($success) {
+          $success = Notifier::sendEmail($recipient, logged_user()->getEmail(), lang('test mail message subject'), $message);
+          if ($success) {
             flash_success(lang('success test mail settings'));
           } else {
             flash_error(lang('error test mail settings'));
@@ -189,7 +189,7 @@
     */
     function tool_mass_mailer() {
       $tool = AdministrationTools::getByName('mass_mailer');
-      if(!($tool instanceof AdministrationTool)) {
+      if (!($tool instanceof AdministrationTool)) {
         flash_error(lang('administration tool dnx', 'test_mail_settings'));
         $this->redirectTo('administration', 'tools');
       } // if
@@ -200,40 +200,40 @@
       tpl_assign('grouped_users', Users::getGroupedByCompany());
       tpl_assign('massmailer_data', $massmailer_data);
       
-      if(is_array($massmailer_data)) {
+      if (is_array($massmailer_data)) {
         try {
           $subject = trim(array_var($massmailer_data, 'subject'));
           $message = trim(array_var($massmailer_data, 'message'));
           
           $errors = array();
           
-          if($subject == '') {
+          if ($subject == '') {
             $errors[] = lang('massmailer subject required');
           } // if
           
-          if($message == '') {
+          if ($message == '') {
             $errors[] = lang('massmailer message required');
           } // if
           
           $users = Users::getAll();
-          $recepients = array();
-          if(is_array($users)) {
-            foreach($users as $user) {
-              if(array_var($massmailer_data, 'user_' . $user->getId()) == 'checked') {
-                $recepients[] = Notifier::prepareEmailAddress($user->getEmail(), $user->getDisplayName());
+          $recipients = array();
+          if (is_array($users)) {
+            foreach ($users as $user) {
+              if (array_var($massmailer_data, 'user_' . $user->getId()) == 'checked') {
+                $recipients[] = Notifier::prepareEmailAddress($user->getEmail(), $user->getDisplayName());
               } // if
             } // foreach
           } // if
           
-          if(!count($recepients)) {
-            $errors[] = lang('massmailer select recepients');
+          if (!count($recipients)) {
+            $errors[] = lang('massmailer select recipients');
           } // if
           
-          if(count($errors)) {
+          if (count($errors)) {
             throw new FormSubmissionErrors($errors);
           } // if
           
-          if(Notifier::sendEmail($recepients, Notifier::prepareEmailAddress(logged_user()->getEmail(), logged_user()->getDisplayName()), $subject, $message)) {
+          if (Notifier::sendEmail($recipients, Notifier::prepareEmailAddress(logged_user()->getEmail(), logged_user()->getDisplayName()), $subject, $message)) {
             flash_success(lang('success massmail'));
           } else {
             flash_error(lang('error massmail'));

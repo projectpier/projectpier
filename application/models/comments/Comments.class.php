@@ -16,7 +16,7 @@
     * @return array
     */
     static function getCommentsByObject(ProjectDataObject $object, $exclude_private = false) {
-      if($exclude_private) {
+      if ($exclude_private) {
         return self::findAll(array(
           'conditions' => array('`rel_object_id` = ? AND `rel_object_manager` = ? AND `is_private` = ?', $object->getObjectId(), get_class($object->manager()), 0),
           'order' => '`created_on`'
@@ -37,7 +37,7 @@
     * @return integer
     */
     static function countCommentsByObject(ProjectDataObject $object, $exclude_private = false) {
-      if($exclude_private) {
+      if ($exclude_private) {
         return self::count(array('`rel_object_id` = ? AND `rel_object_manager` = ? AND `is_private` = ?', $object->getObjectId(), get_class($object->manager()), 0));
       } else {
         return self::count(array('`rel_object_id` = ? AND `rel_object_manager` = ?', $object->getObjectId(), get_class($object->manager())));

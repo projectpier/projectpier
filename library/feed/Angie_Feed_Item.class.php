@@ -145,7 +145,7 @@
     * @return null
     */
     function setPublicationDate($value) {
-      if(!($value instanceof DateTimeValue)) {
+      if (!($value instanceof DateTimeValue)) {
         throw new InvalidInstanceError('value', $value, 'DateTimeValue');
       } // if
       $this->publication_date = $value;
@@ -168,7 +168,7 @@
     * @return null
     */
     function setAuthor($value) {
-      if(!is_null($value) && !($value instanceof Angie_Feed_Author)) {
+      if (!is_null($value) && !($value instanceof Angie_Feed_Author)) {
         throw new InvalidInstanceError('value', $value, 'Angie_Feed_Author');
       } // if
       $this->author = $value;

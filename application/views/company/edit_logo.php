@@ -1,7 +1,7 @@
 <?php
   
   set_page_title(lang('edit company logo'));
-  if($company->isOwner()) {
+  if ($company->isOwner()) {
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(array(
       array(lang('company'), get_url('administration', 'company')),
@@ -23,7 +23,7 @@
   
   <fieldset>
     <legend><?php echo lang('current logo') ?></legend>
-<?php if($company->hasLogo()) { ?>
+<?php if ($company->hasLogo()) { ?>
     <img src="<?php echo $company->getLogoUrl() ?>" alt="<?php echo clean($company->getName()) ?> logo" />
     <p><a href="<?php echo $company->getDeleteLogoUrl() ?>" onclick="return confirm('<?php echo lang('confirm delete company logo') ?>')"><?php echo lang('delete company logo') ?></a></p>
 <?php } else { ?>
@@ -34,7 +34,7 @@
   <div>
     <?php echo label_tag(lang('new logo'), 'avatarFormAvatar', true) ?>
     <?php echo file_field('new_logo', null, array('id' => 'avatarFormAvatar')) ?>
-<?php if($company->hasLogo()) { ?>
+<?php if ($company->hasLogo()) { ?>
     <p class="desc"><?php echo lang('new logo notice') ?></p>
 <?php } // if ?>
   </div>

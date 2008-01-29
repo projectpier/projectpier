@@ -33,7 +33,9 @@
     function __construct($var_name, $var_value, $message = null) {
       
       // Prepare message...
-      if(is_null($message)) $message = "$$var_name is not valid param value";
+      if (is_null($message)) {
+        $message = "$$var_name is not valid param value";
+      } // if
       
       // Inherit...
       parent::__construct($message);

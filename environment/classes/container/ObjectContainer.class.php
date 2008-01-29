@@ -44,7 +44,7 @@
       $class = $this->getAcceptClass();
       
       // Check value instance...
-      if(!($value instanceof $class)) {
+      if (!($value instanceof $class)) {
         throw new InvalidInstanceException('$value', $value, $class);
       } // if
       

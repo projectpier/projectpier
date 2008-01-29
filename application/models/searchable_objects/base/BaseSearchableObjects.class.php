@@ -48,7 +48,7 @@
     * @return string
     */
     function getColumnType($column_name) {
-      if(isset(self::$columns[$column_name])) {
+      if (isset(self::$columns[$column_name])) {
         return self::$columns[$column_name];
       } else {
         return DATA_TYPE_STRING;
@@ -101,7 +101,7 @@
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::find($arguments);
       } else {
         return SearchableObjects::instance()->find($arguments);
@@ -118,7 +118,7 @@
     * @return one or SearchableObjects objects
     */
     function findAll($arguments = null) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::findAll($arguments);
       } else {
         return SearchableObjects::instance()->findAll($arguments);
@@ -135,7 +135,7 @@
     * @return SearchableObject 
     */
     function findOne($arguments = null) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::findOne($arguments);
       } else {
         return SearchableObjects::instance()->findOne($arguments);
@@ -153,7 +153,7 @@
     * @return SearchableObject 
     */
     function findById($id, $force_reload = false) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::findById($id, $force_reload);
       } else {
         return SearchableObjects::instance()->findById($id, $force_reload);
@@ -170,7 +170,7 @@
     * @return integer
     */
     function count($condition = null) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::count($condition);
       } else {
         return SearchableObjects::instance()->count($condition);
@@ -187,7 +187,7 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::delete($condition);
       } else {
         return SearchableObjects::instance()->delete($condition);
@@ -211,7 +211,7 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(isset($this) && instance_of($this, 'SearchableObjects')) {
+      if (isset($this) && instance_of($this, 'SearchableObjects')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
         return SearchableObjects::instance()->paginate($arguments, $items_per_page, $current_page);
@@ -227,7 +227,7 @@
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'SearchableObjects')) {
+      if (!instance_of($instance, 'SearchableObjects')) {
         $instance = new SearchableObjects();
       } // if
       return $instance;

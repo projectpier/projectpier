@@ -28,10 +28,10 @@
       
       <div id="tabsWrapper">
         <div id="tabs">
-<?php if(is_array(tabbed_navigation_items())) { ?>
+<?php if (is_array(tabbed_navigation_items())) { ?>
           <ul>
-<?php foreach(tabbed_navigation_items() as $tabbed_navigation_item) { ?>
-            <li id="tabbed_navigation_item_<?php echo $tabbed_navigation_item->getID() ?>" <?php if($tabbed_navigation_item->getSelected()) { ?> class="active" <?php } ?>><a href="<?php echo $tabbed_navigation_item->getUrl() ?>"><?php echo clean($tabbed_navigation_item->getTitle()) ?></a></li>
+<?php foreach (tabbed_navigation_items() as $tabbed_navigation_item) { ?>
+            <li id="tabbed_navigation_item_<?php echo $tabbed_navigation_item->getID() ?>" <?php if ($tabbed_navigation_item->getSelected()) { ?> class="active" <?php } ?>><a href="<?php echo $tabbed_navigation_item->getUrl() ?>"><?php echo clean($tabbed_navigation_item->getTitle()) ?></a></li>
 <?php } // foreach ?>
           </ul>
 <?php } // if ?>
@@ -41,10 +41,10 @@
       <div id="crumbsWrapper">
         <div id="crumbsBlock">
           <div id="crumbs">
-<?php if(is_array(bread_crumbs())) { ?>
+<?php if (is_array(bread_crumbs())) { ?>
             <ul>
-<?php foreach(bread_crumbs() as $bread_crumb) { ?>
-<?php if($bread_crumb->getUrl()) { ?>
+<?php foreach (bread_crumbs() as $bread_crumb) { ?>
+<?php if ($bread_crumb->getUrl()) { ?>
               <li>&raquo; <a href="<?php echo $bread_crumb->getUrl() ?>"><?php echo clean($bread_crumb->getTitle()) ?></a></li>
 <?php } else {?>
               <li>&raquo; <span><?php echo clean($bread_crumb->getTitle()) ?></span></li>
@@ -59,20 +59,20 @@
       <!-- content wrapper -->
       <div id="outerContentWrapper">
         <div id="innerContentWrapper">
-<?php if(!is_null(flash_get('success'))) { ?>
+<?php if (!is_null(flash_get('success'))) { ?>
           <div id="success" onclick="this.style.display = 'none'"><?php echo clean(flash_get('success')) ?></div>
 <?php } ?>
-<?php if(!is_null(flash_get('error'))) { ?>
+<?php if (!is_null(flash_get('error'))) { ?>
           <div id="error" onclick="this.style.display = 'none'"><?php echo clean(flash_get('error')) ?></div>
 <?php } ?>
 
           <h1 id="pageTitle"><?php echo get_page_title() ?></h1>
           <div id="pageContent">
             <div id="content">
-<?php if(is_array(page_actions())) { ?>
+<?php if (is_array(page_actions())) { ?>
             <div id="page_actions">
               <ul>
-<?php foreach(page_actions() as $page_action) { ?>
+<?php foreach (page_actions() as $page_action) { ?>
                 <li><a href="<?php echo $page_action->getURL() ?>"><?php echo clean($page_action->getTitle()) ?></a></li>
 <?php } // foreach ?>
               </ul>
@@ -82,7 +82,7 @@
               <?php echo $content_for_layout ?>
               <!-- /Content -->
             </div>
-<?php if(isset($content_for_sidebar)) { ?>
+<?php if (isset($content_for_sidebar)) { ?>
             <div id="sidebar"><?php echo $content_for_sidebar ?></div>
 <?php } // if ?>
             <div class="clear"></div>
@@ -92,7 +92,7 @@
         <!--Footer -->
         <div id="footer">
           <div id="copy">
-<?php if(is_valid_url($owner_company_homepage = owner_company()->getHomepage())) { ?>
+<?php if (is_valid_url($owner_company_homepage = owner_company()->getHomepage())) { ?>
             <?php echo lang('footer copy with homepage', date('Y'), $owner_company_homepage, clean(owner_company()->getName())) ?>
 <?php } else { ?>
             <?php echo lang('footer copy without homepage', date('Y'), clean(owner_company()->getName())) ?>

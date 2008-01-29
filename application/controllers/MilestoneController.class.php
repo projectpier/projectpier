@@ -52,12 +52,12 @@
       $this->addHelper('textile');
       
       $milestone = ProjectMilestones::findById(get_id());
-      if(!($milestone instanceof ProjectMilestone)) {
+      if (!($milestone instanceof ProjectMilestone)) {
         flash_error(lang('milestone dnx'));
         $this->redirectTo('milestone', 'index');
       } // if
       
-      if(!$milestone->canView(logged_user())) {
+      if (!$milestone->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('milestone'));
       } // if
@@ -75,13 +75,13 @@
     function add() {
       $this->setTemplate('add_milestone');
       
-      if(!ProjectMilestone::canAdd(logged_user(), active_project())) {
+      if (!ProjectMilestone::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('milestone'));
       } // if
       
       $milestone_data = array_var($_POST, 'milestone');
-      if(!is_array($milestone_data)) {
+      if (!is_array($milestone_data)) {
         $milestone_data = array(
           'due_date' => DateTimeValueLib::now(),
         ); // array
@@ -90,13 +90,15 @@
       tpl_assign('milestone_data', $milestone_data);
       tpl_assign('milestone', $milestone);
       
-      if(is_array(array_var($_POST, 'milestone'))) {
+      if (is_array(array_var($_POST, 'milestone'))) {
         $milestone_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'milestone_due_date_month', 1), array_var($_POST, 'milestone_due_date_day', 1), array_var($_POST, 'milestone_due_date_year', 1970));
         
         $assigned_to = explode(':', array_var($milestone_data, 'assigned_to', ''));
         
         $milestone->setFromAttributes($milestone_data);
-        if(!logged_user()->isMemberOfOwnerCompany()) $milestone->setIsPrivate(false);
+        if (!logged_user()->isMemberOfOwnerCompany()) {
+          $milestone->setIsPrivate(false);
+        }
         
         $milestone->setProjectId(active_project()->getId());
         $milestone->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
@@ -113,7 +115,7 @@
           
           // Send notification
           try {
-            if(array_var($milestone_data, 'send_notification') == 'checked') {
+            if (array_var($milestone_data, 'send_notification') == 'checked') {
               Notifier::milestoneAssigned($milestone); // send notification
             } // if
           } catch(Exception $e) {
@@ -141,18 +143,18 @@
       $this->setTemplate('add_milestone');
       
       $milestone = ProjectMilestones::findById(get_id());
-      if(!($milestone instanceof ProjectMilestone)) {
+      if (!($milestone instanceof ProjectMilestone)) {
         flash_error(lang('milestone dnx'));
         $this->redirectTo('milestone', 'index');
       } // if
       
-      if(!$milestone->canEdit(logged_user())) {
+      if (!$milestone->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('milestone'));
       }
       
       $milestone_data = array_var($_POST, 'milestone');
-      if(!is_array($milestone_data)) {
+      if (!is_array($milestone_data)) {
         $tag_names = $milestone->getTagNames();
         $milestone_data = array(
           'name'        => $milestone->getName(),
@@ -167,7 +169,7 @@
       tpl_assign('milestone_data', $milestone_data);
       tpl_assign('milestone', $milestone);
       
-      if(is_array(array_var($_POST, 'milestone'))) {
+      if (is_array(array_var($_POST, 'milestone'))) {
         $old_owner = $milestone->getAssignedTo(); // remember the old owner
         $milestone_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'milestone_due_date_month', 1), array_var($_POST, 'milestone_due_date_day', 1), array_var($_POST, 'milestone_due_date_year', 1970));
         
@@ -175,7 +177,9 @@
         
         $old_is_private  = $milestone->isPrivate();
         $milestone->setFromAttributes($milestone_data);
-        if(!logged_user()->isMemberOfOwnerCompany()) $milestone->setIsPrivate($old_is_private);
+        if (!logged_user()->isMemberOfOwnerCompany()) {
+          $milestone->setIsPrivate($old_is_private);
+        }
         
         $milestone->setProjectId(active_project()->getId());
         $milestone->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
@@ -192,13 +196,17 @@
           // If owner is changed send notification but don't break submission
           try {
             $new_owner = $milestone->getAssignedTo();
-            if(array_var($milestone_data, 'send_notification') == 'checked') {
-              if($old_owner instanceof User) {
+            if (array_var($milestone_data, 'send_notification') == 'checked') {
+              if ($old_owner instanceof User) {
                 // We have a new owner and it is different than old owner
-                if($new_owner instanceof User && $new_owner->getId() <> $old_owner->getId()) Notifier::milestoneAssigned($milestone);
+                if ($new_owner instanceof User && $new_owner->getId() <> $old_owner->getId()) {
+                  Notifier::milestoneAssigned($milestone);
+                }
               } else {
                 // We have new owner
-                if($new_owner instanceof User) Notifier::milestoneAssigned($milestone);
+                if ($new_owner instanceof User) {
+                  Notifier::milestoneAssigned($milestone);
+                }
               } // if
             } // if
           } catch(Exception $e) {
@@ -224,12 +232,12 @@
     */
     function delete() {
       $milestone = ProjectMilestones::findById(get_id());
-      if(!($milestone instanceof ProjectMilestone)) {
+      if (!($milestone instanceof ProjectMilestone)) {
         flash_error(lang('milestone dnx'));
         $this->redirectTo('milestone');
       } // if
       
-      if(!$milestone->canDelete(logged_user())) {
+      if (!$milestone->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('milestone'));
       } // if
@@ -259,12 +267,12 @@
     */
     function complete() {
       $milestone = ProjectMilestones::findById(get_id());
-      if(!($milestone instanceof ProjectMilestone)) {
+      if (!($milestone instanceof ProjectMilestone)) {
         flash_error(lang('milestone dnx'));
         $this->redirectTo('milestone');
       } // if
       
-      if(!$milestone->canChangeStatus(logged_user())) {
+      if (!$milestone->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('milestone'));
       } // if
@@ -298,12 +306,12 @@
     */
     function open() {
       $milestone = ProjectMilestones::findById(get_id());
-      if(!($milestone instanceof ProjectMilestone)) {
+      if (!($milestone instanceof ProjectMilestone)) {
         flash_error(lang('milestone dnx'));
         $this->redirectTo('milestone');
       } // if
       
-      if(!$milestone->canChangeStatus(logged_user())) {
+      if (!$milestone->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('milestone'));
       } // if

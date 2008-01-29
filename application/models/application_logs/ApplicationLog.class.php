@@ -43,7 +43,9 @@
       $created_on = $this->getCreatedOn();
       
       // getCreatedOn and similar functions can return NULL
-      if(!($created_on instanceof DateTimeValue)) return false;
+      if (!($created_on instanceof DateTimeValue)) {
+        return false;
+      }
       
       return $now->getDay() == $created_on->getDay() && 
              $now->getMonth() == $created_on->getMonth() && 
@@ -58,7 +60,9 @@
     */
     function isYesterday() {
       $created_on = $this->getCreatedOn();
-      if(!($created_on instanceof DateTimeValue)) return false;
+      if (!($created_on instanceof DateTimeValue)) {
+        return false;
+      }
       
       $day_after = $created_on->advance(24 * 60 * 60, false);
       $now = DateTimeValueLib::now();

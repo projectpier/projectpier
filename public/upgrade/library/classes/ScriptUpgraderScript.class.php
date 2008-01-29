@@ -86,7 +86,7 @@
     * @return boolean
     */
     function executeMultipleQueries($sql, &$total_queries, &$executed_queries, $connection) {
-      if(!trim($sql)) {
+      if (!trim($sql)) {
         $total_queries = 0;
         $executed_queries = 0;
         return true;
@@ -96,16 +96,16 @@
       $sql = str_replace(array("\r\n", "\r"), array("\n", "\n"), $sql);
       
       $queries = explode(";\n", $sql);
-      if(!is_array($queries) || !count($queries)) {
+      if (!is_array($queries) || !count($queries)) {
         $total_queries = 0;
         $executed_queries = 0;
         return true;
       } // if
       
       $total_queries = count($queries);
-      foreach($queries as $query) {
-        if(trim($query)) {
-          if(@mysql_query(trim($query), $connection)) {
+      foreach ($queries as $query) {
+        if (trim($query)) {
+          if (@mysql_query(trim($query), $connection)) {
             $executed_queries++;
           } else {
             return false;
@@ -209,7 +209,7 @@
     * @return null
     */
     function printMessage($message, $is_error = false) {
-      if($this->output instanceof Output) {
+      if ($this->output instanceof Output) {
         $this->output->printMessage($message, $is_error);
       } // if
     } // printMessage

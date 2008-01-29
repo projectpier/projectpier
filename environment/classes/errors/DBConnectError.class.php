@@ -45,7 +45,7 @@
     * @return DBConnectError
     */
     function __construct($host, $user, $pass, $database, $message = null) {
-      if(is_null($message)) {
+      if (is_null($message)) {
         $message = "Failed to connect to database";
       } // if
       parent::__construct($message);

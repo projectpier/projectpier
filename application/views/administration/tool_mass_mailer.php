@@ -24,7 +24,7 @@
     
     <h2><?php echo lang('massmailer recipients') ?></h2>
     
-<?php foreach($grouped_users as $company_name => $company_details) { ?>
+<?php foreach ($grouped_users as $company_name => $company_details) { ?>
 <?php $company_id = $company_details['details']->getId() ?>
     <script type="text/javascript">
       App.modules.massmailerForm.controls['company_' + <?php echo $company_id ?>] = [];
@@ -35,7 +35,7 @@
       <div>
         <div class="massmailercompanyLogo"><img src="<?php echo $company_details['details']->getLogoUrl() ?>" alt="<?php echo clean($company_name) ?>" /></div>
         <div class="massmailerRecipeints">
-<?php foreach($company_details['users'] as $user) { ?>
+<?php foreach ($company_details['users'] as $user) { ?>
           <script type="text/javascript">
             App.modules.massmailerForm.controls['company_' + <?php echo $company_id ?>].push(<?php echo $user->getId() ?>);
           </script>

@@ -23,14 +23,14 @@
       $result  = "<rss version=\"2.0\">\n<channel>\n";
       $result .= '<title>' . clean($feed->getTitle()) . "</title>\n";
       $result .= '<link>' . clean($feed->getLink()) . "</link>\n";
-      if($description = trim($feed->getDescription())) {
+      if ($description = trim($feed->getDescription())) {
         $result .= '<description>' . clean($description) . "</description>\n";
       } // if
-      if($language = trim($feed->getLanguage())) {
+      if ($language = trim($feed->getLanguage())) {
         $result .= '<language>' . clean($language) . "</language>\n";
       } // if
       
-      foreach($feed->getItems() as $feed_item) {
+      foreach ($feed->getItems() as $feed_item) {
         $result .= $this->renderItem($feed_item) . "\n";
       } // foreach
       
@@ -48,17 +48,17 @@
       $result  = "<item>\n";
       $result .= '<title>' . clean($item->getTitle()) . "</title>\n";
       $result .= '<link>' . clean($item->getLink()) . "</link>\n";
-      if($description = trim($item->getDescription())) {
+      if ($description = trim($item->getDescription())) {
         $result .= '<description>' . clean($description) . "</description>\n";
       } // if
       
       $author = $item->getAuthor();
-      if($author instanceof Angie_Feed_Author) {
+      if ($author instanceof Angie_Feed_Author) {
         $result .= '<author>' . clean($author->getEmail()) . ' (' . clean($author->getName()) . ")</author>\n";
       } // if
       
       $pubdate = $item->getPublicationDate();
-      if($pubdate instanceof DateTimeValue) {
+      if ($pubdate instanceof DateTimeValue) {
         $result .= '<pubdate>' . $pubdate->toRSS() . "</pubdate>\n";
       } // if
       

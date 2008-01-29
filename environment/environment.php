@@ -8,18 +8,18 @@
 
   // Environment path is used by many environment classes. If not
   // defined do it now
-  if(!defined('ENVIRONMENT_PATH')) define('ENVIRONMENT_PATH', dirname(__FILE__));
+  if (!defined('ENVIRONMENT_PATH')) define('ENVIRONMENT_PATH', dirname(__FILE__));
   
   // Configure PHP
   ini_set('short_open_tag', 'on');
   ini_set('date.timezone', 'GMT');
-  if(function_exists('date_default_timezone_set')) {
+  if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('GMT');
   } else {
     putenv('TZ=GMT');
   } // if
   
-  if(defined('DEBUG') && DEBUG) {
+  if (defined('DEBUG') && DEBUG) {
     //set_time_limit(120);
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
@@ -27,7 +27,7 @@
     ini_set('display_errors', 0);
   } // if
   
-  if(!ini_get('session.auto_start') || (strtolower(ini_get('session.auto_start')) == 'off')) session_start(); // Start the session
+  if (!ini_get('session.auto_start') || (strtolower(ini_get('session.auto_start')) == 'off')) session_start(); // Start the session
   
   include_once ENVIRONMENT_PATH . '/classes/Env.class.php';
   include_once ENVIRONMENT_PATH . '/constants.php';
@@ -39,7 +39,7 @@
   fix_input_quotes();
   
   // Debug
-  if(Env::isDebugging()) {
+  if (Env::isDebugging()) {
     include_once ENVIRONMENT_PATH . '/classes/debug/BenchmarkTimer.class.php';
     benchmark_timer_start();
     benchmark_timer_set_marker('Init environment');

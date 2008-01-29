@@ -38,15 +38,15 @@
 
       $active_projects = $logged_user->getActiveProjects();
       $activity_log = null;
-      if(is_array($active_projects) && count($active_projects)) {
+      if (is_array($active_projects) && count($active_projects)) {
         $include_private = $logged_user->isMemberOfOwnerCompany();
         $include_silent = $logged_user->isAdministrator();
         
         $project_ids = array();
-        if(isset($_GET['project_id'])) {
+        if (isset($_GET['project_id'])) {
           $project_ids[] = (integer) array_var($_GET, 'project_id');
         } else {
-          foreach($active_projects as $active_project) {
+          foreach ($active_projects as $active_project) {
             $project_ids[] = $active_project->getId();
           } // foreach
         } // if
@@ -70,18 +70,18 @@
       $this->setLayout('xml');
       
       $logged_user = $this->loginUserByToken();
-      if(!($logged_user instanceof User)) {
+      if (!($logged_user instanceof User)) {
         header("HTTP/1.0 404 Not Found");
         die();
       } // if
       
       $project = Projects::findById(array_var($_GET, 'project'));
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         header("HTTP/1.0 404 Not Found");
         die();
       } // if
       
-      if(!$logged_user->isProjectUser($project)) {
+      if (!$logged_user->isProjectUser($project)) {
         header("HTTP/1.0 404 Not Found");
         die();
       } // if
@@ -110,7 +110,7 @@
       $this->setLayout('ical');
       
       $user = $this->loginUserByToken();
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         header('HTTP/1.0 404 Not Found');
         die();
       } // if
@@ -128,18 +128,18 @@
       $this->setLayout('ical');
       
       $user = $this->loginUserByToken();
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         header('HTTP/1.0 404 Not Found');
         die();
       } // if
       
       $project = Projects::findById(array_var($_GET, 'project'));
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         header('HTTP/1.0 404 Not Found');
         die();
       } // if
       
-      if(!$user->isProjectUser($project)) {
+      if (!$user->isProjectUser($project)) {
         header('HTTP/1.0 404 Not Found');
         die();
       } // if
@@ -161,11 +161,13 @@
       $calendar->setPropertyValue('X-WR-CALNAME', $calendar_name);
       $calendar->setPropertyValue('X-WR-TIMEZONE', 'GMT');
       
-      if(is_array($milestones)) {
-        foreach($milestones as $milestone) {
-          if(!$user->isMemberOfOwnerCompany() && $milestone->isPrivate()) continue; // hide private milestone
+      if (is_array($milestones)) {
+        foreach ($milestones as $milestone) {
+          if (!$user->isMemberOfOwnerCompany() && $milestone->isPrivate()) {
+            continue; // hide private milestone
+          }
           
-          if(!$milestone->isCompleted()) {
+          if (!$milestone->isCompleted()) {
             $event = new iCalendar_Event();
             
             $date = $milestone->getDueDate();
@@ -199,11 +201,11 @@
     * @return Angie_Feed
     */
     private function populateFeedFromLog(Angie_Feed $feed, $activity_log) {
-      if(is_array($activity_log)) {
-        foreach($activity_log as $activity_log_entry) {
+      if (is_array($activity_log)) {
+        foreach ($activity_log as $activity_log_entry) {
           $item = $feed->addItem(new Angie_Feed_Item($activity_log_entry->getText(), undo_htmlspecialchars($activity_log_entry->getObjectUrl()), '', $activity_log_entry->getCreatedOn()));
           $taken_by = $activity_log_entry->getTakenBy();
-          if($taken_by instanceof User) {
+          if ($taken_by instanceof User) {
             $item->setAuthor(new Angie_Feed_Author($taken_by->getDisplayName(), $taken_by->getEmail()));
           } // if
         } // foreach
@@ -220,12 +222,12 @@
     */
     private function loginUserByToken() {
       $user = Users::findById(array_var($_GET, 'id'));
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         header("HTTP/1.0 404 Not Found");
         die();
       } // if
       
-      if(!$user->isValidToken(array_var($_GET, 'token'))) {
+      if (!$user->isValidToken(array_var($_GET, 'token'))) {
         header("HTTP/1.0 404 Not Found");
         die();
       } // if

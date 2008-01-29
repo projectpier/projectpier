@@ -3,9 +3,9 @@
   administration_tabbed_navigation(ADMINISTRATION_TAB_TOOLS);
   administration_crumbs(lang('administration tools'));
 ?>
-<?php if(isset($tools) && is_array($tools) && count($tools)) { ?>
+<?php if (isset($tools) && is_array($tools) && count($tools)) { ?>
 <div id="administrationTools">
-<?php foreach($tools as $tool) { ?>
+<?php foreach ($tools as $tool) { ?>
   <div class="administrationTool">
     <div class="administrationToolName">
       <h2><a href="<?php echo $tool->getToolUrl() ?>"><?php echo clean($tool->getDisplayName()) ?></a></h2>

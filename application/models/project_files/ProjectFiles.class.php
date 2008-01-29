@@ -36,27 +36,31 @@
     * @return array
     */
     static function getProjectFiles(Project $project, $folder = null, $hide_private = false, $order = null, $page = null, $files_per_page = null, $group_by_order = false) {
-      if($order == self::ORDER_BY_POSTTIME) {
+      if ($order == self::ORDER_BY_POSTTIME) {
         $order_by = '`created_on` DESC';
       } else {
         $order_by = '`filename`';
       } // if
       
       // #PAGE# is reserved as a placeholder
-      //if(!($page == '#PAGE#')) {
-        if((integer) $page < 1) $page = 1;
-        if((integer) $files_per_page < 1) $files_per_page = 10;
+      //if (!($page == '#PAGE#')) {
+        if ((integer) $page < 1) {
+          $page = 1;
+        }
+        if ((integer) $files_per_page < 1) {
+          $files_per_page = 10;
+        }
       //} // if
       
       $folder_ids = array();
-      if(($folder instanceof ProjectFolder) && ($folder->getProjectId() == $project->getId())) {
-        if($hide_private) {
+      if (($folder instanceof ProjectFolder) && ($folder->getProjectId() == $project->getId())) {
+        if ($hide_private) {
           $conditions = array('`project_id` = ? AND `folder_id` = ? AND `is_private` = ? AND `is_visible` = ?', $project->getId(), $folder->getId(), false, true);
         } else {
           $conditions = array('`project_id` = ? AND `folder_id` = ? AND `is_visible` = ?', $project->getId(), $folder->getId(), true);
         } // if
       } else {
-        if($hide_private) {
+        if ($hide_private) {
           $conditions = array('`project_id` = ? AND `is_private` = ? AND `is_visible` = ?', $project->getId(), false, true);
         } else {
           $conditions = array('`project_id` = ? AND `is_visible` = ?', $project->getId(), true);
@@ -68,16 +72,16 @@
         'order' => $order_by
       ), $files_per_page, $page);
       
-      if($group_by_order) {
+      if ($group_by_order) {
         $grouped_files = array();
-        if(is_array($files) && count($files)) {
+        if (is_array($files) && count($files)) {
           $today = DateTimeValueLib::now();
-          foreach($files as $file) {
+          foreach ($files as $file) {
             
             $group_by_str = '';
-            if($order == self::ORDER_BY_POSTTIME) {
+            if ($order == self::ORDER_BY_POSTTIME) {
               $created_on = $file->getCreatedOn();
-              if($created_on->getYear() == $today->getYear()) {
+              if ($created_on->getYear() == $today->getYear()) {
                 $group_by_str = format_descriptive_date($created_on);
               } else {
                 $group_by_str = format_date($created_on);
@@ -86,7 +90,9 @@
               $group_by_str = strtoupper(substr_utf($file->getFilename(), 0, 1));
             } // if
             
-            if(!isset($grouped_files[$group_by_str]) || !is_array($grouped_files[$group_by_str])) $grouped_files[$group_by_str] = array();
+            if (!isset($grouped_files[$group_by_str]) || !is_array($grouped_files[$group_by_str])) {
+              $grouped_files[$group_by_str] = array();
+            }
             $grouped_files[$group_by_str][] = $file;
             
           } // foreach
@@ -105,7 +111,7 @@
     * @return null
     */
     static function getOrphanedFilesByProject(Project $project, $show_private = false) {
-      if($show_private) {
+      if ($show_private) {
         $conditions = array('`project_id` =? AND `folder_id` = ?', $project->getId(), 0);
       } else {
         $conditions = array('`project_id` =? AND `folder_id` = ? AND `is_private` = ?', $project->getId(), 0, false);
@@ -138,11 +144,11 @@
     */
     static function getByFolder(ProjectFolder $folder, $show_private = false) {
       $project = $folder->getProject();
-      if(!($project instanceof Project)) {
+      if (!($project instanceof Project)) {
         return null;
       } // if
       
-      if($show_private) {
+      if ($show_private) {
         $conditions = array('`project_id` =? AND `folder_id` = ?', $project->getId(), $folder->getId());
       } else {
         $conditions = array('`project_id` =? AND `folder_id` = ? AND `is_private` = ?', $project->getId(), $this->getId(), false);
@@ -162,12 +168,12 @@
     * @return string
     */
     static function getIndexUrl($order_by = null, $page = null) {
-      if(($order_by <> ProjectFiles::ORDER_BY_NAME) && ($order_by <> ProjectFiles::ORDER_BY_POSTTIME)) {
+      if (($order_by <> ProjectFiles::ORDER_BY_NAME) && ($order_by <> ProjectFiles::ORDER_BY_POSTTIME)) {
         $order_by = ProjectFiles::ORDER_BY_POSTTIME;
       } // if
       
       // #PAGE# is reserved as a placeholder
-      if($page <> '#PAGE#') {
+      if ($page <> '#PAGE#') {
         $page = (integer) $page > 0 ? (integer) $page : 1;
       } // if
       
@@ -186,7 +192,7 @@
     * @return array
     */
     static function getImportantProjectFiles(Project $project, $include_private = false) {
-      if($include_private) {
+      if ($include_private) {
         $conditions = array('`project_id` = ? AND `is_important` = ?', $project->getId(), true);
       } else {
         $conditions = array('`project_id` = ? AND `is_important` = ? AND `is_private` = ?', $project->getId(), true, false);
@@ -208,31 +214,31 @@
     * @return array
     */
     static function handleHelperUploads(Project $project, $files_var_prefix = null) {
-      if(!isset($_FILES) || !is_array($_FILES) || !count($_FILES)) {
+      if (!isset($_FILES) || !is_array($_FILES) || !count($_FILES)) {
         return null; // no files to handle
       } // if
       
       $uploaded_files = array();
-      foreach($_FILES as $uploaded_file_name => $uploaded_file) {
-        if((trim($files_var_prefix) <> '') && !str_starts_with($uploaded_file_name, $files_var_prefix)) {
+      foreach ($_FILES as $uploaded_file_name => $uploaded_file) {
+        if ((trim($files_var_prefix) <> '') && !str_starts_with($uploaded_file_name, $files_var_prefix)) {
           continue;
         } // if
         
-        if(!isset($uploaded_file['name']) || !isset($uploaded_file['tmp_name']) || !is_file($uploaded_file['tmp_name'])) {
+        if (!isset($uploaded_file['name']) || !isset($uploaded_file['tmp_name']) || !is_file($uploaded_file['tmp_name'])) {
           continue;
         } // if
         
         $uploaded_files[$uploaded_file_name] = $uploaded_file;
       } // foreach
       
-      if(!count($uploaded_file)) {
+      if (!count($uploaded_file)) {
         return null; // no files to handle
       } // if
       
       $result = array(); // we'll put all files here
       $expiration_time = DateTimeValueLib::now()->advance(1800, false);
       
-      foreach($uploaded_files as $uploaded_file) {
+      foreach ($uploaded_files as $uploaded_file) {
         $file = new ProjectFile();
         
         $file->setProjectId($project->getId());

@@ -94,8 +94,10 @@
     * @return User
     */
     function getCreatedBy() {
-      if(is_null($this->created_by)) {
-        if($this->columnExists('created_by_id')) $this->created_by = Users::findById($this->getCreatedById());
+      if (is_null($this->created_by)) {
+        if ($this->columnExists('created_by_id')) {
+          $this->created_by = Users::findById($this->getCreatedById());
+        }
       } // 
       return $this->created_by;
     } // getCreatedBy
@@ -135,8 +137,10 @@
     * @return User
     */
     function getUpdatedBy() {
-      if(is_null($this->updated_by)) {
-        if($this->columnExists('updated_by_id')) $this->updated_by = Users::findById($this->getUpdatedById());
+      if (is_null($this->updated_by)) {
+        if ($this->columnExists('updated_by_id')) {
+          $this->updated_by = Users::findById($this->getUpdatedById());
+        }
       } // 
       return $this->updated_by;
     } // getCreatedBy

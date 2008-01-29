@@ -32,11 +32,13 @@
       $users = array();
       
       $sql = "SELECT $users_table.* FROM $users_table, $project_users_table WHERE ($users_table.`id` = $project_users_table.`user_id` AND $project_users_table.`project_id` = " . DB::escape($project->getId()) . ')';
-      if(trim($additional_conditions) <> '') $sql .= " AND ($additional_conditions)";
+      if (trim($additional_conditions) <> '') {
+        $sql .= " AND ($additional_conditions)";
+      }
       
       $rows = DB::executeAll($sql);
-      if(is_array($rows)) {
-        foreach($rows as $row) {
+      if (is_array($rows)) {
+        foreach ($rows as $row) {
           $users[] = Users::instance()->loadFromRow($row);
         } // foreach
       } // if
@@ -72,14 +74,14 @@
       $projects = array();
       
       $sql = "SELECT $projects_table.* FROM $projects_table, $project_users_table WHERE ($projects_table.`id` = $project_users_table.`project_id` AND $project_users_table.`user_id` = " . DB::escape($user->getId()) . ')';
-      if(trim($additional_conditions) <> '') {
+      if (trim($additional_conditions) <> '') {
         $sql .= " AND ($additional_conditions)";
       } // if
       $sql .= " ORDER BY $projects_table.`name`";
       
       $rows = DB::executeAll($sql);
-      if(is_array($rows)) {
-        foreach($rows as $row) {
+      if (is_array($rows)) {
+        foreach ($rows as $row) {
           $projects[] = Projects::instance()->loadFromRow($row);
         } // foreach
       } // if

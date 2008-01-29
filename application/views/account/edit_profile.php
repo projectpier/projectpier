@@ -1,12 +1,12 @@
 <?php
   
-  if($user->getId() == logged_user()->getId()) {
+  if ($user->getId() == logged_user()->getId()) {
     set_page_title(lang('update profile'));
     account_tabbed_navigation();
     account_crumbs(lang('update profile'));
   } else {
     set_page_title(lang('update profile'));
-    if($company->isOwner()) {
+    if ($company->isOwner()) {
       administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
       administration_crumbs(array(
         array(lang('company'), $company->getViewUrl()),
@@ -23,7 +23,7 @@
     } // if
   } // if
   
-  if($user->canUpdateProfile(logged_user())) {
+  if ($user->canUpdateProfile(logged_user())) {
     add_page_action(array(
       lang('update profile')  => $user->getEditProfileUrl(),
       lang('change password') => $user->getEditPasswordUrl(),
@@ -31,7 +31,7 @@
     ));
   } // if
   
-  if($user->canUpdatePermissions(logged_user())) {
+  if ($user->canUpdatePermissions(logged_user())) {
     add_page_action(array(
       lang('permissions')  => $user->getUpdatePermissionsUrl()
     ));
@@ -42,7 +42,7 @@
 
   <?php tpl_display(get_template_path('form_errors')) ?>
 
-<?php if(logged_user()->isAdministrator()) { ?>
+<?php if (logged_user()->isAdministrator()) { ?>
   <div class="hint">
     <div class="header"><?php echo lang('administrator update profile notice') ?></div>
     <div class="content">
@@ -56,7 +56,7 @@
         <?php echo select_company('user[company_id]', array_var($user_data, 'company_id'), array('id' => 'userFormCompany')) ?>
       </div>
       
-<?php if($company->isOwner()) { ?>
+<?php if ($company->isOwner()) { ?>
       <fieldset>
         <legend><?php echo lang('options') ?></legend>
         
@@ -104,7 +104,7 @@
     <?php echo select_timezone_widget('user[timezone]', array_var($user_data, 'timezone'), array('id' => 'profileFormTimezone', 'class' => 'long')) ?>
   </div>
     
-<?php if(is_array($im_types) && count($im_types)) { ?>
+<?php if (is_array($im_types) && count($im_types)) { ?>
   <fieldset>
     <legend><?php echo lang('instant messengers') ?></legend>
     <table class="blank">
@@ -113,7 +113,7 @@
         <th><?php echo lang('value') ?></th>
         <th><?php echo lang('primary im service') ?></th>
       </tr>
-<?php foreach($im_types as $im_type) { ?>
+<?php foreach ($im_types as $im_type) { ?>
       <tr>
         <td style="vertical-align: middle"><img src="<?php echo $im_type->getIconUrl() ?>" alt="<?php echo $im_type->getName() ?> icon" /></td>
         <td style="vertical-align: middle"><label class="checkbox" for="<?php echo 'profileFormIm' . $im_type->getId() ?>"><?php echo $im_type->getName() ?></label></td>

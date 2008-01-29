@@ -19,7 +19,7 @@
   // ---------------------------------------------------
   
   // Fix for IIS, which doesn't set REQUEST_URI
-  if(!isset($_SERVER['REQUEST_URI']) || trim($_SERVER['REQUEST_URI']) == '') {
+  if (!isset($_SERVER['REQUEST_URI']) || trim($_SERVER['REQUEST_URI']) == '') {
     $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME']; // Does this work under CGI?
     
     // Append the query string if it exists and isn't null
@@ -30,13 +30,17 @@
 
   // Fix for PHP as CGI hosts that set SCRIPT_FILENAME to something ending in php.cgi for all requests
   if ( isset($_SERVER['SCRIPT_FILENAME']) && ( strpos($_SERVER['SCRIPT_FILENAME'], 'php.cgi') == strlen($_SERVER['SCRIPT_FILENAME']) - 7 ) ) {
-	  $_SERVER['SCRIPT_FILENAME'] = $_SERVER['PATH_TRANSLATED'];
+    $_SERVER['SCRIPT_FILENAME'] = $_SERVER['PATH_TRANSLATED'];
   } // if
 
   // Fix for Dreamhost and other PHP as CGI hosts
-  if(strstr($_SERVER['SCRIPT_NAME'], 'php.cgi')) unset($_SERVER['PATH_INFO']);
+  if (strstr($_SERVER['SCRIPT_NAME'], 'php.cgi')) {
+    unset($_SERVER['PATH_INFO']);
+  }
   
-  if(trim($_SERVER['PHP_SELF']) == '') $_SERVER['PHP_SELF'] = preg_replace("/(\?.*)?$/",'', $_SERVER["REQUEST_URI"]);
+  if (trim($_SERVER['PHP_SELF']) == '') {
+    $_SERVER['PHP_SELF'] = preg_replace("/(\?.*)?$/",'', $_SERVER["REQUEST_URI"]);
+  }
   
   // ---------------------------------------------------
   //  Check if script is installed
@@ -44,8 +48,8 @@
   
   // If script is not installed config.php will return false. Othervise it will
   // return NULL. If we get false redirect to install folder
-  if(!include_once(ROOT . '/config/config.php')) {
-		print "ProjectPier is not installed. Please redirect your browser to <b><a href=\"./". PUBLIC_FOLDER . "/install\">" . PUBLIC_FOLDER . "/install</a></b> folder and follow installation procedure";
+  if (!include_once(ROOT . '/config/config.php')) {
+    print "ProjectPier is not installed. Please redirect your browser to <b><a href=\"./". PUBLIC_FOLDER . "/install\">" . PUBLIC_FOLDER . "/install</a></b> folder and follow installation procedure";
     die();
   } // if
   
@@ -54,7 +58,7 @@
   // ---------------------------------------------------
   
   define('PRODUCT_NAME', 'ProjectPier');
-  if(!defined('PRODUCT_VERSION')) {
+  if (!defined('PRODUCT_VERSION')) {
     define('PRODUCT_VERSION', '0.8');
   } // if
   
@@ -83,7 +87,7 @@
   @include ROOT . '/cache/autoloader.php';
   
   // Prepare logger... We might need it early...
-  if(!Env::isDebugging()) {
+  if (!Env::isDebugging()) {
     Logger::setSession(new Logger_Session('default'));
     Logger::setBackend(new Logger_Backend_File(CACHE_DIR . '/log.php'));
      
@@ -102,11 +106,11 @@
       'name'    => DB_NAME,
       'persist' => DB_PERSIST
     )); // connect
-    if(defined('DB_CHARSET') && trim(DB_CHARSET)) {
+    if (defined('DB_CHARSET') && trim(DB_CHARSET)) {
       DB::execute("SET NAMES ?", DB_CHARSET);
     } // if
   } catch(Exception $e) {
-    if(Env::isDebugging()) {
+    if (Env::isDebugging()) {
       Env::dumpError($e);
     } else {
       Logger::log($e, Logger::FATAL);
@@ -115,7 +119,7 @@
   } // try
   
   // Init application
-  if(Env::isDebugging()) {
+  if (Env::isDebugging()) {
     benchmark_timer_set_marker('Init application');
   } // if
   
@@ -125,7 +129,7 @@
   require_once 'application.php';
   
   // Set handle request timer...
-  if(Env::isDebugging()) {
+  if (Env::isDebugging()) {
     benchmark_timer_set_marker('Handle request');
   } // if
   
@@ -133,7 +137,7 @@
   try {
     Env::executeAction(request_controller(), request_action());
   } catch(Exception $e) {
-    if(Env::isDebugging()) {
+    if (Env::isDebugging()) {
       Env::dumpError($e);
     } else {
       Logger::log($e, Logger::FATAL);

@@ -86,7 +86,9 @@
     * @return ProjectFolders 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectFolders)) $this->manager = ProjectFolders::instance();
+      if (!($this->manager instanceof ProjectFolders)) {
+        $this->manager = ProjectFolders::instance();
+      }
       return $this->manager;
     } // manager
   

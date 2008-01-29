@@ -328,7 +328,9 @@
     * @return ProjectMessages 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectMessages)) $this->manager = ProjectMessages::instance();
+      if (!($this->manager instanceof ProjectMessages)) {
+        $this->manager = ProjectMessages::instance();
+      }
       return $this->manager;
     } // manager
   

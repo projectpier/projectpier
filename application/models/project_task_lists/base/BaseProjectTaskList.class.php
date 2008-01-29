@@ -306,7 +306,9 @@
     * @return ProjectTaskLists 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectTaskLists)) $this->manager = ProjectTaskLists::instance();
+      if (!($this->manager instanceof ProjectTaskLists)) {
+        $this->manager = ProjectTaskLists::instance();
+      }
       return $this->manager;
     } // manager
   

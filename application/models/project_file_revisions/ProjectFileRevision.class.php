@@ -54,7 +54,7 @@
     * @return ProjectFile
     */
     function getFile() {
-      if(is_null($this->file)) {
+      if (is_null($this->file)) {
         $this->file = ProjectFiles::findById($this->getFileId());
       } // if
       return $this->file;
@@ -67,9 +67,11 @@
     * @return Project
     */
     function getProject() {
-      if(is_null($this->project)) {
+      if (is_null($this->project)) {
         $file = $this->getFile();
-        if($file instanceof ProjectFile) $this->project = $file->getProject();
+        if ($file instanceof ProjectFile) {
+          $this->project = $file->getProject();
+        }
       } // if
       return $this->project;
     } // getProject
@@ -92,7 +94,7 @@
     * @return FileType
     */
     function getFileType() {
-      if(is_null($this->file_type)) {
+      if (is_null($this->file_type)) {
         $this->file_type = FileTypes::findById($this->getFileTypeId());
       } // if
       return $this->file_type;
@@ -122,16 +124,18 @@
     * @return string
     */
     function getSearchableColumnContent($column_name) {
-      if($column_name == 'filecontent') {
+      if ($column_name == 'filecontent') {
 
         // Unknown type or type not searchable
         $file_type = $this->getFileType();
-        if(!($file_type instanceof FileType) || !$file_type->getIsSearchable()) {
+        if (!($file_type instanceof FileType) || !$file_type->getIsSearchable()) {
           return null;
         } // if
         
         $content = $this->getFileContent();
-        if(strlen($content) <= MAX_SEARCHABLE_FILE_SIZE) return $content;
+        if (strlen($content) <= MAX_SEARCHABLE_FILE_SIZE) {
+          return $content;
+        }
         
       } else {
         return parent::getSearchableColumnContent($column_name);
@@ -147,15 +151,15 @@
     protected function createThumb() {
       do {
         $source_file = CACHE_DIR . '/' . sha1(uniqid(rand(), true));
-      } while(is_file($source_file));
+      } while (is_file($source_file));
       
-      if(!file_put_contents($source_file, $this->getFileContent()) || !is_readable($source_file)) {
+      if (!file_put_contents($source_file, $this->getFileContent()) || !is_readable($source_file)) {
         return false;
       } // if
       
       do {
         $temp_file = CACHE_DIR . '/' . sha1(uniqid(rand(), true));
-      } while(is_file($temp_file));
+      } while (is_file($temp_file));
       
       try {
         Env::useLibrary('simplegd');
@@ -165,7 +169,7 @@
         $thumb->saveAs($temp_file, IMAGETYPE_PNG);
         
         $public_filename = PublicFiles::addFile($temp_file, 'png');
-        if($public_filename) {
+        if ($public_filename) {
           $this->setThumbFilename($public_filename);
           $this->save();
         } // if
@@ -192,7 +196,7 @@
     */
     function getDetailsUrl() {
       $file = $this->getFile();
-      return $file  instanceof ProjectFile ? $file->getDetailsUrl() . '#revision' . $this->getId() : null;
+      return $file instanceof ProjectFile ? $file->getDetailsUrl() . '#revision' . $this->getId() : null;
     } // getDetailsUrl
     
     /**
@@ -232,11 +236,11 @@
     * @return string
     */
     function getThumbUrl() {
-      if($this->getThumbFilename() == '') {
+      if ($this->getThumbFilename() == '') {
         $this->createThumb();
       } // if
       
-      if(trim($this->getThumbFilename())) {
+      if (trim($this->getThumbFilename())) {
         return PublicFiles::getFileUrl($this->getThumbFilename());
       } else {
         return '';
@@ -252,11 +256,11 @@
     */
     function getTypeIconUrl() {
       $file_type = $this->getFileType();
-      if($file_type instanceof FileType) {
-        if($file_type->getIsImage()) {
+      if ($file_type instanceof FileType) {
+        if ($file_type->getIsImage()) {
           $thumb_url = $this->getThumbUrl();
           
-          if(trim($thumb_url)) {
+          if (trim($thumb_url)) {
             return $thumb_url; // we have the thumb!
           } // if
         } // if
@@ -277,7 +281,9 @@
     * @return boolean
     */
     function canManage(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
       return $user->getProjectPermission($this->getProject(), ProjectUsers::CAN_MANAGE_FILES);
     } // canManage
     
@@ -288,8 +294,10 @@
     * @return boolean
     */
     function canView(User $user) {
-      //if(!$user->isProjectUser($this->getProject())) return false;
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) return false;
+      //if (!$user->isProjectUser($this->getProject())) return false;
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+        return false;
+      }
       return true;
     } // canView
     
@@ -322,8 +330,12 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$this->canManage(logged_user())) return false; // user don't have access to this project or can't manage files
-      if($user->isAdministrator()) return true; // give access to admin
+      if (!$this->canManage(logged_user())) {
+        return false; // user don't have access to this project or can't manage files
+      }
+      if ($user->isAdministrator()) {
+        return true; // give access to admin
+      }
       return false;
     } // canEdit
     
@@ -335,20 +347,20 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       
       $file = $this->getFile();
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         return false;
       } // if
       
-      if($file->countRevisions() == 1) {
+      if ($file->countRevisions() == 1) {
         return false; // this is the only file revision! it can't be deleted!
       } // if
       
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
       return false;
@@ -366,13 +378,13 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('file_id')) {
+      if (!$this->validatePresenceOf('file_id')) {
         $errors[] = lang('file revision file_id required');
       } // if
-      if(!$this->validatePresenceOf('repository_id')) {
+      if (!$this->validatePresenceOf('repository_id')) {
         $errors[] = lang('file revision filename required');
       } // if
-      if(!$this->validatePresenceOf('type_string')) {
+      if (!$this->validatePresenceOf('type_string')) {
         $errors[] = lang('file revision type_string required');
       } // if
     } // validate
@@ -397,12 +409,12 @@
     */
     function deleteThumb($save = true) {
       $thumb_filename = $this->getThumbFilename();
-      if($thumb_filename) {
+      if ($thumb_filename) {
         $this->setThumbFilename('');
         PublicFiles::deleteFile($this->getThumbFilename());
       } // if
       
-      if($save) {
+      if ($save) {
         return $this->save();
       } // if
       

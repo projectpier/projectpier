@@ -130,7 +130,9 @@
     * @return AttachedFiles 
     */
     function manager() {
-      if(!($this->manager instanceof AttachedFiles)) $this->manager = AttachedFiles::instance();
+      if (!($this->manager instanceof AttachedFiles)) {
+        $this->manager = AttachedFiles::instance();
+      }
       return $this->manager;
     } // manager
   

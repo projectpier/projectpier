@@ -1,4 +1,4 @@
-<?php if(!$attach_files_js_included) { ?>
+<?php if (!$attach_files_js_included) { ?>
 <?php add_stylesheet_to_page('project/attach_files.css'); ?>
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/attachFiles.js') ?>"></script>
 <?php } // if ?>

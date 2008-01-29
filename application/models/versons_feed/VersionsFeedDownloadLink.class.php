@@ -54,8 +54,12 @@
     */
     function read(SimpleXMLElement $node) {
       $this->setUrl($node);
-      if(isset($node['format'])) $this->setFormat($node['format']);
-      if(isset($node['size'])) $this->setSize($node['size']);
+      if (isset($node['format'])) {
+        $this->setFormat($node['format']);
+      }
+      if (isset($node['size'])) {
+        $this->setSize($node['size']);
+      }
       return true;
     } // read
     

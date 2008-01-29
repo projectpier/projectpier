@@ -29,7 +29,7 @@
     */
     static function setValue($name, $value, $expiration = null) {
       $expiration_time = DateTimeValueLib::now();
-      if((integer) $expiration > 0) {
+      if ((integer) $expiration > 0) {
         $expiration_time->advance($expiration);
       } else {
         $expiration_time->advance(3600); // one hour

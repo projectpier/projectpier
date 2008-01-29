@@ -48,9 +48,15 @@
     * @return DataPagination
     */
     function __construct($total_items = null, $items_per_page = null, $current_page = null) {
-      if(!is_null($total_items)) $this->setTotalItems($total_items);
-      if(!is_null($items_per_page)) $this->setItemsPerPage($items_per_page);
-      if(!is_null($current_page)) $this->setCurrentPage($current_page);
+      if (!is_null($total_items)) {
+        $this->setTotalItems($total_items);
+      } // if
+      if (!is_null($items_per_page)) {
+        $this->setItemsPerPage($items_per_page);
+      } // if
+      if (!is_null($current_page)) {
+        $this->setCurrentPage($current_page);
+      } // if
     } // __construct
     
     // ---------------------------------------------------
@@ -96,7 +102,9 @@
     */
     function isLast($page = null) {
       $page = is_null($page) ? $this->getCurrentPage() : (integer) $page;
-      if(is_null($last = $this->getTotalPages())) return false;
+      if (is_null($last = $this->getTotalPages())) {
+        return false;
+      } // if
       return $page == $last;
     } // isLast
     
@@ -149,7 +157,9 @@
     */
     function hasNext($page = null) {
       $page = is_null($page) ? $this->getCurrentPage() : (integer) $page;
-      if(is_null($last = $this->getTotalPages())) return false;
+      if (is_null($last = $this->getTotalPages())) {
+        return false;
+      } // if
       return $page < $last;
     } // hasNext
     
@@ -161,10 +171,12 @@
     * @return integer
     */
     function getTotalPages() {
-      if(is_int($this->total_pages)) return $this->total_pages;
-      if(($this->getItemsPerPage() < 1) || ($this->getTotalItems() < 1)) return 1; // there must be one page
+      if (is_int($this->total_pages)) {
+        return $this->total_pages;
+      } // if
+      if (($this->getItemsPerPage() < 1) || ($this->getTotalItems() < 1)) return 1; // there must be one page
       
-      if(($this->getTotalItems() % $this->getItemsPerPage()) == 0) {
+      if (($this->getTotalItems() % $this->getItemsPerPage()) == 0) {
         $this->total_pages = (integer) ($this->getTotalItems() / $this->getItemsPerPage());
       } else {
         $this->total_pages = (integer) ($this->getTotalItems() / $this->getItemsPerPage()) + 1; 
@@ -181,9 +193,11 @@
     */
     function countItemsOnPage($page) {
       $page = (integer) $page;
-      if($page < 1) $page = 1;
+      if ($page < 1) {
+        $page = 1;
+      } // if
       
-      if(($page + 1) * $this->getItemsPerPage() > $this->getTotalItems()) {
+      if (($page + 1) * $this->getItemsPerPage() > $this->getTotalItems()) {
         return $this->getTotalItems() - (($page - 1) * $this->getItemsPerPage());
       } else {
         return $this->getItemsPerPage();

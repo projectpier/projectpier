@@ -25,27 +25,27 @@
     * @return ApplicationLog
     */
     static function createLog(ApplicationDataObject $object, $project, $action = null, $is_private = false, $is_silent = null, $save = true) {
-      if(is_null($action)) {
+      if (is_null($action)) {
         $action = self::ACTION_ADD;
       } // if
-      if(!self::isValidAction($action)) {
+      if (!self::isValidAction($action)) {
         throw new Error("'$action' is not valid log action");
       } // if
       
-      if(is_null($is_silent)) {
+      if (is_null($is_silent)) {
         $is_silent = $action == self::ACTION_DELETE;
       } else {
         $is_silent = (boolean) $is_silent;
       } // if
       
       $manager = $object->manager();
-      if(!($manager instanceof DataManager)) {
+      if (!($manager instanceof DataManager)) {
         throw new Error('Invalid object manager');
       } // if
       
       $log = new ApplicationLog();
       
-      if($project instanceof Project) {
+      if ($project instanceof Project) {
         $log->setProjectId($project->getId());
       } // if
       $log->setTakenById(logged_user()->getId());
@@ -56,12 +56,12 @@
       $log->setIsPrivate($is_private);
       $log->setIsSilent($is_silent);
       
-      if($save) {
+      if ($save) {
         $log->save();
       } // if
       
       // Update is private for this object
-      if($object instanceof ProjectDataObject) {
+      if ($object instanceof ProjectDataObject) {
         ApplicationLogs::setIsPrivateForObject($object);
       } // if
       
@@ -78,7 +78,7 @@
     * @return boolean
     */
     static function setIsPrivateForObject(ProjectDataObject $object) {
-      return DB::execute('UPDATE ' . ApplicationLogs::instance()->getTableName(true) . ' SET `is_private` = ?  WHERE `rel_object_id` = ?  AND `rel_object_manager` = ?',
+      return DB::execute('UPDATE ' . ApplicationLogs::instance()->getTableName(true) . ' SET `is_private` = ? WHERE `rel_object_id` = ? AND `rel_object_manager` = ?',
         $object->isPrivate(), 
         $object->getObjectId(), 
         get_class($object->manager()
@@ -95,9 +95,9 @@
     */
     static function setIsPrivateForType($is_private, $type, $ids = null) {
       $limit_ids = null;
-      if(is_array($ids)) {
+      if (is_array($ids)) {
         $limit_ids = array();
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
           $limit_ids[] = DB::escape($id);
         } // if
         
@@ -105,7 +105,7 @@
       } // if
       
       $sql = DB::prepareString('UPDATE ' . ApplicationLogs::instance()->getTableName(true) . ' SET `is_private` = ?  WHERE `rel_object_manager` = ?', array($is_private, $type));
-      if($limit_ids !== null) {
+      if ($limit_ids !== null) {
         $sql .= " AND `rel_object_id` IN ($limit_ids)";
       } // if
       
@@ -156,7 +156,7 @@
       $private_filter = $include_private ? 1 : 0;
       $silent_filter = $include_silent ? 1 : 0;
       
-      if(is_array($project_ids)) {
+      if (is_array($project_ids)) {
         $conditions = array('`is_private` <= ? AND `is_silent` <= ? AND `project_id` IN (?)', $private_filter, $silent_filter, $project_ids);
       } else {
         $conditions = array('`is_private` <= ? AND `is_silent` <= ?', $private_filter, $silent_filter);
@@ -189,7 +189,7 @@
     static function isValidAction($action) {
       static $valid_actions = null;
       
-      if(!is_array($valid_actions)) {
+      if (!is_array($valid_actions)) {
         $valid_actions = array(
           self::ACTION_ADD, 
           self::ACTION_EDIT, 

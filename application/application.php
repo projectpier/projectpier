@@ -20,18 +20,18 @@
   try {
     CompanyWebsite::init();
     
-    if(config_option('upgrade_check_enabled', false)) {
+    if (config_option('upgrade_check_enabled', false)) {
       VersionChecker::check(false);
     } // if
     
-    if(config_option('file_storage_adapter', 'mysql') == FILE_STORAGE_FILE_SYSTEM) {
+    if (config_option('file_storage_adapter', 'mysql') == FILE_STORAGE_FILE_SYSTEM) {
       FileRepository::setBackend(new FileRepository_Backend_FileSystem(FILES_DIR));
     } else {
       FileRepository::setBackend(new FileRepository_Backend_MySQL(DB::connection()->getLink(), TABLE_PREFIX));
     } // if
     
     PublicFiles::setRepositoryPath(ROOT . '/public/files');
-    if(trim(PUBLIC_FOLDER) == '') {
+    if (trim(PUBLIC_FOLDER) == '') {
       PublicFiles::setRepositoryUrl(with_slash(ROOT_URL) . 'files');
     } else {
       PublicFiles::setRepositoryUrl(with_slash(ROOT_URL) . 'public/files');
@@ -45,7 +45,7 @@
     
   // Other type of error? We need to break here
   }  catch(Exception $e) {
-    if(Env::isDebugging()) {
+    if (Env::isDebugging()) {
       Env::dumpError($e);
     } else {
       Logger::log($e, Logger::FATAL);

@@ -47,7 +47,9 @@
     function __construct($host, $user, $pass, $database, $message = null) {
     
       // Prepare message
-      if(is_null($message)) $message = "Failed to connect to database";
+      if (is_null($message)) {
+        $message = "Failed to connect to database";
+      } // if
       
       // Inherit...
       parent::__construct($message);

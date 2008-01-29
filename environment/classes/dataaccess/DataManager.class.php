@@ -131,8 +131,8 @@
       $load_columns = array();
       
       // Loop...
-      foreach($this->getColumns() as $column) {
-        if(!$this->isLazyLoadColumn($column)) {
+      foreach ($this->getColumns() as $column) {
+        if (!$this->isLazyLoadColumn($column)) {
           $load_columns[] = $escape_column_names ? DB::escapeField($column) : $column;
         } // if
       } // foreach
@@ -182,16 +182,20 @@
       $rows = DB::executeAll($sql);
       
       // Empty?
-      if(!is_array($rows) || (count($rows) < 1)) return null;
+      if (!is_array($rows) || (count($rows) < 1)) {
+        return null;
+      } // if
       
       // If we have one load it, else loop and load many
-      if($one) {
+      if ($one) {
         return $this->loadFromRow($rows[0]);
       } else {
         $objects = array();
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
           $object = $this->loadFromRow($row);
-          if(instance_of($object, $this->getItemClass())) $objects[] = $object;
+          if (instance_of($object, $this->getItemClass())) {
+            $objects[] = $object;
+          } // if
         } // foreach
         return count($objects) ? $objects : null;
       } // if
@@ -205,7 +209,9 @@
     * @return array
     */
     function findAll($arguments = null) {
-      if(!is_array($arguments)) $arguments = array();
+      if (!is_array($arguments)) {
+        $arguments = array();
+      } // if
       $arguments['one'] = false;
       return $this->find($arguments);
     } // findAll
@@ -218,7 +224,9 @@
     * @return array
     */
     function findOne($arguments = null) {
-      if(!is_array($arguments)) $arguments = array();
+      if (!is_array($arguments)) {
+        $arguments = array();
+      } // if
       $arguments['one'] = true;
       return $this->find($arguments);
     } // findOne
@@ -281,7 +289,9 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(!is_array($arguments)) $arguments = array();
+      if (!is_array($arguments)) {
+        $arguments = array();
+      } // if
       $conditions = array_var($arguments, 'conditions');
       $pagination = new DataPagination($this->count($conditions), $items_per_page, $current_page);
       
@@ -299,7 +309,7 @@
     * @return string
     */
     function prepareConditions($conditions) {
-      if(is_array($conditions)) {
+      if (is_array($conditions)) {
         $conditions_sql = array_shift($conditions);
         $conditions_arguments = count($conditions) ? $conditions : null;
         return DB::prepareString($conditions_sql, $conditions_arguments);
@@ -319,23 +329,31 @@
     function load($id, $force_reload = false) {
     
       // Is manager ready to do the job?
-      if(!$this->isReady()) return null;
+      if (!$this->isReady()) {
+        return null;
+      } // if
       
       // If caching and we dont need to reload check the cache...
-      if(!$force_reload && $this->getCaching()) {
+      if (!$force_reload && $this->getCaching()) {
         $item = $this->getCachedItem($id);
-        if(instance_of($item, $this->getItemClass())) return $item;
+        if (instance_of($item, $this->getItemClass())) {
+          return $item;
+        } // if
       } // if
       
       // Get object from row...
       $object = $this->loadFromRow($this->loadRow($id));
       
       // Check item...
-      if(!instance_of($object, $this->getItemClass())) return null;
+      if (!instance_of($object, $this->getItemClass())) {
+        return null;
+      } // if
       
       // If loaded cache and return...
-      if($object->isLoaded()) {
-        if($this->getCaching()) $this->cacheItem($object);
+      if ($object->isLoaded()) {
+        if ($this->getCaching()) {
+          $this->cacheItem($object);
+        } // if
         return $object;
       } // if
       
@@ -371,18 +389,24 @@
     function loadFromRow($row) {
     
       // Is manager ready?
-      if(!$this->isReady()) return null;
+      if (!$this->isReady()) {
+        return null;
+      } // if
       
       // OK, get class and construct item...
       $class = $this->getItemClass();
       $item = new $class();
       
       // If not valid item break
-      if(!instance_of($item, 'DataObject')) return null;
+      if (!instance_of($item, 'DataObject')) {
+        return null;
+      } // if
       
       // Load item...
-      if($item->loadFromRow($row) && $item->isLoaded()) {
-        if($this->getCaching()) $this->cacheItem($item);
+      if ($item->loadFromRow($row) && $item->isLoaded()) {
+        if ($this->getCaching()) {
+          $this->cacheItem($item);
+        } // if
         return $item;
       } // if
       
@@ -404,20 +428,20 @@
   	  $pks = $this->getPkColumns();
   	  
   	  // Multiple PKs?
-  	  if(is_array($pks)) {
+  	  if (is_array($pks)) {
   	  	
   	  	// Ok, prepare it...
   	  	$where = array();
   	  	
   	  	// Loop PKs
-  	  	foreach($pks as $column) {
-  	  	  if(isset($id[$column])) {
+  	  	foreach ($pks as $column) {
+  	  	  if (isset($id[$column])) {
   	  	    $where[] = sprintf('%s = %s', DB::escapeField($column), DB::escape($id[$column]));
   	  	  } // if
   	  	} // foreach
   	  	
   	  	// Join...
-  	  	if(is_array($where) && count($where)) {
+  	  	if (is_array($where) && count($where)) {
   	  	  return count($where) > 1 ? implode(' AND ', $where) : $where[0];
   	  	} else {
   	  	  return '';
@@ -443,25 +467,27 @@
     function getCachedItem($id) {
     
       // Multicolumn PK
-      if(is_array($id)) {
+      if (is_array($id)) {
         
         // Lock first cache level
         $array = $this->cache;
         
         // Loop IDs until we reach the end
-        foreach($id as $id_field) {
-          if(is_array($array) && isset($array[$id_field])) {
+        foreach ($id as $id_field) {
+          if (is_array($array) && isset($array[$id_field])) {
             $array = $array[$id_field];
           } // if
         } // if
         
         // If we have valid instance return it
-        if(instance_of($array, 'DataObject')) return $array;
+        if (instance_of($array, 'DataObject')) {
+          return $array;
+        } // if
         
       } else {
       
         // If we have it in cache return it...
-        if(isset($this->cache[$id]) && instance_of($this->cache[$id], $this->getItemClass())) {
+        if (isset($this->cache[$id]) && instance_of($this->cache[$id], $this->getItemClass())) {
           return $this->cache[$id];
         } // if
         
@@ -482,13 +508,15 @@
     function cacheItem($item) {
       
       // Check item instance...
-      if(!instance_of($item, 'DataObject') || !$item->isLoaded()) return false;
+      if (!instance_of($item, 'DataObject') || !$item->isLoaded()) {
+        return false;
+      } // if
       
       // Get PK column(s)
       $id = $item->getPkColumns();
       
       // If array them we have item with multiple items...
-      if(is_array($id)) {
+      if (is_array($id)) {
         
         // First level is cahce
         $array = $this->cache;
@@ -497,7 +525,7 @@
         $iteration = 0;
         
         // Loop fields
-        foreach($id as $id_field) {
+        foreach ($id as $id_field) {
           
           // Value of this field...
           $field_value = $item->getColumnValue($id_field);
@@ -506,12 +534,14 @@
           $iteration++;
           
           // Last field? Cache object here
-          if($iteration == count($id)) {
+          if ($iteration == count($id)) {
             $array[$field_value] = $item;
           
           // Prepare for next iteration and continue...
           } else {
-            if(!isset($array[$field_value]) || !is_array($array[$field_value])) $array[$field_value] = array();
+            if (!isset($array[$field_value]) || !is_array($array[$field_value])) {
+              $array[$field_value] = array();
+            } // if
             $array =& $array[$field_value];
           } // if
           

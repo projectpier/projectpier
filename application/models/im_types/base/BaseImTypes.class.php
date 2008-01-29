@@ -48,7 +48,7 @@
     * @return string
     */
     function getColumnType($column_name) {
-      if(isset(self::$columns[$column_name])) {
+      if (isset(self::$columns[$column_name])) {
         return self::$columns[$column_name];
       } else {
         return DATA_TYPE_STRING;
@@ -97,7 +97,7 @@
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::find($arguments);
       } else {
         return ImTypes::instance()->find($arguments);
@@ -114,7 +114,7 @@
     * @return one or ImTypes objects
     */
     function findAll($arguments = null) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::findAll($arguments);
       } else {
         return ImTypes::instance()->findAll($arguments);
@@ -131,7 +131,7 @@
     * @return ImType 
     */
     function findOne($arguments = null) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::findOne($arguments);
       } else {
         return ImTypes::instance()->findOne($arguments);
@@ -149,7 +149,7 @@
     * @return ImType 
     */
     function findById($id, $force_reload = false) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::findById($id, $force_reload);
       } else {
         return ImTypes::instance()->findById($id, $force_reload);
@@ -166,7 +166,7 @@
     * @return integer
     */
     function count($condition = null) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::count($condition);
       } else {
         return ImTypes::instance()->count($condition);
@@ -183,7 +183,7 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::delete($condition);
       } else {
         return ImTypes::instance()->delete($condition);
@@ -207,7 +207,7 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(isset($this) && instance_of($this, 'ImTypes')) {
+      if (isset($this) && instance_of($this, 'ImTypes')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
         return ImTypes::instance()->paginate($arguments, $items_per_page, $current_page);
@@ -223,7 +223,7 @@
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'ImTypes')) {
+      if (!instance_of($instance, 'ImTypes')) {
         $instance = new ImTypes();
       } // if
       return $instance;

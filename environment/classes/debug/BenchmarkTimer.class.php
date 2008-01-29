@@ -87,7 +87,9 @@
      */
     function __construct($auto = FALSE) {
       $this->auto = $auto;
-      if ($this->auto) $this->start();
+      if ($this->auto) {
+        $this->start();
+      } // if
     } // __construct
   
     /**
@@ -191,8 +193,8 @@
       }
       
       // Fix result
-      foreach($result as $k => $v) {
-        if($k > 0) {
+      foreach ($result as $k => $v) {
+        if ($k > 0) {
           $result[$k - 1]['stop'] = $v['start'];
           $result[$k - 1]['time'] = $v['time'];
           $result[$k - 1]['diff'] = $v['diff'];
@@ -247,7 +249,7 @@
       static $instance;
       
       // Check instance
-      if(!instance_of($instance, 'BenchmarkTimer')) {
+      if (!instance_of($instance, 'BenchmarkTimer')) {
         $instance = new BenchmarkTimer($auto);
       } // if
       

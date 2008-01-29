@@ -41,7 +41,9 @@
     * @return AbstractDBAdapter
     */
     static function connection($connection_name = null) {
-      if(is_null($connection_name)) $connection_name = self::getPrimaryConnection();
+      if (is_null($connection_name)) {
+        $connection_name = self::getPrimaryConnection();
+      } // if
       return array_var(self::$connections, $connection_name);
     } // connection
     
@@ -62,7 +64,7 @@
         trim($connection_name);
         
       $adapter = self::connectAdapter($adapter, $params);
-      if(($adapter instanceof AbstractDBAdapter) && $adapter->isConnected()) {
+      if (($adapter instanceof AbstractDBAdapter) && $adapter->isConnected()) {
         self::$connections[$connection_name] = $adapter;
         return $adapter;
       } else {
@@ -86,7 +88,7 @@
       self::useAdapter($adapter_name);
       
       $adapter_class = self::getAdapterClass($adapter_name);
-      if(!class_exists($adapter_class)) {
+      if (!class_exists($adapter_class)) {
         throw new DBAdapterDnx($adapter_name, $adapter_class);
       } // if
       
@@ -104,7 +106,9 @@
     private function useAdapter($adapter_name) {
       $adapter_class = self::getAdapterClass($adapter_name);
       $path = dirname(__FILE__) . "/adapters/$adapter_class.class.php";
-      if(!is_readable($path)) throw new FileDnxError($path);
+      if (!is_readable($path)) {
+        throw new FileDnxError($path);
+      } // if
       include_once $path;
     } // useAdapter
     
@@ -259,8 +263,8 @@
     * @return string
     */
     static function prepareString($sql, $arguments = null) {
-      if(is_array($arguments) && count($arguments)) {
-        foreach($arguments as $argument) {
+      if (is_array($arguments) && count($arguments)) {
+        foreach ($arguments as $argument) {
           $sql = str_replace_first('?', DB::escape($argument), $sql);
         } // foreach
       } // if
@@ -291,7 +295,7 @@
     * @throws Error if connection does not exists
     */
     static function setPrimaryConnection($value) {
-      if(!isset(self::$connections[$value])) {
+      if (!isset(self::$connections[$value])) {
         throw new Error("Connection '$value' does not exists");
       } // if
       self::$primary_connection = $value;

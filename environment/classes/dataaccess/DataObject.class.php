@@ -130,15 +130,15 @@
   	* @return null
   	*/
   	function setFromAttributes($attributes) {
-  	  if(is_array($attributes)) {
-  	    foreach($attributes as $k => &$v) {
-  	      if(is_array($this->attr_protected) && in_array($k, $this->attr_protected)) {
+  	  if (is_array($attributes)) {
+  	    foreach ($attributes as $k => &$v) {
+  	      if (is_array($this->attr_protected) && in_array($k, $this->attr_protected)) {
   	        continue; // protected attribute
   	      } // if
-  	      if(is_array($this->attr_acceptable) && !in_array($k, $this->attr_acceptable)) {
+  	      if (is_array($this->attr_acceptable) && !in_array($k, $this->attr_acceptable)) {
   	        continue; // not acceptable
   	      } // if
-  	      if($this->columnExists($k)) {
+  	      if ($this->columnExists($k)) {
   	        $this->setColumnValue($k, $attributes[$k]); // column exists, set
   	      } // if
   	    } // foreach
@@ -214,7 +214,7 @@
   	  $pks = $this->getPkColumns();
   	  
   	  // Check...
-  	  if(is_array($pks)) {
+  	  if (is_array($pks)) {
   	    return in_array($column, $pks);
   	  } else {
   	    return $column == $pks;
@@ -232,7 +232,7 @@
   	function isModifiedPrimaryKeyColumn($column) {
   	  
   	  // Check if we have modified column...
-  	  if($this->isPrimaryKeyColumn($column)) {
+  	  if ($this->isPrimaryKeyColumn($column)) {
   	    return isset($this->modified_columns[$column]);
   	  } // if
   	  
@@ -256,7 +256,7 @@
   		
   		// If we have multiple PKs get values and return as array
   		// else, return as scalar
-  		if(is_array($pks)) {
+  		if (is_array($pks)) {
   		
   			// Prepare result
   			$ret = array();
@@ -321,7 +321,9 @@
   	*/
   	function isLazyLoadColumn($column) {
   	  $lazy_load = $this->getLazyLoadColumns();
-  	  if(is_array($lazy_load)) return in_array($column, $lazy_load);
+  	  if (is_array($lazy_load)) {
+  	    return in_array($column, $lazy_load);
+  	  } // if
   	  return false;
   	} // isLazyLoadColumn
   	
@@ -336,10 +338,12 @@
   	function getColumnValue($column_name, $default = null) {
   	  
   	  // Do we have it cached?
-  	  if(isset($this->column_values[$column_name])) return $this->column_values[$column_name];
+  	  if (isset($this->column_values[$column_name])) {
+  	    return $this->column_values[$column_name];
+  	  } // if
   	  
   	  // We don't have it cached. Exists?
-  	  if(!$this->columnExists($column_name) && $this->isLazyLoadColumn($column_name)) {
+  	  if (!$this->columnExists($column_name) && $this->isLazyLoadColumn($column_name)) {
     	  return $this->loadLazyLoadColumnValue($column_name, $default);
   	  } // if
   	  
@@ -359,14 +363,14 @@
   	function setColumnValue($column, $value) {
   		
   		// Field defined
-  		if(!$this->columnExists($column)) return false;
+  		if (!$this->columnExists($column)) return false;
   		
   		// Get type...
   		$coverted_value = $this->rawToPHP($value, $this->getColumnType($column));
   		$old_value = $this->getColumnValue($column);
   		
   		// Do we have modified value?
-  		if($this->isNew() || ($old_value <> $coverted_value)) {
+  		if ($this->isNew() || ($old_value <> $coverted_value)) {
   		  
   		  // Set the value and report modification
   		  $this->column_values[$column] = $coverted_value;
@@ -374,7 +378,7 @@
   		  
   		  // Save primary key value. Also make sure that only the first PK value is
   			// saved as old. Not to save second value on third modification ;)
-  		  if($this->isPrimaryKeyColumn($column) && !isset($this->updated_pks[$column])) {
+  		  if ($this->isPrimaryKeyColumn($column) && !isset($this->updated_pks[$column])) {
   		    $this->updated_pks[$column] = $old_value;
   		  } // if
   		  
@@ -401,7 +405,7 @@
   	function save() {
   	  $errors = $this->doValidate();
   	  
-  	  if(is_array($errors)) {
+  	  if (is_array($errors)) {
   	    throw new DAOValidationError($this, $errors);
   	  } // if
   	  
@@ -417,11 +421,11 @@
   	* @throws DBQueryError
   	*/
   	function delete() {
-  		if($this->isNew() || $this->isDeleted()) {
+  		if ($this->isNew() || $this->isDeleted()) {
   		  return false;
   		} // if
   		
-  		if($this->doDelete()) {
+  		if ($this->doDelete()) {
   		  $this->setDeleted(true);
   		  $this->setLoaded(false);
   		  
@@ -444,19 +448,19 @@
   	*/
   	function loadFromRow($row) {
   	  
-  	  //if(isset($row['assigned_to_user_id'])) {
+  	  //if (isset($row['assigned_to_user_id'])) {
   	  //  pre_var_dump($this->columnExists('assigned_to_user_id'));
   	  //  pre_var_dump($row);
   	  //}
   	  
   	  // Check input array...
-  	  if(is_array($row)) {
+  	  if (is_array($row)) {
   	  
   	    // Loop fiedls...
   	    foreach ($row as $k => $v) {
   	      
   	      // If key exists set value
-  	      if($this->columnExists($k)) {
+  	      if ($this->columnExists($k)) {
   	        $this->setColumnValue($k, $v);
   	      } // if
   	      
@@ -532,21 +536,21 @@
   	private function doSave() {
   		
   	  // Do we need to insert data or we need to save it...
-  		if($this->isNew()) {
+  		if ($this->isNew()) {
   		  
   		  // Lets check if we have created_on and updated_on columns and they are empty
-  		  if($this->columnExists('created_on') && !$this->isColumnModified('created_on')) {
+  		  if ($this->columnExists('created_on') && !$this->isColumnModified('created_on')) {
   		    $this->setColumnValue('created_on', DateTimeValueLib::now());
   		  } // if
-  		  if($this->columnExists('updated_on') && !$this->isColumnModified('updated_on')) {
+  		  if ($this->columnExists('updated_on') && !$this->isColumnModified('updated_on')) {
   		    $this->setColumnValue('updated_on', DateTimeValueLib::now());
   		  } // if
   		  
-  		  if(function_exists('logged_user') && (logged_user() instanceof User)) {
-    		  if($this->columnExists('created_by_id') && !$this->isColumnModified('created_by_id') && (logged_user() instanceof User)) {
+  		  if (function_exists('logged_user') && (logged_user() instanceof User)) {
+    		  if ($this->columnExists('created_by_id') && !$this->isColumnModified('created_by_id') && (logged_user() instanceof User)) {
     		    $this->setColumnValue('created_by_id', logged_user()->getId());
     		  } // if
-    		  if($this->columnExists('updated_by_id') && !$this->isColumnModified('updated_by_id')) {
+    		  if ($this->columnExists('updated_by_id') && !$this->isColumnModified('updated_by_id')) {
     		    $this->setColumnValue('updated_by_id', logged_user()->getId());
     		  } // if
   		  } // if
@@ -557,29 +561,31 @@
   			
   		  // Get SQL
   		  $sql = $this->getInsertQuery();
-  		  if(!DB::execute($this->getInsertQuery())) return false;
+  		  if (!DB::execute($this->getInsertQuery())) {
+  		    return false;
+  		  } // if
   		  
-				// If we have autoincrement field load it...
-				if(!$autoincrement_column_modified && $this->columnExists($autoincrement_column)) {
-				  $this->setColumnValue($autoincrement_column, DB::lastInsertId());
-				} // if
-				
-				// Loaded...
-				$this->setLoaded(true);
-				
-				// Done...
-			  return true;
+        // If we have autoincrement field load it...
+        if (!$autoincrement_column_modified && $this->columnExists($autoincrement_column)) {
+          $this->setColumnValue($autoincrement_column, DB::lastInsertId());
+        } // if
+        
+        // Loaded...
+        $this->setLoaded(true);
+        
+        // Done...
+        return true;
   		
   	  // Update...	
   		} else {
   		  
   		  // Set value of updated_on column...
-  		  if($this->columnExists('updated_on') && !$this->isColumnModified('updated_on')) {
+  		  if ($this->columnExists('updated_on') && !$this->isColumnModified('updated_on')) {
   		    $this->setColumnValue('updated_on', DateTimeValueLib::now());
   		  } // if
   		  
-  		  if(function_exists('logged_user') && (logged_user() instanceof User)) {
-    		  if($this->columnExists('updated_by_id') && !$this->isColumnModified('updated_by_id')) {
+  		  if (function_exists('logged_user') && (logged_user() instanceof User)) {
+    		  if ($this->columnExists('updated_by_id') && !$this->isColumnModified('updated_by_id')) {
     		    $this->setColumnValue('updated_by_id', logged_user()->getId());
     		  } // if
   		  } // if
@@ -588,14 +594,18 @@
   		  $sql = $this->getUpdateQuery();
   		  
   		  // Nothing to update...
-  		  if(is_null($sql)) return true;
+  		  if (is_null($sql)) {
+  		    return true;
+  		  } // if
   		  
   		  // Save...
-  		  if(!DB::execute($sql)) return false;
-		    $this->setLoaded(true);
-		    
-		    // Done!
-		    return true;
+  		  if (!DB::execute($sql)) {
+  		    return false;
+  		  } // if
+        $this->setLoaded(true);
+        
+        // Done!
+        return true;
   			
   		} // if
   		
@@ -633,23 +643,23 @@
   		  $auto_increment = $this->isAutoIncrementColumn($column);
   		  
   		  // If not add it...
-  		  if(!$auto_increment || $this->isColumnModified($column)) {
+  		  if (!$auto_increment || $this->isColumnModified($column)) {
   		    
   		    // Add field...
-				  $columns[] = DB::escapeField($column);
-				  $values[] = DB::escape($this->phpToRaw($this->getColumnValue($column), $this->getColumnType($column)));
-				  
-				  // Switch type...
-				  //switch($this->getColumnType($column)) {
-				  //  case DATA_TYPE_BOOLEAN:
-				  //    $key_value = $this->getColumnValue($column) ? 1 : 0;
-				  //    break;
-				  //  default:
-				  //    $key_value = $this->getColumnValue($column);
-				  //} // switch
+          $columns[] = DB::escapeField($column);
+          $values[] = DB::escape($this->phpToRaw($this->getColumnValue($column), $this->getColumnType($column)));
+          
+          // Switch type...
+          //switch ($this->getColumnType($column)) {
+          //  case DATA_TYPE_BOOLEAN:
+          //    $key_value = $this->getColumnValue($column) ? 1 : 0;
+          //    break;
+          //  default:
+          //    $key_value = $this->getColumnValue($column);
+          //} // switch
 
-					// Add value...
-					//$values[] = DB::escape($key_value);
+          // Add value...
+          //$values[] = DB::escape($key_value);
   		    
   		  } // if
   			
@@ -677,13 +687,13 @@
   		$columns = array();
   		
   		// Check number of modified fields
-  		if(!$this->isObjectModified()) return null;
+  		if (!$this->isObjectModified()) return null;
   		
   		// Loop fields
   		foreach ($this->getColumns() as $column) {
   			
   			// Is this field modified?
-  			if($this->isColumnModified($column)) {
+  			if ($this->isColumnModified($column)) {
   			  $columns[] = sprintf('%s = %s', DB::escapeField($column), DB::escape($this->phpToRaw($this->getColumnValue($column), $this->getColumnType($column))));
   			} // if
   		  
@@ -716,10 +726,12 @@
   	function rawToPHP($value, $type = DATA_TYPE_STRING) {
   	  
   	  // NULL!
-  	  if(is_null($value)) return null;
+  	  if (is_null($value)) {
+  	    return null;
+  	  } // if
   	  
   	  // Switch type...
-  	  switch($type) {
+  	  switch ($type) {
   	    
   	    // String
   	    case DATA_TYPE_STRING:
@@ -741,10 +753,12 @@
   	    case DATA_TYPE_DATETIME:
   	    case DATA_TYPE_DATE:
   	    case DATA_TYPE_TIME:
-  	      if($value instanceof DateTimeValue) {
+  	      if ($value instanceof DateTimeValue) {
   	        return $value;
   	      } else {
-  	        if($value == EMPTY_DATETIME) return null;
+  	        if ($value == EMPTY_DATETIME) {
+  	          return null;
+  	        } // if
   	        return DateTimeValueLib::makeFromString($value);
   	      } // if
   	      
@@ -763,7 +777,7 @@
   	function phpToRaw($value, $type = DATA_TYPE_STRING) {
   	  
   	  // Switch type...
-  	  switch($type) {
+  	  switch ($type) {
   	    
   	    // String
   	    case DATA_TYPE_STRING:
@@ -785,10 +799,12 @@
   	    case DATA_TYPE_DATETIME:
   	    case DATA_TYPE_DATE:
   	    case DATA_TYPE_TIME:
-  	      if(empty($value)) return EMPTY_DATETIME;
-  	      if($value instanceof DateTimeValue) {
+  	      if (empty($value)) {
+  	        return EMPTY_DATETIME;
+  	      } // if
+  	      if ($value instanceof DateTimeValue) {
   	        return $value->toMySQL();
-  	      } elseif(is_numeric($value)) {
+  	      } elseif (is_numeric($value)) {
   	        return date(DATE_MYSQL, $value);
   	      } else {
   	        return EMPTY_DATETIME;
@@ -879,7 +895,7 @@
   	  $this->is_loaded = (boolean) $value;
   	  $this->setNew(!$this->is_loaded);
   	  //$this->is_new = !$this->is_loaded;
-  	  //if($this->is_loaded) $this->setNew(false);
+  	  //if ($this->is_loaded) $this->setNew(false);
   	} // setLoaded
   	
   	/**
@@ -912,7 +928,9 @@
   	* @return null
   	*/
   	protected function addModifiedColumn($column_name) {
-  	  if(!in_array($column_name, $this->modified_columns)) $this->modified_columns[] = $column_name;
+  	  if (!in_array($column_name, $this->modified_columns)) {
+  	    $this->modified_columns[] = $column_name;
+  	  } // if
   	} // addModifiedColumn
   	
   	/**
@@ -958,10 +976,12 @@
   	*/
   	function addProtectedAttribute() {
   	  $args = func_get_args();
-  	  if(is_array($args)) {
-  	    foreach($args as $arg) {
-  	      if(!in_array($arg, $this->attr_protected)) {
-  	        if($this->columnExists($arg)) $this->attr_protected[] = $arg;
+  	  if (is_array($args)) {
+  	    foreach ($args as $arg) {
+  	      if (!in_array($arg, $this->attr_protected)) {
+  	        if ($this->columnExists($arg)) {
+  	          $this->attr_protected[] = $arg;
+  	        } // if
   	      } // if
   	    } // foreach
   	  } // if
@@ -985,10 +1005,12 @@
   	*/
   	function addAcceptableAttribute() {
   	  $args = func_get_args();
-  	  if(is_array($args)) {
-  	    foreach($args as $arg) {
-  	      if(!in_array($arg, $this->attr_acceptable)) {
-  	        if($this->columnExists($arg)) $this->attr_acceptable[] = $arg;
+  	  if (is_array($args)) {
+  	    foreach ($args as $arg) {
+  	      if (!in_array($arg, $this->attr_acceptable)) {
+  	        if ($this->columnExists($arg)) {
+  	          $this->attr_acceptable[] = $arg;
+  	        } // if
   	      } // if
   	    } // foreach
   	  } // if
@@ -1010,7 +1032,9 @@
   	*/
   	function validatePresenceOf($field, $trim_string = true) {
   	  $value = $this->getColumnValue($field);
-  	  if(is_string($value) && $trim_string) $value = trim($value);
+  	  if (is_string($value) && $trim_string) {
+  	    $value = trim($value);
+  	  } // if
   	  return !empty($value);
   	} // validatePresenceOf
   	
@@ -1028,31 +1052,35 @@
   	  
   	  // Get columns
   	  $columns = func_get_args();
-  	  if(!is_array($columns) || count($columns) < 1) return true;
+  	  if (!is_array($columns) || count($columns) < 1) {
+  	    return true;
+  	  } // if
   	  
   	  // Check if we have existsing columns
-  	  foreach($columns as $column) {
-  	    if(!$this->columnExists($column)) return false;
+  	  foreach ($columns as $column) {
+  	    if (!$this->columnExists($column)) {
+  	      return false;
+  	    } // if
   	  } // foreach
   	  
   	  // Get where parets
   	  $where_parts = array();
-  	  foreach($columns as $column) {
+  	  foreach ($columns as $column) {
   	    $where_parts[] = DB::escapeField($column) . ' = ' . DB::escape($this->getColumnValue($column));
   	  } // if
   	  
   	  // If we have new object we need to test if there is any other object
   	  // with this value. Else we need to check if there is any other EXCEPT
   	  // this one with that value
-  	  if($this->isNew()) {
+  	  if ($this->isNew()) {
   	    $sql = sprintf("SELECT COUNT($escaped_pk) AS 'row_count' FROM %s WHERE %s", $this->getTableName(true), implode(' AND ', $where_parts));
   	  } else {
   	    
   	    // Prepare PKs part...
   	    $pks = $this->getPkColumns();
   	    $pk_values = array();
-  	    if(is_array($pks)) {
-  	      foreach($pks as $pk) {
+  	    if (is_array($pks)) {
+  	      foreach ($pks as $pk) {
   	        $pk_values[] = sprintf('%s <> %s', DB::escapeField($pk), DB::escape($this->getColumnValue($pk)));
   	      } // foreach
   	    } else {
@@ -1080,17 +1108,19 @@
   	function validateMaxValueOf($column, $max) {
   	  
   	  // Field does not exists
-  	  if(!$this->columnExists($column)) return false;
+  	  if (!$this->columnExists($column)) {
+  	    return false;
+  	  } // if
   	  
   	  // Get value...
   	  $value = $this->getColumnValue($column);
   	  
   	  // Integer and float...
-  	  if(is_int($value) || is_float($column)) {
+  	  if (is_int($value) || is_float($column)) {
   	    return $column <= $max;
   	    
   	  // String...
-  	  } elseif(is_string($value)) {
+  	  } elseif (is_string($value)) {
   	    return strlen($value) <= $max;
   	    
   	  // Any other value...
@@ -1111,17 +1141,19 @@
   	function validateMinValueOf($column, $min) {
   	  
   	  // Field does not exists
-  	  if(!$this->columnExists($column)) return false;
+  	  if (!$this->columnExists($column)) {
+  	    return false;
+  	  } // if
   	  
   	  // Get value...
   	  $value = $this->getColumnValue($column);
   	  
   	  // Integer and float...
-  	  if(is_int($value) || is_float($value)) {
+  	  if (is_int($value) || is_float($value)) {
   	    return $column >= $min;
   	    
   	  // String...
-  	  } elseif(is_string($value)) {
+  	  } elseif (is_string($value)) {
   	    return strlen($value) >= $min;
   	    
   	  // Any other value...
@@ -1140,7 +1172,9 @@
   	* @return boolean
   	*/
   	function validateFormatOf($column, $pattern) {
-  	  if(!$this->columnExists($column)) return false;
+  	  if (!$this->columnExists($column)) {
+  	    return false;
+  	  } // if
   	  $value = $this->getColumnValue($column);
   	  return preg_match($pattern, $value);
   	} // validateFormatOf

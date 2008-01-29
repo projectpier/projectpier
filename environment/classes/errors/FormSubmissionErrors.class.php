@@ -24,7 +24,7 @@
     * @return FormSubmissionErrors
     */
     function __construct($errors, $message = null) {
-      if(is_null($message)) {
+      if (is_null($message)) {
         $message = 'Form submission failed';
       } // if
       parent::__construct($message);
@@ -65,7 +65,7 @@
     * @return null
     */
     function setErrors($value) {
-      if(is_array($value)) {
+      if (is_array($value)) {
         $this->errors = $value;
       } else {
         throw new InvalidParamError('value', $value, 'Value should be an array of errors');

@@ -16,7 +16,7 @@
     */
     function printMessage($message, $is_error = false) {
       $print_message = htmlspecialchars($message);
-      if($is_error) {
+      if ($is_error) {
         print "<span class=\"error\">$print_message</span>\n";
       } else {
         print "<span>$print_message</span>\n";

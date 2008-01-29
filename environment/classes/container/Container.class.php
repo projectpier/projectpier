@@ -62,7 +62,9 @@
     * @return null
     */
     public function drop($var) {
-      if($this->has($var)) unset($this->__data[$var]);
+      if ($this->has($var)) {
+        unset($this->__data[$var]);
+      }
     } // drop
     
     /**
@@ -106,7 +108,9 @@
     * @return null
     */
     function append($data) {
-      if(is_array($data)) $this->__data = array_merge($this->__data, $data);
+      if (is_array($data)) {
+        $this->__data = array_merge($this->__data, $data);
+      }
     } // append
     
     /**

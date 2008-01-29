@@ -306,7 +306,9 @@
     * @return ProjectFileRevisions 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectFileRevisions)) $this->manager = ProjectFileRevisions::instance();
+      if (!($this->manager instanceof ProjectFileRevisions)) {
+        $this->manager = ProjectFileRevisions::instance();
+      }
       return $this->manager;
     } // manager
   

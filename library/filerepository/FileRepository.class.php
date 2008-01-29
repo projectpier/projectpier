@@ -44,7 +44,7 @@
     * @return integer
     */
     static function countFiles($backend_name = null) {
-      return self::getBackend($backend_name)->countFiles();  
+      return self::getBackend($backend_name)->countFiles();
     } // countFiles
     
     /**
@@ -163,10 +163,10 @@
     * @return FileRepository_Backend
     */
     static function getBackend($backend_name = null) {
-      if(is_null($backend_name)) {
+      if (is_null($backend_name)) {
         return self::$default_backend;
       } else {
-        if(isset(self::$additional_backends[$backend_name])) {
+        if (isset(self::$additional_backends[$backend_name])) {
           return self::$additional_backends[$backend_name];
         } else {
           throw new InvalidParamError('backend_name', $backend_name, "Backend '$backend_name' not available");
@@ -182,8 +182,8 @@
     * @throws InvalidInstanceError
     */
     static function setBackend($value, $backend_name = null) {
-      if($value instanceof FileRepository_Backend) {
-        if(is_null($backend_name)) {
+      if ($value instanceof FileRepository_Backend) {
+        if (is_null($backend_name)) {
           self::$default_backend = $value;
         } else {
           self::$additional_backends[$backend_name] = $value;

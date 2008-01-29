@@ -1,5 +1,5 @@
 <?php 
-  if(!isset($this) || !instance_of($this, 'BenchmarkTimer')) {
+  if (!isset($this) || !instance_of($this, 'BenchmarkTimer')) {
     return false; 
   } // if
 ?>

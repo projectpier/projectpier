@@ -196,7 +196,9 @@
     * @return Tags 
     */
     function manager() {
-      if(!($this->manager instanceof Tags)) $this->manager = Tags::instance();
+      if (!($this->manager instanceof Tags)) {
+        $this->manager = Tags::instance();
+      }
       return $this->manager;
     } // manager
   

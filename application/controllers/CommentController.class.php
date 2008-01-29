@@ -34,13 +34,13 @@
       $object_id = get_id('object_id');
       $object_manager = array_var($_GET, 'object_manager');
       
-      if(!is_valid_function_name($object_manager)) {
+      if (!is_valid_function_name($object_manager)) {
         flash_error(lang('invalid request'));
         $this->redirectToUrl(active_project()->getOverviewUrl());
       } // if
       
       $object = get_object_by_manager_and_id($object_id, $object_manager);
-      if(!($object instanceof ProjectDataObject) || !($object->canComment(logged_user()))) {
+      if (!($object instanceof ProjectDataObject) || !($object->canComment(logged_user()))) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl(active_project()->getOverviewUrl());
       } // if
@@ -52,7 +52,7 @@
       tpl_assign('comment', $comment);
       tpl_assign('comment_data', $comment_data);
       
-      if(is_array($comment_data)) {
+      if (is_array($comment_data)) {
         try {
           try {
             $attached_files = ProjectFiles::handleHelperUploads(active_project());
@@ -63,15 +63,15 @@
           $comment->setFromAttributes($comment_data);
           $comment->setRelObjectId($object_id);
           $comment->setRelObjectManager($object_manager);
-          if(!logged_user()->isMemberOfOwnerCompany()) {
+          if (!logged_user()->isMemberOfOwnerCompany()) {
             $comment->setIsPrivate(false);
           } // if
         
           DB::beginWork();
           $comment->save();
           
-          if(is_array($attached_files)) {
-            foreach($attached_files as $attached_file) {
+          if (is_array($attached_files)) {
+            foreach ($attached_files as $attached_file) {
               $comment->attachFile($attached_file);
             } // foreach
           } // if
@@ -79,8 +79,8 @@
           ApplicationLogs::createLog($comment, active_project(), ApplicationLogs::ACTION_ADD);
           
           // Subscribe user to message (if $object is message)
-          if($object instanceof ProjectMessage) {
-            if(!$object->isSubscriber(logged_user())) {
+          if ($object instanceof ProjectMessage) {
+            if (!$object->isSubscriber(logged_user())) {
               $object->subscribeUser(logged_user());
             } // if
           } // if
@@ -90,7 +90,7 @@
           flash_success(lang('success add comment'));
           
           $redirect_to = $comment->getViewUrl();
-          if(!is_valid_url($redirect_to)) {
+          if (!is_valid_url($redirect_to)) {
             $redirect_to = $object->getViewUrl();
           } // if
           
@@ -114,30 +114,30 @@
       $redirect_to = active_project() instanceof Project ? active_project()->getOverviewUrl() : get_url('dashboard');
       
       $comment = Comments::findById(get_id());
-      if(!($comment instanceof Comment)) {
+      if (!($comment instanceof Comment)) {
         flash_error(lang('comment dnx'));
         $this->redirectToUrl($redirect_to);
       } // if
       
       $object = $comment->getObject();
-      if(!($object instanceof ProjectDataObject)) {
+      if (!($object instanceof ProjectDataObject)) {
         flash_error(lang('object dnx'));
         $this->redirectToUrl($redirect_to);
       } // if
       
-      if(trim($comment->getViewUrl())) {
+      if (trim($comment->getViewUrl())) {
         $redirect_to = $comment->getViewUrl();
-      } elseif(trim($object->getObjectUrl())) {
+      } elseif (trim($object->getObjectUrl())) {
         $redirect_to = $object->getObjectUrl();
       } // if
       
-      if(!$comment->canEdit(logged_user())) {
+      if (!$comment->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl($redirect_to);
       } // if
       
       $comment_data = array_var($_POST, 'comment');
-      if(!is_array($comment_data)) {
+      if (!is_array($comment_data)) {
         $comment_data = array(
           'text' => $comment->getText(),
           'is_private' => $comment->isPrivate(),
@@ -148,14 +148,16 @@
       tpl_assign('comment', $comment);
       tpl_assign('comment_data', $comment_data);
       
-      if(is_array(array_var($_POST, 'comment'))) {
+      if (is_array(array_var($_POST, 'comment'))) {
         try {
           $old_is_private = $comment->isPrivate();
           
           $comment->setFromAttributes($comment_data);
           $comment->setRelObjectId($object->getObjectId());
           $comment->setRelObjectManager(get_class($object->manager()));
-          if(!logged_user()->isMemberOfOwnerCompany()) $comment->setIsPrivate($old_is_private);
+          if (!logged_user()->isMemberOfOwnerCompany()) {
+            $comment->setIsPrivate($old_is_private);
+          }
         
           DB::beginWork();
           $comment->save();
@@ -182,20 +184,22 @@
       $redirect_to = active_project() instanceof Project ? active_project()->getOverviewUrl() : get_url('dashboard');
       
       $comment = Comments::findById(get_id());
-      if(!($comment instanceof Comment)) {
+      if (!($comment instanceof Comment)) {
         flash_error(lang('comment dnx'));
         $this->redirectToUrl($redirect_to);
       } // if
       
       $object = $comment->getObject();
-      if(!($object instanceof ProjectDataObject)) {
+      if (!($object instanceof ProjectDataObject)) {
         flash_error(lang('object dnx'));
         $this->redirectToUrl($redirect_to);
       } // if
       
-      if(trim($object->getObjectUrl())) $redirect_to = $object->getObjectUrl();
+      if (trim($object->getObjectUrl())) {
+        $redirect_to = $object->getObjectUrl();
+      }
       
-      if(!$comment->canDelete(logged_user())) {
+      if (!$comment->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl($redirect_to);
       } // if

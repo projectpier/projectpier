@@ -46,7 +46,7 @@
     * @return array
     */
     function getSearchConditions($search_for, Project $project, $include_private = false) {
-      if($include_private) {
+      if ($include_private) {
         return DB::prepareString('MATCH (`content`) AGAINST (? IN BOOLEAN MODE) AND `project_id` = ?', array($search_for, $project->getId()));
       } else {
         return DB::prepareString('MATCH (`content`) AGAINST (? IN BOOLEAN MODE) AND `project_id` = ? AND `is_private` = ?', array($search_for, $project->getId(), false));
@@ -65,29 +65,33 @@
       $table_name = SearchableObjects::instance()->getTableName(true);
       
       $limit_string = '';
-      if((integer) $limit > 0) {
+      if ((integer) $limit > 0) {
         $offset = (integer) $offset > 0 ? (integer) $offset : 0;
         $limit_string = " LIMIT $offset, $limit";
       } // if
       
       $where = '';
-      if(trim($conditions) <> '') $where = "WHERE $conditions";
+      if (trim($conditions) <> '') {
+        $where = "WHERE $conditions";
+      }
       
       $sql = "SELECT `rel_object_manager`, `rel_object_id` FROM $table_name $where $limit_string";
       $result = DB::executeAll($sql);
       
-      if(!is_array($result)) return null;
+      if (!is_array($result)) {
+        return null;
+      }
       
       $loaded = array();
       $objects = array();
-      foreach($result as $row) {
+      foreach ($result as $row) {
         $manager_class = array_var($row, 'rel_object_manager');
         $object_id = array_var($row, 'rel_object_id');
         
-        if(!isset($loaded[$manager_class . '-' . $object_id]) || !($loaded[$manager_class . '-' . $object_id])) {
-          if(class_exists($manager_class)) {
+        if (!isset($loaded[$manager_class . '-' . $object_id]) || !($loaded[$manager_class . '-' . $object_id])) {
+          if (class_exists($manager_class)) {
             $object = get_object_by_manager_and_id($object_id, $manager_class);
-            if($object instanceof ProjectDataObject) {
+            if ($object instanceof ProjectDataObject) {
               $loaded[$manager_class . '-' . $object_id] = true;
               $objects[] = $object;
             } // if
@@ -107,16 +111,20 @@
     function countUniqueObjects($conditions) {
       $table_name = SearchableObjects::instance()->getTableName(true);
       $where = '';
-      if(trim($conditions <> '')) $where = "WHERE $conditions";
+      if (trim($conditions <> '')) {
+        $where = "WHERE $conditions";
+      }
       
       $sql = "SELECT `rel_object_manager`, `rel_object_id` FROM $table_name $where";
       $result = DB::executeAll($sql);
-      if(!is_array($result) || !count($result)) return 0;
+      if (!is_array($result) || !count($result)) {
+        return 0;
+      }
       
       $counted = array();
       $counter = 0;
-      foreach($result as $row) {
-        if(!isset($counted[array_var($row, 'rel_object_manager') . array_var($row, 'rel_object_id')])) {
+      foreach ($result as $row) {
+        if (!isset($counted[array_var($row, 'rel_object_manager') . array_var($row, 'rel_object_id')])) {
           $counted[array_var($row, 'rel_object_manager') . array_var($row, 'rel_object_id')] = true;
           $counter++;
         } // if

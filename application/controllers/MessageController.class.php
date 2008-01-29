@@ -31,7 +31,9 @@
       $this->addHelper('textile');
       
       $page = (integer) array_var($_GET, 'page', 1);
-      if($page < 0) $page = 1;
+      if ($page < 0) {
+        $page = 1;
+      }
       
       $conditions = logged_user()->isMemberOfOwnerCompany() ? 
         array('`project_id` = ?', active_project()->getId()) :
@@ -64,12 +66,12 @@
       $this->addHelper('textile');
       
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canView(logged_user())) {
+      if (!$message->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('message'));
       } // if
@@ -90,7 +92,7 @@
     function add() {
       $this->setTemplate('add_message');
       
-      if(!ProjectMessage::canAdd(logged_user(), active_project())) {
+      if (!ProjectMessage::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('message'));
       } // if
@@ -99,14 +101,14 @@
       tpl_assign('message', $message);
       
       $message_data = array_var($_POST, 'message');
-      if(!is_array($message_data)) {
+      if (!is_array($message_data)) {
         $message_data = array(
           'milestone_id' => array_var($_GET, 'milestone_id')
         ); // array
       } // if
       tpl_assign('message_data', $message_data);
       
-      if(is_array(array_var($_POST, 'message'))) {
+      if (is_array(array_var($_POST, 'message'))) {
         try {
           $uploaded_files = ProjectFiles::handleHelperUploads(active_project());
         } catch(Exception $e) {
@@ -118,7 +120,7 @@
           $message->setProjectId(active_project()->getId());
           
           // Options are reserved only for members of owner company
-          if(!logged_user()->isMemberOfOwnerCompany()) {
+          if (!logged_user()->isMemberOfOwnerCompany()) {
             $message->setIsPrivate(false); 
             $message->setIsImportant(false);
             $message->setCommentsEnabled(true);
@@ -130,8 +132,8 @@
           $message->subscribeUser(logged_user());
           $message->setTagsFromCSV(array_var($message_data, 'tags'));
           
-          if(is_array($uploaded_files)) {
-            foreach($uploaded_files as $uploaded_file) {
+          if (is_array($uploaded_files)) {
+            foreach ($uploaded_files as $uploaded_file) {
               $message->attachFile($uploaded_file);
               $uploaded_file->setIsPrivate($message->isPrivate());
               $uploaded_file->setIsVisible(true);
@@ -147,11 +149,11 @@
           try {
             $notify_people = array();
             $project_companies = active_project()->getCompanies();
-            foreach($project_companies as $project_company) {
+            foreach ($project_companies as $project_company) {
               $company_users = $project_company->getUsersOnProject(active_project());
-              if(is_array($company_users)) {
-                foreach($company_users as $company_user) {
-                  if((array_var($message_data, 'notify_company_' . $project_company->getId()) == 'checked') || (array_var($message_data, 'notify_user_' . $company_user->getId()))) {
+              if (is_array($company_users)) {
+                foreach ($company_users as $company_user) {
+                  if ((array_var($message_data, 'notify_company_' . $project_company->getId()) == 'checked') || (array_var($message_data, 'notify_user_' . $company_user->getId()))) {
                     $message->subscribeUser($company_user); // subscribe
                     $notify_people[] = $company_user;
                   } // if
@@ -171,8 +173,8 @@
         } catch(Exception $e) {
           DB::rollback();
           
-          if(is_array($uploaded_files)) {
-            foreach($uploaded_files as $uploaded_file) {
+          if (is_array($uploaded_files)) {
+            foreach ($uploaded_files as $uploaded_file) {
               $uploaded_file->delete();
             } // foreach
           } // if
@@ -195,18 +197,18 @@
       $this->setTemplate('add_message');
       
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canEdit(logged_user())) {
+      if (!$message->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('message');
       } // if
       
       $message_data = array_var($_POST, 'message');
-      if(!is_array($message_data)) {
+      if (!is_array($message_data)) {
         $tag_names = $message->getTagNames();
         $message_data = array(
           'milestone_id' => $message->getMilestoneId(),
@@ -224,7 +226,7 @@
       tpl_assign('message', $message);
       tpl_assign('message_data', $message_data);
       
-      if(is_array(array_var($_POST, 'message'))) {
+      if (is_array(array_var($_POST, 'message'))) {
         try {
           $old_is_private = $message->isPrivate();
           $old_is_important = $message->getIsImportant();
@@ -234,7 +236,7 @@
           $message->setFromAttributes($message_data);
           
           // Options are reserved only for members of owner company
-          if(!logged_user()->isMemberOfOwnerCompany()) {
+          if (!logged_user()->isMemberOfOwnerCompany()) {
             $message->setIsPrivate($old_is_private);
             $message->setIsImportant($old_is_important);
             $message->setCommentsEnabled($old_comments_enabled);
@@ -267,18 +269,18 @@
     */
     function update_options() {
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canUpdateOptions(logged_user())) {
+      if (!$message->canUpdateOptions(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('message');
       } // if
       
       $message_data = array_var($_POST, 'message');
-      if(is_array(array_var($_POST, 'message'))) {
+      if (is_array(array_var($_POST, 'message'))) {
         try {
           $message->setIsPrivate((boolean) array_var($message_data, 'is_private', $message->isPrivate()));
           $message->setIsImportant((boolean) array_var($message_data, 'is_important', $message->getIsImportant()));
@@ -307,12 +309,12 @@
     */
     function delete() {
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canDelete(logged_user())) {
+      if (!$message->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('message');
       } // if
@@ -345,17 +347,17 @@
     */
     function subscribe() {
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canView(logged_user())) {
+      if (!$message->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('message');
       } // if
       
-      if($message->subscribeUser(logged_user())) {
+      if ($message->subscribeUser(logged_user())) {
         flash_success('success subscribe to message');
       } else {
         flash_error('error subscribe to message');
@@ -371,17 +373,17 @@
     */
     function unsubscribe() {
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canView(logged_user())) {
+      if (!$message->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('message');
       } // if
       
-      if($message->unsubscribeUser(logged_user())) {
+      if ($message->unsubscribeUser(logged_user())) {
         flash_success('success unsubscribe to message');
       } else {
         flash_error('error unsubscribe to message');
@@ -402,12 +404,12 @@
     */
     function add_comment() {
       $message = ProjectMessages::findById(get_id());
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$message->canAddComment(logged_user())) {
+      if (!$message->canAddComment(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl($message->getViewUrl());
       } // if
@@ -418,10 +420,12 @@
       tpl_assign('comment', $comment);
       tpl_assign('comment_data', $comment_data);
       
-      if(is_array($comment_data)) {
+      if (is_array($comment_data)) {
         $comment->setFromAttributes($comment_data);
         $comment->setMessageId($message->getId());
-        if(!logged_user()->isMemberOfOwnerCompany()) $comment->setIsPrivate(false);
+        if (!logged_user()->isMemberOfOwnerCompany()) {
+          $comment->setIsPrivate(false);
+        }
         
         try {
           
@@ -460,24 +464,24 @@
       $this->setTemplate('add_comment');
       
       $comment = MessageComments::findById(get_id());
-      if(!($comment instanceof MessageComment)) {
+      if (!($comment instanceof MessageComment)) {
         flash_error(lang('comment dnx'));
         $this->redirectTo('message');
       } // if
       
       $message = $comment->getMessage();
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$comment->canEdit(logged_user())) {
+      if (!$comment->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl($message->getViewUrl());
       } // if
       
       $comment_data = array_var($_POST, 'comment');
-      if(!is_array($comment_data)) {
+      if (!is_array($comment_data)) {
         $comment_data = array(
           'text' => $comment->getText(),
           'is_private' => $comment->isPrivate(),
@@ -487,11 +491,13 @@
       tpl_assign('comment', $comment);
       tpl_assign('comment_data', $comment_data);
       
-      if(is_array(array_var($_POST, 'comment'))) {
+      if (is_array(array_var($_POST, 'comment'))) {
         $old_is_private = $comment->isPrivate();
         $comment->setFromAttributes($comment_data);
         $comment->setMessageId($message->getId());
-        if(!logged_user()->isMemberOfOwnerCompany()) $comment->setIsPrivate($old_is_private);
+        if (!logged_user()->isMemberOfOwnerCompany()) {
+          $comment->setIsPrivate($old_is_private);
+        }
         
         try {
           
@@ -520,18 +526,18 @@
     */
     function delete_comment() {
       $comment = MessageComments::findById(get_id());
-      if(!($comment instanceof MessageComment)) {
+      if (!($comment instanceof MessageComment)) {
         flash_error(lang('comment dnx'));
         $this->redirectTo('message');
       } // if
       
       $message = $comment->getMessage();
-      if(!($message instanceof ProjectMessage)) {
+      if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
         $this->redirectTo('message');
       } // if
       
-      if(!$comment->canDelete(logged_user())) {
+      if (!$comment->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl($message->getViewUrl());
       } // if

@@ -11,13 +11,15 @@
   */
   function open_html_tag($name, $attributes = null, $empty = false) {
     $attribute_string = '';
-    if(is_array($attributes) && count($attributes)) {
+    if (is_array($attributes) && count($attributes)) {
       $prepared_attributes = array();
-      foreach($attributes as $k => $v) {
-        if(trim($k) <> '') {
+      foreach ($attributes as $k => $v) {
+        if (trim($k) <> '') {
           
-          if(is_bool($v)) {
-            if($v) $prepared_attributes[] = "$k=\"$k\"";
+          if (is_bool($v)) {
+            if ($v) {
+              $prepared_attributes[] = "$k=\"$k\"";
+            }
           } else {
             $prepared_attributes[] = $k . '="' . clean($v) . '"';
           } // if
@@ -72,12 +74,12 @@
     ); // array
     
     // Additional attributes
-    if(is_array($attributes) && count($attributes)) {
+    if (is_array($attributes) && count($attributes)) {
       $all_attributes = array_merge($all_attributes, $attributes);
     } // if
   	  
     // And done!
-	  return open_html_tag('link', $all_attributes, true);
+    return open_html_tag('link', $all_attributes, true);
   	  
   } // link_tag
   
@@ -143,11 +145,13 @@
   function javascript_tag($src = null, $content = null) {
     
     // Content formatting
-    if($content) $content = "\n" . $content . "\n";
+    if ($content) {
+      $content = "\n" . $content . "\n";
+    }
     
     // Prepare attributes
     $attributes = array('type' => 'text/javascript');
-    if(!is_null($src)) {
+    if (!is_null($src)) {
       $attributes['src'] = is_valid_url($src) ? $src : get_javascript_url($src);
     } // if
     
@@ -165,7 +169,7 @@
   * @return string
   */
   function stylesheet_tag($href, $attributes = null) {
-    if(!is_valid_url($href)) {
+    if (!is_valid_url($href)) {
       $href = get_stylesheet_url($href);
     } // if
     
@@ -173,7 +177,7 @@
       'type' => 'text/css'
     ); // array
     
-    if(is_array($attributes) && count($attributes)) {
+    if (is_array($attributes) && count($attributes)) {
       array_merge($all_attributes, $attributes);
     } // if
     
@@ -194,7 +198,7 @@
     // Open and close for conditional comment
     $open = '';
     $close = '';
-    if($condition) {
+    if ($condition) {
       $open = "<!--[if $condition]>\n";
       $close = '<![endif]-->';
     } // if
@@ -359,7 +363,11 @@
   	function addLink($href, $rel_or_rev = 'rel', $rel = 'alternate', $attributes = null) {
   	  
   	  // Do we have this link?
-  	  foreach($this->links as $link) if(array_var($link, 'href') == $href) return;
+  	  foreach ($this->links as $link) {
+  	    if (array_var($link, 'href') == $href) {
+  	      return;
+  	    }
+  	  }
   	  
   	  // Prepare link attributes...
   	  $link = array(
@@ -368,7 +376,9 @@
   	  ); // array
   	  
   	  // Additional attributes
-  	  if(is_array($attributes) && count($attributes)) $link = array_merge($link, $attributes);
+  	  if (is_array($attributes) && count($attributes)) {
+  	    $link = array_merge($link, $attributes);
+  	  }
   	  $this->links[] = $link;
   	  
   	} // addLink
@@ -463,7 +473,7 @@
     */
     static function instance() {
       static $instance;
-      if(!instance_of($instance, 'PageDescription')) {
+      if (!instance_of($instance, 'PageDescription')) {
         $instance = new PageDescription();
       } // if
       return $instance;
@@ -482,7 +492,7 @@
     $page = PageDescription::instance();
     
     // If we dont have title use action
-    if($page->getTitle() == '') {
+    if ($page->getTitle() == '') {
       $action = array_var($_GET, 'action');
       return $action ? ucfirst($action) : PRODUCT_NAME;
     } else {
@@ -511,7 +521,9 @@
   * @return null
   */
   function add_stylesheet_to_page($href, $title = null, $media = null) {
-    if(!is_valid_url($href)) $href = get_stylesheet_url($href);
+    if (!is_valid_url($href)) {
+      $href = get_stylesheet_url($href);
+    }
     $page = PageDescription::instance();
     $page->addRelLink($href, 'Stylesheet', array(
       'type'  => 'text/css',
@@ -574,9 +586,9 @@
     
     // Generated code...
     $generated_code = '';
-    if(is_array($meta) && count($meta)) {
+    if (is_array($meta) && count($meta)) {
       $generated = array();
-      foreach($meta as $data) {
+      foreach ($meta as $data) {
         $generated[] = meta_tag($data['name'], $data['content'], $data['http_equiv']);
       } // foreach
       $generated_code = implode("\n", $generated);
@@ -606,14 +618,14 @@
     $generated_code = '';
     
     // If we have links go...
-    if(is_array($links) && count($links)) {
+    if (is_array($links) && count($links)) {
       $generated = array();
-      foreach($links as $data) {
+      foreach ($links as $data) {
         $href = array_var($data, 'href');
         
         $rel_or_rev = isset($data['rel']) ? 'rel' : 'rev';
         $rel = '';
-        if(isset($data[$rel_or_rev])) {
+        if (isset($data[$rel_or_rev])) {
           $rel = $data[$rel_or_rev];
           unset($data[$rel_or_rev]);
         } // if
@@ -645,16 +657,18 @@
     $generated_code = '';
     
     // And get code...
-    if(is_array($css) && count($css)) {
+    if (is_array($css) && count($css)) {
       $generated = array();
-      foreach($css as $data) {
+      foreach ($css as $data) {
         
         // Get...
         $content = array_var($data, 'content');
         $condition = array_var($data, 'condition');
         
         // If we have content generate tag...
-        if($content) $generated[] = style_tag($content, $condition);
+        if ($content) {
+          $generated[] = style_tag($content, $condition);
+        }
         
       } // foreach
       $generated_code = implode("\n", $generated);
@@ -684,9 +698,9 @@
     $generated_code = '';
     
     // Loop...
-    if(is_array($javascript) && count($javascript)) {
+    if (is_array($javascript) && count($javascript)) {
       $generated = array();
-      foreach($javascript as $data) {
+      foreach ($javascript as $data) {
         $generated[] = javascript_tag($data);
       } // foreach
       $generated_code = implode("\n", $generated);
@@ -716,9 +730,9 @@
     $generated_code = '';
     
     // Loop...
-    if(is_array($javascript) && count($javascript)) {
+    if (is_array($javascript) && count($javascript)) {
       $generated = array();
-      foreach($javascript as $data) {
+      foreach ($javascript as $data) {
         $generated[] = javascript_tag(null, $data);
       } // foreach
       $generated_code = implode("\n", $generated);
@@ -788,11 +802,11 @@
   function get_stylesheet_url($file_name) {
     static $theme = null;
     
-    if(is_null($theme)) {
-      if(function_exists('config_option')) {
+    if (is_null($theme)) {
+      if (function_exists('config_option')) {
         $theme = config_option('theme');
       } // if
-      if(trim($theme) == '') {
+      if (trim($theme) == '') {
         $theme = DEFAULT_THEME;
       } // if
     } // if
@@ -809,11 +823,11 @@
   function get_image_url($file_name) {
     static $theme = null;
     
-    if(is_null($theme)) {
-      if(function_exists('config_option')) {
+    if (is_null($theme)) {
+      if (function_exists('config_option')) {
         $theme = config_option('theme');
       } // if
-      if(trim($theme) == '') {
+      if (trim($theme) == '') {
         $theme = DEFAULT_THEME;
       } // if
     } // if

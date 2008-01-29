@@ -64,12 +64,12 @@
     * @return string
     */
     function getFileContent($file_id) {
-      if(!$this->isInRepository($file_id)) {
+      if (!$this->isInRepository($file_id)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
       $file_path = $this->getFilePath($file_id);
-      if(!is_file($file_path) || !is_readable($file_path)) {
+      if (!is_file($file_path) || !is_readable($file_path)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
@@ -85,7 +85,7 @@
     * @throws FileNotInRepositoryError
     */
     function getFileAttributes($file_id) {
-      if(!$this->isInRepository($file_id)) {
+      if (!$this->isInRepository($file_id)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
@@ -102,11 +102,11 @@
     * @throws FileNotInRepositoryError if file is not in repository
     */
     function getFileAttribute($file_id, $attribute_name, $default = null) {
-      if(!$this->isInRepository($file_id)) {
+      if (!$this->isInRepository($file_id)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
-      if(isset($this->attributes[$file_id]) && is_array($this->attributes[$file_id]) && isset($this->attributes[$file_id][$attribute_name])) {
+      if (isset($this->attributes[$file_id]) && is_array($this->attributes[$file_id]) && isset($this->attributes[$file_id][$attribute_name])) {
         return $this->attributes[$file_id][$attribute_name];
       } // if
       
@@ -124,19 +124,19 @@
     * @throws InvalidParamError If we have an object or a resource as attribute value
     */
     function setFileAttribute($file_id, $attribute_name, $attribute_value) {
-      if(!$this->isInRepository($file_id)) {
+      if (!$this->isInRepository($file_id)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
-      if(!isset($this->attributes[$file_id]) || !is_array($this->attributes[$file_id])) {
+      if (!isset($this->attributes[$file_id]) || !is_array($this->attributes[$file_id])) {
         $this->attributes[$file_id] = array();
       } // if
       
-      if(is_object($attribute_value) || is_resource($attribute_value)) {
+      if (is_object($attribute_value) || is_resource($attribute_value)) {
         throw new InvalidParamError('$attribute_value', $attribute_value, 'Objects and resources are not supported as attribute values');
       } // if
       
-      if(!isset($this->attributes[$file_id][$attribute_name]) || ($this->attributes[$file_id][$attribute_name] <> $attribute_value)) {
+      if (!isset($this->attributes[$file_id][$attribute_name]) || ($this->attributes[$file_id][$attribute_name] <> $attribute_value)) {
         $this->attributes[$file_id][$attribute_name] = $attribute_value;
         $this->saveFileAttributes();
       } // if
@@ -153,7 +153,7 @@
     * @throws FileRepositoryAddError if we fail to move file to the repository
     */
     function addFile($source, $attributes = null) {
-      if(!is_readable($source)) {
+      if (!is_readable($source)) {
         throw new FileDnxError($source);
       } // if
       
@@ -161,20 +161,20 @@
       $file_path = $this->getFilePath($file_id);
       $destination_dir = dirname($file_path);
       
-      if(!is_dir($destination_dir)) {
-        if(!force_mkdir($destination_dir, 0777)) {
+      if (!is_dir($destination_dir)) {
+        if (!force_mkdir($destination_dir, 0777)) {
           throw new FailedToCreateFolderError($destination_dir);
         } // if
       } // if
       
-      if(!copy($source, $file_path)) {
+      if (!copy($source, $file_path)) {
         throw new FileRepositoryAddError($source, $file_id);
       } // if
       
       $this->attributes[$file_id] = true; // register file
       
-      if(is_array($attributes)) {
-        foreach($attributes as $attribute_name => $attribute_value) {
+      if (is_array($attributes)) {
+        foreach ($attributes as $attribute_name => $attribute_value) {
           $this->setFileAttribute($file_id, $attribute_name, $attribute_value);
         } // foreach
       } // if
@@ -193,17 +193,17 @@
     * @throws FileRepositoryAddError if we fail to update file
     */
     function updateFileContent($file_id, $source) {
-      if(!is_readable($source)) {
+      if (!is_readable($source)) {
         throw new FileDnxError($source);
       } // if
       
-      if(!$this->isInRepository($file_id)) {
+      if (!$this->isInRepository($file_id)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
       $file_path = $this->getFilePath($file_id);
       
-      if(!copy($source, $file_path)) {
+      if (!copy($source, $file_path)) {
         throw new FileRepositoryAddError($source, $file_id);
       } // if
       
@@ -219,17 +219,17 @@
     * @throws FileRepositoryDeleteError if we fail to delete file
     */
     function deleteFile($file_id) {
-      if(!$this->isInRepository($file_id)) {
+      if (!$this->isInRepository($file_id)) {
         throw new FileNotInRepositoryError($file_id);
       } // if
       
       $file_path = $this->getFilePath($file_id);
       
-      if(!unlink($file_path)) {
+      if (!unlink($file_path)) {
         throw new FileRepositoryDeleteError($file_id);
       } // if
       
-      if(isset($this->attributes[$file_id])) {
+      if (isset($this->attributes[$file_id])) {
         unset($this->attributes[$file_id]);
         $this->saveFileAttributes();
       } // if
@@ -247,13 +247,13 @@
     */
     function cleanUp() {
       $dir = dir($this->getRepositoryDir());
-      if($dir) {
-    		while(false !== ($entry = $dir->read())) {
-    		  if(str_starts_with($entry, '.')) continue; // '.', '..' and hidden files ('.svn' for instance)
+      if ($dir) {
+    		while (false !== ($entry = $dir->read())) {
+    		  if (str_starts_with($entry, '.')) continue; // '.', '..' and hidden files ('.svn' for instance)
     		  $path = with_slash($this->getRepositoryDir()) . $entry;
-    		  if(is_dir($path)) {
+    		  if (is_dir($path)) {
     		    delete_dir($path);
-    		  } elseif(is_file($path)) {
+    		  } elseif (is_file($path)) {
     		    unlink($path);
     		  } // if
     		} // while
@@ -294,7 +294,7 @@
     private function cleanUpDir($file_id) {
       $path = $this->idToPath($file_id);
       
-      if(!$path) return;
+      if (!$path) return;
       
       $path_parts = explode('/', $path);
       $repository_path = with_slash($this->getRepositoryDir());
@@ -305,8 +305,8 @@
         $repository_path . $path_parts[0],
       ); // array
       
-      foreach($for_cleaning as $dir) {
-        if(is_dir_empty($dir)) {
+      foreach ($for_cleaning as $dir) {
+        if (is_dir_empty($dir)) {
           delete_dir($dir);
         } else {
           return; // break, not empty
@@ -321,9 +321,9 @@
     * @return string
     */
     private function idToPath($file_id) {
-      if(strlen($file_id) == 40) {
+      if (strlen($file_id) == 40) {
         $parts = array();
-        for($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; $i++) {
           $parts[] = substr($file_id, $i * 5, 5);
         } // for
         $parts[] = substr($file_id, 15, 25);
@@ -343,7 +343,7 @@
       do {
         $id = sha1(uniqid(rand(), true));
         $file_path = $this->getFilePath($id);
-      } while(is_file($file_path));
+      } while (is_file($file_path));
       return $id;
     } // getUniqueId
     
@@ -360,13 +360,13 @@
     protected function loadFileAttributes() {
       $file = $this->getAttributesFilePath();
       
-      if(is_file($file)) {
-        if(!is_readable($file)) {
+      if (is_file($file)) {
+        if (!is_readable($file)) {
           throw new FileDnxError($file);
         } // if
         
         $attributes = include $file; // read from file
-        if(is_array($attributes)) {
+        if (is_array($attributes)) {
           $this->attributes = $attributes;
         } else {
           $this->attributes = array();
@@ -388,7 +388,7 @@
     */
     protected function saveFileAttributes() {
       $file = $this->getAttributesFilePath();
-      if(is_file($file) && !file_is_writable($file)) {
+      if (is_file($file) && !file_is_writable($file)) {
         throw new FileNotWriableError($file);
       } // if
       return file_put_contents($file, "<?php\n\nreturn " . var_export($this->attributes, true) . ";\n\n?>");
@@ -427,11 +427,11 @@
     * @throws DirNotWritableError
     */
     function setRepositoryDir($value) {
-      if(!is_null($value) && !is_dir($value)) {
+      if (!is_null($value) && !is_dir($value)) {
         throw new DirDnxError($value);
       } // if
       
-      if(!folder_is_writable($value)) {
+      if (!folder_is_writable($value)) {
         throw new DirNotWritableError($value);
       } // if
       

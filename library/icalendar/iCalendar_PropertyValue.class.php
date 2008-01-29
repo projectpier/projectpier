@@ -25,8 +25,10 @@
     */
     function __construct($value, $attributes = null) {
       $this->setValue($value);
-      if(is_array($attributes)) {
-        foreach($attributes as $k => $v) $this->setAttribute($k, $v);
+      if (is_array($attributes)) {
+        foreach ($attributes as $k => $v) {
+          $this->setAttribute($k, $v);
+        }
       } // if
     } // __construct
     
@@ -38,8 +40,8 @@
     */
     function render($property_name) {
       $result = $property_name;
-      if(count($this->getAttributes())) {
-        foreach($this->getAttributes() as $k => $v) {
+      if (count($this->getAttributes())) {
+        foreach ($this->getAttributes() as $k => $v) {
           $result .= ';' . $k . '=' . $v;
         } // foreach
       } // if

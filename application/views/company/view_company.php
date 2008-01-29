@@ -1,7 +1,7 @@
 <?php
 
   set_page_title($company->getName());
-  if($company->isOwner()) {
+  if ($company->isOwner()) {
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(lang('company'));
   } else {
@@ -12,14 +12,14 @@
     ));
   } // if
   
-  if($company->canEdit(logged_user())) {
+  if ($company->canEdit(logged_user())) {
     add_page_action(lang('edit company'), $company->getEditUrl());
     add_page_action(lang('edit company logo'), $company->getEditLogoUrl());
-    if(!$company->isOwner()) {
+    if (!$company->isOwner()) {
       add_page_action(lang('update permissions'), $company->getUpdatePermissionsUrl());
     } // if
   } // if
-  if(User::canAdd(logged_user(), $company)) {
+  if (User::canAdd(logged_user(), $company)) {
     add_page_action(lang('add user'), $company->getAddUserUrl());
   } // if
 

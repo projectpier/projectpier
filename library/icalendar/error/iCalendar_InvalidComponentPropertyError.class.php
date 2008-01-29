@@ -32,7 +32,7 @@
     * @return iCalendar_InvalidComponentPropertyError
     */
     function __construct($component_name, $property_name, $message = null) {
-      if(is_null($message)) $message = "'$property_name' is not valid property of '$component_name'";
+      if (is_null($message)) $message = "'$property_name' is not valid property of '$component_name'";
       parent::__construct($message);
       $this->setComponentName($component_name);
       $this->setPropertyName($property_name);

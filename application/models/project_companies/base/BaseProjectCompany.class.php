@@ -64,7 +64,9 @@
     * @return ProjectCompanies 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectCompanies)) $this->manager = ProjectCompanies::instance();
+      if (!($this->manager instanceof ProjectCompanies)) {
+        $this->manager = ProjectCompanies::instance();
+      }
       return $this->manager;
     } // manager
   

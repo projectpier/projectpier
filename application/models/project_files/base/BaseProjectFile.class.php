@@ -372,7 +372,9 @@
     * @return ProjectFiles 
     */
     function manager() {
-      if(!($this->manager instanceof ProjectFiles)) $this->manager = ProjectFiles::instance();
+      if (!($this->manager instanceof ProjectFiles)) {
+        $this->manager = ProjectFiles::instance();
+      }
       return $this->manager;
     } // manager
   

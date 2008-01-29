@@ -36,7 +36,7 @@
     * @return boolean
     */
     function execute() {
-      if(!$this->installer->isExecutedStep(ACI_SYSTEM_CONFIG)) {
+      if (!$this->installer->isExecutedStep(ACI_SYSTEM_CONFIG)) {
         $this->goToStep(ACI_SYSTEM_CONFIG);
       } // if
       
@@ -50,7 +50,7 @@
       $installation->setAbsoluteUrl((string) trim($this->getFromStorage('absolute_url')));
       
       ob_start();
-      if($installation->execute()) {
+      if ($installation->execute()) {
         $all_ok = true;
         $this->installer->clearStorage(); // lets clear data from session... its a DB pass we are talking about here
       } else {

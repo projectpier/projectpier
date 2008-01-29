@@ -42,12 +42,12 @@
       $this->setTemplate('add_user');
       
       $company = Companies::findById(get_id('company_id'));
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectTo('administration');
       } // if
       
-      if(!User::canAdd(logged_user(), $company)) {
+      if (!User::canAdd(logged_user(), $company)) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
@@ -55,7 +55,7 @@
       $user = new User();
       
       $user_data = array_var($_POST, 'user');
-      if(!is_array($user_data)) {
+      if (!is_array($user_data)) {
         $user_data = array(
           'password_generator' => 'random',
           'company_id' => $company->getId(),
@@ -72,22 +72,22 @@
       tpl_assign('permissions', $permissions);
       tpl_assign('user_data', $user_data);
       
-      if(is_array(array_var($_POST, 'user'))) {
+      if (is_array(array_var($_POST, 'user'))) {
         $user->setFromAttributes($user_data);
         $user->setCompanyId($company->getId());
         
         try {
           // Generate random password
-          if(array_var($user_data, 'password_generator') == 'random') {
+          if (array_var($user_data, 'password_generator') == 'random') {
             $password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
             
           // Validate user input
           } else {
             $password = array_var($user_data, 'password');
-            if(trim($password) == '') {
+            if (trim($password) == '') {
               throw new Error(lang('password value required'));
             } // if
-            if($password <> array_var($user_data, 'password_a')) {
+            if ($password <> array_var($user_data, 'password_a')) {
               throw new Error(lang('passwords dont match'));
             } // if
           } // if
@@ -97,14 +97,14 @@
           $user->save();
           ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_ADD);
           
-          if(is_array($projects)) {
-            foreach($projects as $project) {
-              if(array_var($user_data, 'project_permissions_' . $project->getId()) == 'checked') {
+          if (is_array($projects)) {
+            foreach ($projects as $project) {
+              if (array_var($user_data, 'project_permissions_' . $project->getId()) == 'checked') {
                 $relation = new ProjectUser();
                 $relation->setProjectId($project->getId());
                 $relation->setUserId($user->getId());
                 
-                foreach($permissions as $permission => $permission_text) {
+                foreach ($permissions as $permission => $permission_text) {
                   $permission_value = array_var($user_data, 'project_permission_' . $project->getId() . '_' . $permission) == 'checked';
                   
                   $setter = 'set' . Inflector::camelize($permission);
@@ -120,7 +120,7 @@
           
           // Send notification...
           try {
-            if(array_var($user_data, 'send_email_notification')) {
+            if (array_var($user_data, 'send_email_notification')) {
               Notifier::newUserAccount($user, $password);
             } // if
           } catch(Exception $e) {
@@ -148,12 +148,12 @@
     */
     function delete() {
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectTo('administration');
       } // if
       
-      if(!$user->canDelete(logged_user())) {
+      if (!$user->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
@@ -187,12 +187,12 @@
       $this->setLayout('dashboard');
       
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectToReferer(ROOT_URL);
       } // if
       
-      if(!logged_user()->canSeeUser($user)) {
+      if (!logged_user()->canSeeUser($user)) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(ROOT_URL);
       } // if

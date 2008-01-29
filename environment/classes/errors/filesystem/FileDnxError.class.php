@@ -23,7 +23,9 @@
     * @return FileDnxError
     */
     function __construct($file_path, $message = null) {
-      if(is_null($message)) $message = "File '$file_path' doesn't exists";
+      if (is_null($message)) {
+        $message = "File '$file_path' doesn't exists";
+      } // if
       parent::__construct($message);
       $this->setFilePath($file_path);
     } // __construct

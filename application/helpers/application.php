@@ -27,12 +27,16 @@
   * @return string
   */
   function render_system_notices(User $user) {
-    if(!$user->isAdministrator()) return;
+    if (!$user->isAdministrator()) {
+      return;
+    }
     
     $system_notices = array();
-    if(config_option('upgrade_check_enabled', false) && config_option('upgrade_last_check_new_version', false)) $system_notices[] = lang('new ProjectPier version available', get_url('administration', 'upgrade'));
+    if (config_option('upgrade_check_enabled', false) && config_option('upgrade_last_check_new_version', false)) {
+      $system_notices[] = lang('new ProjectPier version available', get_url('administration', 'upgrade'));
+    }
     
-    if(count($system_notices)) {
+    if (count($system_notices)) {
       tpl_assign('_system_notices', $system_notices);
       return tpl_fetch(get_template_path('system_notices', 'application'));
     } // if
@@ -48,11 +52,13 @@
   function select_company($name, $selected = null, $attributes = null) {
     $companies = Companies::getAll();
     $options = array(option_tag(lang('none'), 0));
-    if(is_array($companies)) {
-      foreach($companies as $company) {
+    if (is_array($companies)) {
+      foreach ($companies as $company) {
         $option_attributes = $company->getId() == $selected ? array('selected' => 'selected') : null;
         $company_name = $company->getName();
-        if($company->isOwner()) $company_name .= ' (' . lang('owner company') . ')';
+        if ($company->isOwner()) {
+          $company_name .= ' (' . lang('owner company') . ')';
+        }
         $options[] = option_tag($company_name, $company->getId(), $option_attributes);
       } // foreach
     } // if
@@ -69,10 +75,10 @@
   * @return null
   */
   function assign_to_select_box($list_name, $project = null, $selected = null, $attributes = null) {
-    if(is_null($project)) {
+    if (is_null($project)) {
       $project = active_project();
     } // if
-    if(!($project instanceof Project)) {
+    if (!($project instanceof Project)) {
       throw new InvalidInstanceError('$project', $project, 'Project');
     } // if
     
@@ -84,21 +90,21 @@
     $grouped_users = $project->getUsers(true);
     
     $options = array(option_tag(lang('anyone'), '0:0'));
-    if(is_array($grouped_users) && count($grouped_users)) {
-      foreach($grouped_users as $company_id => $users) {
+    if (is_array($grouped_users) && count($grouped_users)) {
+      foreach ($grouped_users as $company_id => $users) {
         $company = Companies::findById($company_id);
-        if(!($company instanceof Company)) {
+        if (!($company instanceof Company)) {
           continue;
         } // if
         
         // Check if $logged_user can assign task to members of this company
-        if($company_id <> $logged_user->getCompanyId()) {
-          if($company->isOwner()) {
-            if(!$can_assign_to_owners) {
+        if ($company_id <> $logged_user->getCompanyId()) {
+          if ($company->isOwner()) {
+            if (!$can_assign_to_owners) {
               continue;
             } // if
           } else {
-            if(!$can_assign_to_other) {
+            if (!$can_assign_to_other) {
               continue;
             } // if
           } // if
@@ -109,8 +115,8 @@
         $option_attributes = $company->getId() . ':0' == $selected ? array('selected' => 'selected') : null;
         $options[] = option_tag($company->getName(), $company_id . ':0', $option_attributes);
         
-        if(is_array($users)) {
-          foreach($users as $user) {
+        if (is_array($users)) {
+          foreach ($users as $user) {
             $option_attributes = $company_id . ':' . $user->getId() == $selected ? array('selected' => 'selected') : null;
             $options[] = option_tag($company->getName() . ': ' . $user->getDisplayName(), $company_id . ':' . $user->getId(), $option_attributes);
           } // foreach
@@ -133,19 +139,25 @@
   * @throws InvalidInstanceError
   */
   function select_milestone($name, $project = null, $selected = null, $attributes = null) {
-    if(is_null($project)) $project = active_project();
-    if(!($project instanceof Project)) throw new InvalidInstanceError('$project', $project, 'Project');
+    if (is_null($project)) {
+      $project = active_project();
+    }
+    if (!($project instanceof Project)) {
+      throw new InvalidInstanceError('$project', $project, 'Project');
+    }
     
-    if(is_array($attributes)) {
-      if(!isset($attributes['class'])) $attributes['class'] = 'select_milestone';
+    if (is_array($attributes)) {
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'select_milestone';
+      }
     } else {
       $attributes = array('class' => 'select_milestone');
     } // if
     
     $options = array(option_tag(lang('none'), 0));
     $milestones = $project->getOpenMilestones();
-    if(is_array($milestones)) {
-      foreach($milestones as $milestone) {
+    if (is_array($milestones)) {
+      foreach ($milestones as $milestone) {
         $option_attributes = $milestone->getId() == $selected ? array('selected' => 'selected') : null;
         $options[] = option_tag($milestone->getName(), $milestone->getId(), $option_attributes);
       } // foreach
@@ -165,19 +177,25 @@
   * @return string
   */
   function select_task_list($name, $project = null, $selected = null, $open_only = false, $attributes = null) {
-    if(is_null($project)) $project = active_project();
-    if(!($project instanceof Project)) throw new InvalidInstanceError('$project', $project, 'Project');
+    if (is_null($project)) {
+      $project = active_project();
+    }
+    if (!($project instanceof Project)) {
+      throw new InvalidInstanceError('$project', $project, 'Project');
+    }
     
-    if(is_array($attributes)) {
-      if(!isset($attributes['class'])) $attributes['class'] = 'select_task_list';
+    if (is_array($attributes)) {
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'select_task_list';
+      }
     } else {
       $attributes = array('class' => 'select_task_list');
     } // if
     
     $options = array(option_tag(lang('none'), 0));
     $task_lists = $open_only ? $project->getOpenTaskLists() : $project->getTaskLists();
-    if(is_array($task_lists)) {
-      foreach($task_lists as $task_list) {
+    if (is_array($task_lists)) {
+      foreach ($task_lists as $task_list) {
         $option_attributes = $task_list->getId() == $selected ? array('selected' => 'selected') : null;
         $options[] = option_tag($task_list->getName(), $task_list->getId(), $option_attributes);
       } // foreach
@@ -196,19 +214,25 @@
   * @return string
   */
   function select_message($name, $project = null, $selected = null, $attributes = null) {
-    if(is_null($project)) $project = active_project();
-    if(!($project instanceof Project)) throw new InvalidInstanceError('$project', $project, 'Project');
+    if (is_null($project)) {
+      $project = active_project();
+    }
+    if (!($project instanceof Project)) {
+      throw new InvalidInstanceError('$project', $project, 'Project');
+    }
     
-    if(is_array($attributes)) {
-      if(!isset($attributes['class'])) $attributes['class'] = 'select_message';
+    if (is_array($attributes)) {
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'select_message';
+      }
     } else {
       $attributes = array('class' => 'select_message');
     } // if
     
     $options = array(option_tag(lang('none'), 0));
     $messages = $project->getMessages();
-    if(is_array($messages)) {
-      foreach($messages as $messages) {
+    if (is_array($messages)) {
+      foreach ($messages as $messages) {
         $option_attributes = $messages->getId() == $selected ? array('selected' => 'selected') : null;
         $options[] = option_tag($messages->getTitle(), $messages->getId(), $option_attributes);
       } // foreach
@@ -227,15 +251,17 @@
   * @return string
   */
   function select_project_folder($name, $project = null, $selected = null, $attributes = null) {
-    if(is_null($project)) {
+    if (is_null($project)) {
       $project = active_project();
     } // if
-    if(!($project instanceof Project)) {
+    if (!($project instanceof Project)) {
       throw new InvalidInstanceError('$project', $project, 'Project');
     } // if
     
-    if(is_array($attributes)) {
-      if(!isset($attributes['class'])) $attributes['class'] = 'select_folder';
+    if (is_array($attributes)) {
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'select_folder';
+      }
     } else {
       $attributes = array('class' => 'select_folder');
     } // if
@@ -243,8 +269,8 @@
     $options = array(option_tag(lang('none'), 0));
     
     $folders = $project->getFolders();
-    if(is_array($folders)) {
-      foreach($folders as $folder) {
+    if (is_array($folders)) {
+      foreach ($folders as $folder) {
       	$option_attributes = $folder->getId() == $selected ? array('selected' => true) : null;
       	$options[] = option_tag($folder->getName(), $folder->getId(), $option_attributes);
       } // foreach
@@ -264,29 +290,31 @@
   * @return string
   */
   function select_project_file($name, $project = null, $selected = null, $exclude_files = null, $attributes = null) {
-    if(is_null($project)) {
+    if (is_null($project)) {
       $project = active_project();
     } // if
-    if(!($project instanceof Project)) {
+    if (!($project instanceof Project)) {
       throw new InvalidInstanceError('$project', $project, 'Project');
     } // if
     
     $all_options = array(option_tag(lang('none'), 0)); // array of options
     
     $folders = $project->getFolders();
-    if(is_array($folders)) {
-      foreach($folders as $folder) {
+    if (is_array($folders)) {
+      foreach ($folders as $folder) {
         $files = $folder->getFiles();
-        if(is_array($files)) {
+        if (is_array($files)) {
           $options = array();
-          foreach($files as $file) {
-            if(is_array($exclude_files) && in_array($file->getId(), $exclude_files)) continue;
+          foreach ($files as $file) {
+            if (is_array($exclude_files) && in_array($file->getId(), $exclude_files)) {
+              continue;
+            }
             
             $option_attrbutes = $file->getId() == $selected ? array('selected' => true) : null;
             $options[] = option_tag($file->getFilename(), $file->getId(), $option_attrbutes);
           } // if
           
-          if(count($options)) {
+          if (count($options)) {
             $all_options[] = option_tag('', 0); // separator
             $all_options[] = option_group_tag($folder->getName(), $options);
           } // if
@@ -295,10 +323,12 @@
     } // if
     
     $orphaned_files = $project->getOrphanedFiles();
-    if(is_array($orphaned_files)) {
+    if (is_array($orphaned_files)) {
       $all_options[] = option_tag('', 0); // separator
-      foreach($orphaned_files as $file) {
-        if(is_array($exclude_files) && in_array($file->getId(), $exclude_files)) continue;
+      foreach ($orphaned_files as $file) {
+        if (is_array($exclude_files) && in_array($file->getId(), $exclude_files)) {
+          continue;
+        }
         
         $option_attrbutes = $file->getId() == $selected ? array('selected' => true) : null;
         $all_options[] = option_tag($file->getFilename(), $file->getId(), $option_attrbutes);
@@ -330,10 +360,12 @@
   */
   function project_object_tags(ProjectDataObject $object, Project $project) {
     $tag_names = $object->getTagNames();
-    if(!is_array($tag_names) || !count($tag_names)) return '--';
+    if (!is_array($tag_names) || !count($tag_names)) {
+      return '--';
+    }
     
     $links = array();
-    foreach($tag_names as $tag_name) {
+    foreach ($tag_names as $tag_name) {
       $links[] = '<a href="' . $project->getTagUrl($tag_name) . '">' . clean($tag_name) . '</a>';
     } // foreach
     return implode(', ', $links);
@@ -346,7 +378,9 @@
   * @return null
   */
   function render_object_comments(ProjectDataObject $object) {
-    if(!$object->isCommentable()) return '';
+    if (!$object->isCommentable()) {
+      return '';
+    }
     tpl_assign('__comments_object', $object);
     return tpl_fetch(get_template_path('object_comments', 'comment'));
   } // render_object_comments
@@ -381,7 +415,7 @@
     $attach_files_id = 0;
     do {
       $attach_files_id++;
-    } while(in_array($attach_files_id, $ids));
+    } while (in_array($attach_files_id, $ids));
     
     $old_js_included = $js_included;
     $js_included = true;
@@ -432,9 +466,9 @@
   * @return string
   */
   function render_action_taken_on_by(ApplicationLog $application_log_entry) {
-    if($application_log_entry->isToday()) { 
+    if ($application_log_entry->isToday()) { 
       $result = '<span class="desc">' . lang('today') . ' ' . clean(format_time($application_log_entry->getCreatedOn()));
-    } elseif($application_log_entry->isYesterday()) { 
+    } elseif ($application_log_entry->isYesterday()) { 
       //return '<span class="desc">' . lang('yesterday') . ' ' . clean(format_time($application_log_entry->getCreatedOn()));
       $result = '<span class="desc">' . lang('yesterday');
     } else { 

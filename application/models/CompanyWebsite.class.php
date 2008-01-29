@@ -41,7 +41,7 @@
     * @throws Error
     */
     function init() {
-      if(isset($this) && ($this instanceof CompanyWebsite)) {
+      if (isset($this) && ($this instanceof CompanyWebsite)) {
         $this->initCompany();
         $this->initActiveProject();
         $this->initLoggedUser();
@@ -60,11 +60,11 @@
     */
     private function initCompany() {
       $company = Companies::getOwnerCompany();
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         throw new OwnerCompanyDnxError();
       } // if
       
-      if(!($company->getCreatedBy() instanceof User)) {
+      if (!($company->getCreatedBy() instanceof User)) {
         throw new AdministratorDnxError();
       } // if
       
@@ -81,9 +81,9 @@
     */
     private function initActiveProject() {
       $project_id = array_var($_GET, 'active_project');
-      if(!empty($project_id)) {
+      if (!empty($project_id)) {
         $project = Projects::findById($project_id);
-        if(!($project instanceof Project)) {
+        if (!($project instanceof Project)) {
           throw new Error(lang('failed to load project'));
         } // if
         $this->setProject($project);
@@ -106,20 +106,20 @@
       $twisted_token = Cookie::getValue(TOKEN_COOKIE_NAME);
       $remember      = (boolean) Cookie::getValue('remember'.TOKEN_COOKIE_NAME, false);
       
-      if(empty($user_id) || empty($twisted_token)) {
+      if (empty($user_id) || empty($twisted_token)) {
         return false; // we don't have a user
       } // if
       
       $user = Users::findById($user_id);
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         return false; // failed to find user
       } // if
-      if(!$user->isValidToken($twisted_token)) {
+      if (!$user->isValidToken($twisted_token)) {
         return false; // failed to validate token
       } // if
       
       $session_expires = $user->getLastActivity()->advance(SESSION_LIFETIME, false);
-      if(DateTimeValueLib::now()->getTimestamp() < $session_expires->getTimestamp()) {
+      if (DateTimeValueLib::now()->getTimestamp() < $session_expires->getTimestamp()) {
         $this->setLoggedUser($user, $remember, true);
       } else {
         $this->logUserIn($user, $remember);
@@ -141,7 +141,7 @@
     function logUserIn(User $user, $remember = false) {
       $user->setLastLogin(DateTimeValueLib::now());
       
-      if(is_null($user->getLastActivity())) {
+      if (is_null($user->getLastActivity())) {
         $user->setLastVisit(DateTimeValueLib::now());
       } else {
         $user->setLastVisit($user->getLastActivity());
@@ -213,7 +213,7 @@
     * @throws DBQueryError
     */
     function setLoggedUser(User $user, $remember = false, $set_last_activity_time = true) {
-      if($set_last_activity_time) {
+      if ($set_last_activity_time) {
         $user->setLastActivity(DateTimeValueLib::now());
         $user->save();
       } // if
@@ -223,7 +223,7 @@
       Cookie::setValue('id'.TOKEN_COOKIE_NAME, $user->getId(), $expiration);
       Cookie::setValue(TOKEN_COOKIE_NAME, $user->getTwistedToken(), $expiration);
       
-      if($remember) {
+      if ($remember) {
         Cookie::setValue('remember'.TOKEN_COOKIE_NAME, 1, $expiration);
       } else {
         Cookie::unsetValue('remember'.TOKEN_COOKIE_NAME);
@@ -251,7 +251,9 @@
     * @return null
     */
     function setProject($value) {
-      if(is_null($value) || ($value instanceof Project)) $this->selected_project = $value;
+      if (is_null($value) || ($value instanceof Project)) {
+        $this->selected_project = $value;
+      }
     } // setProject
     
     /**
@@ -263,7 +265,7 @@
     */
     static function instance() {
       static $instance;
-      if(!($instance instanceof CompanyWebsite)) {
+      if (!($instance instanceof CompanyWebsite)) {
         $instance = new CompanyWebsite();
       } // if
       return $instance;

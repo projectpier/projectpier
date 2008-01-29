@@ -50,7 +50,7 @@
     * @return VersionsFeed
     */
     function __construct($feed_url = null) {
-      if(!is_null($feed_url)) {
+      if (!is_null($feed_url)) {
         $this->setFeedUrl($feed_url);
       } // if
       $this->setIsLoaded($this->read());
@@ -68,9 +68,11 @@
     */
     function hasNewVersions($current_version) {
       $versions = $this->getVersions();
-      if(is_array($versions)) {
-        foreach($versions as $version) {
-          if($version->isNewerThan($current_version)) return true;
+      if (is_array($versions)) {
+        foreach ($versions as $version) {
+          if ($version->isNewerThan($current_version)) {
+            return true;
+          }
         } // foreach
       } // if
       return false;
@@ -85,12 +87,14 @@
     function getNewVersions($current_version) {
       $new_versions = null;
       $all_versions = $this->getVersions();
-      if(is_array($all_versions)) {
+      if (is_array($all_versions)) {
         $new_versions = array();
-        foreach($all_versions as $version) {
-          if($version->isNewerThan($current_version)) $new_versions[] = $version;
+        foreach ($all_versions as $version) {
+          if ($version->isNewerThan($current_version)) {
+            $new_versions[] = $version;
+          }
         } // foreach
-        if(!count($new_versions)) {
+        if (!count($new_versions)) {
           $new_versions = null;
         } // if
       } // if
@@ -104,12 +108,12 @@
     * @return null
     */
     private function read() {
-      if(!function_exists('simplexml_load_file')) {
+      if (!function_exists('simplexml_load_file')) {
         return false;
       } // if
       
       $this->xml_object = simplexml_load_file($this->getFeedUrl());
-      if(!($this->xml_object instanceof SimpleXMLElement)) {
+      if (!($this->xml_object instanceof SimpleXMLElement)) {
         $this->xml_object = null;
         return false;
       } // if
@@ -125,15 +129,17 @@
     */
     private function processXml() {
       $feed_format = $this->xml_object['format'];
-      if(trim($feed_format)) {
+      if (trim($feed_format)) {
         $this->setFeedFormat($feed_format);
       } // if
       
       $versions = array();
-      foreach($this->xml_object->children() as $version_node) {
+      foreach ($this->xml_object->children() as $version_node) {
         $version = new VersionsFeedEntry($version_node);
-        if($version->isLoaded()) $versions[] = $version;
-        if(count($versions)) {
+        if ($version->isLoaded()) {
+          $versions[] = $version;
+        }
+        if (count($versions)) {
           usort($versions, array('VersionsFeed', 'compareByVersion'));
         } // if
       } // foreach
@@ -234,9 +240,11 @@
     */
     function getVersion($number) {
       $versions = $this->getVersions();
-      if(is_array($versions)) {
-        foreach($versions as $version) {
-          if($version->getVersionNumber() == $number) return $version;
+      if (is_array($versions)) {
+        foreach ($versions as $version) {
+          if ($version->getVersionNumber() == $number) {
+            return $version;
+          }
         } // foerach
       } // if
       return null;

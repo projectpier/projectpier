@@ -121,12 +121,14 @@
     * @return Project
     */
     function getProject() {
-      if($this->isNew() && function_exists('active_project')) {
+      if ($this->isNew() && function_exists('active_project')) {
         return active_project();
       } // if
       
-      if(is_null($this->project)) {
-        if($this->columnExists('project_id')) $this->project = Projects::findById($this->getProjectId());
+      if (is_null($this->project)) {
+        if ($this->columnExists('project_id')) {
+          $this->project = Projects::findById($this->getProjectId());
+        }
       } // if
       return $this->project;
     } // getProject
@@ -176,22 +178,32 @@
     * @throws InvalidInstanceError if $user is not instance of User or AnonymousUser
     */
     function canComment($user) {
-      if(!($user instanceof User) && !($user instanceof AnonymousUser)) {
+      if (!($user instanceof User) && !($user instanceof AnonymousUser)) {
         throw new InvalidInstanceError('user', $user, 'User or AnonymousUser');
       } // if
       
       // Access permissions
-      if($user instanceof User) {
-        if($user->isAdministrator()) return true; // admins have all the permissions
+      if ($user instanceof User) {
+        if ($user->isAdministrator()) return true; // admins have all the permissions
         $project = $this->getProject();
-        if(!($project instanceof Project)) return false;
-        if(!$user->isProjectUser($project)) return false; // not a project member
+        if (!($project instanceof Project)) {
+          return false;
+        }
+        if (!$user->isProjectUser($project)) {
+          return false; // not a project member
+        }
       } // if
       
-      if(!$this->isCommentable()) return false;
-      if($this->columnExists('comments_enabled') && !$this->getCommentsEnabled()) return false;
-      if($user instanceof AnonymousUser) {
-        if($this->columnExists('anonymous_comments_enabled') && !$this->getAnonymousCommentsEnabled()) return false;
+      if (!$this->isCommentable()) {
+        return false;
+      }
+      if ($this->columnExists('comments_enabled') && !$this->getCommentsEnabled()) {
+        return false;
+      }
+      if ($user instanceof AnonymousUser) {
+        if ($this->columnExists('anonymous_comments_enabled') && !$this->getAnonymousCommentsEnabled()) {
+          return false;
+        }
       } // if
       return true;
     } // canComment
@@ -204,8 +216,10 @@
     * @return boolean
     */
     function canAttachFile(User $user, Project $project) {
-      if(!$this->isFileContainer()) return false;
-      if($this->isNew()) {
+      if (!$this->isFileContainer()) {
+        return false;
+      }
+      if ($this->isNew()) {
         return $user->getProjectPermission($project, ProjectUsers::CAN_UPLOAD_FILES);
       } else {
         return $this->canEdit($user);
@@ -234,7 +248,7 @@
     * @return boolean
     */
     function isPrivate() {
-      if($this->columnExists('is_private')) {
+      if ($this->columnExists('is_private')) {
         return $this->getIsPrivate();
       } else {
         return false;
@@ -262,7 +276,9 @@
     * @return array
     */
     function getTags() {
-      if(!$this->isTaggable()) throw new Error('Object not taggable');
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
       return Tags::getTagsByObject($this, get_class($this->manager()));
     } // getTags
     
@@ -274,7 +290,9 @@
     * @return array
     */
     function getTagNames() {
-      if(!$this->isTaggable()) throw new Error('Object not taggable');
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
       return Tags::getTagNamesByObject($this, get_class($this->manager()));
     } // getTagNames
     
@@ -286,10 +304,12 @@
     */
     function setTagsFromCSV($input) {
       $tag_names = array();
-      if(trim($input)) {
+      if (trim($input)) {
         $tag_names = explode(',', $input);
-        foreach($tag_names as $k => $v) {
-          if(trim($v) <> '') $tag_names[$k] = trim($v);
+        foreach ($tag_names as $k => $v) {
+          if (trim($v) <> '') {
+            $tag_names[$k] = trim($v);
+          }
         } // foreach
       } // if
       return $this->setTags($tag_names);
@@ -303,7 +323,9 @@
     * @return boolean
     */
     function setTags() {
-      if(!$this->isTaggable()) throw new Error('Object not taggable');
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
       $args = array_flat(func_get_args());
       return Tags::setObjectTags($args, $this, get_class($this->manager()), $this->getProject());
     } // setTags
@@ -316,7 +338,9 @@
     * @return boolean
     */
     function clearTags() {
-      if(!$this->isTaggable()) throw new Error('Object not taggable');
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
       return Tags::clearObjectTags($this, get_class($this->manager()));
     } // clearTags
     
@@ -342,7 +366,9 @@
     * @return array
     */
     function getSearchableColumns() {
-      if(!$this->isSearchable()) return null;
+      if (!$this->isSearchable()) {
+        return null;
+      }
       return $this->searchable_columns;
     } // getSearchableColumns
     
@@ -354,7 +380,9 @@
     * @return string
     */
     function getSearchableColumnContent($column_name) {
-      if(!$this->columnExists($column_name)) throw new Error("Object column '$column_name' does not exist");
+      if (!$this->columnExists($column_name)) {
+        throw new Error("Object column '$column_name' does not exist");
+      }
       return (string) $this->getColumnValue($column_name);
     } // getSearchableColumnContent
     
@@ -392,7 +420,7 @@
       $manager_class = get_class($this->manager());
       $object_id = $this->getObjectId();
       
-      if(($object_id == $comment->getRelObjectId()) && ($manager_class == $comment->getRelObjectManager())) {
+      if (($object_id == $comment->getRelObjectId()) && ($manager_class == $comment->getRelObjectManager())) {
         return true;
       } // if
       
@@ -410,7 +438,7 @@
     * @return boolean
     */
     function getAllComments() {
-      if(is_null($this->all_comments)) {
+      if (is_null($this->all_comments)) {
         $this->all_comments = Comments::getCommentsByObject($this);
       } // if
       return $this->all_comments;
@@ -423,10 +451,10 @@
     * @return array
     */
     function getComments() {
-      if(logged_user()->isMemberOfOwnerCompany()) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
         return $this->getAllComments();
       } // if
-      if(is_null($this->comments)) {
+      if (is_null($this->comments)) {
         $this->comments = Comments::getCommentsByObject($this, true);
       } // if
       return $this->comments;
@@ -439,7 +467,7 @@
     * @return integer
     */
     function countAllComments() {
-      if(is_null($this->all_comments_count)) {
+      if (is_null($this->all_comments_count)) {
         $this->all_comments_count = Comments::countCommentsByObject($this);
       } // if
       return $this->all_comments_count;
@@ -452,10 +480,10 @@
     * @return integer
     */
     function countComments() {
-      if(logged_user()->isMemberOfOwnerCompany()) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
         return $this->countAllComments();
       } // if
-      if(is_null($this->comments_count)) {
+      if (is_null($this->comments_count)) {
         $this->comments_count = Comments::countCommentsByObject($this, true);
       } // if
       return $this->comments_count;
@@ -469,11 +497,13 @@
     */
     function getCommentNum(Comment $comment) {
       $comments = $this->getComments();
-      if(is_array($comments)) {
+      if (is_array($comments)) {
         $counter = 0;
-        foreach($comments as $object_comment) {
+        foreach ($comments as $object_comment) {
           $counter++;
-          if($comment->getId() == $object_comment->getId()) return $counter;
+          if ($comment->getId() == $object_comment->getId()) {
+            return $counter;
+          } // if
         } // foreach
       } // if
       return 0;
@@ -510,7 +540,7 @@
     } // onAddComment
     
     /**
-    * This event is trigered when comment that belongs to this object is updated
+    * This event is triggered when comment that belongs to this object is updated
     *
     * @param Comment $comment
     * @return boolean
@@ -582,7 +612,7 @@
         'file_id' => $file->getId(),
       )); // findById
       
-      if($attached_file instanceof AttachedFile) {
+      if ($attached_file instanceof AttachedFile) {
         return $attached_file; // Already attached
       } // if
       
@@ -593,7 +623,7 @@
       
       $attached_file->save();
       
-      if(!$file->getIsVisible()) {
+      if (!$file->getIsVisible()) {
         $file->setIsVisible(true);
         $file->setExpirationTime(EMPTY_DATETIME);
         $file->save();
@@ -609,7 +639,7 @@
     * @return array
     */
     function getAllAttachedFiles() {
-      if(is_null($this->all_attached_files)) {
+      if (is_null($this->all_attached_files)) {
         $this->all_attached_files = AttachedFiles::getFilesByObject($this);
       } // if
       return $this->all_attached_files;
@@ -623,10 +653,10 @@
     * @return array
     */
     function getAttachedFiles() {
-      if(logged_user()->isMemberOfOwnerCompany()) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
         return $this->getAllAttachedFiles();
       } // if
-      if(is_null($this->attached_files)) {
+      if (is_null($this->attached_files)) {
         $this->attached_files = AttachedFiles::getFilesByObject($this, true);
       } // if
       return $this->attached_files;
@@ -686,20 +716,22 @@
       $result = parent::save();
       
       // If searchable refresh content in search table
-      if($this->isSearchable()) {
+      if ($this->isSearchable()) {
         SearchableObjects::dropContentByObject($this);
         $project = $this->getProject();
         
-        foreach($this->getSearchableColumns() as $column_name) {
+        foreach ($this->getSearchableColumns() as $column_name) {
           $content = $this->getSearchableColumnContent($column_name);
-          if(trim($content) <> '') {
+          if (trim($content) <> '') {
             $searchable_object = new SearchableObject();
             
             $searchable_object->setRelObjectManager(get_class($this->manager()));
             $searchable_object->setRelObjectId($this->getObjectId());
             $searchable_object->setColumnName($column_name);
             $searchable_object->setContent($content);
-            if($project instanceof Project) $searchable_object->setProjectId($project->getId());
+            if ($project instanceof Project) {
+              $searchable_object->setProjectId($project->getId());
+            }
             $searchable_object->setIsPrivate($this->isPrivate());
             
             $searchable_object->save();
@@ -718,16 +750,16 @@
     * @return boolean
     */
     function delete() {
-      if($this->isTaggable()) {
+      if ($this->isTaggable()) {
         $this->clearTags();
       } // if
-      if($this->isSearchable()) {
+      if ($this->isSearchable()) {
         $this->clearSearchIndex();
       } // if
-      if($this->isCommentable()) {
+      if ($this->isCommentable()) {
         $this->clearComments();
       } // if
-      if($this->isFileContainer()) {
+      if ($this->isFileContainer()) {
         $this->clearAttachedFiles();
       } // if
       return parent::delete();

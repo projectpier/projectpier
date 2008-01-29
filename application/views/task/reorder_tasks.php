@@ -18,7 +18,7 @@
         <th><?php echo lang('order') ?></th>
         <th><?php echo lang('task') ?></th>
       </tr>
-<?php foreach($tasks as $task) { ?>
+<?php foreach ($tasks as $task) { ?>
       <tr>
         <td><?php echo text_field('task_' . $task->getId(), $task->getOrder(), array('class' => 'short')) ?></td>
         <td><?php echo clean($task->getText()) ?></td>

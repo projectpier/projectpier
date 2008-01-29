@@ -30,16 +30,18 @@
     function project_tag() {
       
       $tag = array_var($_GET, 'tag');
-      if(trim($tag) == '') {
+      if (trim($tag) == '') {
         flash_error(lang('tag dnx'));
         $this->redirectTo('project', 'tags');
       } // if
       
       $tagged_objects = active_project()->getObjectsByTag($tag);
       $total_tagged_objects = 0;
-      if(is_array($tagged_objects)) {
-        foreach($tagged_objects as $type => $objects) {
-          if(is_array($objects)) $total_tagged_objects += count($objects);
+      if (is_array($tagged_objects)) {
+        foreach ($tagged_objects as $type => $objects) {
+          if (is_array($objects)) {
+            $total_tagged_objects += count($objects);
+          }
         } // foreach
       } // if
       

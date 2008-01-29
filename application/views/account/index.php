@@ -10,7 +10,7 @@
     lang('update avatar')   => logged_user()->getUpdateAvatarUrl()
   ));
   
-  if($user->canUpdatePermissions(logged_user())) {
+  if ($user->canUpdatePermissions(logged_user())) {
     add_page_action(array(
       lang('permissions')  => $user->getUpdatePermissionsUrl()
     ));

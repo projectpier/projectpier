@@ -19,7 +19,7 @@
       prepare_company_website_controller($this, 'administration');
       
       // Access permissios
-      if(!logged_user()->isAdministrator(owner_company())) {
+      if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
@@ -33,12 +33,12 @@
     */
     function update_category() {
       $category = ConfigCategories::findById(get_id());
-      if(!($category instanceof ConfigCategory)) {
+      if (!($category instanceof ConfigCategory)) {
         flash_error(lang('config category dnx'));
         $this->redirectToReferer(get_url('administration'));
       } // if
       
-      if($category->isEmpty()) {
+      if ($category->isEmpty()) {
         flash_error(lang('config category is empty'));
         $this->redirectToReferer(get_url('administration'));
       } // if
@@ -51,10 +51,12 @@
       tpl_assign('config_categories', $categories);
       
       $submited_values = array_var($_POST, 'options');
-      if(is_array($submited_values)) {
-        foreach($options as $option) {
+      if (is_array($submited_values)) {
+        foreach ($options as $option) {
           $new_value = array_var($submited_values, $option->getName());
-          if(is_null($new_value) || ($new_value == $option->getValue())) continue;
+          if (is_null($new_value) || ($new_value == $option->getValue())) {
+            continue;
+          }
           
           $option->setValue($new_value);
           $option->save();

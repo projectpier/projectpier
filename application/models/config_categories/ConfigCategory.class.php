@@ -49,7 +49,7 @@
     * @return array
     */
     function getOptions($include_system_options = false) {
-      if(is_null($this->config_options)) {
+      if (is_null($this->config_options)) {
         $this->config_options = ConfigOptions::getOptionsByCategory($this, $include_system_options);
       } // if
       return $this->config_options;
@@ -62,7 +62,7 @@
     * @return integer
     */
     function countOptions($include_system_options = false) {
-      if(is_null($this->count_config_options)) {
+      if (is_null($this->count_config_options)) {
         $this->count_config_options = ConfigOptions::countOptionsByCategory($this, $include_system_options);
       } // if
       return $this->count_config_options;

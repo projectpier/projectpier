@@ -103,7 +103,7 @@
     * @throws InvalidParamError
     */
     function setEmail($value) {
-      if(!is_null($value) && !is_valid_email($value)) {
+      if (!is_null($value) && !is_valid_email($value)) {
         throw new InvalidParamError('value', $value, "$value is not a valid email address");
       } // if
       $this->email = $value;
@@ -127,7 +127,7 @@
     * @throws InvalidParamError
     */
     function setLink($value) {
-      if(!is_null($value) && !is_valid_url($value)) {
+      if (!is_null($value) && !is_valid_url($value)) {
         throw new InvalidParamError('value', $value, "$value is not a valid URL");
       } // if
       $this->link = $value;

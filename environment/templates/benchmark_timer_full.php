@@ -1,5 +1,5 @@
-<?php if(!isset($this) || !instance_of($this, 'BenchmarkTimer')) return false; ?>
-<?php if(!$css_rendered) { ?>
+<?php if (!isset($this) || !instance_of($this, 'BenchmarkTimer')) return false; ?>
+<?php if (!$css_rendered) { ?>
 <style type="text/css">
   
 
@@ -43,7 +43,7 @@
 <?php $result = $this->getProfiling(); ?>
 <div class="bencmark_timer_full_report">
 
-<?php if(is_array($result)) { ?>
+<?php if (is_array($result)) { ?>
   <table class="bencmark_timer_full_report">
     <tr>
       <th>From</th>
@@ -51,7 +51,7 @@
       <th>Time taken</th>
       <th>Step</th>
     </tr>
-<?php foreach($result as $data) { ?>
+<?php foreach ($result as $data) { ?>
     <tr>
       <td><?php echo $data['start'] ?></td>
       <td><?php echo $data['stop'] ?></td>

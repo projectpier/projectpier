@@ -13,9 +13,9 @@
   * @return boolean
   */
   function tpl_assign($varname, $varvalue = null) {
-    if(is_array($varname)) {
+    if (is_array($varname)) {
       $template_instance = Template::instance();
-      foreach($varname as $k => $v) {
+      foreach ($varname as $k => $v) {
         $template_instance->assign($k, $v);
       } // foreach
     } else {

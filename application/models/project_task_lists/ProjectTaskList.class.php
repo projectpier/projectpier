@@ -102,10 +102,10 @@
       $task = new ProjectTask();
       $task->setText($text);
       
-      if($assigned_to_user instanceof User) {
+      if ($assigned_to_user instanceof User) {
         $task->setAssignedToUserId($assigned_to_user->getId());
         $task->setAssignedToCompanyId($assigned_to_user->getCompanyId());
-      } elseif($assigned_to_company instanceof Company) {
+      } elseif ($assigned_to_company instanceof Company) {
         $task->setAssignedToCompanyId($assigned_to_company->getId());
       } // if
       
@@ -120,12 +120,16 @@
     * @return null
     */
     function attachTask(ProjectTask $task) {
-      if($task->getTaskListId() == $this->getId()) return;
+      if ($task->getTaskListId() == $this->getId()) {
+        return;
+      }
       
       $task->setTaskListId($this->getId());
       $task->save();
         
-      if($this->isCompleted()) $this->open();
+      if ($this->isCompleted()) {
+        $this->open();
+      }
     } // attachTask
     
     /**
@@ -137,9 +141,11 @@
     * @return null
     */
     function detachTask(ProjectTask $task, $attach_to = null) {
-      if($task->getTaskListId() <> $this->getId()) return;
+      if ($task->getTaskListId() <> $this->getId()) {
+        return;
+      }
       
-      if($attach_to instanceof ProjectTaskList) {
+      if ($attach_to instanceof ProjectTaskList) {
         $attach_to->attachTask($task);
       } else {
         $task->setTaskListId(0);
@@ -148,13 +154,17 @@
       
       $close = true;
       $open_tasks = $this->getOpenTasks();
-      if(is_array($open_tasks)) {
-        foreach($open_tasks as $open_task) {
-          if($open_task->getId() <> $task->getId()) $close = false;
+      if (is_array($open_tasks)) {
+        foreach ($open_tasks as $open_task) {
+          if ($open_task->getId() <> $task->getId()) {
+            $close = false;
+          }
         } // if
       } // if
       
-      if($close) $this->complete(DateTimeValueLib::now(), logged_user());
+      if ($close) {
+        $this->complete(DateTimeValueLib::now(), logged_user());
+      }
     } // detachTask
     
     /**
@@ -198,7 +208,7 @@
     * @return array
     */
     function getTasks() {
-      if(is_null($this->all_tasks)) {
+      if (is_null($this->all_tasks)) {
         $this->all_tasks = ProjectTasks::findAll(array(
           'conditions' => '`task_list_id` = ' . DB::escape($this->getId()),
           'order' => '`order`, `created_on`'
@@ -216,7 +226,7 @@
     * @return array
     */
     function getOpenTasks() {
-      if(is_null($this->open_tasks)) {
+      if (is_null($this->open_tasks)) {
         $this->open_tasks = ProjectTasks::findAll(array(
           'conditions' => '`task_list_id` = ' . DB::escape($this->getId()) . ' AND `completed_on` = ' . DB::escape(EMPTY_DATETIME),
           'order' => '`order`, `created_on`'
@@ -234,7 +244,7 @@
     * @return array
     */
     function getCompletedTasks() {
-      if(is_null($this->completed_tasks)) {
+      if (is_null($this->completed_tasks)) {
         $this->completed_tasks = ProjectTasks::findAll(array(
           'conditions' => '`task_list_id` = ' . DB::escape($this->getId()) . ' AND `completed_on` > ' . DB::escape(EMPTY_DATETIME),
           'order' => '`completed_on` DESC'
@@ -252,8 +262,8 @@
     * @return integer
     */
     function countAllTasks() {
-      if(is_null($this->count_all_tasks)) {
-        if(is_array($this->all_tasks)) {
+      if (is_null($this->count_all_tasks)) {
+        if (is_array($this->all_tasks)) {
           $this->count_all_tasks = count($this->all_tasks);
         } else {
           $this->count_all_tasks = ProjectTasks::count('`task_list_id` = ' . DB::escape($this->getId()));
@@ -270,8 +280,8 @@
     * @return integer
     */
     function countOpenTasks() {
-      if(is_null($this->count_open_tasks)) {
-        if(is_array($this->open_tasks)) {
+      if (is_null($this->count_open_tasks)) {
+        if (is_array($this->open_tasks)) {
           $this->count_open_tasks = count($this->open_tasks);
         } else {
           $this->count_open_tasks = ProjectTasks::count('`task_list_id` = ' . DB::escape($this->getId()) . ' AND `completed_on` = ' . DB::escape(EMPTY_DATETIME));
@@ -288,8 +298,8 @@
     * @return integer
     */
     function countCompletedTasks() {
-      if(is_null($this->count_completed_tasks)) {
-        if(is_array($this->completed_tasks)) {
+      if (is_null($this->count_completed_tasks)) {
+        if (is_array($this->completed_tasks)) {
           $this->count_completed_tasks = count($this->completed_tasks);
         } else {
           $this->count_completed_tasks = ProjectTasks::count('`task_list_id` = ' . DB::escape($this->getId()) . ' AND `completed_on` > ' . DB::escape(EMPTY_DATETIME));
@@ -316,7 +326,7 @@
     * @return array
     */
     function getRelatedForms() {
-      if(is_null($this->related_forms)) {
+      if (is_null($this->related_forms)) {
         $this->related_forms = ProjectForms::findAll(array(
           'conditions' => '`action` = ' . DB::escape(ProjectForm::ADD_TASK_ACTION) . ' AND `in_object_id` = ' . DB::escape($this->getId()),
           'order' => '`order`'
@@ -333,7 +343,7 @@
     * @return User
     */
     function getCompletedBy() {
-      if(!($this->completed_by instanceof User)) {
+      if (!($this->completed_by instanceof User)) {
         $this->completed_by = Users::findById($this->getCompletedById());
       } // if
       return $this->completed_by;
@@ -382,10 +392,10 @@
     * @return boolean
     */
     function canView(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user have access to project
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't access private objects
       } // if
       return true;
@@ -399,7 +409,7 @@
     * @return boolean
     */
     function canAdd(User $user, Project $project) {
-      if($user->isAccountOwner()) {
+      if ($user->isAccountOwner()) {
         return true;
       } // if
       return $user->getProjectPermission($project, ProjectUsers::CAN_MANAGE_TASKS);
@@ -412,16 +422,16 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // user is administrator or root
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't edit private objects
       } // if
-      if($user->getId() == $this->getCreatedById()) {
+      if ($user->getId() == $this->getCreatedById()) {
         return true; // user is list author
       } // if
       return false; // no no
@@ -434,10 +444,10 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // user is administrator or root
       } // if
       return false; // no no
@@ -450,13 +460,13 @@
     * @return boolean
     */
     function canAddTask(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // user is administrator or root
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't add task lists
       } // if
       return $this->canManage($user, $this->getProject());
@@ -469,13 +479,13 @@
     * @return boolean
     */
     function canReorderTasks(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user is on project
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // user is administrator or root
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't add task lists
       } // if
       return $this->canManage($user, $this->getProject());
@@ -503,7 +513,7 @@
     */
     function getOverviewUrl() {
       $project = $this->getProject();
-      if($project instanceof Project) {
+      if ($project instanceof Project) {
         return $project->getTasksUrl() . '#taskList' . $this->getId();
       } // if
       return '';
@@ -538,7 +548,7 @@
     */
     function getAddTaskUrl($redirect_to_list = true) {
       $attributes = array('task_list_id' => $this->getId(), 'active_project' => $this->getProjectId());
-      if($redirect_to_list) {
+      if ($redirect_to_list) {
         $attributes['back_to_list'] = true;
       } // if
       return get_url('task', 'add_task', $attributes);
@@ -552,7 +562,7 @@
     */
     function getReorderTasksUrl($redirect_to_list = true) {
       $attributes = array('task_list_id' => $this->getId(), 'active_project' => $this->getProjectId());
-      if($redirect_to_list) {
+      if ($redirect_to_list) {
         $attributes['back_to_list'] = true;
       } // if
       return get_url('task', 'reorder_tasks', $attributes);
@@ -570,7 +580,7 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('name')) {
+      if (!$this->validatePresenceOf('name')) {
         $errors[] = lang('task list name required');
       } // if
     } // validate
@@ -586,8 +596,8 @@
       $this->deleteTasks();
       
       $related_forms = $this->getRelatedForms();
-      if(is_array($related_forms)) {
-        foreach($related_forms as $related_form) {
+      if (is_array($related_forms)) {
+        foreach ($related_forms as $related_form) {
           $related_form->setInObjectId(0);
           $related_form->save();
         } // foreach
@@ -606,13 +616,13 @@
       parent::save();
       
       $tasks = $this->getTasks();
-      if(is_array($tasks)) {
+      if (is_array($tasks)) {
         $task_ids = array();
-        foreach($tasks as $task) {
+        foreach ($tasks as $task) {
           $task_ids[] = $task->getId();
         } // if
         
-        if(count($task_ids)) {
+        if (count($task_ids)) {
           ApplicationLogs::setIsPrivateForType($this->isPrivate(), 'ProjectTasks', $task_ids);
         } // if
       } // if

@@ -49,7 +49,7 @@
     * @param mixed $default Default value that is returned in case of any error
     * @return null
     */
-    static function getOptionValue($name, $default = null) {      
+    static function getOptionValue($name, $default = null) {
       $option = self::getByName($name);
       return $option instanceof ConfigOption ? $option->getValue() : $default;
     } // getOptionValue

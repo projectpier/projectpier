@@ -12,7 +12,9 @@
     add_bread_crumb(active_project()->getName(), active_project()->getOverviewUrl());
     
     $args = func_get_args();
-    if(!count($args)) return;
+    if (!count($args)) {
+      return;
+    }
     BreadCrumbs::instance()->addByFunctionArguments($args);
     
   } // dashboard_crumbs
@@ -64,12 +66,12 @@
       lang('tags'),
       get_url('project', 'tags')
     ));
-    if(logged_user()->isAdministrator()) {
+    if (logged_user()->isAdministrator()) {
       add_tabbed_navigation_item(new TabbedNavigationItem(
         PROJECT_TAB_FORMS,
         lang('forms'),
         get_url('form')
-      ));  
+      ));
     } // if
     add_tabbed_navigation_item(new TabbedNavigationItem(
       PROJECT_TAB_PEOPLE,

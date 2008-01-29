@@ -32,7 +32,9 @@
     * @return InvalidControllerActionError
     */
     function __construct($controller, $action, $message = null) {
-      if(is_null($message)) $message = "Invalid controller action $controller::$action()";
+      if (is_null($message)) {
+        $message = "Invalid controller action $controller::$action()";
+      } // if
       parent::__construct($message);
       
       $this->setController($controller);

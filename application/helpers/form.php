@@ -7,8 +7,8 @@
   * @return null
   */
   function label_tag($text, $for = null, $is_required = false, $attributes = null, $after_label = ':') {
-    if(trim($for)) {
-      if(is_array($attributes)) {
+    if (trim($for)) {
+      if (is_array($attributes)) {
         $attributes['for'] = trim($for);
       } else {
         $attributes = array('for' => trim($for));
@@ -16,7 +16,9 @@
     } // if
     
     $render_text = trim($text) . $after_label;
-    if($is_required) $render_text .= ' <span class="label_required">*</span>';
+    if ($is_required) {
+      $render_text .= ' <span class="label_required">*</span>';
+    }
     
     return open_html_tag('label', $attributes) . $render_text . close_html_tag('label');
   } // form_label
@@ -51,8 +53,8 @@
   function text_field($name, $value = null, $attributes = null) {
     
     // If we don't have type attribute set it
-    if(array_var($attributes, 'type', false) === false) {
-      if(is_array($attributes)) {
+    if (array_var($attributes, 'type', false) === false) {
+      if (is_array($attributes)) {
         $attributes['type'] = 'text';
       } else {
         $attributes = array('type' => 'text');
@@ -76,7 +78,7 @@
   function password_field($name, $value = null, $attributes = null) {
     
     // Set type to password
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['type'] = 'password';
     } else {
       $attributes = array('type' => 'password');
@@ -99,7 +101,7 @@
   function file_field($name, $value = null, $attributes = null) {
     
     // Set type to password
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['type'] = 'file';
     } else {
       $attributes = array('type' => 'file');
@@ -123,22 +125,28 @@
   function radio_field($name, $checked = false, $attributes = null) {
     
     // Prepare attributes array
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['type'] = 'radio';
-      if(!isset($attributes['class'])) $attributes['class'] = 'checkbox';
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'checkbox';
+      }
     } else {
       $attributes = array('type' => 'radio', 'class' => 'checkbox');
     } // if
     
     // Value
     $value = array_var($attributes, 'value', false);
-    if($value === false) $value = 'checked';
+    if ($value === false) {
+      $value = 'checked';
+    }
     
     // Checked
-    if($checked) {
+    if ($checked) {
       $attributes['checked'] = 'checked';
     } else {
-      if(isset($attributes['checked'])) unset($attributes['checked']);
+      if (isset($attributes['checked'])) {
+        unset($attributes['checked']);
+      }
     } // if
     
     // And done
@@ -159,22 +167,28 @@
   function checkbox_field($name, $checked = false, $attributes = null) {
     
     // Prepare attributes array
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['type'] = 'checkbox';
-      if(!isset($attributes['class'])) $attributes['class'] = 'checkbox';
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'checkbox';
+      }
     } else {
       $attributes = array('type' => 'checkbox', 'class' => 'checkbox');
     } // if
     
     // Value
     $value = array_var($attributes, 'value', false);
-    if($value === false) $value = 'checked';
+    if ($value === false) {
+      $value = 'checked';
+    }
     
     // Checked
-    if($checked) {
+    if ($checked) {
       $attributes['checked'] = 'checked';
     } else {
-      if(isset($attributes['checked'])) unset($attributes['checked']);
+      if (isset($attributes['checked'])) {
+        unset($attributes['checked']);
+      }
     } // if
     
     // And done
@@ -192,15 +206,15 @@
   * @return null
   */
   function select_box($name, $options, $attributes = null) {
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['name'] = $name;
     } else {
       $attributes = array('name' => $name);
     } // if
     
     $output = open_html_tag('select', $attributes) . "\n";
-    if(is_array($options)) {
-      foreach($options as $option) {
+    if (is_array($options)) {
+      foreach ($options as $option) {
         $output .= $option . "\n";
       } // foreach
     } // if
@@ -217,8 +231,8 @@
   * @return string
   */
   function option_tag($text, $value = null, $attributes = null) {
-    if(!($value === null)) {
-      if(is_array($attributes)) {
+    if (!($value === null)) {
+      if (is_array($attributes)) {
         $attributes['value'] = $value;
       } else {
         $attributes = array('value' => $value);
@@ -236,15 +250,15 @@
   * @return string
   */
   function option_group_tag($label, $options, $attributes = null) {
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['label'] = $label;
     } else {
       $attributes = array('label' => $label);
     } // if
     
     $output = open_html_tag('optgroup', $attributes) . "\n";
-    if(is_array($options)) {
-      foreach($options as $option) {
+    if (is_array($options)) {
+      foreach ($options as $option) {
         $output .= $option . "\n";
       } // foreach
     } // if
@@ -261,15 +275,15 @@
   * @return string
   */
   function submit_button($title, $accesskey = 's', $attributes = null) {
-    if(!is_array($attributes)) {
+    if (!is_array($attributes)) {
       $attributes = array();
     } // if
     $attributes['class'] = 'submit';
     $attributes['type'] = 'submit';
     $attributes['accesskey'] = $accesskey;
     
-    if($accesskey) {
-      if(strpos($title, $accesskey) !== false) {
+    if ($accesskey) {
+      if (strpos($title, $accesskey) !== false) {
         $title = str_replace_first($accesskey, "<u>$accesskey</u>", $title);
       } // if
     } // if
@@ -287,14 +301,14 @@
   * @return string
   */
   function textarea_field($name, $value, $attributes = null) {
-    if(!is_array($attributes)) {
+    if (!is_array($attributes)) {
       $attributes = array();
     } // if
     $attributes['name'] = $name;
-    if(!isset($attributes['rows']) || trim($attributes['rows'] == '')) {
+    if (!isset($attributes['rows']) || trim($attributes['rows'] == '')) {
       $attributes['rows'] = '10'; // required attribute
     } // if
-    if(!isset($attributes['cols']) || trim($attributes['cols'] == '')) {
+    if (!isset($attributes['cols']) || trim($attributes['cols'] == '')) {
       $attributes['cols'] = '40'; // required attribute
     } // if
     
@@ -330,16 +344,18 @@
   * @return null
   */
   function pick_date_widget($name, $value = null, $year_from = null, $year_to = null) {
-    if(!($value instanceof DateTimeValue)) $value = new DateTimeValue($value);
+    if (!($value instanceof DateTimeValue)) {
+      $value = new DateTimeValue($value);
+    }
     
     $month_options = array();
-    for($i = 1; $i <= 12; $i++) {
+    for ($i = 1; $i <= 12; $i++) {
       $option_attributes = $i == $value->getMonth() ? array('selected' => 'selected') : null;
       $month_options[] = option_tag(lang("month $i"), $i, $option_attributes);
     } // for
     
     $day_options = array();
-    for($i = 1; $i <= 31; $i++) {
+    for ($i = 1; $i <= 31; $i++) {
       $option_attributes = $i == $value->getDay() ? array('selected' => 'selected') : null;
       $day_options[] = option_tag($i, $i, $option_attributes);
     } // for
@@ -348,7 +364,7 @@
     $year_to = (integer) $year_to < 1 || ((integer) $year_to < $year_from) ? $value->getYear() + 10 : (integer) $year_to;
     
     $year_options = array();
-    for($i = $year_from; $i <= $year_to; $i++) {
+    for ($i = $year_from; $i <= $year_to; $i++) {
       $option_attributes = $i == $value->getYear() ? array('selected' => 'selected') : null;
       $year_options[] = option_tag($i, $i, $option_attributes);
     } // if
@@ -378,7 +394,9 @@
   */
   function editor_widget($name, $value = null, $attributes = null) {
     $editor_attributes = is_array($attributes) ? $attributes : array();
-    if(!isset($editor_attributes['class'])) $editor_attributes['class'] = 'editor';
+    if (!isset($editor_attributes['class'])) {
+      $editor_attributes['class'] = 'editor';
+    }
     return textarea_field($name, $value, $editor_attributes);
   } // editor_widget
   
@@ -414,14 +432,14 @@
   function select_country_widget($name, $value, $attributes = null) {
     $country_codes = array_keys(CountryCodes::getAll());
     $countries = array();
-    foreach($country_codes as $code) {
+    foreach ($country_codes as $code) {
       $countries[$code] = lang("country $code");
     } // foreach
     
     asort($countries);
     
     $country_options = array(option_tag(lang('none'), ''));
-    foreach($countries as $country_code => $country_name) {
+    foreach ($countries as $country_code => $country_name) {
       $option_attributes = $country_code == $value ? array('selected' => true) : null;
       $country_options[] = option_tag($country_name, $country_code, $option_attributes);
     } // foreach
@@ -442,7 +460,7 @@
     $all_timezones = Timezones::getTimezones();
     
     $options = array();
-    foreach($all_timezones as $timezone) {
+    foreach ($all_timezones as $timezone) {
       $option_attributes = $selected_value == $timezone ? array('selected' => true) : null;
       $option_text = $timezone > 0 ? lang("timezone gmt +$timezone") : lang("timezone gmt $timezone");
       $options[] = option_tag($option_text, $timezone, $option_attributes);

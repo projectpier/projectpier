@@ -42,12 +42,12 @@
     */
     function view_list() {
       $task_list = ProjectTaskLists::findById(get_id());
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
       
-      if(!$task_list->canView(logged_user())) {
+      if (!$task_list->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('task'));
       } // if
@@ -69,14 +69,14 @@
     */
     function add_list() {
       
-      if(!ProjectTaskList::canAdd(logged_user(), active_project())) {
+      if (!ProjectTaskList::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('task'));
       } // if
       
       $task_list = new ProjectTaskList();
       $task_list_data = array_var($_POST, 'task_list');
-      if(!is_array($task_list_data)) {
+      if (!is_array($task_list_data)) {
         $task_list_data = array(
           'milestone_id' => array_var($_GET, 'milestone_id')
         ); // array
@@ -85,15 +85,17 @@
       tpl_assign('task_list_data', $task_list_data);
       tpl_assign('task_list', $task_list);
       
-      if(is_array(array_var($_POST, 'task_list'))) {
+      if (is_array(array_var($_POST, 'task_list'))) {
         
         $task_list->setFromAttributes($task_list_data);
         $task_list->setProjectId(active_project()->getId());
-        if(!logged_user()->isMemberOfOwnerCompany()) $task_list->setIsPrivate(false);
+        if (!logged_user()->isMemberOfOwnerCompany()) {
+          $task_list->setIsPrivate(false);
+        }
         
         $tasks = array();
-        for($i = 0; $i < 6; $i++) {
-          if(isset($task_list_data["task$i"]) && is_array($task_list_data["task$i"]) && (trim(array_var($task_list_data["task$i"], 'text')) <> '')) {
+        for ($i = 0; $i < 6; $i++) {
+          if (isset($task_list_data["task$i"]) && is_array($task_list_data["task$i"]) && (trim(array_var($task_list_data["task$i"], 'text')) <> '')) {
             $assigned_to = explode(':', array_var($task_list_data["task$i"], 'assigned_to', ''));
             $tasks[] = array(
               'text' => array_var($task_list_data["task$i"], 'text'),
@@ -109,7 +111,7 @@
           $task_list->save();
           $task_list->setTagsFromCSV(array_var($task_list_data, 'tags'));
           
-          foreach($tasks as $task_data) {
+          foreach ($tasks as $task_data) {
             $task = new ProjectTask();
             $task->setFromAttributes($task_data);
             $task_list->attachTask($task);
@@ -142,18 +144,18 @@
       $this->setTemplate('add_list');
       
       $task_list = ProjectTaskLists::findById(get_id());
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
       
-      if(!$task_list->canEdit(logged_user())) {
+      if (!$task_list->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
       
       $task_list_data = array_var($_POST, 'task_list');
-      if(!is_array($task_list_data)) {
+      if (!is_array($task_list_data)) {
         $tag_names = $task_list->getTagNames();
         $task_list_data = array(
           'name' => $task_list->getName(),
@@ -166,10 +168,12 @@
       tpl_assign('task_list', $task_list);
       tpl_assign('task_list_data', $task_list_data);
       
-      if(is_array(array_var($_POST, 'task_list'))) {
+      if (is_array(array_var($_POST, 'task_list'))) {
         $old_is_private = $task_list->isPrivate();
         $task_list->setFromAttributes($task_list_data);
-        if(!logged_user()->isMemberOfOwnerCompany()) $task_list->setIsPrivate($old_is_private);
+        if (!logged_user()->isMemberOfOwnerCompany()) {
+          $task_list->setIsPrivate($old_is_private);
+        }
         
         try {
           DB::beginWork();
@@ -199,12 +203,12 @@
     */
     function delete_list() {
       $task_list = ProjectTaskLists::findById(get_id());
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
       
-      if(!$task_list->canDelete(logged_user())) {
+      if (!$task_list->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
@@ -232,7 +236,7 @@
     */
     function reorder_tasks() {
       $task_list = ProjectTaskLists::findById(get_id('task_list_id'));
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
@@ -240,13 +244,13 @@
       $back_to_list = (boolean) array_var($_GET, 'back_to_list');
       $redirect_to = $back_to_list ? $task_list->getViewUrl() : get_url('task');
       
-      if(!$task_list->canReorderTasks(logged_user())) {
+      if (!$task_list->canReorderTasks(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToUrl($redirect_to);
       } // if
       
       $tasks = $task_list->getOpenTasks();
-      if(!is_array($tasks) || (count($tasks) < 1)) {
+      if (!is_array($tasks) || (count($tasks) < 1)) {
         flash_error(lang('no open task in task list'));
         $this->redirectToUrl($redirect_to);
       } // if
@@ -255,13 +259,13 @@
       tpl_assign('tasks', $tasks);
       tpl_assign('back_to_list', $back_to_list);
       
-      if(array_var($_POST, 'submitted') == 'submitted') {
+      if (array_var($_POST, 'submitted') == 'submitted') {
         $updated = 0;
-        foreach($tasks as $task) {
+        foreach ($tasks as $task) {
           $new_value = (integer) array_var($_POST, 'task_' . $task->getId());
-          if($new_value <> $task->getOrder()) {
+          if ($new_value <> $task->getOrder()) {
             $task->setOrder($new_value);
-            if($task->save()) {
+            if ($task->save()) {
               $updated++;
             } // if
           } // if
@@ -285,12 +289,12 @@
     */
     function add_task() {
       $task_list = ProjectTaskLists::findById(get_id('task_list_id'));
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
       
-      if(!$task_list->canAddTask(logged_user())) {
+      if (!$task_list->canAddTask(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
@@ -306,7 +310,7 @@
       tpl_assign('task_data', $task_data);
       
       // Form is submited
-      if(is_array($task_data)) {
+      if (is_array($task_data)) {
         $task->setFromAttributes($task_data);
         
         $assigned_to = explode(':', array_var($task_data, 'assigned_to', ''));
@@ -322,7 +326,7 @@
           DB::commit();
           
           flash_success(lang('success add task'));
-          if($back_to_list) {
+          if ($back_to_list) {
             $this->redirectToUrl($task_list->getViewUrl());
           } else {
             $this->redirectTo('task');
@@ -347,24 +351,24 @@
       $this->setTemplate('add_task');
       
       $task = ProjectTasks::findById(get_id());
-      if(!($task instanceof ProjectTask)) {
+      if (!($task instanceof ProjectTask)) {
         flash_error(lang('task dnx'));
         $this->redirectTo('task');
       } // if
       
       $task_list = $task->getTaskList();
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error('task list dnx');
         $this->redirectTo('task');
       } // if
       
-      if(!$task->canEdit(logged_user())) {
+      if (!$task->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
       
       $task_data = array_var($_POST, 'task');
-      if(!is_array($task_data)) {
+      if (!is_array($task_data)) {
         $task_data = array(
           'text' => $task->getText(),
           'task_list_id' => $task->getTaskListId(),
@@ -376,7 +380,7 @@
       tpl_assign('task_list', $task_list);
       tpl_assign('task_data', $task_data);
       
-      if(is_array(array_var($_POST, 'task'))) {
+      if (is_array(array_var($_POST, 'task'))) {
         $task->setFromAttributes($task_data);
         $task->setTaskListId($task_list->getId()); // keep old task list id
         
@@ -390,11 +394,11 @@
           
           // Move?
           $new_task_list_id = (integer) array_var($task_data, 'task_list_id');
-          if($new_task_list_id && ($task->getTaskListId() <> $new_task_list_id)) {
+          if ($new_task_list_id && ($task->getTaskListId() <> $new_task_list_id)) {
             
             // Move!
             $new_task_list = ProjectTaskLists::findById($new_task_list_id);
-            if($new_task_list instanceof ProjectTaskList) {
+            if ($new_task_list instanceof ProjectTaskList) {
               $task_list->detachTask($task, $new_task_list); // detach from old and attach to new list
             } // if
             
@@ -406,7 +410,7 @@
           flash_success(lang('success edit task'));
           
           // Redirect to task list. Check if we have updated task list ID first
-          if(isset($new_task_list) && ($new_task_list instanceof ProjectTaskList)) {
+          if (isset($new_task_list) && ($new_task_list instanceof ProjectTaskList)) {
             $this->redirectToUrl($new_task_list->getViewUrl());
           } else {
             $this->redirectToUrl($task_list->getViewUrl());
@@ -430,18 +434,18 @@
     */
     function delete_task() {
       $task = ProjectTasks::findById(get_id());
-      if(!($task instanceof ProjectTask)) {
+      if (!($task instanceof ProjectTask)) {
         flash_error(lang('task dnx'));
         $this->redirectTo('task');
       } // if
       
       $task_list = $task->getTaskList();
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error('task list dnx');
         $this->redirectTo('task');
       } // if
       
-      if(!$task->canDelete(logged_user())) {
+      if (!$task->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
@@ -470,24 +474,24 @@
     */
     function complete_task() {
       $task = ProjectTasks::findById(get_id());
-      if(!($task instanceof ProjectTask)) {
+      if (!($task instanceof ProjectTask)) {
         flash_error(lang('task dnx'));
         $this->redirectTo('task');
       } // if
       
       $task_list = $task->getTaskList();
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
       
-      if(!$task->canChangeStatus(logged_user())) {
+      if (!$task->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if(!is_valid_url($redirect_to)) {
+      if (!is_valid_url($redirect_to)) {
         $redirect_to = get_referer($task_list->getViewUrl());
       } // if
       
@@ -515,24 +519,24 @@
     */
     function open_task() {
       $task = ProjectTasks::findById(get_id());
-      if(!($task instanceof ProjectTask)) {
+      if (!($task instanceof ProjectTask)) {
         flash_error(lang('task dnx'));
         $this->redirectTo('task');
       } // if
       
       $task_list = $task->getTaskList();
-      if(!($task_list instanceof ProjectTaskList)) {
+      if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
         $this->redirectTo('task');
       } // if
       
-      if(!$task->canChangeStatus(logged_user())) {
+      if (!$task->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('task');
       } // if
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if((trim($redirect_to) == '') || !is_valid_url($redirect_to)) {
+      if ((trim($redirect_to) == '') || !is_valid_url($redirect_to)) {
         $redirect_to = get_referer($task_list->getViewUrl());
       } // if
       

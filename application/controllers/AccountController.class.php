@@ -40,24 +40,24 @@
     */
     function edit_profile() {
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectTo('dashboard');
       } // if
       
       $company = $user->getCompany();
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('administration'));
       } // if
       
-      if(!$user->canUpdateProfile(logged_user())) {
+      if (!$user->canUpdateProfile(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+      if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
         $redirect_to = $user->getCardUrl();
       } // if
       tpl_assign('redirect_to', $redirect_to);
@@ -65,7 +65,7 @@
       $im_types = ImTypes::findAll(array('order' => '`id`'));
       
       $user_data = array_var($_POST, 'user');
-      if(!is_array($user_data)) {
+      if (!is_array($user_data)) {
         $user_data = array(
           'username'      => $user->getUsername(),
           'email'         => $user->getEmail(),
@@ -81,8 +81,8 @@
           'company_id'    => $user->getCompanyId(),
         ); // array
         
-        if(is_array($im_types)) {
-          foreach($im_types as $im_type) {
+        if (is_array($im_types)) {
+          foreach ($im_types as $im_type) {
             $user_data['im_' . $im_type->getId()] = $user->getImValue($im_type);
           } // forech
         } // if
@@ -97,7 +97,7 @@
       tpl_assign('user_data', $user_data);
       tpl_assign('im_types', $im_types);
       
-      if(is_array(array_var($_POST, 'user'))) {
+      if (is_array(array_var($_POST, 'user'))) {
         try {
           DB::beginWork();
           
@@ -106,9 +106,9 @@
           
           $user->clearImValues();
           
-          foreach($im_types as $im_type) {
+          foreach ($im_types as $im_type) {
             $value = trim(array_var($user_data, 'im_' . $im_type->getId()));
-            if($value <> '') {
+            if ($value <> '') {
               
               $user_im_value = new UserImValue();
               
@@ -141,18 +141,18 @@
     */
     function edit_password() {
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectTo('dashboard');
       } // if
       
-      if(!$user->canUpdateProfile(logged_user())) {
+      if (!$user->canUpdateProfile(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+      if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
         $redirect_to = $user->getCardUrl();
       } // if
       tpl_assign('redirect_to', $redirect_to);
@@ -160,25 +160,25 @@
       $password_data = array_var($_POST, 'password');
       tpl_assign('user', $user);
       
-      if(is_array($password_data)) {
+      if (is_array($password_data)) {
         $old_password = array_var($password_data, 'old_password');
         $new_password = array_var($password_data, 'new_password');
         $new_password_again = array_var($password_data, 'new_password_again');
         
         try {
-          if(!logged_user()->isAdministrator()) {
-            if(trim($old_password) == '') {
+          if (!logged_user()->isAdministrator()) {
+            if (trim($old_password) == '') {
               throw new Error(lang('old password required'));
             } // if
-            if(!$user->isValidPassword($old_password)) {
+            if (!$user->isValidPassword($old_password)) {
               throw new Error(lang('invalid old password'));
             } // if
           } // if
           
-          if(trim($new_password) == '') {
+          if (trim($new_password) == '') {
               throw new Error(lang('password value required'));
             } // if
-          if($new_password <> $new_password_again) {
+          if ($new_password <> $new_password_again) {
             throw new Error(lang('passwords dont match'));
           } // if
           
@@ -204,24 +204,24 @@
     */
     function update_permissions() {
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
-      if(!$user->canUpdatePermissions(logged_user())) {
+      if (!$user->canUpdatePermissions(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
       $company = $user->getCompany();
-      if(!($company instanceof Company)) {
+      if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
       $projects = $company->getProjects();
-      if(!is_array($projects) || !count($projects)) {
+      if (!is_array($projects) || !count($projects)) {
         flash_error(lang('no projects owned by company'));
         $this->redirectToReferer($company->getViewUrl());
       } // if
@@ -229,7 +229,7 @@
       $permissions = ProjectUsers::getNameTextArray();
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+      if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
         $redirect_to = $user->getCardUrl();
       } // if
       
@@ -239,22 +239,22 @@
       tpl_assign('permissions', $permissions);
       tpl_assign('redirect_to', $redirect_to);
       
-      if(array_var($_POST, 'submitted') == 'submitted') {
+      if (array_var($_POST, 'submitted') == 'submitted') {
         DB::beginWork();
-        foreach($projects as $project) {
+        foreach ($projects as $project) {
           $relation = ProjectUsers::findById(array(
             'project_id' => $project->getId(),
             'user_id' => $user->getId(),
           )); // findById
           
-          if(array_var($_POST, 'project_permissions_' . $project->getId()) == 'checked') {
-            if(!($relation instanceof ProjectUser)) {
+          if (array_var($_POST, 'project_permissions_' . $project->getId()) == 'checked') {
+            if (!($relation instanceof ProjectUser)) {
               $relation = new ProjectUser();
               $relation->setProjectId($project->getId());
               $relation->setUserId($user->getId());
             } // if
             
-            foreach($permissions as $permission => $permission_text) {
+            foreach ($permissions as $permission => $permission_text) {
               $permission_value = array_var($_POST, 'project_permission_' . $project->getId() . '_' . $permission) == 'checked';
               
               $setter = 'set' . Inflector::camelize($permission);
@@ -263,7 +263,7 @@
             
             $relation->save();
           } else {
-            if($relation instanceof ProjectUser) {
+            if ($relation instanceof ProjectUser) {
               $relation->delete();
             } // if
           } // if
@@ -283,18 +283,18 @@
     */
     function edit_avatar() {
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectTo('dashboard');
       } // if
       
-      if(!$user->canUpdateProfile(logged_user())) {
+      if (!$user->canUpdateProfile(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+      if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
         $redirect_to = $user->getUpdateAvatarUrl();
       } // if
       tpl_assign('redirect_to', $redirect_to);
@@ -302,9 +302,9 @@
       $avatar = array_var($_FILES, 'new_avatar');
       tpl_assign('user', $user);
       
-      if(is_array($avatar)) {
+      if (is_array($avatar)) {
         try {
-          if(!isset($avatar['name']) || !isset($avatar['type']) || !isset($avatar['size']) || !isset($avatar['tmp_name']) || !is_readable($avatar['tmp_name'])) {
+          if (!isset($avatar['name']) || !isset($avatar['type']) || !isset($avatar['size']) || !isset($avatar['tmp_name']) || !is_readable($avatar['tmp_name'])) {
             throw new InvalidUploadError($avatar, lang('error upload file'));
           } // if
           
@@ -312,7 +312,7 @@
           $max_width   = config_option('max_avatar_width', 50);
           $max_height  = config_option('max_avatar_height', 50);
           
-          if(!in_array($avatar['type'], $valid_types) || !($image = getimagesize($avatar['tmp_name']))) {
+          if (!in_array($avatar['type'], $valid_types) || !($image = getimagesize($avatar['tmp_name']))) {
             throw new InvalidUploadError($avatar, lang('invalid upload type', 'JPG, GIF, PNG'));
           } // if
           
@@ -320,7 +320,7 @@
             $old_file = $user->getAvatarPath();
             DB::beginWork();
             
-            if(!$user->setAvatar($avatar['tmp_name'], $max_width, $max_height)) {
+            if (!$user->setAvatar($avatar['tmp_name'], $max_width, $max_height)) {
               DB::rollback();
               flash_error(lang('error edit avatar'));
               $this->redirectToUrl($user->getUpdateAvatarUrl());
@@ -329,7 +329,7 @@
             ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_EDIT);
             DB::commit();
             
-            if(is_file($old_file)) {
+            if (is_file($old_file)) {
               @unlink($old_file);
             } // if
             
@@ -354,23 +354,23 @@
     */
     function delete_avatar() {
       $user = Users::findById(get_id());
-      if(!($user instanceof User)) {
+      if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
         $this->redirectTo('dashboard');
       } // if
       
-      if(!$user->canUpdateProfile(logged_user())) {
+      if (!$user->canUpdateProfile(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
       
       $redirect_to = array_var($_GET, 'redirect_to');
-      if((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+      if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
         $redirect_to = $user->getUpdateAvatarUrl();
       } // if
       tpl_assign('redirect_to', $redirect_to);
       
-      if(!$user->hasAvatar()) {
+      if (!$user->hasAvatar()) {
         flash_error(lang('avatar dnx'));
         $this->redirectToUrl($redirect_to);
       } // if

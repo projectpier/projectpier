@@ -32,7 +32,9 @@
     * @return DBAdapterDnx
     */
     function __construct($adapter_name, $adapter_class, $message = null) {
-      if(is_null($message)) $message = "Database adapter '$adapter_name' (class '$adapter_class') was not found";
+      if (is_null($message)) {
+        $message = "Database adapter '$adapter_name' (class '$adapter_class') was not found";
+      } // if
       parent::__construct($message);
       $this->setAdapterClass($adapter_class);
       $this->setAdapterName($adapter_name);

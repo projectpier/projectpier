@@ -19,10 +19,12 @@
       $due_date = DateTimeValueLib::now()->beginningOfDay();
       
       $projects = $company->getActiveProjects();
-      if(!is_array($projects) || !count($projects)) return null;
+      if (!is_array($projects) || !count($projects)) {
+        return null;
+      }
       
       $project_ids = array();
-      foreach($projects as $project) {
+      foreach ($projects as $project) {
         $project_ids[] = $project->getId();
       } // foreach
       
@@ -43,10 +45,12 @@
       $to_date = DateTimeValueLib::now()->endOfDay();
       
       $projects = $company->getActiveProjects();
-      if(!is_array($projects) || !count($projects)) return null;
+      if (!is_array($projects) || !count($projects)) {
+        return null;
+      }
       
       $project_ids = array();
-      foreach($projects as $project) {
+      foreach ($projects as $project) {
         $project_ids[] = $project->getId();
       } // foreach
       
@@ -64,12 +68,12 @@
     */
     static function getActiveMilestonesByUser(User $user) {
       $projects = $user->getActiveProjects();
-      if(!is_array($projects) || !count($projects)) {
+      if (!is_array($projects) || !count($projects)) {
         return null;
       } // if
       
       $project_ids = array();
-      foreach($projects as $project) {
+      foreach ($projects as $project) {
         $project_ids[] = $project->getId();
       } // foreach
       
@@ -103,10 +107,12 @@
       $due_date = DateTimeValueLib::now()->beginningOfDay();
       
       $projects = $user->getActiveProjects();
-      if(!is_array($projects) || !count($projects)) return null;
+      if (!is_array($projects) || !count($projects)) {
+        return null;
+      }
       
       $project_ids = array();
-      foreach($projects as $project) {
+      foreach ($projects as $project) {
         $project_ids[] = $project->getId();
       } // foreach
       
@@ -128,10 +134,12 @@
       $to_date = DateTimeValueLib::now()->endOfDay();
       
       $projects = $user->getActiveProjects();
-      if(!is_array($projects) || !count($projects)) return null;
+      if (!is_array($projects) || !count($projects)) {
+        return null;
+      }
       
       $project_ids = array();
-      foreach($projects as $project) {
+      foreach ($projects as $project) {
         $project_ids[] = $project->getId();
       } // foreach
       

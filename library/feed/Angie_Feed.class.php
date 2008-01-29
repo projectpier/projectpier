@@ -183,7 +183,7 @@
     * @return null
     */
     function setAuthor($value) {
-      if(!is_null($value) && !($value instanceof Angie_Feed_Author)) {
+      if (!is_null($value) && !($value instanceof Angie_Feed_Author)) {
         throw new InvalidInstanceError('value', $value, 'Angie_Feed_Author');
       } // if
       $this->author = $value;

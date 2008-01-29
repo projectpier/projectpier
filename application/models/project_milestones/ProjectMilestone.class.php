@@ -44,7 +44,9 @@
     * @return boolean
     */
     function isCompleted() {
-      if(is_null($this->getDueDate())) return false;
+      if (is_null($this->getDueDate())) {
+        return false;
+      }
       return (boolean) $this->getCompletedOn();
     } // isCompleted
     
@@ -56,8 +58,12 @@
     * @return null
     */
     function isLate() {
-      if($this->isCompleted()) return false;
-      if(is_null($this->getDueDate())) return true;
+      if ($this->isCompleted()) {
+        return false;
+      }
+      if (is_null($this->getDueDate())) {
+        return true;
+      }
       return !$this->isToday() && ($this->getDueDate()->getTimestamp() < time());
     } // isLate
     
@@ -73,7 +79,9 @@
       $due = $this->getDueDate();
       
       // getDueDate and similar functions can return NULL
-      if(!($due instanceof DateTimeValue)) return false;
+      if (!($due instanceof DateTimeValue)) {
+        return false;
+      }
       
       return $now->getDay() == $due->getDay() && 
         $now->getMonth() == $due->getMonth() && 
@@ -199,9 +207,9 @@
     * @return ApplicationDataObject
     */
     function getAssignedTo() {
-      if($this->getAssignedToUserId() > 0) {
+      if ($this->getAssignedToUserId() > 0) {
         return $this->getAssignedToUser();
-      } elseif($this->getAssignedToCompanyId() > 0) {
+      } elseif ($this->getAssignedToCompanyId() > 0) {
         return $this->getAssignedToCompany();
       } else {
         return null;
@@ -237,7 +245,9 @@
     * @return User
     */
     function getCompletedBy() {
-      if(is_null($this->completed_by)) $this->completed_by = Users::findById($this->getCompletedById());
+      if (is_null($this->completed_by)) {
+        $this->completed_by = Users::findById($this->getCompletedById());
+      }
       return $this->completed_by;
     } // getCompletedBy
     
@@ -263,9 +273,15 @@
     * @return boolean
     */
     function canView(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
-      if($user->isAdministrator()) return true;
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) return false;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
+      if ($user->isAdministrator()) {
+        return true;
+      }
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+        return false;
+      }
       return true;
     } // canView
     
@@ -278,8 +294,12 @@
     * @return boolean
     */
     function canAdd(User $user, Project $project) {
-      if(!$user->isProjectUser($project)) return false;
-      if($user->isAdministrator()) return true;
+      if (!$user->isProjectUser($project)) {
+        return false;
+      }
+      if ($user->isAdministrator()) {
+        return true;
+      }
       return $user->getProjectPermission($project, ProjectUsers::CAN_MANAGE_MILESTONES);
     } // canAdd
     
@@ -291,9 +311,15 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
-      if($user->isAdministrator()) return true;
-      if($this->getCreatedById() == $user->getId()) return true;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
+      if ($user->isAdministrator()) {
+        return true;
+      }
+      if ($this->getCreatedById() == $user->getId()) {
+        return true;
+      }
       return false;
     } // canEdit
     
@@ -305,13 +331,19 @@
     * @return boolean
     */
     function canChangeStatus(User $user) {
-      if($this->canEdit($user)) return true;
+      if ($this->canEdit($user)) {
+        return true;
+      }
       
       // Additional check - is this milestone assigned to this user or its company
-      if($this->getAssignedTo() instanceof User) {
-        if($user->getId() == $this->getAssignedTo()->getObjectId()) return true;
-      } elseif($this->getAssignedTo() instanceof Company) {
-        if($user->getCompanyId() == $this->getAssignedTo()->getObjectId()) return true;
+      if ($this->getAssignedTo() instanceof User) {
+        if ($user->getId() == $this->getAssignedTo()->getObjectId()) {
+          return true;
+        }
+      } elseif ($this->getAssignedTo() instanceof Company) {
+        if ($user->getCompanyId() == $this->getAssignedTo()->getObjectId()) {
+          return true;
+        }
       } // if
       return false;
     } // canChangeStatus
@@ -324,8 +356,12 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) return false;
-      if($user->isAdministrator()) return true;
+      if (!$user->isProjectUser($this->getProject())) {
+        return false;
+      }
+      if ($user->isAdministrator()) {
+        return true;
+      }
       return false;
     } // canDelete
     
@@ -415,8 +451,12 @@
     * @return boolean
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('name')) $errors[] = lang('milestone name required');
-      if(!$this->validatePresenceOf('due_date')) $errors[] = lang('milestone due date required');
+      if (!$this->validatePresenceOf('name')) {
+        $errors[] = lang('milestone name required');
+      }
+      if (!$this->validatePresenceOf('due_date')) {
+        $errors[] = lang('milestone due date required');
+      }
     } // validate
     
     /**

@@ -268,7 +268,7 @@
     */
     function executeOne($sql, $arguments = null) {
       $result = $this->prepareAndExecute($sql, $arguments);
-      if($result instanceof DBResult) {
+      if ($result instanceof DBResult) {
         $first = $result->fetchRow();
         $result->free();
         return $first ? $first : null;
@@ -287,7 +287,7 @@
     */
     function executeAll($sql, $arguments = null) {
       $result = $this->prepareAndExecute($sql, $arguments);
-      if($result instanceof DBResult) {
+      if ($result instanceof DBResult) {
         $all = $result->fetchAll();
         $result->free();
         return $all ? $all : null;
@@ -362,12 +362,14 @@
     * @throws DBQueryError
     */
     protected function prepareAndExecute($sql, $arguments = null) {
-      if(is_array($arguments)) $sql = DB::prepareString($sql, $arguments);
+      if (is_array($arguments)) {
+        $sql = DB::prepareString($sql, $arguments);
+      } // if
       
       $query_result = $this->executeQuery($sql, $this->link);
       DB::addToSQLLog($sql);
       
-      if($query_result === false) {
+      if ($query_result === false) {
         throw new DBQueryError($sql, $this->lastErrorCode(), $this->lastError());
       } // if
       return $query_result === true ? true : new DBResult($this, $query_result);
@@ -403,7 +405,9 @@
     * @return null
     */
     protected function setLink($link) {
-      if(is_resource($link)) $this->link = $link;
+      if (is_resource($link)) {
+        $this->link = $link;
+      } // if
     } // setLink
     
     /**

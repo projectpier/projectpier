@@ -18,7 +18,7 @@
       $twister = array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
       do {
         shuffle($twister);
-      } while($twister[0] == '0');
+      } while ($twister[0] == '0');
       return implode('', $twister);
     } // getTwister
     
@@ -30,10 +30,12 @@
     * @return string
     */
     static function twist($untwisted_string, $twister) {
-      if(strlen($untwisted_string) <> strlen($twister)) return $untwisted_string;
+      if (strlen($untwisted_string) <> strlen($twister)) {
+        return $untwisted_string;
+      } // if
       
       $twisted_array = array();
-      for($i = 0, $strlen = strlen($twister); $i < $strlen; $i++) {
+      for ($i = 0, $strlen = strlen($twister); $i < $strlen; $i++) {
         $twisted_array[(integer) $twister[$i]] = $untwisted_string[$i];
       } // for
       
@@ -49,11 +51,13 @@
     * @return string
     */
     static function untwist($twisted_string, $twister) {
-      if(strlen($twisted_string) <> strlen($twister)) return $twisted_string;
+      if (strlen($twisted_string) <> strlen($twister)) {
+        return $twisted_string;
+      } // if
       
       $twisted_array = string_to_array($twisted_string);
       $untwisted_array = array();
-      for($i = 0, $strlen = strlen($twister); $i < $strlen; $i++) {
+      for ($i = 0, $strlen = strlen($twister); $i < $strlen; $i++) {
         $untwisted_array[] = $twisted_array[(integer) $twister[$i]];
       } // for
       
@@ -68,9 +72,11 @@
     * @return string
     */
     static function twistHash($untwisted_hash, $twister) {
-      if(!is_valid_hash($untwisted_hash)) return $untwisted_sha1;
+      if (!is_valid_hash($untwisted_hash)) {
+        return $untwisted_sha1;
+      } // if
       $result = '';
-      for($i = 0; $i < 4; $i++) {
+      for ($i = 0; $i < 4; $i++) {
         $result .= self::twist(substr($untwisted_hash, $i * 10, 10), $twister);
       } // for
       return $result;
@@ -84,9 +90,11 @@
     * @return string
     */
     static function untwistHash($twisted_hash, $twister) {
-      if(!is_valid_hash($twisted_hash)) return $twisted_hash;
+      if (!is_valid_hash($twisted_hash)) {
+        return $twisted_hash;
+      } // if
       $result = '';
-      for($i = 0; $i < 4; $i++) {
+      for ($i = 0; $i < 4; $i++) {
         $result .= self::untwist(substr($twisted_hash, $i * 10, 10), $twister);
       } // for
       return $result;

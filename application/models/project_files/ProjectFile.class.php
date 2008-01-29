@@ -75,9 +75,9 @@
     * @return ProjectFolder
     */
     function getFolder() {
-      if(is_null($this->folder)) {
+      if (is_null($this->folder)) {
         $this->folder = ProjectFolders::findById($this->getFolderId());
-        if(($this->folder instanceof ProjectFolder) && ($this->folder->getProjectId() <> $this->getProjectId())) {
+        if (($this->folder instanceof ProjectFolder) && ($this->folder->getProjectId() <> $this->getProjectId())) {
           $this->folder = null;
         } // if
       } // if
@@ -91,7 +91,7 @@
     * @return Project
     */
     function getProject() {
-      if(is_null($this->project)) {
+      if (is_null($this->project)) {
         $this->project = Projects::findById($this->getProjectId());
       } // if
       return $this->project;
@@ -104,12 +104,16 @@
     * @return array
     */
     function getRevisions($exclude_last = false) {
-      if($exclude_last) {
+      if ($exclude_last) {
         $last_revision = $this->getLastRevision();
-        if($last_revision instanceof ProjectFileRevision) $conditions = DB::prepareString('`id` <> ? AND `file_id` = ?', array($last_revision->getId(), $this->getId()));
+        if ($last_revision instanceof ProjectFileRevision) {
+          $conditions = DB::prepareString('`id` <> ? AND `file_id` = ?', array($last_revision->getId(), $this->getId()));
+        }
       } // if
       
-      if(!isset($conditions)) $conditions = DB::prepareString('`file_id` = ?', array($this->getId()));
+      if (!isset($conditions)) {
+        $conditions = DB::prepareString('`file_id` = ?', array($this->getId()));
+      }
       
       return ProjectFileRevisions::find(array(
         'conditions' => $conditions,
@@ -147,7 +151,7 @@
     * @return ProjectFileRevision
     */
     function getLastRevision() {
-      if(is_null($this->last_revision)) {
+      if (is_null($this->last_revision)) {
         $this->last_revision = ProjectFileRevisions::findOne(array(
           'conditions' => array('`file_id` = ?', $this->getId()),
           'order' => '`created_on` DESC',
@@ -243,16 +247,16 @@
     */
     function handleUploadedFile($uploaded_file, $create_revision = true, $revision_comment = '') {
       $revision = null;
-      if(!$create_revision) {
+      if (!$create_revision) {
         $revision = $this->getLastRevision();
       } // if
       
-      if(!($revision instanceof ProjectFileRevision)) {
+      if (!($revision instanceof ProjectFileRevision)) {
         $revision = new ProjectFileRevision();
         $revision->setFileId($this->getId());
         $revision->setRevisionNumber($this->getNextRevisionNumber());
         
-        if((trim($revision_comment) == '') && ($this->countRevisions() < 1)) {
+        if ((trim($revision_comment) == '') && ($this->countRevisions() < 1)) {
           $revision_comment = lang('initial versions');
         } // if
       } // if
@@ -260,10 +264,10 @@
       $revision->deleteThumb(false); // remove thumb
       
       // We have a file to handle!
-      if(!is_array($uploaded_file) || !isset($uploaded_file['name']) || !isset($uploaded_file['size']) || !isset($uploaded_file['type']) || !isset($uploaded_file['tmp_name']) || !is_readable($uploaded_file['tmp_name'])) {
+      if (!is_array($uploaded_file) || !isset($uploaded_file['name']) || !isset($uploaded_file['size']) || !isset($uploaded_file['type']) || !isset($uploaded_file['tmp_name']) || !is_readable($uploaded_file['tmp_name'])) {
         throw new InvalidUploadError($uploaded_file);
       } // if
-      if(isset($uploaded_file['error']) && ($uploaded_file['error'] > UPLOAD_ERR_OK)) {
+      if (isset($uploaded_file['error']) && ($uploaded_file['error'] > UPLOAD_ERR_OK)) {
         throw new InvalidUploadError($uploaded_file);
       } // if
       
@@ -275,9 +279,9 @@
       $revision->setTypeString($uploaded_file['type']);
       
       $extension = get_file_extension(basename($uploaded_file['name']));
-      if(trim($extension)) {
+      if (trim($extension)) {
         $file_type = FileTypes::getByExtension($extension);
-        if($file_type instanceof Filetype) {
+        if ($file_type instanceof Filetype) {
           $revision->setFileTypeId($file_type->getId());
         } // if
       } // if
@@ -389,21 +393,21 @@
     * @return boolean
     */
     function canManage(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       return $user->getProjectPermission($this->getProject(), ProjectUsers::CAN_MANAGE_FILES);
     } // canManage
     
     /**
-    * Retrns value of CAN_UPLOAD_FILES permission
+    * Returns value of CAN_UPLOAD_FILES permission
     *
     * @param User $user
     * @param Project $project
     * @return boolean
     */
     function canUpload(User $user, Project $project) {
-      if(!$user->isProjectUser($project)) {
+      if (!$user->isProjectUser($project)) {
         return false;
       } // if
       return $user->getProjectPermission($project, ProjectUsers::CAN_UPLOAD_FILES);
@@ -416,7 +420,7 @@
     * @return boolean
     */
     function canView(User $user) {
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false;
       } // if
       return true;
@@ -451,17 +455,17 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
       
-      if(!$this->canManage(logged_user())) {
+      if (!$this->canManage(logged_user())) {
         return false; // user don't have access to this project or can't manage files
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true; // give access to admin
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // reserved only for members of owner company
       } // if
       
@@ -486,10 +490,10 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
       return false;
@@ -506,7 +510,7 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('filename')) {
+      if (!$this->validatePresenceOf('filename')) {
         $errors[] = lang('filename required');
       } // if
     } // validate
@@ -531,8 +535,8 @@
     */
     function clearRevisions() {
       $revisions = $this->getRevisions();
-      if(is_array($revisions)) {
-        foreach($revisions as $revision) {
+      if (is_array($revisions)) {
+        foreach ($revisions as $revision) {
           $revision->delete();
         } // foreach
       } // if
@@ -558,16 +562,16 @@
     * @return string
     */
     function getSearchableColumnContent($column_name) {
-      if($column_name == 'filecontent') {
+      if ($column_name == 'filecontent') {
         $file_type = $this->getFileType();
         
         // Unknown type or type not searchable
-        if(!($file_type instanceof FileType) || !$file_type->getIsSearchable()) {
+        if (!($file_type instanceof FileType) || !$file_type->getIsSearchable()) {
           return null;
         } // if
         
         $content = $this->getFileContent();
-        if(strlen($content) < MAX_SEARCHABLE_FILE_SIZE) {
+        if (strlen($content) < MAX_SEARCHABLE_FILE_SIZE) {
           return $content;
         } // if
       } else {

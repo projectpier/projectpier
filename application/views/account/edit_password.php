@@ -1,12 +1,12 @@
 <?php 
   
-  if($user->getId() == logged_user()->getId()) {
+  if ($user->getId() == logged_user()->getId()) {
     set_page_title(lang('change password'));
     account_tabbed_navigation();
     account_crumbs(lang('change password'));
   } else {
     set_page_title(lang('change password'));
-    if($user->getCompany()->isOwner()) {
+    if ($user->getCompany()->isOwner()) {
       administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
       administration_crumbs(array(
         array(lang('company'), $user->getCompany()->getViewUrl()),
@@ -23,7 +23,7 @@
     } // if
   } // if
   
-  if($user->canUpdateProfile(logged_user())) {
+  if ($user->canUpdateProfile(logged_user())) {
     add_page_action(array(
       lang('update profile')  => $user->getEditProfileUrl(),
       lang('change password') => $user->getEditPasswordUrl(),
@@ -31,7 +31,7 @@
     ));
   } // if
   
-  if($user->canUpdatePermissions(logged_user())) {
+  if ($user->canUpdatePermissions(logged_user())) {
     add_page_action(array(
       lang('permissions')  => $user->getUpdatePermissionsUrl()
     ));
@@ -42,7 +42,7 @@
 
   <?php tpl_display(get_template_path('form_errors')) ?>
   
-<?php if(!logged_user()->isAdministrator()) { ?>
+<?php if (!logged_user()->isAdministrator()) { ?>
   <div>
     <?php echo label_tag(lang('old password'), 'passwordFormOldPassword', true) ?>
     <?php echo password_field('password[old_password]') ?>

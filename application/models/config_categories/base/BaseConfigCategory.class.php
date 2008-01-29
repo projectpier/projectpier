@@ -108,7 +108,9 @@
     * @return ConfigCategories 
     */
     function manager() {
-      if(!($this->manager instanceof ConfigCategories)) $this->manager = ConfigCategories::instance();
+      if (!($this->manager instanceof ConfigCategories)) {
+        $this->manager = ConfigCategories::instance();
+      }
       return $this->manager;
     } // manager
   

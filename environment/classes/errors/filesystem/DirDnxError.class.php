@@ -24,7 +24,9 @@
     * @return DirDnxError
     */
     function __construct($dir_path, $message = null) {
-      if(is_null($message)) $message = "Directory '$dir_path' doesn't exists";
+      if (is_null($message)) {
+        $message = "Directory '$dir_path' doesn't exists";
+      } // if
       parent::__construct($message);
       $this->setDirPath($dir_path);
     } // __construct

@@ -255,7 +255,7 @@
     * @return array
     */
     function getAllMessages() {
-      if(is_null($this->all_messages)) {
+      if (is_null($this->all_messages)) {
         $this->all_messages = ProjectMessages::getProjectMessages($this, true);
       } // if
       return $this->all_messages;
@@ -269,11 +269,11 @@
     * @return null
     */
     function getMessages() {
-      if(logged_user()->isMemberOfOwnerCompany()) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
         return $this->getAllMessages(); // members of owner company can view all messages
       } // if
       
-      if(is_null($this->messages)) {
+      if (is_null($this->messages)) {
         $this->messages = ProjectMessages::getProjectMessages($this, false);
       } // if
       return $this->messages;
@@ -286,7 +286,7 @@
     * @return array
     */
     function getAllImportantMessages() {
-      if(is_null($this->all_important_messages)) {
+      if (is_null($this->all_important_messages)) {
         $this->all_important_messages = ProjectMessages::getImportantProjectMessages($this, true);
       } // if
       return $this->all_important_messages;
@@ -299,11 +299,11 @@
     * @return array
     */
     function getImportantMessages() {
-      if(logged_user()->isMemberOfOwnerCompany()) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
         return $this->getAllImportantMessages();
       } // if
       
-      if(is_null($this->important_messages)) {
+      if (is_null($this->important_messages)) {
         $this->important_messages = ProjectMessages::getImportantProjectMessages($this, false);
       } // if
       return $this->important_messages;
@@ -320,7 +320,7 @@
     * @return array
     */
     function getAllMilestones() {
-      if(is_null($this->all_milestones)) {
+      if (is_null($this->all_milestones)) {
         $this->all_milestones = ProjectMilestones::findAll(array(
           'conditions' => array('`project_id` = ?', $this->getId()),
           'order' => 'due_date'
@@ -337,8 +337,10 @@
     * @return array
     */
     function getMilestones() {
-      if(logged_user()->isMemberOfOwnerCompany()) return $this->getAllMilestones(); // member of owner company
-      if(is_null($this->milestones)) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllMilestones(); // member of owner company
+      }
+      if (is_null($this->milestones)) {
         $this->milestones = ProjectMilestones::findAll(array(
           'conditions' => array('`project_id` = ? AND `is_private` = ?', $this->getId(), 0),
           'order' => 'due_date'
@@ -354,7 +356,7 @@
     * @return array
     */
     function getAllOpenMilestones() {
-      if(is_null($this->all_open_milestones)) {
+      if (is_null($this->all_open_milestones)) {
         $this->all_open_milestones = ProjectMilestones::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` = ?', $this->getId(), EMPTY_DATETIME),
           'order' => 'due_date'
@@ -371,8 +373,10 @@
     * @return array
     */
     function getOpenMilestones() {
-      if(logged_user()->isMemberOfOwnerCompany()) return $this->getAllOpenMilestones();
-      if(is_null($this->open_milestones)) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllOpenMilestones();
+      }
+      if (is_null($this->open_milestones)) {
         $this->open_milestones = ProjectMilestones::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` = ? AND `is_private` = ?', $this->getId(), EMPTY_DATETIME, 0),
           'order' => 'due_date'
@@ -388,7 +392,7 @@
     * @return array
     */
     function getAllCompletedMilestones() {
-      if(is_null($this->all_completed_milestones)) {
+      if (is_null($this->all_completed_milestones)) {
         $this->all_completed_milestones = ProjectMilestones::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` > ?', $this->getId(), EMPTY_DATETIME),
           'order' => 'due_date'
@@ -405,8 +409,10 @@
     * @return array
     */
     function getCompletedMilestones() {
-      if(logged_user()->isMemberOfOwnerCompany()) return $this->getAllCompletedMilestones();
-      if(is_null($this->completed_milestones)) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllCompletedMilestones();
+      }
+      if (is_null($this->completed_milestones)) {
         $this->completed_milestones = ProjectMilestones::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` > ? AND `is_private` = ?', $this->getId(), EMPTY_DATETIME, 0),
           'order' => 'due_date'
@@ -422,7 +428,9 @@
     * @return array
     */
     function getLateMilestones() {
-      if($this->late_milestones === false) $this->splitOpenMilestones();
+      if ($this->late_milestones === false) {
+        $this->splitOpenMilestones();
+      }
       return $this->late_milestones;
     } // getLateMilestones
     
@@ -433,7 +441,9 @@
     * @return array
     */
     function getTodayMilestones() {
-      if($this->today_milestones === false) $this->splitOpenMilestones();
+      if ($this->today_milestones === false) {
+        $this->splitOpenMilestones();
+      }
       return $this->today_milestones;
     } // getTodayMilestones
     
@@ -444,7 +454,9 @@
     * @return array
     */
     function getUpcomingMilestones() {
-      if($this->upcoming_milestones === false) $this->splitOpenMilestones();
+      if ($this->upcoming_milestones === false) {
+        $this->splitOpenMilestones();
+      }
       return $this->upcoming_milestones;
     } // getUpcomingMilestones
     
@@ -462,16 +474,22 @@
       $this->today_milestones = null;
       $this->upcoming_milestones = null;
       
-      if(is_array($open_milestones)) {
-        foreach($open_milestones as $open_milestone) {
-          if($open_milestone->isLate()) {
-            if(!is_array($this->late_milestones)) $this->late_milestones = array();
+      if (is_array($open_milestones)) {
+        foreach ($open_milestones as $open_milestone) {
+          if ($open_milestone->isLate()) {
+            if (!is_array($this->late_milestones)) {
+              $this->late_milestones = array();
+            }
             $this->late_milestones[] = $open_milestone;
-          } elseif($open_milestone->isToday()) {
-            if(!is_array($this->today_milestones)) $this->today_milestones = array();
+          } elseif ($open_milestone->isToday()) {
+            if (!is_array($this->today_milestones)) {
+              $this->today_milestones = array();
+            }
             $this->today_milestones[] = $open_milestone;
           } else {
-            if(!is_array($this->upcoming_milestones)) $this->upcoming_milestones = array();
+            if (!is_array($this->upcoming_milestones)) {
+              $this->upcoming_milestones = array();
+            }
             $this->upcoming_milestones[] = $open_milestone;
           } // if
         } // foreach
@@ -489,7 +507,7 @@
     * @return array
     */
     function getAllTaskLists() {
-      if(is_null($this->all_task_lists)) {
+      if (is_null($this->all_task_lists)) {
         $this->all_task_lists = ProjectTaskLists::findAll(array(
           'conditions' => array('`project_id` = ?', $this->getId()),
           'order' => '`order`'
@@ -506,8 +524,10 @@
     * @return array
     */
     function getTaskLists() {
-      if(logged_user()->isMemberOfOwnerCompany()) return $this->getAllTaskLists();
-      if(is_null($this->task_lists)) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllTaskLists();
+      }
+      if (is_null($this->task_lists)) {
         $this->task_lists = ProjectTaskLists::findAll(array(
           'conditions' => array('`project_id` = ? AND `is_private` = ?', $this->getId(), 0),
           'order' => '`order`'
@@ -523,7 +543,7 @@
     * @return array
     */
     function getAllOpenTaskLists() {
-      if(is_null($this->all_open_task_lists)) {
+      if (is_null($this->all_open_task_lists)) {
         $this->all_open_task_lists = ProjectTaskLists::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` = ?', $this->getId(), EMPTY_DATETIME),
           'order' => '`order`'
@@ -540,8 +560,10 @@
     * @return array
     */
     function getOpenTaskLists() {
-      if(logged_user()->isMemberOfOwnerCompany()) return $this->getAllOpenTaskLists();
-      if(is_null($this->open_task_lists)) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllOpenTaskLists();
+      }
+      if (is_null($this->open_task_lists)) {
         $this->open_task_lists = ProjectTaskLists::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` = ? AND `is_private` = ?', $this->getId(), EMPTY_DATETIME, 0),
           'order' => '`order`'
@@ -557,7 +579,7 @@
     * @return array
     */
     function getAllCompletedTaskLists() {
-      if(is_null($this->all_completed_task_lists)) {
+      if (is_null($this->all_completed_task_lists)) {
         $this->all_completed_task_lists = ProjectTaskLists::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` > ?', $this->getId(), EMPTY_DATETIME),
           'order' => '`order`'
@@ -574,8 +596,10 @@
     * @return array
     */
     function getCompletedTaskLists() {
-      if(logged_user()->isMemberOfOwnerCompany()) return $this->getAllCompletedTaskLists();
-      if(is_null($this->completed_task_lists)) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllCompletedTaskLists();
+      }
+      if (is_null($this->completed_task_lists)) {
         $this->completed_task_lists = ProjectTaskLists::findAll(array(
           'conditions' => array('`project_id` = ? AND `completed_on` > ? AND `is_private` = ?', $this->getId(), EMPTY_DATETIME, 0),
           'order' => '`order`'
@@ -597,7 +621,7 @@
     */
     function getTagNames() {
       $exclude_private = !logged_user()->isMemberOfOwnerCompany();
-      if(is_null($this->tag_names)) {
+      if (is_null($this->tag_names)) {
         $this->tag_names = Tags::getProjectTagNames($this, $exclude_private);
       } // if
       return $this->tag_names;
@@ -687,7 +711,7 @@
     * @return array
     */
     function getAllForms() {
-      if(is_null($this->all_forms)) {
+      if (is_null($this->all_forms)) {
         $this->all_forms = ProjectForms::findAll(array(
           'conditions' => array('`project_id` = ?', $this->getId()),
           'order' => '`order`'
@@ -704,7 +728,7 @@
     */
     function getVisibleForms($only_enabled = false) {
       $conditions = '`project_id` = ' . DB::escape($this->getId());
-      if($only_enabled) {
+      if ($only_enabled) {
         $conditions .= ' AND `is_enabled` = ' . DB::escape(true);
       } // if
       
@@ -734,10 +758,12 @@
     */
     function getCompanies($include_owner_company = true) {
       $result = array();
-      if($include_owner_company) $result[] = $this->getCompany();
+      if ($include_owner_company) {
+        $result[] = $this->getCompany();
+      }
       
       $companies = ProjectCompanies::getCompaniesByProject($this);
-      if(is_array($companies)) {
+      if (is_array($companies)) {
         $result = array_merge($result, $companies);
       } // if
       
@@ -764,15 +790,15 @@
     */
     function getUsers($group_by_company = true) {
       $users = ProjectUsers::getUsersByProject($this);
-      if(!is_array($users) || !count($users)) {
+      if (!is_array($users) || !count($users)) {
         return null;
       } // if
       
-      if($group_by_company) {
+      if ($group_by_company) {
         
         $grouped = array();
-        foreach($users as $user) {
-          if(!isset($grouped[$user->getCompanyId()]) || !is_array($grouped[$user->getCompanyId()])) {
+        foreach ($users as $user) {
+          if (!isset($grouped[$user->getCompanyId()]) || !is_array($grouped[$user->getCompanyId()])) {
             $grouped[$user->getCompanyId()] = array();
           } // if
           $grouped[$user->getCompanyId()][] = $user;
@@ -841,7 +867,7 @@
     */
     function getUsersMilestones(User $user) {
       $conditions = DB::prepareString('`project_id` = ? AND ((`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?)) AND `completed_on` = ?', array($this->getId(), $user->getId(), $user->getCompanyId(), 0, $user->getCompanyId(), 0, 0, EMPTY_DATETIME));
-      if(!$user->isMemberOfOwnerCompany()) {
+      if (!$user->isMemberOfOwnerCompany()) {
         $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));
       } // if
       return ProjectMilestones::findAll(array(
@@ -858,13 +884,13 @@
     */
     function getUsersTasks(User $user) {
       $task_lists = $this->getTaskLists();
-      if(!is_array($task_lists)) {
+      if (!is_array($task_lists)) {
         return false;
       } // if
       
       $task_list_ids = array();
-      foreach($task_lists as $task_list) {
-        if(!$user->isMemberOfOwnerCompany() && $task_list->isPrivate()) {
+      foreach ($task_lists as $task_list) {
+        if (!$user->isMemberOfOwnerCompany() && $task_list->isPrivate()) {
           continue;
         } // if
         $task_list_ids[] = $task_list->getId();
@@ -881,7 +907,7 @@
     // ---------------------------------------------------
     
     function getFolders() {
-      if(is_null($this->folders)) {
+      if (is_null($this->folders)) {
         $this->folders = ProjectFolders::getProjectFolders($this);
       } // if
       return $this->folders;
@@ -894,7 +920,7 @@
     * @return array
     */
     function getAllImportantFiles() {
-      if(is_null($this->all_important_files)) {
+      if (is_null($this->all_important_files)) {
         $this->all_important_files = ProjectFiles::getImportantProjectFiles($this, true);
       } // if
       return $this->all_important_files;
@@ -907,11 +933,11 @@
     * @return array
     */
     function getImportantFiles() {
-      if(logged_user()->isMemberOfOwnerCompany()) {
+      if (logged_user()->isMemberOfOwnerCompany()) {
         return $this->getAllImportantFiles();
       } // if
       
-      if(is_null($this->important_files)) {
+      if (is_null($this->important_files)) {
         $this->important_files = ProjectFiles::getImportantProjectFiles($this, false);
       } // if
       return $this->important_files;
@@ -924,7 +950,7 @@
     * @return array
     */
     function getAllOrphanedFiles() {
-      if(is_null($this->all_orphaned_files)) {
+      if (is_null($this->all_orphaned_files)) {
         $this->all_orphaned_files = ProjectFiles::getOrphanedFilesByProject($this, true);
       } //
       return $this->all_orphaned_files;
@@ -937,7 +963,7 @@
     * @return array
     */
     function getOrphanedFiles() {
-      if(is_null($this->orphaned_files)) {
+      if (is_null($this->orphaned_files)) {
         $this->orphaned_files = ProjectFiles::getOrphanedFilesByProject($this, logged_user()->isMemberOfOwnerCompany());
       } // if
       return $this->orphaned_files;
@@ -1037,7 +1063,9 @@
     * @return boolean
     */
     function canRemoveCompanyFromProject(User $user, Company $remove_company) {
-      if($remove_company->isOwner()) return false;
+      if ($remove_company->isOwner()) {
+        return false;
+      }
       return $user->isAccountOwner() || $user->isAdministrator();
     } // canRemoveCompanyFromProject
     
@@ -1050,7 +1078,9 @@
     * @return boolean
     */
     function canRemoveUserFromProject(User $user, User $remove_user) {
-      if($remove_user->isAccountOwner()) return false;
+      if ($remove_user->isAccountOwner()) {
+        return false;
+      }
       return $user->isAccountOwner() || $user->isAdministrator();
     } // canRemoveUserFromProject
     
@@ -1137,7 +1167,7 @@
     * @return string
     */
     function getSearchUrl($search_for = null, $page = null) {
-      if(trim($search_for) <> '') {
+      if (trim($search_for) <> '') {
         $params = array(
           'active_project' => $this->getId(),
           'search_for' => $search_for,
@@ -1244,10 +1274,10 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('name')) {
+      if (!$this->validatePresenceOf('name')) {
         $errors[] = lang('project name required');
       } // if
-      if(!$this->validateUniquenessOf('name')) {
+      if (!$this->validateUniquenessOf('name')) {
         $errors[] = lang('project name unique');
       } // if
     } // validate
@@ -1278,8 +1308,8 @@
     */
     private function clearMessages() {
       $messages = $this->getAllMessages();
-      if(is_array($messages)) {
-        foreach($messages as $message) {
+      if (is_array($messages)) {
+        foreach ($messages as $message) {
           $message->delete();
         } // foreach
       } // if
@@ -1293,8 +1323,8 @@
     */
     private function clearTaskLists() {
       $task_lists = $this->getAllTaskLists();
-      if(is_array($task_lists)) {
-        foreach($task_lists as $task_list) {
+      if (is_array($task_lists)) {
+        foreach ($task_lists as $task_list) {
           $task_list->delete();
         } // foreach
       } // if
@@ -1308,8 +1338,8 @@
     */
     private function clearMilestones() {
       $milestones = $this->getAllMilestones();
-      if(is_array($milestones)) {
-        foreach($milestones as $milestone) {
+      if (is_array($milestones)) {
+        foreach ($milestones as $milestone) {
           $milestone->delete();
         } // foreach
       } // if
@@ -1323,8 +1353,8 @@
     */
     private function clearForms() {
       $forms = $this->getAllForms();
-      if(is_array($forms)) {
-        foreach($forms as $form) {
+      if (is_array($forms)) {
+        foreach ($forms as $form) {
           $form->delete();
         } // foreach
       } // if
@@ -1338,8 +1368,8 @@
     */
     private function clearFiles() {
       $files = ProjectFiles::getAllFilesByProject($this);
-      if(is_array($files)) {
-        foreach($files as $file) {
+      if (is_array($files)) {
+        foreach ($files as $file) {
           $file->delete();
         } // foreach
       } // if
@@ -1353,8 +1383,8 @@
     */
     private function clearFolders() {
       $folders = $this->getFolders();
-      if(is_array($folders)) {
-        foreach($folders as $folder) {
+      if (is_array($folders)) {
+        foreach ($folders as $folder) {
           $folder->delete();
         } // foreach
       } // if

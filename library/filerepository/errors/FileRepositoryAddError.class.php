@@ -33,7 +33,7 @@
     * @return FileRepositoryAddError
     */
     function __construct($source, $unique_file_id = null, $message = null) {
-      if(is_null($message)) $message = "Failed to import file '$source' to the file repository (unique file id: $unique_file_id)";
+      if (is_null($message)) $message = "Failed to import file '$source' to the file repository (unique file id: $unique_file_id)";
       parent::__construct($message);
       $this->setSource($source);
       $this->setUniqueFileId($unique_file_id);

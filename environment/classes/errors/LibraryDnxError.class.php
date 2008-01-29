@@ -25,7 +25,9 @@
     * @return LibraryDnxError
     */
     function __construct($library, $message = null) {
-      if(is_null($message)) $message = "Library '$library' does not exists";
+      if (is_null($message)) {
+        $message = "Library '$library' does not exists";
+      } // if
       parent::__construct($message);
       $this->setLibrary($library);
     } // __construct

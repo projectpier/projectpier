@@ -1,81 +1,80 @@
 <?php
 
   // ---------------------------------------------------
-  //  System callback functions, registered automaticly
+  //  System callback functions, registered automatically
   //  or in application/application.php
   // ---------------------------------------------------
+
+  /**
+  * Gets called, when an undefined class is being instantiated
+  *
+  * @param_string $load_class_name
+  */
+  function __autoload($load_class_name) {
+    static $loader = null;
+    $class_name = strtoupper($load_class_name);
+    
+    // Try to get this data from index...
+    if (isset($GLOBALS[AutoLoader::GLOBAL_VAR]) && 
+      isset($GLOBALS[AutoLoader::GLOBAL_VAR][$class_name])) {
+      return include $GLOBALS[AutoLoader::GLOBAL_VAR][$class_name];
+    } // if
+    
+    if (!$loader) {
+      $loader = new AutoLoader();
+      $loader->addDir(ROOT . '/application');
+      $loader->addDir(ROOT . '/environment');
+      $loader->addDir(ROOT . '/library');
+      $loader->setIndexFilename(ROOT . '/cache/autoloader.php');
+    } // if
+    
+    try {
+      $loader->loadClass($class_name);
+    } catch(Exception $e) {
+      die('Caught Exception in AutoLoader: ' . $e->__toString());
+    } // try
+  } // __autoload
   
   /**
-	* Gets called, when an undefined class is being instanciated
-	*d
-	* @param_string $load_class_name
-	*/
-	function __autoload($load_class_name) {
-		static $loader = null;
-		$class_name = strtoupper($load_class_name);
-		
-		// Try to get this data from index...
-		if(isset($GLOBALS[AutoLoader::GLOBAL_VAR])) {
-		  if(isset($GLOBALS[AutoLoader::GLOBAL_VAR][$class_name])) {
-		    return include $GLOBALS[AutoLoader::GLOBAL_VAR][$class_name];
-		  } // if
-		} // if
-		
-		if(!$loader) {
-			$loader = new AutoLoader();
-			$loader->addDir(ROOT . '/application');
-			$loader->addDir(ROOT . '/environment');
-			$loader->addDir(ROOT . '/library');
-			$loader->setIndexFilename(ROOT . '/cache/autoloader.php');
-		} // if
-		
-    try {
-    	$loader->loadClass($class_name);
-    } catch(Exception $e) {
-    	die('Caught Exception in AutoLoader: ' . $e->__toString());
-    } // try
-	} // __autoload
-	
-	/**
-	* ProjectPier shutdown function
-	*
-	* @param void
-	* @return null
-	*/
-	function __shutdown() {
-	  $logger_session = Logger::getSession();
-	  if(($logger_session instanceof Logger_Session) && !$logger_session->isEmpty()) {
-	    Logger::saveSession();
-	  } // if
-	} // __shutdown
-	
-	/**
-	* This function will be used as error handler for production
-	*
-	* @param integer $code
-	* @param string $message
-	* @param string $file
-	* @param integer $line
-	* @return null
-	*/
-	function __production_error_handler($code, $message, $file, $line) {
-	  // Skip non-static method called staticly type of error...
-	  if($code == 2048) {
-	    return;
-	  } // if
-	  
-	  Logger::log("Error: $message in '$file' on line $line (error code: $code)", Logger::ERROR);
-	} // __production_error_handler
-	
-	/**
-	* This function will be used as exception handler in production environment
-	*
-	* @param Exception $exception
-	* @return null
-	*/
-	function __production_exception_handler($exception) {
-	  Logger::log($exception, Logger::FATAL);
-	} // __production_exception_handler
+  * ProjectPier shutdown function
+  *
+  * @param void
+  * @return null
+  */
+  function __shutdown() {
+    $logger_session = Logger::getSession();
+    if (($logger_session instanceof Logger_Session) && !$logger_session->isEmpty()) {
+      Logger::saveSession();
+    } // if
+  } // __shutdown
+  
+  /**
+  * This function will be used as error handler for production
+  *
+  * @param integer $code
+  * @param string $message
+  * @param string $file
+  * @param integer $line
+  * @return null
+  */
+  function __production_error_handler($code, $message, $file, $line) {
+    // Skip non-static method called staticly type of error...
+    if ($code == 2048) {
+      return;
+    } // if
+    
+    Logger::log("Error: $message in '$file' on line $line (error code: $code)", Logger::ERROR);
+  } // __production_error_handler
+  
+  /**
+  * This function will be used as exception handler in production environment
+  *
+  * @param Exception $exception
+  * @return null
+  */
+  function __production_exception_handler($exception) {
+    Logger::log($exception, Logger::FATAL);
+  } // __production_exception_handler
 
   // ---------------------------------------------------
   //  Get URL
@@ -84,7 +83,7 @@
   /**
   * Return an application URL
   * 
-  * If $include_project_id variable is presend active_project variable will be added to the list of params if we have a 
+  * If $include_project_id variable is present active_project variable will be added to the list of params if we have a 
   * project selected (active_project() function returns valid project instance)
   *
   * @param string $controller_name
@@ -97,23 +96,23 @@
   function get_url($controller_name = null, $action_name = null, $params = null, $anchor = null, $include_project_id = true) {
     $controller = trim($controller_name) ? $controller_name : DEFAULT_CONTROLLER;
     $action = trim($action_name) ? $action_name : DEFAULT_ACTION;
-    if(!is_array($params) && !is_null($params)) {
+    if (!is_array($params) && !is_null($params)) {
       $params = array('id' => $params);
     } // if
     
     $url_params = array('c=' . $controller, 'a=' . $action);
     
-    if($include_project_id) {
-      if(function_exists('active_project') && (active_project() instanceof Project)) {
-        if(!(is_array($params) && isset($params['active_project']))) {
+    if ($include_project_id) {
+      if (function_exists('active_project') && (active_project() instanceof Project)) {
+        if (!(is_array($params) && isset($params['active_project']))) {
           $url_params[] = 'active_project=' . active_project()->getId();
         } // if
       } // if
     } // if
     
-    if(is_array($params)) {
-      foreach($params as $param_name => $param_value) {
-        if(is_bool($param_value)) {
+    if (is_array($params)) {
+      foreach ($params as $param_name => $param_value) {
+        if (is_bool($param_value)) {
           $url_params[] = $param_name . '=1';
         } else {
           $url_params[] = $param_name . '=' . urlencode($param_value);
@@ -121,7 +120,7 @@
       } // foreach
     } // if
     
-    if(trim($anchor) <> '') {
+    if (trim($anchor) <> '') {
       $anchor = '#' . $anchor;
     } // if
     
@@ -161,19 +160,19 @@
   * @return string
   */
   function product_signature() {
-    if(function_exists('logged_user') && (logged_user() instanceof User) && logged_user()->isMemberOfOwnerCompany()) {
+    if (function_exists('logged_user') && (logged_user() instanceof User) && logged_user()->isMemberOfOwnerCompany()) {
       $result = lang('footer powered', 'http://www.projectpier.org/', clean(product_name()) . ' ' . product_version());
-      if(Env::isDebugging()) {
+      if (Env::isDebugging()) {
         ob_start();
         benchmark_timer_display(false);
         $result .= '. ' . ob_get_clean();
-        if(function_exists('memory_get_usage')) {
+        if (function_exists('memory_get_usage')) {
           $result .= '. ' . format_filesize(memory_get_usage());
         } // if
       } // if
       return $result;
     } else {
-      return  lang('footer powered', 'http://www.ProjectPier.org/', clean(product_name()));
+      return lang('footer powered', 'http://www.ProjectPier.org/', clean(product_name()));
     } // if
   } // product_signature
   
@@ -220,9 +219,11 @@
   function prepare_company_website_controller(PageController $controller, $layout = 'dashboard') {
     
     // If we don't have logged user prepare referer params and redirect user to login page
-    if(!(logged_user() instanceof User)) {
+    if (!(logged_user() instanceof User)) {
       $ref_params = array();
-      foreach($_GET as $k => $v) $ref_params['ref_' . $k] = $v;
+      foreach ($_GET as $k => $v) {
+        $ref_params['ref_' . $k] = $v;
+      }
       $controller->redirectTo('access', 'login', $ref_params);
     } // if
     
@@ -292,7 +293,7 @@
   */
   function set_config_option($option_name, $value) {
     $config_option = ConfigOptions::getByName($option_name);
-    if(!($config_option instanceof ConfigOption)) {
+    if (!($config_option instanceof ConfigOption)) {
       return false;
     } // if
     
@@ -311,7 +312,7 @@
     $object_id = (integer) $object_id;
     $manager_class = trim($manager_class);
     
-    if(!is_valid_function_name($manager_class) || !class_exists($manager_class, true)) {
+    if (!is_valid_function_name($manager_class) || !class_exists($manager_class, true)) {
       throw new Error("Class '$manager_class' does not exist");
     } // if
     

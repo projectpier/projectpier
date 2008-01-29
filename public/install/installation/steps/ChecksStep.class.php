@@ -57,15 +57,15 @@
       $all_ok = true;
       
       // Check PHP version
-      if(version_compare(PHP_VERSION, '5.0.2', 'ge')) {
+      if (version_compare(PHP_VERSION, '5.0.2', 'ge')) {
         $this->addToChecklist('PHP version is ' . PHP_VERSION, true);
       } else {
         $this->addToChecklist('You PHP version is ' . PHP_VERSION . '. PHP 5.0.2 or newer is required', false);
         $all_ok = false;
       } // if
       
-      foreach($this->check_extensions as $extension_name) {
-        if(extension_loaded($extension_name)) {
+      foreach ($this->check_extensions as $extension_name) {
+        if (extension_loaded($extension_name)) {
           $this->addToChecklist("'$extension_name' extension is loaded", true);
         } else {
           $this->addToChecklist("'$extension_name' extension is not loaded", false);
@@ -73,18 +73,18 @@
         } // if
       } // if
       
-      if(is_array($this->check_is_writable)) {
-        foreach($this->check_is_writable as $relative_folder_path) {
+      if (is_array($this->check_is_writable)) {
+        foreach ($this->check_is_writable as $relative_folder_path) {
           $check_this = INSTALLATION_PATH . $relative_folder_path;
           
           $is_writable = false;
-          if(is_file($check_this)) {
+          if (is_file($check_this)) {
             $is_writable = file_is_writable($check_this);
-          } elseif(is_dir($check_this)) {
+          } elseif (is_dir($check_this)) {
             $is_writable = folder_is_writable($check_this);
           } // if
           
-          if($is_writable) {
+          if ($is_writable) {
             $this->addToChecklist("$relative_folder_path is writable", true);
           } else {
             $this->addToChecklist("$relative_folder_path is not writable", false);
@@ -95,11 +95,11 @@
       
       $this->setContentFromTemplate('checks.php');
       
-      if(ini_get('zend.ze1_compatibility_mode')) {
+      if (ini_get('zend.ze1_compatibility_mode')) {
         $this->addToChecklist('zend.ze1_compatibility_mode is set to On. This can cause some strange problems. It is strongly suggested to turn this value to Off (in your php.ini file)', false);
       } // if
       
-      if($all_ok) {
+      if ($all_ok) {
         return $this->isSubmited();
       } // if
       

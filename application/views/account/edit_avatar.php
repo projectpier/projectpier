@@ -1,12 +1,12 @@
 <?php
 
-  if($user->getId() == logged_user()->getId()) {
+  if ($user->getId() == logged_user()->getId()) {
     set_page_title(lang('update avatar'));
     account_tabbed_navigation();
     account_crumbs(lang('update avatar'));
   } else {
     set_page_title(lang('update avatar'));
-    if($user->getCompany()->isOwner()) {
+    if ($user->getCompany()->isOwner()) {
       administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
       administration_crumbs(array(
         array(lang('company'), $user->getCompany()->getViewUrl()),
@@ -23,7 +23,7 @@
     } // if
   } // if
   
-  if($user->canUpdateProfile(logged_user())) {
+  if ($user->canUpdateProfile(logged_user())) {
     add_page_action(array(
       lang('update profile')  => $user->getEditProfileUrl(),
       lang('change password') => $user->getEditPasswordUrl(),
@@ -31,7 +31,7 @@
     ));
   } // if
   
-  if($user->canUpdatePermissions(logged_user())) {
+  if ($user->canUpdatePermissions(logged_user())) {
     add_page_action(array(
       lang('permissions')  => $user->getUpdatePermissionsUrl()
     ));
@@ -44,7 +44,7 @@
   
   <fieldset>
     <legend><?php echo lang('current avatar') ?></legend>
-<?php if($user->hasAvatar()) { ?>
+<?php if ($user->hasAvatar()) { ?>
     <img src="<?php echo $user->getAvatarUrl() ?>" alt="<?php echo clean($user->getDisplayName()) ?> avatar" />
     <p><a href="<?php echo $user->getDeleteAvatarUrl() ?>" onclick="return confirm('<?php echo lang('confirm delete current avatar') ?>')"><?php echo lang('delete current avatar') ?></a></p>
 <?php } else { ?>
@@ -55,7 +55,7 @@
   <div>
     <?php echo label_tag(lang('new avatar'), 'avatarFormAvatar', true) ?>
     <?php echo file_field('new avatar', null, array('id' => 'avatarFormAvatar')) ?>
-<?php if($user->hasAvatar()) { ?>
+<?php if ($user->hasAvatar()) { ?>
     <p class="desc"><?php echo lang('new avatar notice') ?></p>
 <?php } // if ?>
   </div>

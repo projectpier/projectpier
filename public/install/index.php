@@ -4,7 +4,7 @@
   
   // Prepare and execute
   require_once INSTALLER_PATH . '/installation/installation.php'; 
-  if(!isset($installer) || !is_object($installer)) {
+  if (!isset($installer) || !is_object($installer)) {
     die('Installer not prepared.');
   } // if
   

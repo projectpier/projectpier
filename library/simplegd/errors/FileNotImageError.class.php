@@ -24,7 +24,9 @@
     * @return FileNotImageError
     */
     function __construct($file_path, $message = null) {
-      if(is_null($message)) $message = "File '$file_path' is not an image";
+      if (is_null($message)) {
+      	$message = "File '$file_path' is not an image";
+      }
       parent::__construct($message);
       $this->setFilePath($file_path);
     } // __construct

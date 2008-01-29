@@ -8,7 +8,7 @@
 <form action="<?php echo $project_form->getSubmitUrl() ?>" method="post">
   <?php tpl_display(get_template_path('form_errors')) ?>
   
-<?php if($project_form->getDescription()) { ?>
+<?php if ($project_form->getDescription()) { ?>
   <div class="formDescription"><?php echo do_textile($project_form->getDescription()) ?></div>
 <?php } // if ?>
   <div>

@@ -68,18 +68,18 @@
     * @throws InvalidParamError If we don't get session by $session_name
     */
     static function log($message, $severity = Logger::DEBUG, $session_name = null) {
-      if(!self::$enabled) {
+      if (!self::$enabled) {
         return false;
       } // if
       
-      if($message instanceof Exception) {
+      if ($message instanceof Exception) {
         $message_to_log = $message->__toString();
       } else {
         $message_to_log = (string) $message;
       } // if
       
       $session = self::getSession($session_name);
-      if(!($session instanceof Logger_Session)) {
+      if (!($session instanceof Logger_Session)) {
         throw new InvalidParamError('session_name', $session_name, "There is no session matching this name (null for default session): " . var_export($session_name, true));
       } // if
       
@@ -96,17 +96,17 @@
     * @throws InvalidParamError If backedn $backend_name does not exists
     */
     static function saveSession($session_name = null, $backend_name = null) {
-      if(!self::$enabled) {
+      if (!self::$enabled) {
         return false;
       } // if
       
       $session = self::getSession($session_name);
-      if(!($session instanceof Logger_Session)) {
+      if (!($session instanceof Logger_Session)) {
         throw new InvalidParamError('session_name', $session_name, 'There is no session matching this name (null for default session): ' . var_export($session_name, true));
       } // if
       
       $backend = self::getBackend($backend_name);
-      if(!($backend instanceof Logger_Backend)) {
+      if (!($backend instanceof Logger_Backend)) {
         throw new InvalidParamError('backend_name', $backend_name, 'There is no backend matching this name (null for default backend): ' . var_export($session_name, true));
       } // if
       
@@ -121,12 +121,12 @@
     * @throws InvalidParamError If backedn $backend_name does not exists
     */
     static function saveAll($backend_name = null) {
-      if(!self::$enabled) {
+      if (!self::$enabled) {
         return false;
       } // if
       
       $backend = self::getBackend($backend_name);
-      if(!($backend instanceof Logger_Backend)) {
+      if (!($backend instanceof Logger_Backend)) {
         throw new InvalidParamError('backend_name', $backend_name, 'There is no backend matching this name (null for default backend): ' . var_export($session_name, true));
       } // if
       
@@ -140,7 +140,7 @@
     * @return string
     */
     static function severityToString($severity) {
-      switch($severity) {
+      switch ($severity) {
         case Logger::DEBUG:
           return 'DEBUG';
         case Logger::INFO:
@@ -178,7 +178,7 @@
     * @return Logger_Backend
     */
     static function setBackend(Logger_Backend $backend, $name = null) {
-      if(is_null($name)) {
+      if (is_null($name)) {
         self::$default_backend = $backend;
       } else {
         self::$additional_backends[$name] = $backend;
@@ -204,7 +204,7 @@
     * @return null
     */
     static function setSession(Logger_Session $session, $name = null) {
-      if(is_null($name)) {
+      if (is_null($name)) {
         self::$default_session = $session;
       } else {
         self::$additional_sessions[$name] = $session;
@@ -220,11 +220,11 @@
     static function getAllSessions() {
       $result = array();
       
-      if(self::$default_session instanceof Logger_Session) {
+      if (self::$default_session instanceof Logger_Session) {
         $result[] = self::$default_session;
       } // if
       
-      if(count(self::$additional_sessions)) {
+      if (count(self::$additional_sessions)) {
         return array_merge($result, self::$additional_sessions);
       } else {
         return $result;

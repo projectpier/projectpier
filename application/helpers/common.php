@@ -32,7 +32,7 @@
   * @return string
   */
   function render_icon($filename, $alt = '', $attributes = null) {
-    if(is_array($attributes)) {
+    if (is_array($attributes)) {
       $attributes['src'] = icon_url($filename);
       $attributes['alt'] = $alt;
     } else {
@@ -52,7 +52,7 @@
   * @return void
   */
   function use_widget($widget_name) {
-    if(function_exists('add_javascript_to_page') && function_exists('add_stylesheet_to_page')) {
+    if (function_exists('add_javascript_to_page') && function_exists('add_stylesheet_to_page')) {
       add_javascript_to_page("widgets/$widget_name/widget.js");
       add_stylesheet_to_page(get_javascript_url("widgets/$widget_name/widget.css"));
     } // if

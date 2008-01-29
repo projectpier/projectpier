@@ -262,7 +262,9 @@
     * @return ApplicationLogs 
     */
     function manager() {
-      if(!($this->manager instanceof ApplicationLogs)) $this->manager = ApplicationLogs::instance();
+      if (!($this->manager instanceof ApplicationLogs)) {
+        $this->manager = ApplicationLogs::instance();
+      }
       return $this->manager;
     } // manager
   

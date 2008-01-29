@@ -24,7 +24,7 @@
     * @return FileNotInRepositoryError
     */
     function __construct($file_id, $message = null) {
-      if(is_null($message)) $message = "File '$file_id' can not be found in the repository";
+      if (is_null($message)) $message = "File '$file_id' can not be found in the repository";
       parent::__construct($message);
       $this->setFileId($file_id);
     } // __construct

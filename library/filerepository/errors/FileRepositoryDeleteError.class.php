@@ -23,7 +23,7 @@
     * @return FileRepositoryDeleteError
     */
     function __construct($file_id, $message = null) {
-      if(is_null($message)) $message = "Failed to remove '$file_id' from the '$repository_path' repository";
+      if (is_null($message)) $message = "Failed to remove '$file_id' from the '$repository_path' repository";
       parent::__construct($message);
       $this->setFileId($file_id);
     } // __construct

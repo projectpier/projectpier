@@ -30,15 +30,17 @@
       $this->addHelper('textile');
       
       $order = array_var($_GET, 'order');
-      if(($order <> ProjectFiles::ORDER_BY_NAME) && ($order <> ProjectFiles::ORDER_BY_POSTTIME)) {
+      if (($order <> ProjectFiles::ORDER_BY_NAME) && ($order <> ProjectFiles::ORDER_BY_POSTTIME)) {
         $order = ProjectFiles::ORDER_BY_POSTTIME;
       } // if
       $page = (integer) array_var($_GET, 'page', 1);
-      if((integer) $page < 1) $page = 1;
+      if ((integer) $page < 1) {
+        $page = 1;
+      }
       
       $hide_private = !logged_user()->isMemberOfOwnerCompany();
       $result = ProjectFiles::getProjectFiles(active_project(), null, $hide_private, $order, $page, config_option('files_per_page'), true);
-      if(is_array($result)) {
+      if (is_array($result)) {
         list($files, $pagination) = $result;
       } else {
         $files = null;
@@ -67,21 +69,23 @@
       $this->setTemplate('index'); // use index template
       
       $folder = ProjectFolders::findById(get_id());
-      if(!($folder instanceof ProjectFolder)) {
+      if (!($folder instanceof ProjectFolder)) {
         flash_error(lang('folder dnx'));
         $this->redirectTo('files');
       } // if
       
       $order = array_var($_GET, 'order');
-      if(($order <> ProjectFiles::ORDER_BY_NAME) && ($order <> ProjectFiles::ORDER_BY_POSTTIME)) {
+      if (($order <> ProjectFiles::ORDER_BY_NAME) && ($order <> ProjectFiles::ORDER_BY_POSTTIME)) {
         $order = ProjectFiles::ORDER_BY_POSTTIME;
       } // if
       $page = (integer) array_var($_GET, 'page', 1);
-      if((integer) $page < 1) $page = 1;
+      if ((integer) $page < 1) {
+        $page = 1;
+      }
       
       $hide_private = !logged_user()->isMemberOfOwnerCompany();
       $result = ProjectFiles::getProjectFiles(active_project(), $folder, $hide_private, $order, $page, config_option('files_per_page'), true);
-      if(is_array($result)) {
+      if (is_array($result)) {
         list($files, $pagination) = $result;
       } else {
         $files = null;
@@ -111,7 +115,7 @@
     * @return null
     */
     function add_folder() {
-      if(!ProjectFolder::canAdd(logged_user(), active_project())) {
+      if (!ProjectFolder::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -122,7 +126,7 @@
       tpl_assign('folder', $folder);
       tpl_assign('folder_data', $folder_data);
       
-      if(is_array($folder_data)) {
+      if (is_array($folder_data)) {
         $folder->setFromAttributes($folder_data);
         $folder->setProjectId(active_project()->getId());
         
@@ -152,25 +156,25 @@
       $this->setTemplate('add_folder');
       
       $folder = ProjectFolders::findById(get_id());
-      if(!($folder instanceof ProjectFolder)) {
+      if (!($folder instanceof ProjectFolder)) {
         flash_error(lang('folder dnx'));
         $this->redirectTo('files');
       } // if
       
-      if(!$folder->canEdit(logged_user())) {
+      if (!$folder->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $folder_data = array_var($_POST, 'folder');
-      if(!is_array($folder_data)) {
+      if (!is_array($folder_data)) {
         $folder_data = array('name' => $folder->getName());
       } // if
       
       tpl_assign('folder', $folder);
       tpl_assign('folder_data', $folder_data);
       
-      if(is_array(array_var($_POST, 'folder'))) {
+      if (is_array(array_var($_POST, 'folder'))) {
         $old_name = $folder->getName();
         
         $folder->setFromAttributes($folder_data);
@@ -200,12 +204,12 @@
     */
     function delete_folder() {
       $folder = ProjectFolders::findById(get_id());
-      if(!($folder instanceof ProjectFolder)) {
+      if (!($folder instanceof ProjectFolder)) {
         flash_error(lang('folder dnx'));
         $this->redirectTo('files');
       } // if
       
-      if(!$folder->canDelete(logged_user())) {
+      if (!$folder->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -239,18 +243,18 @@
       $this->addHelper('textile');
       
       $file = ProjectFiles::findById(get_id());
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      if(!$file->canView(logged_user())) {
+      if (!$file->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $revisions = $file->getRevisions();
-      if(!count($revisions)) {
+      if (!count($revisions)) {
         flash_error(lang('no file revisions in file'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -280,12 +284,12 @@
       $inline = (boolean) array_var($_GET, 'inline', false);
       
       $file = ProjectFiles::findById(get_id());
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      if(!$file->canDownload(logged_user())) {
+      if (!$file->canDownload(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -302,18 +306,18 @@
     */
     function download_revision() {
       $revision = ProjectFileRevisions::findById(get_id());
-      if(!($revision instanceof ProjectFileRevision)) {
+      if (!($revision instanceof ProjectFileRevision)) {
         flash_error(lang('file revision dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $file = $revision->getFile();
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      if(!($revision->canDownload(logged_user()))) {
+      if (!($revision->canDownload(logged_user()))) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -330,7 +334,7 @@
     * @return null
     */
     function add_file() {
-      if(!ProjectFile::canAdd(logged_user(), active_project())) {
+      if (!ProjectFile::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -340,11 +344,11 @@
       
       $folder = null;
       $folder_id = get_id('folder_id');
-      if($folder_id) {
+      if ($folder_id) {
         $folder = ProjectFolders::findById($folder_id);
       } // if
       
-      if(($folder instanceof ProjectFolder) && !is_array($file_data)) {
+      if (($folder instanceof ProjectFolder) && !is_array($file_data)) {
         $file_data = array(
           'folder_id' => $folder->getId()
         ); // array
@@ -353,13 +357,13 @@
       tpl_assign('file', $file);
       tpl_assign('file_data', $file_data);
       
-      if(is_array(array_var($_POST, 'file'))) {
+      if (is_array(array_var($_POST, 'file'))) {
         try {
           DB::beginWork();
           $uploaded_file = array_var($_FILES, 'file_file');
           $file->setFromAttributes($file_data);
           
-          if(!logged_user()->isMemberOfOwnerCompany()) {
+          if (!logged_user()->isMemberOfOwnerCompany()) {
             $file->setIsPrivate(false);
             $file->setIsImportant(false);
             $file->setCommentsEnabled(true);
@@ -384,7 +388,7 @@
           tpl_assign('file', new ProjectFile()); // reset file
           
           // If we uploaded the file remove it from repository
-          if(isset($revision) && ($revision instanceof ProjectFileRevision) && FileRepository::isInRepository($revision->getRepositoryId())) {
+          if (isset($revision) && ($revision instanceof ProjectFileRevision) && FileRepository::isInRepository($revision->getRepositoryId())) {
             FileRepository::deleteFile($revision->getRepositoryId());
           } // if
         } // try
@@ -402,18 +406,18 @@
       $this->setTemplate('add_file');
       
       $file = ProjectFiles::findById(get_id());
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      if(!$file->canEdit(logged_user())) {
+      if (!$file->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $file_data = array_var($_POST, 'file');
-      if(!is_array($file_data)) {
+      if (!is_array($file_data)) {
         $tag_names = $file->getTagNames();
         $file_data = array(
           'folder_id' => $file->getFolderId(),
@@ -429,7 +433,7 @@
       tpl_assign('file', $file);
       tpl_assign('file_data', $file_data);
       
-      if(is_array(array_var($_POST, 'file'))) {
+      if (is_array(array_var($_POST, 'file'))) {
         try {
           $old_is_private = $file->isPrivate();
           $old_is_important = $file->getIsImportant();
@@ -443,7 +447,7 @@
           
           $file->setFromAttributes($file_data);
           
-          if(!logged_user()->isMemberOfOwnerCompany()) {
+          if (!logged_user()->isMemberOfOwnerCompany()) {
             $file->setIsPrivate($old_is_private);
             $file->setIsImportant($old_is_important);
             $file->setCommentsEnabled($old_comments_enabled);
@@ -451,7 +455,7 @@
           } // if
           $file->save();
           $file->setTagsFromCSV(array_var($file_data, 'tags'));
-          if($handle_file) {
+          if ($handle_file) {
             $file->handleUploadedFile(array_var($_FILES, 'file_file'), $post_revision, $revision_comment);
           } // if
           ApplicationLogs::createLog($file, active_project(), ApplicationLogs::ACTION_EDIT);
@@ -476,12 +480,12 @@
     */
     function delete_file() {
       $file = ProjectFiles::findById(get_id());
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      if(!$file->canEdit(logged_user())) {
+      if (!$file->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -514,24 +518,24 @@
       $this->setTemplate('add_file_revision');
       
       $revision = ProjectFileRevisions::findById(get_id());
-      if(!($revision instanceof ProjectFileRevision)) {
+      if (!($revision instanceof ProjectFileRevision)) {
         flash_error(lang('file revision dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $file = $revision->getFile();
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      if(!$revision->canDelete(logged_user())) {
+      if (!$revision->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $revision_data = array_var($_POST, 'revision');
-      if(!is_array($revision_data)) {
+      if (!is_array($revision_data)) {
         $revision_data = array(
           'comment' => $revision->getComment(),
         ); // array
@@ -541,7 +545,7 @@
       tpl_assign('file', $file);
       tpl_assign('revision_data', $revision_data);
       
-      if(is_array(array_var($_POST, 'revision'))) {
+      if (is_array(array_var($_POST, 'revision'))) {
         try {
           DB::beginWork();
           $revision->setComment(array_var($revision_data, 'comment'));
@@ -566,24 +570,24 @@
     */
     function delete_file_revision() {
       $revision = ProjectFileRevisions::findById(get_id());
-      if(!($revision instanceof ProjectFileRevision)) {
+      if (!($revision instanceof ProjectFileRevision)) {
         flash_error(lang('file revision dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $file = $revision->getFile();
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
       
       $all_revisions = $file->getRevisions();
-      if(count($all_revisions) == 1) {
+      if (count($all_revisions) == 1) {
         flash_error(lang('cant delete only revision'));
         $this->redirectToReferer($file->getDetailsUrl());
       } // if
       
-      if(!$revision->canDelete(logged_user())) {
+      if (!$revision->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
@@ -618,22 +622,22 @@
       $object_id = get_id('object_id');
       
       $object = get_object_by_manager_and_id($object_id, $manager_class);
-      if(!($object instanceof ProjectDataObject)) {
+      if (!($object instanceof ProjectDataObject)) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
       $already_attached_files = $object->getAttachedFiles();
       $already_attached_file_ids = null;
-      if(is_array($already_attached_files)) {
+      if (is_array($already_attached_files)) {
         $already_attached_file_ids = array();
-        foreach($already_attached_files as $already_attached_file) {
+        foreach ($already_attached_files as $already_attached_file) {
           $already_attached_file_ids[] = $already_attached_file->getId();
         } // foreach
       } // if
       
       $attach_data = array_var($_POST, 'attach');
-      if(!is_array($attach_data)) {
+      if (!is_array($attach_data)) {
         $attach_data = array('what' => 'existing_file');
       } // if
       
@@ -641,17 +645,17 @@
       tpl_assign('attach_data', $attach_data);
       tpl_assign('already_attached_file_ids', $already_attached_file_ids);
       
-      if(is_array(array_var($_POST, 'attach'))) {
+      if (is_array(array_var($_POST, 'attach'))) {
         $attach_files = array();
           
-        if(array_var($attach_data, 'what') == 'existing_file') {
+        if (array_var($attach_data, 'what') == 'existing_file') {
           $file = ProjectFiles::findById(array_var($attach_data, 'file_id'));
-          if(!($file instanceof ProjectFile)) {
+          if (!($file instanceof ProjectFile)) {
             flash_error(lang('no files to attach'));
             $this->redirectToUrl($object->getAttachFilesUrl());
           } // if
           $attach_files[] = $file;
-        } elseif(array_var($attach_data, 'what') == 'new_file') {
+        } elseif (array_var($attach_data, 'what') == 'new_file') {
           try {
             $attach_files = ProjectFiles::handleHelperUploads(active_project());
           } catch(Exception $e) {
@@ -660,7 +664,7 @@
           } // try
         } // if
         
-        if(!is_array($attach_files) || !count($attach_files)) {
+        if (!is_array($attach_files) || !count($attach_files)) {
           flash_error(lang('no files to attach'));
           $this->redirectToUrl($object->getAttachFilesUrl());
         } // if
@@ -669,7 +673,7 @@
           DB::beginWork();
           
           $counter = 0;
-          foreach($attach_files as $attach_file) {
+          foreach ($attach_files as $attach_file) {
             $object->attachFile($attach_file);
             $counter++;
           } // foreach
@@ -681,8 +685,8 @@
         } catch(Exception $e) {
           DB::rollback();
           
-          if(array_var($attach_data, 'what') == 'new_file' && count($attach_files)) {
-            foreach($attach_files as $attach_file) {
+          if (array_var($attach_data, 'what') == 'new_file' && count($attach_files)) {
+            foreach ($attach_files as $attach_file) {
               $attach_file->delete();
             } // foreach
           } // if
@@ -704,13 +708,13 @@
       $file_id = get_id('file_id');
       
       $object = get_object_by_manager_and_id($object_id, $manager_class);
-      if(!($object instanceof ProjectDataObject)) {
+      if (!($object instanceof ProjectDataObject)) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
       $file = ProjectFiles::findById($file_id);
-      if(!($file instanceof ProjectFile)) {
+      if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
@@ -721,7 +725,7 @@
         'file_id' => $file_id,
       )); // findById
       
-      if(!($attached_file instanceof AttachedFile)) {
+      if (!($attached_file instanceof AttachedFile)) {
         flash_error(lang('file not attached to object'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if

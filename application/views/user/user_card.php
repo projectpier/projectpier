@@ -1,4 +1,4 @@
-<?php if(isset($user) && ($user instanceof User)) { ?>
+<?php if (isset($user) && ($user instanceof User)) { ?>
 <div class="card">
   <div class="cardIcon"><img src="<?php echo $user->getAvatarUrl() ?>" alt="<?php echo clean($user->getDisplayName()) ?> avatar" /></div>
   <div class="cardData">
@@ -15,13 +15,13 @@
     <div class="cardBlock">
       <div><span><?php echo lang('email address') ?>:</span> <a href="mailto:<?php echo clean($user->getEmail()) ?>"><?php echo clean($user->getEmail()) ?></a></div>
       
-<?php if(is_array($im_values = $user->getImValues()) && count($im_values)) { ?>
+<?php if (is_array($im_values = $user->getImValues()) && count($im_values)) { ?>
       <table class="imAddresses">
-<?php foreach($im_values as $im_value) { ?>
-<?php if($im_type = $im_value->getImType()) { ?>
+<?php foreach ($im_values as $im_value) { ?>
+<?php if ($im_type = $im_value->getImType()) { ?>
         <tr>
           <td><img src="<?php echo $im_type->getIconUrl() ?>" alt="<?php echo $im_type->getName() ?>" /></td>
-          <td><?php echo clean($im_value->getValue()) ?> <?php if($im_value->getIsDefault()) { ?><span class="desc">(<?php echo lang('primary im service') ?>)</span><?php } ?></td>
+          <td><?php echo clean($im_value->getValue()) ?> <?php if ($im_value->getIsDefault()) { ?><span class="desc">(<?php echo lang('primary im service') ?>)</span><?php } ?></td>
         </tr>
 <?php } // if ?>
 <?php } // foreach ?>

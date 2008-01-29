@@ -90,7 +90,7 @@
     */
     function setEmail($value) {
       $value = trim($value);
-      if(is_valid_email($value)) {
+      if (is_valid_email($value)) {
         $this->email = $value;
       } else {
         throw new InvalidEmailAddressError($value);
@@ -115,7 +115,9 @@
     */
     function setHomepage($value) {
       $value = trim($value);
-      if($value && is_valid_url($value)) $this->homepage = $value;
+      if ($value && is_valid_url($value)) {
+        $this->homepage = $value;
+      }
     } // setHomepage
   
   } // AnonymousUser

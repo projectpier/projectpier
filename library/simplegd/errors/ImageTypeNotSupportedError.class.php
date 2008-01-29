@@ -31,7 +31,9 @@
     * @return ImageTypeNotSupportedError
     */
     function __construct($file_path, $type_value, $message = null) {
-      if(is_null($message)) $message = "This type of image is not supported. SimpleGD supports only PNG, JPG and GIF image types. Type: $type_value";
+      if (is_null($message)) {
+      	$message = "This type of image is not supported. SimpleGD supports only PNG, JPG and GIF image types. Type: $type_value";
+      }
       parent::__construct($message);
       $this->setFilePath($file_path);
     } // __construct

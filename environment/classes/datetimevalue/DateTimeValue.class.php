@@ -78,8 +78,8 @@
     */
     function advance($input, $mutate = true) {
       $timestamp = (integer) $input;
-      if($timestamp <> 0) {
-        if($mutate) {
+      if ($timestamp <> 0) {
+        if ($mutate) {
           $this->setTimestamp($this->getTimestamp() + $timestamp);
         } else {
           return new DateTimeValue($this->getTimestamp() + $timestamp);
@@ -225,7 +225,7 @@
     private function parse() {
       $data = getdate($this->timestamp);
       
-      if($data) {
+      if ($data) {
         $this->year   = (integer) $data['year'];
         $this->month  = (integer) $data['mon'];
         $this->day    = (integer) $data['mday'];
