@@ -20,9 +20,9 @@ Version 0.8.0 Release Candidate 1 (0.8.0RC1)  03 Sept 2007
 - Brand new default theme (old default theme included as acClassic)
 - New theme 'goCollabMonochrome' included
 - Message and comment email notification subject lines optimized for threading
-  For Messages: ProjectTitle – MessageTitle
-  For Comments: ProjectTitle – MessageTitle
-  For Milestones: ProjectTitle – Milestone has been assigned to you – MilestoneName
+  For Messages: ProjectTitle - MessageTitle
+  For Comments: ProjectTitle - MessageTitle
+  For Milestones: ProjectTitle - Milestone has been assigned to you - MilestoneName
 - Modified the notification message system for Messages, Comments, and Milestones so that 
   the message body is included in the notification email (optional configuration in config.php).
 
