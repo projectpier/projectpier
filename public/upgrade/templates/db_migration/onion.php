@@ -97,7 +97,7 @@ ALTER TABLE `<?php echo $table_prefix ?>application_logs` ADD COLUMN `is_silent`
 
 ALTER TABLE `<?php echo $table_prefix ?>companies` MODIFY COLUMN `client_of_id` smallint(5) unsigned;
 ALTER TABLE `<?php echo $table_prefix ?>companies` MODIFY COLUMN `logo_file` varchar(44);
-ALTER TABLE `<?php echo $table_prefix ?>companies` ADD COLUMN `timezone` float(2,1) NOT NULL DEFAULT '0.0';
+ALTER TABLE `<?php echo $table_prefix ?>companies` ADD COLUMN `timezone` float(3,1) NOT NULL DEFAULT '0.0';
 
 ALTER TABLE `<?php echo $table_prefix ?>project_messages` ADD COLUMN `comments_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1';
 ALTER TABLE `<?php echo $table_prefix ?>project_messages` ADD COLUMN `anonymous_comments_enabled` tinyint(1) unsigned NOT NULL DEFAULT '0';
@@ -126,7 +126,7 @@ ALTER TABLE `<?php echo $table_prefix ?>users` ADD COLUMN `token` varchar(40) NO
 ALTER TABLE `<?php echo $table_prefix ?>users` ADD COLUMN `salt` varchar(13) NOT NULL;
 ALTER TABLE `<?php echo $table_prefix ?>users` ADD COLUMN `twister` varchar(10) NOT NULL;
 ALTER TABLE `<?php echo $table_prefix ?>users` MODIFY COLUMN `avatar_file` varchar(44);
-ALTER TABLE `<?php echo $table_prefix ?>users` ADD COLUMN `timezone` float(2,1) NOT NULL DEFAULT '0.0';
+ALTER TABLE `<?php echo $table_prefix ?>users` ADD COLUMN `timezone` float(3,1) NOT NULL DEFAULT '0.0';
 ALTER TABLE `<?php echo $table_prefix ?>users` DROP COLUMN `password`;
 ALTER TABLE `<?php echo $table_prefix ?>users` DROP KEY `session_id`;
 ALTER TABLE `<?php echo $table_prefix ?>users` DROP COLUMN `session_id`;
