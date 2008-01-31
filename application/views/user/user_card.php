@@ -6,7 +6,7 @@
     <h2><?php echo clean($user->getDisplayName()) ?></h2>
     
     <div class="cardBlock">
-      <div><span><?php echo lang('title') ?>:</span> <?php echo $user->getTitle() ? clean($user->getTitle()) : lang('n/a') ?></div>
+      <div><span><?php echo lang('user title') ?>:</span> <?php echo $user->getTitle() ? clean($user->getTitle()) : lang('n/a') ?></div>
       <div><span><?php echo lang('company') ?>:</span> <a href="<?php echo $user->getCompany()->getCardUrl() ?>"><?php echo clean($user->getCompany()->getName()) ?></a></div>
     </div>
     
