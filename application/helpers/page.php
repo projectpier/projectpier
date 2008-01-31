@@ -525,11 +525,10 @@
       $href = get_stylesheet_url($href);
     }
     $page = PageDescription::instance();
-    $page->addRelLink($href, 'Stylesheet', array(
-      'type'  => 'text/css',
-      'title' => $title,
-      'media' => $media
-    )); // addRelLink
+    $attributes = array('type' => 'text/css');
+    if ($title) $attributes['title'] = $title;
+    if ($media) $attributes['media'] = $media;
+    $page->addRelLink($href, 'Stylesheet', $attributes); // addRelLink
   } // add_stylesheet_to_page
   
   /**
