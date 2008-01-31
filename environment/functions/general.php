@@ -333,7 +333,7 @@
   * @param string $alternative Alternative URL is used if referer is not valid URL
   * @return null
   */
-  function redirect_to_referer($alternative = nulls) {
+  function redirect_to_referer($alternative = null) {
     $referer = get_referer();
     if (!is_valid_url($referer)) {
       redirect_to($alternative);
