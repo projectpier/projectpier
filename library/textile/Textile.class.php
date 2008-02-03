@@ -9,8 +9,8 @@
  */
 
 /*
-$Id: classTextile.php 216 2006-10-17 22:31:53Z zem $
-$LastChangedRevision: 2462 $
+$HeadURL: http://svn.textpattern.com/releases/4.0.6/source/textpattern/lib/classTextile.php $
+$LastChangedRevision: 2779 $
 */
 
 /*
@@ -228,7 +228,7 @@ class Textile
 	var $hu = '';
 	
 	var $ver = '2.0.0';
-	var $rev = '$Rev: 2462 $';
+	var $rev = '$Rev: 2779 $';
 	
 	var $doc_root;
 
@@ -297,7 +297,7 @@ class Textile
 
 		if ($encode) {
 		 $text = $this->incomingEntities($text);
-			$text = str_replace("x%x%", "&#38;", $text);
+			$text = str_replace("x%x%", "&amp;", $text);
 			return $text;
 		} else {
 
@@ -480,8 +480,8 @@ class Textile
 	function fList($m)
 	{
 		$text = preg_split('/\n(?=[*#])/m', $m[0]);
-		foreach($text as $line) {
-			$nextline = next($text);
+		foreach($text as $nr => $line) {
+			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
 			if (preg_match("/^([#*]+)($this->a$this->c) (.*)$/s", $line, $m)) {
 				list(, $tl, $atts, $content) = $m;
 				$nl = '';
@@ -506,7 +506,7 @@ class Textile
 				}
 			}
 			else {
-				$line .= n;
+				$line .= "\n";
 			}
 			$out[] = $line;
 		}
@@ -1132,26 +1132,26 @@ class Textile
 // -------------------------------------------------------------
 	function encode_raw_amp($text)
 	 {
-		return preg_replace('/&(?!#?[a-z0-9]+;)/i', '&#38;', $text);
+		return preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $text);
 	}
 
 // -------------------------------------------------------------
 	function encode_lt_gt($text)
 	 {
-		return strtr($text, array('<' => '&#60;', '>' => '&#62;'));
+		return strtr($text, array('<' => '&lt;', '>' => '&gt;'));
 	}
 
 // -------------------------------------------------------------
 	function encode_html($str, $quotes=1)
 	{
 		$a = array(
-			'&' => '&#38;',
-			'<' => '&#60;',
-			'>' => '&#62;',
+			'&' => '&amp;',
+			'<' => '&lt;',
+			'>' => '&gt;',
 		);
 		if ($quotes) $a = $a + array(
-			"'" => '&#39;',
-			'"' => '&#34;',
+			"'" => '&#39;', // numeric, as in htmlspecialchars
+			'"' => '&quot;',
 		);
 
 		return strtr($str, $a);
