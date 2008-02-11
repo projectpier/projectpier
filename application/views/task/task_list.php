@@ -45,7 +45,7 @@
 <?php if ($task->getAssignedTo()) { ?>
           <span class="assignedTo"><?php echo clean($task->getAssignedTo()->getObjectName()) ?>:</span> 
 <?php } // if{ ?>
-          <?php echo clean($task->getText()) ?> <?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?> <?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" onclick="return confirm('<?php echo lang('confirm delete task') ?>')" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?>
+          <?php echo clean($task->getText()) ?> <?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?> <?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?>
         </td>
       </tr>
 <?php } // foreach ?>
@@ -97,7 +97,7 @@
         <td class="taskCheckbox"><img src="<?php echo icon_url('checked.jpg') ?>" alt="<?php echo lang('completed task') ?>" /></td>
 <?php } // if ?>
         <td class="taskText">
-          <?php echo clean($task->getText()) ?> <?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?> <?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" onclick="return confirm('<?php echo lang('confirm delete task') ?>')" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?><br />
+          <?php echo clean($task->getText()) ?> <?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?> <?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?><br />
           <span class="taskCompletedOnBy">(<?php echo lang('completed on by', format_date($task->getCompletedOn()), $task->getCompletedBy()->getCardUrl(), clean($task->getCompletedBy()->getDisplayName())) ?>)</span>
         </td>
         <td></td>
@@ -119,7 +119,7 @@
     $options[] = '<a href="' . $task_list->getEditUrl() . '">' . lang('edit') . '</a>';
   } // if
   if ($task_list->canDelete(logged_user())) {
-    $options[] = '<a href="' . $task_list->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete task list') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $task_list->getDeleteUrl() . '">' . lang('delete') . '</a>';
   } // if
   if ($task_list->canReorderTasks(logged_user())) {
     $options[] = '<a href="' . $task_list->getReorderTasksUrl($on_list_page) . '">' . lang('reorder tasks') . '</a>';

@@ -382,6 +382,9 @@
     * @return null
     */
     function delete() {
+      $this->setTemplate('del_project');
+      $this->setLayout('administration');
+
       $project = Projects::findById(get_id());
       if (!($project instanceof Project)) {
         flash_error(lang('project dnx'));
@@ -392,23 +395,47 @@
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('administration', 'projects'));
       } // if
-      
-      try {
-        
-        DB::beginWork();
-        $project->delete();
-        CompanyWebsite::instance()->setProject(null);
-        ApplicationLogs::createLog($project, null, ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete project', $project->getName()));
-        
-      } catch(Exception $e) {
-        DB::rollback();
+
+      $delete_data = array_var($_POST, 'deleteProject');
+      tpl_assign('project',$project);
+      tpl_assign('delete_data', $delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          $this->render();
+        } // if
+        try {
+
+          DB::beginWork();
+          $project->delete();
+          CompanyWebsite::instance()->setProject(null);
+          ApplicationLogs::createLog($project, null, ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete project', $project->getName()));
+
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete project'));
+        } // try
+
+        $this->redirectTo('administration', 'projects');
+      } else {
         flash_error(lang('error delete project'));
-      } // try
-      
-      $this->redirectTo('administration', 'projects');
+        $this->redirectTo('administration', 'projects');
+      }
     } // delete
     
     /**

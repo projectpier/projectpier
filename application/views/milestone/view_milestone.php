@@ -86,7 +86,7 @@
     $options[] = '<a href="' . $milestone->getEditUrl() . '">' . lang('edit') . '</a>';
   }
   if ($milestone->canDelete(logged_user())) {
-    $options[] = '<a href="' . $milestone->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete milestone') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $milestone->getDeleteUrl() . '">' . lang('delete') . '</a>';
   }
 ?>
 <?php if (count($options)) { ?>

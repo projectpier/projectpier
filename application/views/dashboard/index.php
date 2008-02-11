@@ -16,7 +16,7 @@
 <div class="hint">
 
   <div class="header"><?php echo lang('welcome to new account') ?></div>
-  <div class="content"><?php echo lang('welcome to new account info', logged_user()->getDisplayName(), ROOT_URL) ?></div>
+  <div class="content"><?php echo lang('welcome to new account info', clean(logged_user()->getDisplayName()), ROOT_URL) ?></div>
   
 <?php if (owner_company()->isInfoUpdated()) { ?>
   <div class="header"><del><?php echo lang('new account step1') ?></del></div>

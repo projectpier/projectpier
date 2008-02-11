@@ -33,7 +33,7 @@
     $options[] = '<a href="' . $client->getEditUrl() . '">' . lang('edit') . '</a>';
   } // if
   if ($client->canDelete(logged_user())) {
-    $options[] = '<a href="' . $client->getDeleteClientUrl() . '" onclick="return confirm(\'' . lang('confirm delete client') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $client->getDeleteClientUrl() . '">' . lang('delete') . '</a>';
   } // if
 ?>
     <td><?php echo implode(' | ', $options) ?></td>

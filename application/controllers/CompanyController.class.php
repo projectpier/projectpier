@@ -241,6 +241,8 @@
     * @return null
     */
     function delete_client() {
+      $this->setTemplate('del_company');
+
       if (!logged_user()->isAdministrator(owner_company())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
@@ -252,19 +254,44 @@
         $this->redirectTo('administration', 'clients');
       } // if
       
-      try {
-        DB::beginWork();
-        $company->delete();
-        ApplicationLogs::createLog($company, null, ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete client', $company->getName()));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteCompany');
+      tpl_assign('company',$company);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          $this->render();
+        } // if
+
+        try {
+          DB::beginWork();
+          $company->delete();
+          ApplicationLogs::createLog($company, null, ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete client', $company->getName()));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete client'));
+        } // try
+
+        $this->redirectTo('administration', 'clients');
+      } else {
         flash_error(lang('error delete client'));
-      } // try
-      
-      $this->redirectTo('administration', 'clients');
+        $this->redirectTo('administration', 'clients');
+      }
     } // delete_client
     
     /**

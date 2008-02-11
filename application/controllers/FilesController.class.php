@@ -479,29 +479,55 @@
     * @return null
     */
     function delete_file() {
+      $this->setTemplate('del_file');
+
       $file = ProjectFiles::findById(get_id());
       if (!($file instanceof ProjectFile)) {
         flash_error(lang('file dnx'));
         $this->redirectToReferer(get_url('files'));
       } // if
-      
+
       if (!$file->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
-      
-      try {
-        DB::beginWork();
-        $file->delete();
-        ApplicationLogs::createLog($file, $file->getProject(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete file', $file->getFilename()));
-      } catch(Exception $e) {
+
+      $delete_data = array_var($_POST, 'deleteFile');
+      tpl_assign('file',$file);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+        try {
+          DB::beginWork();
+          $file->delete();
+          ApplicationLogs::createLog($file, $file->getProject(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete file', $file->getFilename()));
+        } catch(Exception $e) {
+          flash_error(lang('error delete file'));
+        } // try
+
+        $this->redirectTo('files');
+      } else {
         flash_error(lang('error delete file'));
-      } // try
-      
-      $this->redirectTo('files');
+        $this->redirectToUrl($file->getDetailsUrl());
+      }
     } // delete_file
     
     // ---------------------------------------------------
@@ -569,6 +595,8 @@
     * @return null
     */
     function delete_file_revision() {
+      $this->setTemplate('del_revision');
+
       $revision = ProjectFileRevisions::findById(get_id());
       if (!($revision instanceof ProjectFileRevision)) {
         flash_error(lang('file revision dnx'));
@@ -592,19 +620,45 @@
         $this->redirectToReferer(get_url('files'));
       } // if
       
-      try {
-        DB::beginWork();
-        $revision->delete();
-        ApplicationLogs::createLog($revision, $revision->getProject(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete file revision'));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteFileRevision');
+      tpl_assign('file',$file);
+      tpl_assign('revision',$revision);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+        ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+
+        try {
+          DB::beginWork();
+          $revision->delete();
+          ApplicationLogs::createLog($revision, $revision->getProject(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete file revision'));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete file revision'));
+        } // try
+
+        $this->redirectToUrl($file->getDetailsUrl());
+      } else {
         flash_error(lang('error delete file revision'));
-      } // try
-      
-      $this->redirectToUrl($file->getDetailsUrl());
+        $this->redirectToUrl($file->getDetailsUrl());
+      }
     } // delete_file_revision
     
     // ---------------------------------------------------

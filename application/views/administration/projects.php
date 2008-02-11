@@ -34,7 +34,7 @@
     $options[] = '<a href="' . $project->getEditUrl() .'">' . lang('edit') . '</a>';
   }
   if ($project->canDelete(logged_user())) {
-    $options[] = '<a href="' . $project->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete project') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $project->getDeleteUrl() . '">' . lang('delete') . '</a>';
   }
 ?>
     <td class="middle"><?php echo implode(' | ', $options) ?></td>

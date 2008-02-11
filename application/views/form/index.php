@@ -22,9 +22,9 @@
 <?php if ($form->getInObject() instanceof ApplicationDataObject) { ?>
 
 <?php if ($form->getAction() == ProjectForm::ADD_COMMENT_ACTION) { ?>
-      <div class="action"><em><?php echo lang('project form action') ?></em>: <?php echo lang('add comment to message', $form->getInObjectUrl(), $form->getInObjectName()) ?></div>
+      <div class="action"><em><?php echo lang('project form action') ?></em>: <?php echo lang('add comment to message', $form->getInObjectUrl(), clean($form->getInObjectName())) ?></div>
 <?php } else { ?>
-      <div class="action"><em><?php echo lang('project form action') ?></em>: <?php echo lang('add task to list', $form->getInObjectUrl(), $form->getInObjectName()) ?></div>
+      <div class="action"><em><?php echo lang('project form action') ?></em>: <?php echo lang('add task to list', $form->getInObjectUrl(), clean($form->getInObjectName())) ?></div>
 <?php } // if ?>
 
 <?php } else { ?>

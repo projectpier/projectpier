@@ -54,7 +54,7 @@
 <?php foreach ($users as $user) { ?>
           <tr>
             <td style="width: 200px">
-              <div class="projectUserDisplayName"><a href="<?php echo $user->getCardUrl() ?>"><?php echo $user->getDisplayName() ?></a></div>
+              <div class="projectUserDisplayName"><a href="<?php echo $user->getCardUrl() ?>"><?php echo clean($user->getDisplayName()) ?></a></div>
 <?php if ($user->hasTitle()) { ?>
               <div class="projectUserTitle"><?php echo clean($user->getTitle()) ?></div>
 <?php } // if ?>

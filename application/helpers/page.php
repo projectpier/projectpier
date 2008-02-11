@@ -508,7 +508,7 @@
   * @return null
   */
   function set_page_title($value) {
-    PageDescription::instance()->setTitle($value);
+    PageDescription::instance()->setTitle(clean($value));
   } // set_page_title
   
   /**

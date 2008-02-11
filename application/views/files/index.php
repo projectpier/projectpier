@@ -51,7 +51,7 @@
 <?php if (($last_revision = $file->getLastRevision()) instanceof ProjectFileRevision) { ?>
       <div class="fileLastRevision">
 <?php if ($last_revision->getCreatedBy() instanceof User) { ?>
-        <?php echo lang('file revision info long', $last_revision->getRevisionNumber(), $last_revision->getCreatedBy()->getCardUrl(), $last_revision->getCreatedBy()->getDisplayName(), format_descriptive_date($last_revision->getCreatedOn())) ?>
+        <?php echo lang('file revision info long', $last_revision->getRevisionNumber(), $last_revision->getCreatedBy()->getCardUrl(), clean($last_revision->getCreatedBy()->getDisplayName()), format_descriptive_date($last_revision->getCreatedOn())) ?>
 <?php } else { ?>
         <?php echo lang('file revision info short', $last_revision->getRevisionNumber(), format_descriptive_date($last_revision->getCreatedOn())) ?>
 <?php } // if ?>
@@ -72,7 +72,7 @@
     $options[] = '<a href="' . $file->getEditUrl() . '">' . lang('edit') . '</a>';
   }
   if ($file->canDelete(logged_user())) {
-    $options[] = '<a href="' . $file->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete file') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $file->getDeleteUrl() . '">' . lang('delete') . '</a>';
   }
 ?>
 <?php if (count($options)) { ?>

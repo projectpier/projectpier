@@ -147,6 +147,8 @@
     * @return null
     */
     function delete() {
+      $this->setTemplate('del_user');
+
       $user = Users::findById(get_id());
       if (!($user instanceof User)) {
         flash_error(lang('user dnx'));
@@ -158,22 +160,46 @@
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
-      try {
-        
-        DB::beginWork();
-        $user->delete();
-        ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete user', $user->getDisplayName()));
-        
-      } catch(Exception $e) {
-        DB::rollback();
-        flash_error(lang('error delete user'));
-      } // try
-      
-      $this->redirectToUrl($user->getCompany()->getViewUrl());
-      
+      $delete_data = array_var($_POST, 'deleteUser');
+      tpl_assign('user',$user);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+        ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+        try {
+
+          DB::beginWork();
+          $user->delete();
+          ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete user', $user->getDisplayName()));
+
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete user'));
+        } // try
+
+        $this->redirectToUrl($user->getCompany()->getViewUrl());
+      } else {
+        flash_error(lang('error delete client'));
+        $this->redirectToUrl($user->getCompany()->getViewUrl());
+      }
+
     } // delete
     
     /**

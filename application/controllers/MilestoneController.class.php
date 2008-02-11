@@ -231,6 +231,8 @@
     * @return null
     */
     function delete() {
+      $this->setTemplate('del_milestone');
+
       $milestone = ProjectMilestones::findById(get_id());
       if (!($milestone instanceof ProjectMilestone)) {
         flash_error(lang('milestone dnx'));
@@ -242,20 +244,44 @@
         $this->redirectToReferer(get_url('milestone'));
       } // if
       
-      try {
-        
-        DB::beginWork();
-        $milestone->delete();
-        ApplicationLogs::createLog($milestone, $milestone->getProject(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success deleted milestone', $milestone->getName()));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteMilestone');
+      tpl_assign('milestone',$milestone);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+        try {
+
+          DB::beginWork();
+          $milestone->delete();
+          ApplicationLogs::createLog($milestone, $milestone->getProject(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success deleted milestone', $milestone->getName()));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete milestone'));
+        } // try
+
+        $this->redirectTo('milestone');
+      } else {
         flash_error(lang('error delete milestone'));
-      } // try
-      
-      $this->redirectTo('milestone');
+        $this->redirectTo('milestone');
+      }
     } // delete
     
     /**

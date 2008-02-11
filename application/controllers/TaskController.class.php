@@ -202,6 +202,8 @@
     * @return null
     */
     function delete_list() {
+      $this->setTemplate('del_list');
+      
       $task_list = ProjectTaskLists::findById(get_id());
       if (!($task_list instanceof ProjectTaskList)) {
         flash_error(lang('task list dnx'));
@@ -213,19 +215,43 @@
         $this->redirectTo('task');
       } // if
       
-      try {
-        DB::beginWork();
-        $task_list->delete();
-        ApplicationLogs::createLog($task_list, active_project(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete task list', $task_list->getName()));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteTaskList');
+      tpl_assign('task_list',$task_list);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+        try {
+          DB::beginWork();
+          $task_list->delete();
+          ApplicationLogs::createLog($task_list, active_project(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete task list', $task_list->getName()));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete task list'));
+        } // try
+
+        $this->redirectTo('task');
+      } else {
         flash_error(lang('error delete task list'));
-      } // try
-      
-      $this->redirectTo('task');
+        $this->redirectToUrl($task_list->getViewUrl());
+      }
     } // delete_list
     
     /**
@@ -433,6 +459,8 @@
     * @return null
     */
     function delete_task() {
+      $this->setTemplate('del_task');
+
       $task = ProjectTasks::findById(get_id());
       if (!($task instanceof ProjectTask)) {
         flash_error(lang('task dnx'));
@@ -450,19 +478,44 @@
         $this->redirectTo('task');
       } // if
       
-      try {
-        DB::beginWork();
-        $task->delete();
-        ApplicationLogs::createLog($task, active_project(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete task'));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteTask');
+      tpl_assign('task',$task);
+      tpl_assign('task_list',$task_list);
+      tpl_assign('delete_data',$$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+        try {
+          DB::beginWork();
+          $task->delete();
+          ApplicationLogs::createLog($task, active_project(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete task'));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete task'));
+        } // try
+
+        $this->redirectToUrl($task_list->getViewUrl());
+      } else {
         flash_error(lang('error delete task'));
-      } // try
-      
-      $this->redirectToUrl($task_list->getViewUrl());
+        $this->redirectToUrl($task_list->getViewUrl());
+      }
     } // delete_task
     
     /**

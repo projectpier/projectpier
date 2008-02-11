@@ -33,7 +33,7 @@
     $options[] = '<a href="' . $message->getEditUrl() . '">' . lang('edit') . '</a>';
   } // if
   if ($message->canDelete(logged_user())) {
-    $options[] = '<a href="' . $message->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete message') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $message->getDeleteUrl() . '">' . lang('delete') . '</a>';
   } // if
 ?>
 <?php if (count($options)) { ?>

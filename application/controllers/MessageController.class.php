@@ -308,6 +308,8 @@
     * @return null
     */
     function delete() {
+      $this->setTemplate('del_message');
+
       $message = ProjectMessages::findById(get_id());
       if (!($message instanceof ProjectMessage)) {
         flash_error(lang('message dnx'));
@@ -319,20 +321,45 @@
         $this->redirectTo('message');
       } // if
       
-      try {
-        
-        DB::beginWork();
-        $message->delete();
-        ApplicationLogs::createLog($message, $message->getProject(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success deleted message', $message->getTitle()));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteMessage');
+      tpl_assign('message',$message);
+      tpl_assign('delete_data',$delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+        try {
+
+          DB::beginWork();
+          $message->delete();
+          ApplicationLogs::createLog($message, $message->getProject(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success deleted message', $message->getTitle()));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete message'));
+        } // try
+
+        $this->redirectTo('message');
+      } else {
         flash_error(lang('error delete message'));
-      } // try
-      
-      $this->redirectTo('message');
+        $this->redirectTo('message');
+      }
+
     } // delete
     
     // ---------------------------------------------------

@@ -45,7 +45,7 @@
 <?php if ($last_revision instanceof ProjectFileRevision) { ?>
       <div id="fileLastRevision"><span class="propertyName"><?php echo lang('last revision') ?>:</span> 
 <?php if ($last_revision->getCreatedBy() instanceof User) { ?>
-      <?php echo lang('file revision info long', $last_revision->getRevisionNumber(), $last_revision->getCreatedBy()->getCardUrl(), $last_revision->getCreatedBy()->getDisplayName(), format_descriptive_date($last_revision->getCreatedOn())) ?>
+      <?php echo lang('file revision info long', $last_revision->getRevisionNumber(), $last_revision->getCreatedBy()->getCardUrl(), clean($last_revision->getCreatedBy()->getDisplayName()), format_descriptive_date($last_revision->getCreatedOn())) ?>
 <?php } else { ?>
       <?php echo lang('file revision info short', $last_revision->getRevisionNumber(), format_descriptive_date($last_revision->getCreatedOn())) ?>
 <?php } // if ?>
@@ -57,7 +57,7 @@
 $options = array();
 if ($file->canDownload(logged_user())) $options[] = '<a href="' . $file->getDownloadUrl() . '" class="downloadLink">' . lang('download') . ' <span>(' . format_filesize($file->getFilesize()) . ')</span></a>';
 if ($file->canEdit(logged_user())) $options[] = '<a href="' . $file->getEditUrl() . '">' . lang('edit') . '</a>';
-if ($file->canDelete(logged_user())) $options[] = '<a href="' . $file->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete file') . '\')">' . lang('delete') . '</a>'
+if ($file->canDelete(logged_user())) $options[] = '<a href="' . $file->getDeleteUrl() . '">' . lang('delete') . '</a>'
 ?>
 <?php if (count($options)) { ?>
         <div id="fileOptions"><?php echo implode(' | ', $options) ?></div>
@@ -93,7 +93,7 @@ if ($file->canDelete(logged_user())) $options[] = '<a href="' . $file->getDelete
     $options[] = '<a href="' . $revision->getEditUrl() . '">' . lang('edit') . '</a>';
   }
   if ($revision->canDelete(logged_user())) {
-    $options[] = '<a href="' . $revision->getDeleteUrl() . '" onclick="return confirm(\'' . lang('confirm delete revision') . '\')">' . lang('delete') . '</a>';
+    $options[] = '<a href="' . $revision->getDeleteUrl() . '">' . lang('delete') . '</a>';
   }
 ?>
 <?php if (count($revisions)) { ?>

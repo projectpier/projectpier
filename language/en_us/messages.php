@@ -67,6 +67,7 @@
     'no files to attach' => 'Please select files that need to be attached',
     'no administration tools' => 'There are no registered administration tools in the database',
     'administration tool dnx' => 'Administration tool "%s" does not exists',
+    'about to delete' => 'You are about to delete',
     
     // Success
     'success add project' => 'Project %s has been added successfully',

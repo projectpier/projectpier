@@ -9,7 +9,7 @@
 <?php if (!$config_category->isEmpty()) { ?>
 
   <div class="configCategory" id="category_<?php echo $config_category->getName() ?>">
-    <h2><a href="<?php echo $config_category->getUpdateUrl() ?>"><?php echo $config_category->getDisplayName() ?></a></h2>
+    <h2><a href="<?php echo $config_category->getUpdateUrl() ?>"><?php echo clean($config_category->getDisplayName()) ?></a></h2>
 <?php if (trim($config_category->getDisplayDescription())) { ?>
     <div class="configCategoryDescription"><?php echo do_textile($config_category->getDisplayDescription()) ?></div>
 <?php } // if ?>
