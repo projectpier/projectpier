@@ -10,6 +10,8 @@
     <div class="content">
 <?php if ($message->getCreatedBy() instanceof User) { ?>
       <div class="messageAuthor"><?php echo lang('posted on by', format_datetime($message->getCreatedOn()), $message->getCreatedBy()->getCardUrl(), clean($message->getCreatedBy()->getDisplayName())) ?></div>
+<?php } else { ?>
+      <div class="messageAuthor"><?php echo lang('posted on', format_datetime($message->getCreatedOn())) ?></div>
 <?php } // if ?>
       <div class="messageText">
         <?php echo do_textile($message->getText()) ?>

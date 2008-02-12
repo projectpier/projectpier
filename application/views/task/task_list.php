@@ -45,7 +45,7 @@
 <?php if ($task->getAssignedTo()) { ?>
           <span class="assignedTo"><?php echo clean($task->getAssignedTo()->getObjectName()) ?>:</span> 
 <?php } // if{ ?>
-          <?php echo clean($task->getText()) ?> <?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?> <?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?>
+          <?php echo clean($task->getText()) ?>&nbsp;<?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?>&nbsp;<?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?>
         </td>
       </tr>
 <?php } // foreach ?>
@@ -98,7 +98,12 @@
 <?php } // if ?>
         <td class="taskText">
           <?php echo clean($task->getText()) ?> <?php if ($task->canEdit(logged_user())) { ?><a href="<?php echo $task->getEditUrl() ?>" class="blank" title="<?php echo lang('edit task') ?>"><img src="<?php echo icon_url('edit.gif') ?>" alt="" /></a><?php } // if ?> <?php if ($task->canDelete(logged_user())) { ?><a href="<?php echo $task->getDeleteUrl() ?>" class="blank" title="<?php echo lang('delete task') ?>"><img src="<?php echo icon_url('cancel_gray.gif') ?>" alt="" /></a><?php } // if ?><br />
-          <span class="taskCompletedOnBy">(<?php echo lang('completed on by', format_date($task->getCompletedOn()), $task->getCompletedBy()->getCardUrl(), clean($task->getCompletedBy()->getDisplayName())) ?>)</span>
+          <span class="taskCompletedOnBy">(<?php
+          if ($task->getCompletedBy()) {
+            echo lang('completed on by', format_date($task->getCompletedOn()), $task->getCompletedBy()->getCardUrl(), clean($task->getCompletedBy()->getDisplayName()));
+          } else {
+            echo lang('completed on', format_date($task->getCompletedOn()));
+          } //if ?>)</span>
         </td>
         <td></td>
       </tr>

@@ -19,6 +19,8 @@
 <?php } // if ?>
 <?php if ($message->getCreatedBy() instanceof User) { ?>
     <div class="messageAuthor"><?php echo lang('posted on by', format_datetime($message->getCreatedOn()), $message->getCreatedBy()->getCardUrl(), clean($message->getCreatedBy()->getDisplayName())) ?></div>
+<?php } else { ?>
+    <div class="messageAuthor"><?php echo lang('posted on', format_datetime($message->getCreatedOn())) ?></div>
 <?php } // if ?>
   </div>
   <div class="messageText">

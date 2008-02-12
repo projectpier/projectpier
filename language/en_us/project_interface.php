@@ -34,8 +34,10 @@
     'comment posted on' => 'Posted on %s',
     'comment posted on by' => 'Posted on %s by <a href="%s">%s</a>',
     'completed on by' => '%s | <a href="%s">%s</a>',
+    'completed on' => '%s',
     'started on by' => '%s | <a href="%s">%s</a>',
     'posted on by' => '%s | <a href="%s">%s</a>',
+    'posted on' => '%s',
     'milestone assigned to' => 'Assigned to %s',
     'project started on' => 'Started on',
     
