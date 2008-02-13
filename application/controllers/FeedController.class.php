@@ -34,6 +34,12 @@
     function recent_activities() {
       $this->setLayout('xml');
       
+      $logout_after = false;
+      $cw =& CompanyWebsite::instance();
+      if (!$cw->getLoggedUser()) {
+        // not logged in, remember to logout later
+        $logout_after = true;
+      }
       $logged_user = $this->loginUserByToken();
 
       $active_projects = $logged_user->getActiveProjects();
@@ -56,6 +62,10 @@
       
       $feed = new Angie_Feed(lang('recent activities feed'), undo_htmlspecialchars(ROOT_URL));
       $feed = $this->populateFeedFromLog($feed, $activity_log);
+      
+      if ($logout_after) {
+        $cw->logUserOut();
+      }
       
       $this->renderText($feed->renderRSS2(), true);
     } // recent_activities

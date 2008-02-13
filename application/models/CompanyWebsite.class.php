@@ -105,6 +105,7 @@
       $user_id       = Cookie::getValue('id'.TOKEN_COOKIE_NAME);
       $twisted_token = Cookie::getValue(TOKEN_COOKIE_NAME);
       $remember      = (boolean) Cookie::getValue('remember'.TOKEN_COOKIE_NAME, false);
+      $controller    = array_var($_GET, 'c'); // needed to check for RSS feed
       
       if (empty($user_id) || empty($twisted_token)) {
         return false; // we don't have a user
@@ -118,11 +119,15 @@
         return false; // failed to validate token
       } // if
       
-      $session_expires = $user->getLastActivity()->advance(SESSION_LIFETIME, false);
-      if (DateTimeValueLib::now()->getTimestamp() < $session_expires->getTimestamp()) {
-        $this->setLoggedUser($user, $remember, true);
+      if ($controller == 'feed') {
+        $this->setLoggedUser($user, $remember, false);
       } else {
-        $this->logUserIn($user, $remember);
+        $session_expires = $user->getLastActivity()->advance(SESSION_LIFETIME, false);
+        if (DateTimeValueLib::now()->getTimestamp() < $session_expires->getTimestamp()) {
+          $this->setLoggedUser($user, $remember, true);
+        } else {
+          $this->logUserIn($user, $remember);
+        } // if
       } // if
     } // initLoggedUser
     
