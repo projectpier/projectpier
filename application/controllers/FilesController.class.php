@@ -493,8 +493,8 @@
       } // if
 
       $delete_data = array_var($_POST, 'deleteFile');
-      tpl_assign('file',$file);
-      tpl_assign('delete_data',$delete_data);
+      tpl_assign('file', $file);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(
@@ -621,9 +621,9 @@
       } // if
       
       $delete_data = array_var($_POST, 'deleteFileRevision');
-      tpl_assign('file',$file);
-      tpl_assign('revision',$revision);
-      tpl_assign('delete_data',$delete_data);
+      tpl_assign('file', $file);
+      tpl_assign('revision', $revision);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(

@@ -216,8 +216,8 @@
       } // if
       
       $delete_data = array_var($_POST, 'deleteTaskList');
-      tpl_assign('task_list',$task_list);
-      tpl_assign('delete_data',$delete_data);
+      tpl_assign('task_list', $task_list);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(
@@ -479,9 +479,9 @@
       } // if
       
       $delete_data = array_var($_POST, 'deleteTask');
-      tpl_assign('task',$task);
-      tpl_assign('task_list',$task_list);
-      tpl_assign('delete_data',$$delete_data);
+      tpl_assign('task', $task);
+      tpl_assign('task_list', $task_list);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(

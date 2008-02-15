@@ -255,8 +255,8 @@
       } // if
       
       $delete_data = array_var($_POST, 'deleteCompany');
-      tpl_assign('company',$company);
-      tpl_assign('delete_data',$delete_data);
+      tpl_assign('company', $company);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(

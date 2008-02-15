@@ -322,8 +322,8 @@
       } // if
       
       $delete_data = array_var($_POST, 'deleteMessage');
-      tpl_assign('message',$message);
-      tpl_assign('delete_data',$delete_data);
+      tpl_assign('message', $message);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(

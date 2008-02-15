@@ -106,7 +106,7 @@
     * @return string Camelized word. likeThis.
     */
     static function camelize($lower_case_and_underscored_word) {
-      return str_replace(" ","",ucwords(str_replace("_"," ",$lower_case_and_underscored_word)));
+      return str_replace(" ","",ucwords(str_replace("_", " ", $lower_case_and_underscored_word)));
     }
   
     /**
@@ -116,8 +116,8 @@
     * @return string Underscore-syntaxed version of the $camel_cased_word
     */
     static function underscore($camel_cased_word) {
-      $camel_cased_word = preg_replace('/([A-Z]+)([A-Z])/','\1_\2', $camel_cased_word);
-      return strtolower(preg_replace('/([a-z])([A-Z])/','\1_\2', $camel_cased_word));
+      $camel_cased_word = preg_replace('/([A-Z]+)([A-Z])/', '\1_\2', $camel_cased_word);
+      return strtolower(preg_replace('/([a-z])([A-Z])/', '\1_\2', $camel_cased_word));
     }
   
     /**
@@ -128,7 +128,7 @@
     * @return string Human-readable string
     */
     static function humanize($lower_case_and_underscored_word) {
-      return ucwords(str_replace("_"," ",$lower_case_and_underscored_word));
+      return ucwords(str_replace("_", " ", $lower_case_and_underscored_word));
     }
     
   } // Inflector

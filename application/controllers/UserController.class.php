@@ -161,8 +161,8 @@
       } // if
       
       $delete_data = array_var($_POST, 'deleteUser');
-      tpl_assign('user',$user);
-      tpl_assign('delete_data',$delete_data);
+      tpl_assign('user', $user);
+      tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
         $delete_data = array(

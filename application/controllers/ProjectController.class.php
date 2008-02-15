@@ -397,7 +397,7 @@
       } // if
 
       $delete_data = array_var($_POST, 'deleteProject');
-      tpl_assign('project',$project);
+      tpl_assign('project', $project);
       tpl_assign('delete_data', $delete_data);
 
       if (!is_array($delete_data)) {
