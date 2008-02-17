@@ -91,6 +91,7 @@
     'delete folder' => 'Delete folder',
     
     'edit file revisions' => 'Edit revision',
+    'delete file revision' => 'Delete revision',
     
     'attach file' => 'Attach file',
     'attach files' => 'Attach files',

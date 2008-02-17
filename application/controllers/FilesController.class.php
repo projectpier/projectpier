@@ -203,6 +203,8 @@
     * @return null
     */
     function delete_folder() {
+      $this->setTemplate('del_folder');
+
       $folder = ProjectFolders::findById(get_id());
       if (!($folder instanceof ProjectFolder)) {
         flash_error(lang('folder dnx'));
@@ -213,20 +215,45 @@
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
       } // if
+
+      $delete_data = array_var($_POST, 'deleteFolder');
+      tpl_assign('folder', $folder);
+      tpl_assign('delete_data', $delete_data);
       
-      try {
-        DB::beginWork();
-        $folder->delete();
-        ApplicationLogs::createLog($folder, active_project(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success delete folder', $folder->getName()));
-      } catch(Exception $e) {
-        DB::rollback();
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid login data')));
+          return $this->render();
+        }
+      
+        try {
+          DB::beginWork();
+          $folder->delete();
+          ApplicationLogs::createLog($folder, active_project(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+          
+          flash_success(lang('success delete folder', $folder->getName()));
+        } catch(Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete folder'));
+        } // try
+      
+        $this->redirectTo('files');
+      } else {
         flash_error(lang('error delete folder'));
-      } // try
-      
-      $this->redirectTo('files');
+        $this->redirectToUrl($folder->getDetailsUrl());
+      }
     } // delete_folder
     
     // ---------------------------------------------------
