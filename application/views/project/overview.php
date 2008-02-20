@@ -38,9 +38,9 @@
 <?php if (is_array($late_milestones) && count($late_milestones)) { ?>
 <?php foreach ($late_milestones as $late_milestone) { ?>
 <?php if ($late_milestone->getAssignedTo() instanceof ApplicationDataObject) { ?>
-    <li><?php echo clean($late_milestone->getAssignedTo()->getObjectName()) ?>: <a href="<?php echo $late_milestone->getViewUrl() ?>"><?php echo clean($late_milestone->getName()) ?></a> (<?php echo format_descriptive_date($late_milestone->getDueDate()) ?> - <?php echo lang('days late', $late_milestone->getLateInDays()) ?>)</li>
+    <li><?php echo clean($late_milestone->getAssignedTo()->getObjectName()) ?>: <a href="<?php echo $late_milestone->getViewUrl() ?>"><?php echo clean($late_milestone->getName()) ?></a> (<?php echo format_descriptive_date($late_milestone->getDueDate()) ?> - <?php echo format_days('days late', $late_milestone->getLateInDays()) ?>)</li>
 <?php } else { ?>
-    <li><a href="<?php echo $late_milestone->getViewUrl() ?>"><?php echo clean($late_milestone->getName()) ?></a> (<?php echo format_descriptive_date($late_milestone->getDueDate()) ?> - <?php echo lang('days late', $late_milestone->getLateInDays()) ?>)</li>
+    <li><a href="<?php echo $late_milestone->getViewUrl() ?>"><?php echo clean($late_milestone->getName()) ?></a> (<?php echo format_descriptive_date($late_milestone->getDueDate()) ?> - <?php echo format_days('days late', $late_milestone->getLateInDays()) ?>)</li>
 <?php } // if ?>
 <?php } // foreach ?>
 <?php } // if ?>
@@ -70,9 +70,9 @@
 <?php if ($upcoming_milestone->getLeftInDays() <= 30) { ?>
 
 <?php if ($upcoming_milestone->getAssignedTo() instanceof ApplicationDataObject) { ?>
-    <li><?php echo clean($upcoming_milestone->getAssignedTo()->getObjectName()) ?>: <a href="<?php echo $upcoming_milestone->getViewUrl() ?>"><?php echo clean($upcoming_milestone->getName()) ?></a> (<?php echo format_descriptive_date($upcoming_milestone->getDueDate()) ?> - <?php echo lang('days left', $upcoming_milestone->getLeftInDays()) ?>)</li>
+    <li><?php echo clean($upcoming_milestone->getAssignedTo()->getObjectName()) ?>: <a href="<?php echo $upcoming_milestone->getViewUrl() ?>"><?php echo clean($upcoming_milestone->getName()) ?></a> (<?php echo format_descriptive_date($upcoming_milestone->getDueDate()) ?> - <?php echo format_days('days left', $upcoming_milestone->getLeftInDays()) ?>)</li>
 <?php } else { ?>
-    <li><a href="<?php echo $upcoming_milestone->getViewUrl() ?>"><?php echo clean($upcoming_milestone->getName()) ?></a> (<?php echo format_descriptive_date($upcoming_milestone->getDueDate()) ?> - <?php echo lang('days left', $upcoming_milestone->getLeftInDays()) ?>)</li>
+    <li><a href="<?php echo $upcoming_milestone->getViewUrl() ?>"><?php echo clean($upcoming_milestone->getName()) ?></a> (<?php echo format_descriptive_date($upcoming_milestone->getDueDate()) ?> - <?php echo format_days('days left', $upcoming_milestone->getLeftInDays()) ?>)</li>
 <?php } // if ?>
 
 <?php } else { ?>

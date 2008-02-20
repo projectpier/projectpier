@@ -62,9 +62,9 @@
   <ul>
 <?php foreach ($late_milestones as $milestone) { ?>
 <?php if ($milestone->getAssignedTo() instanceof ApplicationDataObject) { ?>
-    <li><?php echo clean($milestone->getAssignedTo()->getObjectName()) ?>: <a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> <?php echo strtolower(lang('in')) ?> <a href="<?php echo $milestone->getProject()->getOverviewUrl() ?>"><?php echo clean($milestone->getProject()->getName()) ?></a> (<?php echo lang('days late', $milestone->getLateInDays()) ?>)</li>
+    <li><?php echo clean($milestone->getAssignedTo()->getObjectName()) ?>: <a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> <?php echo strtolower(lang('in')) ?> <a href="<?php echo $milestone->getProject()->getOverviewUrl() ?>"><?php echo clean($milestone->getProject()->getName()) ?></a> (<?php echo format_days('days late', $milestone->getLateInDays()) ?>)</li>
 <?php } else { ?>
-    <li><a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> <?php echo strtolower(lang('in')) ?> <a href="<?php echo $milestone->getProject()->getOverviewUrl() ?>"><?php echo clean($milestone->getProject()->getName()) ?></a> (<?php echo lang('days late', $milestone->getLateInDays()) ?>)</li>
+    <li><a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> <?php echo strtolower(lang('in')) ?> <a href="<?php echo $milestone->getProject()->getOverviewUrl() ?>"><?php echo clean($milestone->getProject()->getName()) ?></a> (<?php echo format_days('days late', $milestone->getLateInDays()) ?>)</li>
 <?php } // if ?>
 <?php } // foreach ?>
   </ul>

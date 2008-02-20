@@ -106,5 +106,17 @@
     $datetime = $value instanceof DateTimeValue ? $value : new DateTimeValue($value);
     return Localization::instance()->formatTime($datetime, $timezone);
   } // format_time
+  
+  /**
+   * Uses the 'day...' instead of 'days...' language token when there's only one day
+   * @access public
+   * @param string language token (e.g. 'days left')
+   * @param int number of days
+   * @return string translated string
+   */
+  function format_days($tok, $days) {
+    if ($days == 1) $tok = str_replace('days', 'day', $tok);
+    return lang($tok, $days);
+  }
 
 ?>

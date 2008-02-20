@@ -52,7 +52,9 @@
     'new logo notice' => 'Current logo will be deleted and replaced with new one!',
     
     'days late' => '%s days late',
+    'day late' => '%s day late',
     'days left' => '%s days left',
+    'day left' => '%s day left',
     
     'user card of' => 'User card of %s',
     'company card of' => 'Company card of %s',

@@ -41,9 +41,9 @@
 <?php } // if ?>
             <a href="<?php echo $assigned_milestone->getViewUrl() ?>"><?php echo clean($assigned_milestone->getName()) ?></a> - 
 <?php if ($assigned_milestone->isUpcoming()) { ?>
-            <span><?php echo lang('days left', $assigned_milestone->getLeftInDays()) ?></span>
+            <span><?php echo format_days('days left', $assigned_milestone->getLeftInDays()) ?></span>
 <?php } elseif ($assigned_milestone->isLate()) { ?>
-            <span class="error"><?php echo lang('days late', $assigned_milestone->getLateInDays()) ?></span>
+            <span class="error"><?php echo format_days('days late', $assigned_milestone->getLateInDays()) ?></span>
 <?php } elseif ($assigned_milestone->isToday()) { ?>
             <span><?php echo lang('today') ?></span>
 <?php } // if ?>

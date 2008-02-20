@@ -29,9 +29,9 @@
 <?php } // if ?>
       <a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a>
 <?php if ($milestone->isUpcoming()) { ?>
- (<?php echo lang('days left', $milestone->getLeftInDays()) ?>)
+ (<?php echo format_days('days left', $milestone->getLeftInDays()) ?>)
 <?php } elseif ($milestone->isLate()) { ?>
- (<?php echo lang('days late', $milestone->getLateInDays()) ?>)
+ (<?php echo format_days('days late', $milestone->getLateInDays()) ?>)
 <?php } elseif ($milestone->isToday()) { ?>
  (<?php echo lang('today') ?>)
 <?php } // if ?>
