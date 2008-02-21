@@ -29,7 +29,7 @@
     'timezone gmt +8'   => '(GMT+8:00) Beijing, Perth, Singapore, Hong Kong, Urumqi, Taipei',
     'timezone gmt +9'   => '(GMT+9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk',
     'timezone gmt +9.5' => '(GMT+9:30) Adelaide, Darwin',
-    'timezone gmt +10'  => '(GMT+10:00) Brisbane, Canberra, Melbourne, Sydney, Guam,Vlasdiostok',
+    'timezone gmt +10'  => '(GMT+10:00) Brisbane, Canberra, Melbourne, Sydney, Guam, Vlasdiostok',
     'timezone gmt +11'  => '(GMT+11:00) Magadan, Solomon Islands, New Caledonia',
     'timezone gmt +12'  => '(GMT+12:00) Auckland, Wellington, Fiji, Kamchatka, Marshall Island',
   ); // array

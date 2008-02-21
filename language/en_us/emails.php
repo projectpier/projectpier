@@ -14,14 +14,14 @@
     
     'user password reseted' => 'Your password has been reset. New password is \'%s\'.',
     
-    'dont reply wraning' => 'THIS IS SYSTEM NOTIFICATION. DO NOT REPLY TO THIS EMAIL!',
-    'new message posted' => 'New message "%s" has been posted in "%s" project',
+    'dont reply wraning' => 'THIS IS A SYSTEM NOTIFICATION. DO NOT REPLY TO THIS EMAIL!',
+    'new message posted' => 'New message "%s" has been posted in the "%s" project',
     'view new message' => 'View that message',
     
     'new comment posted' => 'New comment on "%s" has been posted',
     'view new comment' => 'View that comment',
     
-    'user created your account' => '%s created new account for you',
+    'user created your account' => '%s created a new account for you',
     'visit and login' => 'Visit %s and login with',
     
     'milestone assigned' => 'Milestone "%s" has been assigned to you',

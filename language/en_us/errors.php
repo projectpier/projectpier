@@ -32,7 +32,7 @@
     'invalid upload type' => 'Invalid file type. Allowed types are %s',
     'invalid upload dimensions' => 'Invalid image dimensions. Max size is %sx%s pixels',
     'invalid upload size' => 'Invalid image size. Max size is %s',
-    'invalid upload failed to move' => 'Failed to move uplaoded file',
+    'invalid upload failed to move' => 'Failed to move uploaded file',
     
     // Registration form
     'terms of services not accepted' => 'In order to create an account you need to read and accept our terms of services',
@@ -42,8 +42,8 @@
     'failed to load project' => 'Failed to load active project',
     
     // Login form
-    'username value missing' => 'Please insert your username',
-    'password value missing' => 'Please insert your password',
+    'username value missing' => 'Please enter your username',
+    'password value missing' => 'Please enter your password',
     'invalid login data' => 'Failed to log you in. Please check your login data and try again',
     
     // Add project form
@@ -82,7 +82,7 @@
     
     // Validate project folder
     'folder name required' => 'Folder name is required',
-    'folder name unique' => 'Folder name need to be unique in this project',
+    'folder name unique' => 'Folder name needs to be unique in this project',
     
     // Validate add / edit file form
     'folder id required' => 'Please select folder',
