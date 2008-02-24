@@ -13,7 +13,7 @@
     <div class="private" title="<?php echo lang('private comment') ?>"><span><?php echo lang('private comment') ?></span></div>
 <?php } // if ?>
 <?php if ($comment->getCreatedBy() instanceof User) { ?>
-    <div class="commentHead"><span><a href="<?php echo $comment->getViewUrl() ?>" title="<?php echo lang('permalink') ?>">#<?php echo $counter ?></a>:</span> <?php echo lang('comment posted on by', format_datetime($comment->getUpdatedOn()), $comment->getCreatedByCardUrl(), $comment->getCreatedByDisplayName()) ?>:</div>
+    <div class="commentHead"><span><a href="<?php echo $comment->getViewUrl() ?>" title="<?php echo lang('permalink') ?>">#<?php echo $counter ?></a>:</span> <?php echo lang('comment posted on by', format_datetime($comment->getUpdatedOn()), $comment->getCreatedByCardUrl(), clean($comment->getCreatedByDisplayName())) ?>:</div>
 <?php } else { ?>
     <div class="commentHead"><span><a href="<?php echo $comment->getViewUrl() ?>" title="<?php echo lang('permalink') ?>">#<?php echo $counter ?></a>:</span> <?php echo lang('comment posted on', format_datetime($comment->getUpdatedOn())) ?>:</div>
 <?php } // if ?>
