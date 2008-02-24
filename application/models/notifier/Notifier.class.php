@@ -83,13 +83,13 @@
       
       tpl_assign('new_message', $message);
       
-      $recepients = array();
+      $recipients = array();
       foreach ($people as $user) {
-        $recepients[] = self::prepareEmailAddress($user->getEmail(), $user->getDisplayName());
+        $recipients[] = self::prepareEmailAddress($user->getEmail(), $user->getDisplayName());
       } // foreach
       
       return self::sendEmail(
-        $recepients,
+        $recipients,
         self::prepareEmailAddress($message->getCreatedBy()->getEmail(), $message->getCreatedByDisplayName()),
         $message->getProject()->getName() . ' - ' . $message->getTitle(),
         tpl_fetch(get_template_path('new_message', 'notifier'))
@@ -114,7 +114,7 @@
         return true; // no subscribers
       } // if
       
-      $recepients = array();
+      $recipients = array();
       foreach ($all_subscribers as $subscriber) {
         if ($subscriber->getId() == $comment->getCreatedById()) {
           continue; // skip comment author
@@ -122,15 +122,15 @@
         
         if ($comment->isPrivate()) {
           if ($subscriber->isMemberOfOwnerCompany()) {
-            $recepients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
+            $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
           } // if
         } else {
-          $recepients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
+          $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
         } // of
       } // foreach
       
-      if (!count($recepients)) {
-        return true; // no recepients
+      if (!count($recipients)) {
+        return true; // no recipients
       } // if
       
       tpl_assign('new_comment', $comment);

@@ -101,7 +101,7 @@
     // Mass mailer
     'massmailer subject required' => 'Message subject is required',
     'massmailer message required' => 'Message body is required',
-    'massmailer select recepients' => 'Please select users that will receive this email',
+    'massmailer select recipients' => 'Please select users that will receive this email',
     
   ); // array
 

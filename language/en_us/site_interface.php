@@ -81,7 +81,7 @@
     // Tools
     'administration tools' => 'Tools',
     
-    'test mail recepient' => 'Test recipient',
+    'test mail recipient' => 'Test recipient',
     'test mail message' => 'Test message',
     'test mail message subject' => 'Test subject',
     
