@@ -223,7 +223,7 @@
         $user->save();
       } // if
       
-      $expiration = $remember ? REMEMBER_LOGIN_LIFETIME : SESSION_LIFETIME;
+      $expiration = $remember ? REMEMBER_LOGIN_LIFETIME : null;
       
       Cookie::setValue('id'.TOKEN_COOKIE_NAME, $user->getId(), $expiration);
       Cookie::setValue(TOKEN_COOKIE_NAME, $user->getTwistedToken(), $expiration);
