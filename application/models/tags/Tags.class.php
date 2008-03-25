@@ -75,6 +75,7 @@
     function setObjectTags($tags, ProjectDataObject $object, $manager_class, $project = null) {
       self::clearObjectTags($object, $manager_class);
       if (is_array($tags) && count($tags)) {
+        $tags = array_unique($tags);
         foreach ($tags as $tag_name) {
           
           if (trim($tag_name) <> '') {
