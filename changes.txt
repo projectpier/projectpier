@@ -3,6 +3,29 @@
 ProjectPier Change Log
 ~~~~~~~~~~~~~~~~~~~~~~
 
+----------------------------
+Version 0.8.0.2  15 Feb 2008
+----------------------------
+
+- Fixed (Node 629) - Added missing XSRF files from 0.8.0.1
+- Minor code cleanups
+
+----------------------------
+Version 0.8.0.1  12 Feb 2008
+----------------------------
+
+- Fixed (Node 665) - multiple XSS vulnerabilities
+- Fixed (Node 629) - XSRF when deleting companies, users or projects
+- Fixed (Node 455) - code unified to coding standards
+- Changed all files to be in Unix text file format
+
+-----------------------------------
+Version 0.8.0 (final)  22 Sept 2007
+-----------------------------------
+- Added new Continental Portuguese translation 
+- Fixed (Node 225) - Downloading files does not work with Internet Explorer 
+  under https protocol
+
 ----------------------------------------------------------
 Version 0.8.0 Release Candidate 1 (0.8.0RC1)  03 Sept 2007
 ----------------------------------------------------------
