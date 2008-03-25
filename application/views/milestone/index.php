@@ -6,6 +6,7 @@
   if (ProjectMilestone::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add milestone'), get_url('milestone', 'add'));
   } // if
+  add_page_action(lang('view calendar'), get_url('milestone', 'calendar'));
 
 ?>
 <?php if ($late_milestones || $today_milestones || $upcoming_milestones) { ?>

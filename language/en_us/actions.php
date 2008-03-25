@@ -63,6 +63,7 @@
     'add milestone' => 'Add milestone',
     'edit milestone' => 'Edit milestone',
     'delete milestone' => 'Delete milestone',
+    'view calendar' => 'View calendar',
     
     // People
     'update people' => 'Update',

@@ -496,6 +496,31 @@
       } // if
     } // splitOpenMilestones
     
+
+    /**
+    * Return array of milestones for the month specified that the user has
+    * haccess to.
+    *
+    * @access public
+    * @param int $year
+    * @param int $month
+    * @return array
+    */
+    function getMilestonesByMonth($year, $month) {
+      $from_date = DateTimeValueLib::make(0, 0, 0, $month, 1, $year);
+      $to_date = new DateTimeValue(strtotime('+1 month -1 day', $from_date->getTimestamp()));
+
+      if (logged_user()->isMemberOfOwnerCompany()) {
+        $conditions = array('`project_id` = ? AND (`due_date` >= ? AND `due_date` < ?)', $this->getId(), $from_date, $to_date);
+      } else {
+        $conditions = array('`project_id` = ? AND (`due_date` >= ? AND `due_date` < ?) AND `is_private` = ?', $this->getId(), $from_date, $to_date, 0);
+      }
+      return ProjectMilestones::findAll(array(
+        'conditions' => $conditions,
+        'order' => 'due_date'
+      )); // findAll
+    } // getMilestonesByMonth
+
     // ---------------------------------------------------
     //  Task lists
     // ---------------------------------------------------

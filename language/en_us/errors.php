@@ -12,6 +12,7 @@
   
     // General
     'invalid email address' => 'Email address format is not valid',
+    'id missing' => 'Required ID value is missing',
    
     // Company validation errors
     'company name required' => 'Company / organization name is required',

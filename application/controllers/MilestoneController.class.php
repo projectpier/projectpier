@@ -362,6 +362,32 @@
       $this->redirectToReferer($milestone->getViewUrl());
     } // open
   
+    /**
+    * Show calendar view milestone page
+    *
+    * @access public
+    * @param void
+    * @return null
+    */
+    function calendar() {
+      $this->addHelper('textile');
+
+      $project = active_project();
+      $id = get_id();
+      if (strlen($id) == 0) {
+        $id = gmdate('Ym');
+      }
+      if (preg_match('/^(\d{4})(\d{2})$/', $id, $matches)) {
+        list (, $year, $month) = $matches;
+        tpl_assign('year', $year);
+        tpl_assign('month', $month);
+      } else {
+        flash_error(lang('id missing'));
+        $this->redirectToReferer(get_url('milestone'));
+      }
+      tpl_assign('milestones', $project->getMilestonesByMonth($year, $month));
+    } // calendar
+
   } // MilestoneController
 
 ?>

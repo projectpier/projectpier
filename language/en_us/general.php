@@ -117,6 +117,14 @@
     'month 10' => 'October',
     'month 11' => 'November',
     'month 12' => 'December',
+
+    'dow 1' => 'Monday',
+    'dow 2' => 'Tuesday',
+    'dow 3' => 'Wednesday',
+    'dow 4' => 'Thursday',
+    'dow 5' => 'Friday',
+    'dow 6' => 'Saturday',
+    'dow 7' => 'Sunday',
   ); // array
 
 ?>
