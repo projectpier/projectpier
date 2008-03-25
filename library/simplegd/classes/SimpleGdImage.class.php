@@ -291,7 +291,13 @@
       $height = (integer) $height > 0 ? (integer) $height : 1;
       
       if ($this->getImageType() == IMAGETYPE_GIF) {
-        $new_resource = imagecreate($width, $height);
+        $new_resource = imagecreatetruecolor($new_width, $new_height); 
+        $colorcount = imagecolorstotal($this->resource); 
+        imagetruecolortopalette($new_resource, true, $colorcount); 
+        imagepalettecopy($new_resource, $this->resource); 
+        $transparentcolor = imagecolortransparent($this->resource); 
+        imagefill($new_resource, 0, 0, $transparentcolor); 
+        imagecolortransparent($new_resource, $transparentcolor);
       } else {
         $new_resource = imagecreatetruecolor($width, $height);
       } // if
@@ -359,7 +365,13 @@
       $new_height = floor($scale * $this->getHeight());
       
       if ($this->getImageType() == IMAGETYPE_GIF) {
-        $new_resource = imagecreate($new_width, $new_height);
+        $new_resource = imagecreatetruecolor($new_width, $new_height); 
+        $colorcount = imagecolorstotal($this->resource); 
+        imagetruecolortopalette($new_resource, true, $colorcount); 
+        imagepalettecopy($new_resource, $this->resource); 
+        $transparentcolor = imagecolortransparent($this->resource); 
+        imagefill($new_resource, 0, 0, $transparentcolor); 
+        imagecolortransparent($new_resource, $transparentcolor);
       } else {
         $new_resource = imagecreatetruecolor($new_width, $new_height);
       } // if
