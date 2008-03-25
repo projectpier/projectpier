@@ -9,7 +9,7 @@
   function do_textile($text) {
     Env::useLibrary('textile');
     $textile = new Textile();
-    return $textile->TextileRestricted($text);
+    return $textile->TextileRestricted($text, false, false);
   } // do_textile
 
 ?>
