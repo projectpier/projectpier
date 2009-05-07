@@ -73,7 +73,7 @@
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       } // if
-      
+
       $search_for = array_var($_GET, 'search_for');
       $page = (integer) array_var($_GET, 'page', 1);
       if ($page < 1) {
@@ -84,7 +84,7 @@
         $search_results = null;
         $pagination = null;
       } else {
-        list($search_results, $pagination) = SearchableObjects::searchPaginated($search_for, active_project(), logged_user()->isMemberOfOwnerCompany());
+        list($search_results, $pagination) = SearchableObjects::searchPaginated($search_for, active_project(), logged_user()->isMemberOfOwnerCompany(), 10, $page);
       } // if
       
       tpl_assign('search_string', $search_for);

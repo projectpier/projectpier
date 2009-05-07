@@ -1188,15 +1188,15 @@
     * Return search URL
     *
     * @param string $search_for
-    * @param integer $page
+    * @param string placeholder for search page
     * @return string
     */
-    function getSearchUrl($search_for = null, $page = null) {
+    function getSearchUrl($search_for = null, $page = '#PAGE#') {
       if (trim($search_for) <> '') {
         $params = array(
           'active_project' => $this->getId(),
           'search_for' => $search_for,
-          'page' => (integer) $page > 0 ? (integer) $page : 1
+          'page' =>  $page,
         ); // array
         return get_url('project', 'search', $params);
       } else {
