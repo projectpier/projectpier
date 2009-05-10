@@ -67,6 +67,12 @@
             $comment->setIsPrivate(false);
           } // if
         
+          if($object instanceof ProjectMessage || $object instanceof ProjectFile) {
+            if($object->getIsPrivate()) {
+              $comment->setIsPrivate(true);
+	    } // if
+          } // if
+	  
           DB::beginWork();
           $comment->save();
           
@@ -159,6 +165,12 @@
             $comment->setIsPrivate($old_is_private);
           }
         
+          if($object instanceof ProjectMessage || $object instanceof ProjectFile) {
+            if($object->getIsPrivate()) {
+              $comment->setIsPrivate(true);
+	    } // if
+          } // if
+
           DB::beginWork();
           $comment->save();
           ApplicationLogs::createLog($comment, active_project(), ApplicationLogs::ACTION_EDIT);
