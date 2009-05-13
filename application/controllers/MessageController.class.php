@@ -35,6 +35,7 @@
         $page = 1;
       }
       
+      $this->canGoOn();
       $conditions = logged_user()->isMemberOfOwnerCompany() ? 
         array('`project_id` = ?', active_project()->getId()) :
         array('`project_id` = ? AND `is_private` = ?', active_project()->getId(), 0);

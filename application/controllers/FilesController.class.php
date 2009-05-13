@@ -38,6 +38,7 @@
         $page = 1;
       }
       
+      $this->canGoOn();
       $hide_private = !logged_user()->isMemberOfOwnerCompany();
       $result = ProjectFiles::getProjectFiles(active_project(), null, $hide_private, $order, $page, config_option('files_per_page'), true);
       if (is_array($result)) {
@@ -83,6 +84,7 @@
         $page = 1;
       }
       
+      $this->canGoOn();
       $hide_private = !logged_user()->isMemberOfOwnerCompany();
       $result = ProjectFiles::getProjectFiles(active_project(), $folder, $hide_private, $order, $page, config_option('files_per_page'), true);
       if (is_array($result)) {
@@ -286,6 +288,7 @@
         $this->redirectToReferer(get_url('files'));
       } // if
       
+      $this->canGoOn();
       tpl_assign('file', $file);
       tpl_assign('folder', $file->getFolder());
       tpl_assign('last_revision', $file->getLastRevision());
@@ -321,6 +324,7 @@
         $this->redirectToReferer(get_url('files'));
       } // if
       
+      $this->canGoOn();
       download_contents($file->getFileContent(), $file->getTypeString(), $file->getFilename(), $file->getFileSize(), !$inline);
       die();
     } // download_file
@@ -349,6 +353,7 @@
         $this->redirectToReferer(get_url('files'));
       } // if
       
+      $this->canGoOn();
       download_contents($revision->getFileContent(), $revision->getTypeString(), $file->getFilename(), $file->getFileSize());
       die();
     } // download_revision

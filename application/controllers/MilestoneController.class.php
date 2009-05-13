@@ -32,7 +32,9 @@
     function index() {
       $this->addHelper('textile');
       $project = active_project();
-      
+
+      $this->canGoOn();
+
       tpl_assign('late_milestones', $project->getLateMilestones());
       tpl_assign('today_milestones', $project->getTodayMilestones());
       tpl_assign('upcoming_milestones', $project->getUpcomingMilestones());

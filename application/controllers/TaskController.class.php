@@ -30,6 +30,9 @@
     function index() {
       tpl_assign('open_task_lists', active_project()->getOpenTaskLists());
       tpl_assign('completed_task_lists', active_project()->getCompletedTaskLists());
+
+      $this->canGoOn();
+
       $this->setSidebar(get_template_path('index_sidebar', 'task'));
     } // index
     
