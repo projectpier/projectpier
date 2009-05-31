@@ -20,7 +20,7 @@
     </form>
     <div id="footer">
     <ul>
-      <li><a href="http://www.projectpier.org/" target="_blank">ProjectPier</a> is provided free of charge under the <a href="http://www.projectpier.org/licence/" target="_blank">Honest Public License.</a></li>
+      <li><a href="http://www.projectpier.org/" target="_blank">ProjectPier</a> is provided free of charge under the <a href="http://www.projectpier.org/AGPL" target="_blank">Gnu Affero General Public License (AGPL).</a></li>
       <li>If you have problems, check the <a href="http://www.projectpier.org/forum/" target="_blank">support forum</a></ul>
     </ul>  
     </div>

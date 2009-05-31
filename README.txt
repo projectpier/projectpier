@@ -64,7 +64,7 @@ Changing the Language
 ~~~~~~~~~~~~~~~~~~~~~
 
 ProjectPier installation screens are in English and English is the default language
-for the program.  However, ProjectPier is distributed with 13 other language options.
+for the program.  However, ProjectPier is distributed with 22 other language options.
 
 After installation is complete, the language can be changed by manually editing the
 file /config/config.php. 
@@ -74,20 +74,29 @@ How: Find this line in your config.php file: define('DEFAULT_LOCALIZATION', 'en_
      Example for German: define('DEFAULT_LOCALIZATION', 'de_de');
 
 The following languages are available:
+es_ar = Argentinian Spanish
+pt_br = Bralilian Portuguese
+bg_bg = Bulgarian
+pt_pt = Continental Portuguese
+cz_cz = Czech
 da_dk = Danish
+nl_nl = Dutch
+en_us = English (US)
+fi_fi = Finnish
+fr_fr = French
 de_de = German
 el_gr = Greek
-en_us = English (US)
-es_ar = Argentinian Spanish
 hu_formal = Hungarian (formal)
 hu_informal = Hungarian (informal)
-nl_nl = Dutch
+it_it = Italian
+lt_lt = Lithuanian
+es_mx = Mexican Spanish
 pl_pl = Polish
-pt_br = Bralilian Portuguese
+ru_ru = Russian
+zn_ch = Simplified Chinese
 sl_si = Slovenian
 sv_sv = Swedish
 tr_tr = Turkish
-zn_ch = Simplified Chinese
 
 ~~~~~~~~~~~~~~~~~
 About ProjectPier
@@ -95,6 +104,6 @@ About ProjectPier
 	
 ProjectPier is an Open Source project management and collaboration
 tool that you can install on your own server. It is released under the 
-terms of the Honest Public License - HPL (see license.txt for details).  
+terms of the Gnu Affero General Public License (AGPL) (see LICENSE.txt for details).  
 	
 : http://www.projectpier.org
