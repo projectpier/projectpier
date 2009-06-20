@@ -114,30 +114,30 @@
         
         // If we have valid file that do the checks
         if (is_file($path)) {
-        	
-        	if (is_null($extension)) {
-        	  $files[] = $base_name_only ? basename($path) : $path;
-        	} else {
-        	
-        		// Match multiple extensions?
-        		if (is_array($extension)) {
-        			
-        			// If in array add...
-        		  if (in_array( strtolower(get_file_extension($path)), $extension )) {
-        		    $files[] = $base_name_only ? basename($path) : $path;
-        		  } // if
-        		  
-        		// Match single extension
-        		} else {
-        			
-        			// If extensions match add...
-        		  if (strtolower(get_file_extension($path)) == $extension) {
-        		    $files[] = $base_name_only ? basename($path) : $path;
-        		  } // if
-        		  
-        		} // if
-        		
-        	} // if
+        
+           if (is_null($extension)) {
+             $files[] = $base_name_only ? basename($path) : $path;
+           } else {
+        
+              // Match multiple extensions?
+              if (is_array($extension)) {
+        
+              // If in array add...
+              if (in_array( strtolower(get_file_extension($path)), $extension )) {
+                 $files[] = $base_name_only ? basename($path) : $path;
+              } // if
+          
+              // Match single extension
+              } else {
+        
+                 // If extensions match add...
+                 if (strtolower(get_file_extension($path)) == $extension) {
+                    $files[] = $base_name_only ? basename($path) : $path;
+                 } // if
+          
+              } // if
+        
+            } // if
         
         } // if
         
@@ -221,46 +221,55 @@
   	return rmdir($dir) ? true : false;
   } // end func delete_dir
   
-  /**
-  * Force creation of all dirs
-  *
-  * @access public
-  * @param void
-  * @return null
-  */
-  function force_mkdir($path, $chmod = null) {
-    if (is_dir($path)) {
-      return true;
-    } // if
+/**
+* Force creation of all dirs.  
+* @access public
+* @param void
+* @return null
+*/
+function force_mkdir($path, $chmod = null) {
     $real_path = str_replace('\\', '/', $path);
-    $parts = explode('/', $real_path);
-    
-    $forced_path = '';
-    foreach ($parts as $part) {
-      
-      // Skip first on windows
-      if ($forced_path == '') {
-        $start = substr(__FILE__, 0, 1) == '/' ? '/' : '';
-        $forced_path = $start . $part;
-      } else {
-        $forced_path .= '/' . $part;
-      } // if
-      
-      if (!is_dir($forced_path)) {
-        if (!is_null($chmod)) {
-          if (!mkdir($forced_path)) {
-            return false;
-          } // if
-        } else {
-          if (!mkdir($forced_path, $chmod)) {
-            return false;
-          } // if
-        } // if
-      } // if
-    } // foreach
-    
-    return true;
-  } // force_mkdir
+    if (!isOpenbasedirAllowedPath($real_path))    {
+        return false;
+    }
+    mkdir($real_path, $chmod, true);
+    return is_dir($real_path);
+} // force_mkdir
+
+
+/**
+* Checks wether a given path is accesible with respect to openbase_dir restriction
+*
+* @access public
+* @param void
+* @return null
+*/
+function isOpenbasedirAllowedPath($path)    {
+    $basedirs = explode (PATH_SEPARATOR, ini_get("open_basedir"));
+   
+    // no basedir restrictions
+    if (empty($basedirs)) return true;
+   
+    // check if path is in basedirs
+    foreach ($basedirs as $basedir)          {
+        if (substr($basedir,-1,1) === DIRECTORY_SEPARATOR)    {
+            // open_basedir restricts access to $basedir only, not in its subdirs
+            // remove trailing slash
+            $basedir        = substr($basedir, 0, -1);
+               
+            // if the path points to exactly this strict basedir, then open_basedir restriction permits access
+            if ($basedir === $path)    {
+                return true;
+            }
+        } elseif (substr($path, 0, strlen($basedir)) ===  $basedir)    {
+            // the path is in the allowed basedir
+            return true;
+        }
+    }
+    // path is not in any basedir, so path is forbidden
+    return false;
+} //isOpenbasedirAllowedPath
+
   
   /**
   * This function will return true if $dir_path is empty
