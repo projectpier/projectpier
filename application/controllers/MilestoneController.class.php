@@ -37,9 +37,9 @@
       
       // Gets desired view 'detail' or 'list'
       // $view_type is from URL, Cookie or set to default: 'list'
-      $view_type = (array_var($_GET, 'view') ? array_var($_GET, 'view') : Cookie::getValue('milestoneViewType', 'list'));
+      $view_type = (array_var($_GET, 'view') ? array_var($_GET, 'view') : Cookie::getValue('milestonesViewType', 'list'));
       $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
-      Cookie::setValue('milestoneViewType', $view_type, $expiration);
+      Cookie::setValue('milestonesViewType', $view_type, $expiration);
       
       tpl_assign('view_type', $view_type);
       tpl_assign('late_milestones', $project->getLateMilestones());

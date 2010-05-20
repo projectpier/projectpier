@@ -36,6 +36,12 @@
       }
       
       $this->canGoOn();
+      // Gets desired view 'detail' or 'list'
+      // $view_type is from URL, Cookie or set to default: 'list'
+      $view_type = (array_var($_GET, 'view') ? array_var($_GET, 'view') : Cookie::getValue('messagesViewType', 'list'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('messagesViewType', $view_type, $expiration);
+
       $conditions = logged_user()->isMemberOfOwnerCompany() ? 
         array('`project_id` = ?', active_project()->getId()) :
         array('`project_id` = ? AND `is_private` = ?', active_project()->getId(), 0);
@@ -49,6 +55,7 @@
         $page
       ); // paginate
       
+      tpl_assign('view_type', $view_type);
       tpl_assign('messages', $messages);
       tpl_assign('messages_pagination', $pagination);
       tpl_assign('important_messages', active_project()->getImportantMessages());
