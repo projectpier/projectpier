@@ -27,6 +27,7 @@
     'description' => 'Description',
     'text' => 'Text',
     'additional text' => 'Additional text',
+    'date' => 'Date',
     'due date' => 'Due date',
     'assign to' => 'Assign to',
     'late' => 'Late',

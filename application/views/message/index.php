@@ -12,7 +12,7 @@
 <div id="messages">
   <div id="messagesPaginationTop"><?php echo advanced_pagination($messages_pagination, get_url('message', 'index', array('page' => '#PAGE#'))) ?></div>
   <table id="short_messages">
-    <tr class="message short header"><th></th><th>Date</th><th>Title</th><th>Author</th><th><img src="<?php echo get_image_url("icons/comments.png"); ?>" title="Comments" alt="Comments"/></th><th><img src="<?php echo get_image_url("icons/attach.png"); ?>" title="Attachments" alt="Attachments"/></th></tr>
+    <tr class="message short header"><th></th><th><?php echo lang('date') ?></th><th><?php echo lang('title') ?></th><th><?php echo lang('author'); ?></th><th><img src="<?php echo get_image_url("icons/comments.png"); ?>" title="<?php echo lang('comments'); ?>" alt="<?php echo lang('comments'); ?>"/></th><th><img src="<?php echo get_image_url("icons/attach.png"); ?>" title="<?php echo lang('attachments'); ?>" alt="<?php echo lang('attachments'); ?>"/></th></tr>
 <?php $odd_or_even = "even"; ?>
 <?php foreach ($messages as $message) { ?>
 <?php 
