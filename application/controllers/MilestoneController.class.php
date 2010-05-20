@@ -46,7 +46,7 @@
       tpl_assign('today_milestones', $project->getTodayMilestones());
       tpl_assign('upcoming_milestones', $project->getUpcomingMilestones());
       tpl_assign('completed_milestones', $project->getCompletedMilestones());
-      tpl_assign('all_milestones', $project->getAllMilestones());
+      tpl_assign('all_visible_milestones', $project->getMilestones());
       
       $this->setSidebar(get_template_path('index_sidebar', 'milestone'));
     } // index

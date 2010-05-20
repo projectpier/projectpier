@@ -23,7 +23,8 @@ if ($milestone->isUpcoming()) {
   <?php } // if?>
   </td>
   <td class="milestoneDueDate"><?php echo format_date($milestone->getDueDate(), null, 0); ?></td>
-  <td class="milestoneTitle"><?php if ($milestone->getAssignedTo() instanceof ApplicationDataObject) { ?>
+  <td class="milestoneTitle"><?php if ($milestone->isPrivate()) { ?>
+      <div class="private" title="<?php echo lang('private milestone') ?>"><span><?php echo lang('private milestone') ?></span></div><?php } // if ?><?php if ($milestone->getAssignedTo() instanceof ApplicationDataObject) { ?>
           <span class="assignedTo"><?php echo clean($milestone->getAssignedTo()->getObjectName()) ?>:</span>
   <?php } // if ?><a href="<?php echo $milestone->getViewUrl(); ?>"><?php echo clean($milestone->getName()); ?></a></td>
   <td class="milestoneDaysLeft"><?php if ($milestone->isUpcoming()) { ?>
