@@ -2,7 +2,7 @@
 
   /**
   * Abstract upgrade script. Single script is used to upgrade product from $version_from 
-  * to $verion_to or to execute some code changes regardles of the version
+  * to $version_to or to execute some code changes regardless of the version
   *
   * @package ScriptUpgrader
   * @version 1.0
@@ -57,7 +57,7 @@
     abstract function execute();
     
     /**
-    * Return script name. This can be overriden by the single step
+    * Return script name. This can be overridden by the single step
     *
     * @param void
     * @return string

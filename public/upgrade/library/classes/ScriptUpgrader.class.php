@@ -61,7 +61,7 @@
     } // __construct
     
     /**
-    * Execute upgrade script that is responsible for upgrade process from one version to targe version
+    * Execute upgrade script that is responsible for upgrade process from one version to target version
     *
     * @param string $from_version
     * @param string $to_version
