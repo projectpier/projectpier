@@ -13,7 +13,7 @@
     add_page_action(lang('add milestone'), get_url('milestone', 'add'));
   } // if
   if(ProjectTicket::canAdd(logged_user(), active_project())) {
-    add_page_action(lang('add tracTicket'), get_url('trac', 'add'));
+    add_page_action(lang('add ticket'), get_url('ticket', 'add'));
   } // if
   if (ProjectFile::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add file'), get_url('files', 'add_file'));

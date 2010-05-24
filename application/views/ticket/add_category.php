@@ -1,19 +1,19 @@
 <?php 
 
   // Set page title and set crumbs to index
-  set_page_title($category->isNew() ? lang('add tracCategory') : lang('edit tracCategory'));
+  set_page_title($category->isNew() ? lang('add category') : lang('edit category'));
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   project_crumbs(array(
-    array(lang('tickets'), get_url('trac')),
-    array(lang('tracCategories'), get_url('trac','categories')),
-    array($category->isNew() ? lang('add tracCategory') : lang('edit tracCategory'))
+    array(lang('tickets'), get_url('ticket')),
+    array(lang('categories'), get_url('ticket','categories')),
+    array($category->isNew() ? lang('add category') : lang('edit category'))
   )); 
   $canEdit = $category->isNew() || $category->canEdit(logged_user());
   add_stylesheet_to_page('project/tickets.css');
 ?>
 
 <?php if($category->isNew()) { ?>
-<form action="<?php echo get_url('trac', 'add_category') ?>" method="post" enctype="multipart/form-data">
+<form action="<?php echo get_url('ticket', 'add_category') ?>" method="post" enctype="multipart/form-data">
 <?php } else { ?>
 <form action="<?php echo $category->getEditUrl() ?>" method="post">
 <?php } // if?>
@@ -39,7 +39,7 @@
   </div>
 
 <?php if ($canEdit) { ?>
-  <?php echo submit_button($category->isNew() ? lang('add tracCategory') : lang('edit tracCategory')) ?>
+  <?php echo submit_button($category->isNew() ? lang('add category') : lang('edit category')) ?>
 <?php } // if?>
 <?php if(!$category->isNew() && $category->canDelete(logged_user())) { ?>
     <a href="<?php echo $category->getDeleteUrl() ?>" onclick="return confirm('<?php echo lang('confirm delete category') ?>')"><?php echo lang('delete') ?></a>

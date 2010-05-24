@@ -55,7 +55,7 @@
     add_tabbed_navigation_item(new TabbedNavigationItem(
       PROJECT_TAB_TICKETS, 
       lang('tickets'), 
-      get_url('trac')
+      get_url('ticket')
     ));
     add_tabbed_navigation_item(new TabbedNavigationItem(
       PROJECT_TAB_MILESTONES, 

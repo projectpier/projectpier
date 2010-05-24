@@ -14,7 +14,7 @@
     'my tasks' => 'My tasks',
     'welcome back' => 'Welcome back <strong>%s</strong>',
     
-    // Bug Trac
+    // Issue tracker
     'my tickets' => 'My tickets',
     
     'online users' => 'Online users',

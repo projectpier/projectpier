@@ -165,7 +165,7 @@
     private $completed_task_lists;
     
     // ---------------------------------------------------
-    //  Trac
+    //  Tickets
     // ---------------------------------------------------
 
     /**
@@ -690,7 +690,7 @@
     } // getCompletedTaskLists
     
     // ---------------------------------------------------
-    //  Trac
+    //  Ticket
     // ---------------------------------------------------
 
     /**
@@ -1345,14 +1345,14 @@
     } // getMilestonesUrl
     
     /**
-    * Return project trac index page URL
+    * Return project tickets index page URL
     *
     * @param void
     * @return string
     */
-    function getTracUrl() {
-      return get_url('trac', 'index', array('active_project' => $this->getId()));
-    } // getTracUrl
+    function getTicketsUrl() {
+      return get_url('ticket', 'index', array('active_project' => $this->getId()));
+    } // getTicketsUrl
 
     /**
     * Return project forms index page URL

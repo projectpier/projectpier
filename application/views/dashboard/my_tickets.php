@@ -23,11 +23,11 @@
   <div class="block">
     <div class="header"><h2><a href="<?php echo $active_project->getOverviewUrl() ?>"><?php echo clean($active_project->getName()) ?></a></h2></div>
     <div class="content">
-      <p><a href="<?php echo $active_project->getTracUrl() ?>"><?php echo lang('tickets') ?></a>:</p>
+      <p><a href="<?php echo $active_project->getTicketsUrl() ?>"><?php echo lang('tickets') ?></a>:</p>
       <div>
 <?php
   $this->assign('tickets', $tickets);
-  $this->includeTemplate(get_template_path('view_tickets', 'trac'));
+  $this->includeTemplate(get_template_path('view_tickets', 'ticket'));
 ?>
       </div>
     </div>

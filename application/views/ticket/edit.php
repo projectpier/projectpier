@@ -2,21 +2,21 @@
   $canEdit = $ticket->canEdit(logged_user());
 
   // Set page title and set crumbs to index
-  $title = $canEdit ? 'edit tracTicket' : 'view tracTicket';
+  $title = $canEdit ? 'edit ticket' : 'view ticket';
   set_page_title(lang($title));
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
-  $crumbs = array(array(lang('tickets'), get_url('trac')));
+  $crumbs = array(array(lang('tickets'), get_url('ticket')));
   if ($ticket->isClosed()) {
-    $crumbs[] = array(lang('closed tracTickets'), ProjectTickets::getIndexUrl(true));
+    $crumbs[] = array(lang('closed tickets'), ProjectTickets::getIndexUrl(true));
   }
   $crumbs[] = array(lang($title));
   project_crumbs($crumbs);
   
   if ($ticket->canChangeStatus(logged_user())) {
     if ($ticket->isClosed()) {
-      add_page_action(lang('open tracTicket'), $ticket->getOpenUrl());
+      add_page_action(lang('open ticket'), $ticket->getOpenUrl());
     } else {
-      add_page_action(lang('close tracTicket'), $ticket->getCloseUrl());
+      add_page_action(lang('close ticket'), $ticket->getCloseUrl());
     }
   }
   add_stylesheet_to_page('project/tickets.css');
@@ -106,7 +106,7 @@
 </div>
 
 <?php if ($canEdit) { ?>
-  <?php echo submit_button($ticket->isNew() ? lang('add tracTicket') : lang('edit tracTicket')) ?>
+  <?php echo submit_button($ticket->isNew() ? lang('add ticket') : lang('edit ticket')) ?>
 <?php } // if?>
 </form>
 <br />

@@ -118,7 +118,7 @@
     * @return string
     */
     function getEditUrl() {
-      return get_url('trac', 'edit_category', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'edit_category', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getEditUrl
     
     /**
@@ -128,7 +128,7 @@
     * @return string
     */
     function getDeleteUrl() {
-      return get_url('trac', 'delete_category', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'delete_category', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getDeleteUrl
     
     // ---------------------------------------------------

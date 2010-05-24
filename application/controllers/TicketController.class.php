@@ -1,12 +1,12 @@
 <?php
 
   /**
-  * Bug Trac controller
+  * Issue tracker controller
   *
   * @version 1.0
   * @http://www.projectpier.org/
   */
-  class TracController extends ApplicationController {
+  class TicketController extends ApplicationController {
     
     /**
     * Prepare this controller
@@ -38,7 +38,7 @@
       tpl_assign('categories', $categories);
       tpl_assign('categories_pagination', $pagination);
       
-      $this->setSidebar(get_template_path('trac_sidebar', 'trac'));
+      $this->setSidebar(get_template_path('ticket_sidebar', 'ticket'));
     } // categories
     
     /**
@@ -77,7 +77,7 @@
       tpl_assign('tickets', $tickets);
       tpl_assign('tickets_pagination', $pagination);
       
-      $this->setSidebar(get_template_path('index_sidebar', 'trac'));
+      $this->setSidebar(get_template_path('index_sidebar', 'ticket'));
     } // index
     
     /**
@@ -92,7 +92,7 @@
       
       if(!ProjectTicket::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac'));
+        $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $ticket = new ProjectTicket();
@@ -163,7 +163,7 @@
           } // try
           
           flash_success(lang('success add ticket', $ticket->getSummary()));
-          $this->redirectTo('trac');
+          $this->redirectTo('ticket');
           
         // Error...
         } catch(Exception $e) {
@@ -196,12 +196,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canView(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac'));
+        $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $ticket_data = array_var($_POST, 'ticket');
@@ -221,12 +221,12 @@
       tpl_assign('subscribers', $ticket->getSubscribers());
       tpl_assign('changes', $ticket->getChanges());
       
-      $this->setSidebar(get_template_path('edit_sidebar', 'trac'));
+      $this->setSidebar(get_template_path('edit_sidebar', 'ticket'));
       
       if(is_array(array_var($_POST, 'ticket'))) {
         if(!$ticket->canEdit(logged_user())) {
           flash_error(lang('no access permissions'));
-          $this->redirectTo('trac');
+          $this->redirectTo('ticket');
         } else {
           $old_fields = array(
             'summary' => $ticket->getSummary(),
@@ -316,12 +316,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canUpdateOptions(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac'));
+        $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $ticket_data = array_var($_POST, 'ticket');
@@ -363,12 +363,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac'));
+        $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $status = $ticket->isClosed() ? 'closed' : 'open';
@@ -414,12 +414,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac'));
+        $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $status = $ticket->isClosed() ? 'closed' : 'open';
@@ -465,12 +465,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       try {
@@ -486,7 +486,7 @@
         flash_error(lang('error delete ticket'));
       } // try
       
-      $this->redirectTo('trac');
+      $this->redirectTo('ticket');
     } // delete
     
     /**
@@ -499,7 +499,7 @@
     function add_category() {
       if(!Category::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac', 'categories'));
+        $this->redirectToReferer(get_url('ticket', 'categories'));
       } // if
       
       $category = new Category();
@@ -520,7 +520,7 @@
           DB::commit();
           
           flash_success(lang('success add category', $category->getName()));
-          $this->redirectTo('trac', 'categories');
+          $this->redirectTo('ticket', 'categories');
           
         // Error...
         } catch(Exception $e) {
@@ -546,12 +546,12 @@
       $category = Categories::findById(get_id());
       if(!($category instanceof Category)) {
         flash_error(lang('category dnx'));
-        $this->redirectTo('trac', 'categories');
+        $this->redirectTo('ticket', 'categories');
       } // if
       
       if(!$category->canView(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac', 'categories'));
+        $this->redirectToReferer(get_url('ticket', 'categories'));
       } // if
       
       $category_data = array_var($_POST, 'category');
@@ -568,7 +568,7 @@
       if(is_array(array_var($_POST, 'category'))) {
         if(!$category->canEdit(logged_user())) {
           flash_error(lang('no access permissions'));
-          $this->redirectTo('trac', 'categories');
+          $this->redirectTo('ticket', 'categories');
         } else {
           try {
             $category->setFromAttributes($category_data);
@@ -601,12 +601,12 @@
       $category = Categories::findById(get_id());
       if(!($category instanceof Category)) {
         flash_error(lang('category dnx'));
-        $this->redirectTo('trac', 'categories');
+        $this->redirectTo('ticket', 'categories');
       } // if
       
       if(!$category->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('trac', 'categories'));
+        $this->redirectToReferer(get_url('ticket', 'categories'));
       } // if
       
       try {
@@ -622,7 +622,7 @@
         flash_error(lang('error delete category'));
       } // try
       
-      $this->redirectTo('trac', 'categories');
+      $this->redirectTo('ticket', 'categories');
     } // delete
     
     // ---------------------------------------------------
@@ -639,12 +639,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canView(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if($ticket->subscribeUser(logged_user())) {
@@ -665,12 +665,12 @@
       $ticket = ProjectTickets::findById(get_id());
       if(!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if(!$ticket->canView(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectTo('trac');
+        $this->redirectTo('ticket');
       } // if
       
       if($ticket->unsubscribeUser(logged_user())) {
@@ -681,6 +681,6 @@
       $this->redirectToUrl($ticket->getViewUrl());
     } // unsubscribe
   
-  } // TracController
+  } // TicketController
 
 ?>

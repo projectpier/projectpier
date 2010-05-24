@@ -1,16 +1,16 @@
 <?php 
 
   // Set page title and set crumbs to index
-  set_page_title(lang('tracCategories'));
+  set_page_title(lang('categories'));
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   project_crumbs(array(
-    array(lang('tickets'), get_url('trac')),
-    array(lang('tracCategories'))
+    array(lang('tickets'), get_url('ticket')),
+    array(lang('categories'))
   ));
   if(Category::canAdd(logged_user(), active_project())) {
-    add_page_action(lang('add tracCategory'), get_url('trac', 'add_category'));
+    add_page_action(lang('add category'), get_url('ticket', 'add_category'));
   }
-  add_stylesheet_to_page('trac/tickets.css');
+  add_stylesheet_to_page('project/tickets.css');
 ?>
 <?php if(isset($categories) && is_array($categories) && count($categories)) { ?>
 <div id="listing">

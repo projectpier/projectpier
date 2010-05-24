@@ -69,7 +69,7 @@
     } // getClosedProjectTickets
   
     /**
-    * Return trac index page
+    * Return ticket index page
     *
     * @param string $order_by
     * @param integer $page
@@ -81,7 +81,7 @@
       } else {
         $options = array();
       } // if
-      return get_url('trac', 'index', $options);
+      return get_url('ticket', 'index', $options);
     } // getIndexUrl
 
   } // ProjectTickets 

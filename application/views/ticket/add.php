@@ -1,11 +1,11 @@
 <?php 
 
   // Set page title and set crumbs to index
-  set_page_title(lang('add tracTicket'));
+  set_page_title(lang('add ticket'));
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   project_crumbs(array(
-    array(lang('tickets'), get_url('trac')),
-    array(lang('add tracTicket'))
+    array(lang('tickets'), get_url('ticket')),
+    array(lang('add ticket'))
   ));
   
   add_stylesheet_to_page('project/tickets.css');
@@ -13,7 +13,7 @@
 <h2><?php echo lang('ticket #', $ticket->getId()); ?></h2>
 
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/addMessageForm.js') ?>"></script>
-<form action="<?php echo get_url('trac', 'add') ?>" method="post" enctype="multipart/form-data">
+<form action="<?php echo get_url('ticket', 'add') ?>" method="post" enctype="multipart/form-data">
 
 <?php tpl_display(get_template_path('form_errors')) ?>
 
@@ -97,5 +97,5 @@
   <?php echo render_attach_files() ?>
 <?php } // if ?>
 
-  <?php echo submit_button($ticket->isNew() ? lang('add tracTicket') : lang('edit tracTicket')) ?>
+  <?php echo submit_button($ticket->isNew() ? lang('add ticket') : lang('edit ticket')) ?>
 </form>

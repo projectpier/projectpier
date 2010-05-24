@@ -1,4 +1,4 @@
-<?php $this->includeTemplate(get_template_path('trac_sidebar', 'trac')) ?>
+<?php $this->includeTemplate(get_template_path('ticket_sidebar', 'ticket')) ?>
 <div class="sidebarBlock" id="tickets_legend">
   <h2><?php echo lang('legend'); ?></h2>
   <ul>

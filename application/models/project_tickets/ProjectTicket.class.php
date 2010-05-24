@@ -498,7 +498,7 @@
     * @return string
     */
     function getEditUrl() {
-      return get_url('trac', 'edit', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'edit', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getEditUrl
     
     /**
@@ -509,7 +509,7 @@
     * @return string
     */
     function getDeleteUrl() {
-      return get_url('trac', 'delete', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'delete', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getDeleteUrl
     
     /**
@@ -529,7 +529,7 @@
         $params['redirect_to'] = $redirect_to;
       } // if
       
-      return get_url('trac', 'close', $params);
+      return get_url('ticket', 'close', $params);
     } // getCompleteUrl
     
     /**
@@ -549,7 +549,7 @@
         $params['redirect_to'] = $redirect_to;
       } // if
       
-      return get_url('trac', 'open', $params);
+      return get_url('ticket', 'open', $params);
     } // getOpenUrl
     
     /**
@@ -559,7 +559,7 @@
     * @return string
     */
     function getUpdateOptionsUrl() {
-      return get_url('trac', 'update_options', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'update_options', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getUpdateOptionsUrl
     
     /**
@@ -569,7 +569,7 @@
     * @return boolean
     */
     function getSubscribeUrl() {
-      return get_url('trac', 'subscribe', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'subscribe', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getSubscribeUrl
     
     /**
@@ -579,7 +579,7 @@
     * @return boolean
     */
     function getUnsubscribeUrl() {
-      return get_url('trac', 'unsubscribe', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+      return get_url('ticket', 'unsubscribe', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getUnsubscribeUrl
     
     // ---------------------------------------------------
