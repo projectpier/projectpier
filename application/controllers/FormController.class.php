@@ -101,6 +101,7 @@
     */
     function add() {
       $this->setTemplate('add_project_form');
+      $this->addHelper('textile');
       
       if (!ProjectForm::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
@@ -119,6 +120,7 @@
       
       tpl_assign('project_form', $project_form);
       tpl_assign('project_form_data', $project_form_data);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'project_form'))) {
         $project_form->setFromAttributes($project_form_data);
@@ -163,6 +165,7 @@
     */
     function edit() {
       $this->setTemplate('add_project_form');
+      $this->addHelper('textile');
       
       $project_form = ProjectForms::findById(get_id());
       if (!($project_form instanceof ProjectForm)) {
@@ -202,6 +205,7 @@
       
       tpl_assign('project_form', $project_form);
       tpl_assign('project_form_data', $project_form_data);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'project_form'))) {
         $project_form->setFromAttributes($project_form_data);

@@ -368,6 +368,7 @@
     * @return null
     */
     function add_file() {
+      $this->addHelper('textile');
       if (!ProjectFile::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('files'));
@@ -390,6 +391,7 @@
       
       tpl_assign('file', $file);
       tpl_assign('file_data', $file_data);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'file'))) {
         try {
@@ -438,6 +440,7 @@
     */
     function edit_file() {
       $this->setTemplate('add_file');
+      $this->addHelper('textile');
       
       $file = ProjectFiles::findById(get_id());
       if (!($file instanceof ProjectFile)) {
@@ -466,6 +469,7 @@
       
       tpl_assign('file', $file);
       tpl_assign('file_data', $file_data);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'file'))) {
         try {

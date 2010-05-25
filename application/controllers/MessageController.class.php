@@ -98,6 +98,7 @@
     * @return null
     */
     function add() {
+      $this->addHelper('textile');
       $this->setTemplate('add_message');
       
       if (!ProjectMessage::canAdd(logged_user(), active_project())) {
@@ -116,6 +117,7 @@
       } // if
       tpl_assign('message_data', $message_data);
       
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       if (is_array(array_var($_POST, 'message'))) {
         try {
           $uploaded_files = ProjectFiles::handleHelperUploads(active_project());
@@ -202,6 +204,7 @@
     * @return null
     */
     function edit() {
+      $this->addHelper('textile');
       $this->setTemplate('add_message');
       
       $message = ProjectMessages::findById(get_id());
@@ -231,6 +234,7 @@
         ); // array
       } // if
       
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       tpl_assign('message', $message);
       tpl_assign('message_data', $message_data);
       

@@ -89,6 +89,8 @@
     */
     function add() {
       $this->addHelper('ticket');
+      $this->addHelper('textile');
+      
       
       if(!ProjectTicket::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
@@ -101,6 +103,7 @@
       
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if(is_array(array_var($_POST, 'ticket'))) {
         try {

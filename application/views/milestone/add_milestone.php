@@ -2,7 +2,7 @@
 
   set_page_title($milestone->isNew() ? lang('add milestone') : lang('edit milestone'));
   project_tabbed_navigation(PROJECT_TAB_MILESTONES);
-  project_crumbs(lang('add milestone'));
+  project_crumbs($milestone->isNew() ? lang('add milestone') : lang('edit milestone'));
   
 ?>
 <?php if ($milestone->isNew()) { ?>

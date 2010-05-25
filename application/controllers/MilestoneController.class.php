@@ -83,6 +83,7 @@
     * @return null
     */
     function add() {
+      $this->addHelper('textile');
       $this->setTemplate('add_milestone');
       
       if (!ProjectMilestone::canAdd(logged_user(), active_project())) {
@@ -99,6 +100,7 @@
       $milestone = new ProjectMilestone();
       tpl_assign('milestone_data', $milestone_data);
       tpl_assign('milestone', $milestone);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'milestone'))) {
         $milestone_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'milestone_due_date_month', 1), array_var($_POST, 'milestone_due_date_day', 1), array_var($_POST, 'milestone_due_date_year', 1970));
@@ -151,6 +153,7 @@
     */
     function edit() {
       $this->setTemplate('add_milestone');
+      $this->addHelper('textile');
       
       $milestone = ProjectMilestones::findById(get_id());
       if (!($milestone instanceof ProjectMilestone)) {
@@ -178,6 +181,7 @@
       
       tpl_assign('milestone_data', $milestone_data);
       tpl_assign('milestone', $milestone);
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'milestone'))) {
         $old_owner = $milestone->getAssignedTo(); // remember the old owner
