@@ -15,23 +15,24 @@
   $options_pagination = array('page' => '#PAGE#');
   if ($closed) $options_pagination['closed'] = true;
 ?>
-<?php if(isset($tickets) && is_array($tickets) && count($tickets)) { ?>
 <div id="tickets">
-  <div id="ticketsFilters">
+  <fieldset id="ticketsFilters">
     <?php
       $this->assign('tickets', $tickets);
+      $this->assign('filtered', $filtered);
       $this->assign('params', $params);
       $this->includeTemplate(get_template_path('ticket_filters', 'ticket'))
     ?>
-  </div>
-  <div id="messagesPaginationTop"><?php echo advanced_pagination($tickets_pagination, get_url('ticket', 'index', $options_pagination)) ?></div>
+  </fieldset>
+<?php if(isset($tickets) && is_array($tickets) && count($tickets)) { ?>
+  <div id="messagesPaginationTop"><?php echo advanced_pagination($tickets_pagination, get_url('ticket', 'index', array_merge($params, $options_pagination))) ?></div>
 <?php
   $this->assign('tickets', $tickets);
   $this->assign('params', $params);
   $this->includeTemplate(get_template_path('view_tickets', 'ticket'));
 ?>
-  <div id="messagesPaginationBottom"><?php echo advanced_pagination($tickets_pagination, get_url('ticket', 'index', $options_pagination)) ?></div>
-</div>
+  <div id="messagesPaginationBottom"><?php echo advanced_pagination($tickets_pagination, get_url('ticket', 'index', array_merge($params, $options_pagination))) ?></div>
 <?php } else { ?>
 <p><?php echo lang('no tickets in project') ?></p>
 <?php } // if ?>
+</div>

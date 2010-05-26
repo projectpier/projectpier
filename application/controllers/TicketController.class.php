@@ -78,8 +78,18 @@
       if ($params['category_id'] = array_var($_GET, 'category_id')) {
         $conditions .= DB::prepareString(' AND `category_id` IN (?)', array(explode(',', $params['category_id'])));
       }
-
       $params['order'] = (array_var($_GET, 'order') != 'DESC' ? 'ASC' : 'DESC');
+      
+      // Clean up empty and malformed parameters
+      foreach($params as $key => $value) {
+        $value = preg_replace("/,+/", ",", $value);
+        $value = preg_replace("/^,?(.*),?$/", "$1", $value);
+        $params[$key] = $value;
+        if ($value=="") {
+          unset($params[$key]);
+        }
+      }
+      
       $order = '`'.$params['sort_by'].'` '.$params['order'].'';
       if(!logged_user()->isMemberOfOwnerCompany()) {
         $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));
@@ -94,6 +104,8 @@
         $page
       ); // paginate
       
+      $filtered = $params['status']!="" || $params['priority']!="" || $params['type']!="" || $params['category_id']!="";
+      tpl_assign('filtered', $filtered);
       tpl_assign('params', $params);
       tpl_assign('closed', $closed);
       tpl_assign('tickets', $tickets);

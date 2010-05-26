@@ -151,6 +151,8 @@
     'old value' => 'Old value',
     'new value' => 'New value',
     'change date' => 'Change date',
+    'filter' => 'Filter',
+    'filters' => 'Filters',
     
     // iCal
     'icalendar' => 'iCalendar',

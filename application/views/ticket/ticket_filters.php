@@ -1,53 +1,47 @@
-<h4><a href="#" onclick="var s=document.getElementById('ticketsFiltersContent'); s.style.display = (s.style.display=='none'?'block':'none');"<?php echo lang('filters') ?></a></h4>
-<div id="ticketsFiltersContent">
+<h4><a href="#" onclick="var s=document.getElementById('ticketsFiltersContent'); s.style.display = (s.style.display=='none'?'block':'none');"><?php echo lang('filters') ?></a></h4>
+<div id="ticketsFiltersContent" <?php if (!$filtered) { echo "style='display:none'";} ?>>
   <div id="statusFilters">
     <strong><?php echo lang('status'); ?>:</strong>
     <?php
-    $statuses = get_ticket_statuses();
-    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('status'=> ''))).'">'.lang('all').'</a> ';
-    
-    foreach ($statuses as $status) {
-      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('status'=> $status))).'">'.lang($status).'</a> ';
-      if (in_array($status, explode(",", $params['status']))) {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('status' => str_replace($status, '',$params['status'])))).'">-</a> ';
-      } else {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('status' => $params['status'].','.$status))).'">+</a> ';
-      }
-    }
+    $this->assign('properties', get_ticket_statuses());
+    $this->assign('property_name', 'status');
+    $this->includeTemplate(get_template_path('filter_links', 'ticket'));
     ?>
   </div>
   <div id="priorityFilters">
     <strong><?php echo lang('priority'); ?>:</strong>
     <?php
-    $priorities = get_ticket_priorities();
-    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('priority'=> ''))).'">'.lang('all').'</a> ';
-    foreach ($priorities as $priority) {
-      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('priority'=> $priority))).'">'.lang($priority).'</a> ';
-      if (in_array($priority, explode(",", $params['priority']))) {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('priority' => str_replace($priority, '',$params['priority'])))).'">-</a> ';
-      } else {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('priority' => $params['priority'].','.$priority))).'">+</a> ';
-      }
-    }
+    $this->assign('properties', get_ticket_priorities());
+    $this->assign('property_name', 'priority');
+    $this->includeTemplate(get_template_path('filter_links', 'ticket'));
     ?>
   </div>
   <div id="typeFilters">
     <strong><?php echo lang('type'); ?>:</strong>
     <?php
-    $types = get_ticket_types();
-    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('type'=> ''))).'">'.lang('all').'</a> ';
-    foreach ($types as $type) {
-      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('type'=> $type))).'">'.lang($type).'</a> ';
-      if (in_array($type, explode(",", $params['type']))) {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('type' => str_replace($type, '',$params['type'])))).'">-</a> ';
-      } else {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array('type' => $params['type'].','.$type))).'">+</a> ';
-      }
-    }
+    $this->assign('properties', get_ticket_types());
+    $this->assign('property_name', 'type');
+    $this->includeTemplate(get_template_path('filter_links', 'ticket'));
     ?>
   </div>
   <div id="categoryFilters">
     <strong><?php echo lang('category'); ?>:</strong>
+    <?php
+    $categories = Categories::getProjectCategories(active_project());
+    $property_name = 'category_id';
     
+    // TODO make filter_links template more flexible so that it can be used with Categories and not only text.
+    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> ''))).'" '.($params[$property_name] == "" ? 'class="selected"' : '').'>'.lang('all').'</a> ';
+
+    foreach ($categories as $category) {
+      $category_id = $category->getId();
+      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> $category->getId()))).'" '.(preg_match("/^(.*,)?$category_id(,.*)?$/", $params[$property_name]) ? 'class="selected"' : '').'>'.$category->getName().'</a> ';
+      if (preg_match("/^(.*,)?$category_id(,.*)?$/", $params[$property_name])) {
+        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$category,/", "/,$category,/", "/,$category$/","/^$category$/"), array('', ',', '', ''), $params[$property_name])))).'">-</a> ';
+      } else {
+        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($params[$property_name] == "" ? $category_id : $params[$property_name].','.$category_id)))).'">+</a> ';
+      }
+    }
+    ?>
   </div>
 </div><!-- // ticketsFiltersContent -->

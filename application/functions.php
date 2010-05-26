@@ -181,7 +181,7 @@
   // ---------------------------------------------------
   
   /**
-  * Return matched requst controller
+  * Return matched request controller
   *
   * @access public
   * @param void
