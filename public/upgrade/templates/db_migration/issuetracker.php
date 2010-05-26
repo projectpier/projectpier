@@ -13,6 +13,7 @@ CREATE TABLE `<?php echo $table_prefix ?>project_tickets` (
   `assigned_to_company_id` smallint(5) unsigned default NULL,
   `assigned_to_user_id` int(10) unsigned default NULL,
   `summary` varchar(200) <?php echo $default_collation ?> NOT NULL default '',
+  `status` enum('new', 'open', 'pending', 'closed') <?php echo $default_collation ?> NOT NULL default 'new',
   `type` enum('defect','enhancement','feature request') <?php echo $default_collation ?> NOT NULL default 'defect',
   `description` text <?php echo $default_collation ?>,
   `priority` enum('critical','major','minor','trivial') <?php echo $default_collation ?> NOT NULL default 'major',

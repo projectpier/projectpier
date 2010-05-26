@@ -261,7 +261,7 @@
     } // getAssignedTo
     
     /**
-    * Return owner comapny
+    * Return owner company
     *
     * @access public
     * @param void
@@ -298,17 +298,6 @@
     } // getAssignedTo
     
     /**
-    * Return status of ticket
-    *
-    * @access public
-    * @param void
-    * @return boolean
-    */
-    function getStatus() {
-      return $this->isClosed() ? 'closed' : 'open';
-    } // getStatus
-    
-    /**
     * Returns true if this ticket was not closed
     *
     * @access public
@@ -327,7 +316,8 @@
     * @return boolean
     */
     function isClosed() {
-      return $this->getClosedOn() instanceof DateTimeValue;
+      // TODO remove hardcoded value from here
+      return $this->getStatus() == 'closed';
     } // isClosed
     
     // ---------------------------------------------------

@@ -188,6 +188,28 @@
     } // setSummary() 
     
     /**
+    * Return value of 'status' field
+    *
+    * @access public
+    * @param void
+    * @return string 
+    */
+    function getStatus() {
+      return $this->getColumnValue('status');
+    } // getStatus()
+    
+    /**
+    * Set value of 'status' field
+    *
+    * @access public   
+    * @param string $value
+    * @return boolean
+    */
+    function setStatus($value) {
+      return $this->setColumnValue('status', $value);
+    } // setStatus() 
+    
+    /**
     * Return value of 'type' field
     *
     * @access public

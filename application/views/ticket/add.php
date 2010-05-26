@@ -24,6 +24,11 @@
   </div>
   
   <div>
+    <?php echo label_tag(lang('status'), 'ticketFormStatus') ?>
+    <?php echo select_ticket_status("ticket[status]", array_var($ticket_data, 'type'), array('id' => 'ticketFormStatus')) ?>
+  </div>
+  
+  <div>
     <?php echo label_tag(lang('type'), 'ticketFormType') ?>
     <?php echo select_ticket_type("ticket[type]", array_var($ticket_data, 'type'), array('id' => 'ticketFormType')) ?>
   </div>

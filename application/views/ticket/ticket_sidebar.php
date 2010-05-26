@@ -1,3 +1,4 @@
+<?php if (active_project()) { ?>
 <div class="sidebarBlock">
   <h2><?php echo lang('view'); ?></h2>
   <div class="blockContent">
@@ -8,3 +9,4 @@
     </ul>
   </div>
 </div>
+<?php } ?>

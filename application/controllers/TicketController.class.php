@@ -50,20 +50,41 @@
     */
     function index() {
       $page = (integer) array_var($_GET, 'page', 1);
-      if($page < 0) $page = 1;
+      if ($page < 0) {
+        $page = 1;
+      }
       
-      $closed = (boolean) array_var($_GET, 'closed', false);
-      $conditions = DB::prepareString('`closed_on` '.($closed ? '>' : '=').' ? and `project_id` = ?', array(EMPTY_DATETIME, active_project()->getId()));
+      $params = array();
+      
+      $params['sort_by'] = array_var($_GET, 'sort_by', Cookie::getValue('ticketsSortBy', 'id'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('ticketsSortBy', $params['sort_by'], $expiration);
+      
+      
+      // $closed = (boolean) array_var($_GET, 'closed', false);
+      // $conditions = DB::prepareString('`closed_on` '.($closed ? '>' : '=').' ? and `project_id` = ?', array(EMPTY_DATETIME, active_project()->getId()));
+      
+      // $conditions = DB::prepareString('`status` LIKE "new" AND `project_id` = ?', array(active_project()->getId()));
+      $conditions = DB::prepareString('`project_id` = ?', array(active_project()->getId()));
+      if ($params['status'] = array_var($_GET, 'status')) {
+        $conditions .= DB::prepareString(' AND `status` IN (?)', array(explode(',', $params['status'])));
+      }
+      if ($params['priority'] = array_var($_GET, 'priority')) {
+        $conditions .= DB::prepareString(' AND `priority` IN (?)', array(explode(',', $params['priority'])));
+      }
+      if ($params['type'] = array_var($_GET, 'type')) {
+        $conditions .= DB::prepareString(' AND `type` IN (?)', array(explode(',', $params['type'])));
+      }
+      if ($params['category_id'] = array_var($_GET, 'category_id')) {
+        $conditions .= DB::prepareString(' AND `category_id` IN (?)', array(explode(',', $params['category_id'])));
+      }
+
+      $params['order'] = (array_var($_GET, 'order') != 'DESC' ? 'ASC' : 'DESC');
+      $order = '`'.$params['sort_by'].'` '.$params['order'].'';
       if(!logged_user()->isMemberOfOwnerCompany()) {
         $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));
       } // if
-      
-      if ($closed) {
-        $order = '`closed_on` DESC';
-      } else {
-        $order = '`created_on` DESC';
-      } // if
-      
+            
       list($tickets, $pagination) = ProjectTickets::paginate(
         array(
           'conditions' => $conditions,
@@ -73,6 +94,7 @@
         $page
       ); // paginate
       
+      tpl_assign('params', $params);
       tpl_assign('closed', $closed);
       tpl_assign('tickets', $tickets);
       tpl_assign('tickets_pagination', $pagination);
@@ -166,7 +188,7 @@
           } // try
           
           flash_success(lang('success add ticket', $ticket->getSummary()));
-          $this->redirectTo('ticket');
+          $this->redirectToUrl($ticket->getViewUrl());
           
         // Error...
         } catch(Exception $e) {

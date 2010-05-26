@@ -1,12 +1,11 @@
 <?php 
 
   // Set page title and set crumbs to index
-  $title = ($closed ? 'closed' : 'open').' tickets';
-  set_page_title(lang($title));
+  set_page_title(lang('tickets'));
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   project_crumbs(array(
     array(lang('tickets'), get_url('ticket')),
-    array(lang($title))
+    array(lang('tickets'))
   ));
   if(ProjectTicket::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add ticket'), get_url('ticket', 'add'));  
@@ -18,9 +17,17 @@
 ?>
 <?php if(isset($tickets) && is_array($tickets) && count($tickets)) { ?>
 <div id="tickets">
+  <div id="ticketsFilters">
+    <?php
+      $this->assign('tickets', $tickets);
+      $this->assign('params', $params);
+      $this->includeTemplate(get_template_path('ticket_filters', 'ticket'))
+    ?>
+  </div>
   <div id="messagesPaginationTop"><?php echo advanced_pagination($tickets_pagination, get_url('ticket', 'index', $options_pagination)) ?></div>
 <?php
   $this->assign('tickets', $tickets);
+  $this->assign('params', $params);
   $this->includeTemplate(get_template_path('view_tickets', 'ticket'));
 ?>
   <div id="messagesPaginationBottom"><?php echo advanced_pagination($tickets_pagination, get_url('ticket', 'index', $options_pagination)) ?></div>
