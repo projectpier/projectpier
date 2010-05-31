@@ -79,7 +79,7 @@
         $change->save();
         
         Notifier::newTicketComment($comment);
-      } catch(Exception $e) {
+      } catch (Exception $e) {
         // nothing here, just suppress error...
       } // try
     } // onAddComment
@@ -108,7 +108,7 @@
         } // foreach
         
         Notifier::attachFilesToTicket($this, $files);
-      } catch(Exception $e) {
+      } catch (Exception $e) {
         // nothing here, just suppress error...
       } // try
     } // onAttachFiles
@@ -124,7 +124,9 @@
     * @return array
     */
     function getChanges() {
-      if(is_null($this->changes)) $this->changes = TicketChanges::getChangesByTicket($this);
+      if (is_null($this->changes)) {
+        $this->changes = TicketChanges::getChangesByTicket($this);
+      }
       return $this->changes;
     } // getChanges
     
@@ -139,7 +141,9 @@
     * @return array
     */
     function getSubscribers() {
-      if(is_null($this->subscribers)) $this->subscribers = TicketSubscriptions::getUsersByTicket($this);
+      if (is_null($this->subscribers)) {
+        $this->subscribers = TicketSubscriptions::getUsersByTicket($this);
+      }
       return $this->subscribers;
     } // getSubscribers
     
@@ -164,10 +168,10 @@
     * @return boolean
     */
     function subscribeUser(User $user) {
-      if($this->isNew()) {
+      if ($this->isNew()) {
         throw new Error('Can\'t subscribe user to ticket that is not saved');
       } // if
-      if($this->isSubscriber($user)) {
+      if ($this->isSubscriber($user)) {
         return true;
       } // if
       
@@ -189,7 +193,7 @@
         'ticket_id' => $this->getId(),
         'user_id' => $user->getId()
       )); // findById
-      if($subscription instanceof TicketSubscription) {
+      if ($subscription instanceof TicketSubscription) {
         return $subscription->delete();
       } else {
         return true;
@@ -251,9 +255,9 @@
     * @return ApplicationDataObject
     */
     function getAssignedTo() {
-      if($this->getAssignedToUserId() > 0) {
+      if ($this->getAssignedToUserId() > 0) {
         return $this->getAssignedToUser();
-      } elseif($this->getAssignedToCompanyId() > 0) {
+      } elseif ($this->getAssignedToCompanyId() > 0) {
         return $this->getAssignedToCompany();
       } else {
         return null;
@@ -290,7 +294,7 @@
     * @return ApplicationDataObject
     */
     function getCategory() {
-      if($this->getCategoryId() > 0) {
+      if ($this->getCategoryId() > 0) {
         return Categories::findById($this->getCategoryId());
       } else {
         return null;
@@ -331,10 +335,10 @@
     * @return boolean
     */
     function canView(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false; // user have access to project
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't access private objects
       } // if
       return true;
@@ -346,10 +350,10 @@
     * @access public
     * @param User $user
     * @param Project $project
-    * @return booelean
+    * @return boolean
     */
     function canAdd(User $user, Project $project) {
-      if(!$user->isProjectUser($project)) {
+      if (!$user->isProjectUser($project)) {
         return false; // user is on project
       } // if
       return true;
@@ -363,13 +367,13 @@
     * @return boolean
     */
     function canChangeStatus(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if($this->canEdit($user)) {
+      if ($this->canEdit($user)) {
         return true;
       } // if
-      
+
       return $user->getId() == $this->getCreatedById();
     } // canEdit
     
@@ -381,23 +385,26 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
-      if($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
         return false; // user that is not member of owner company can't access private objects
       } // if
       
+      if ($this->getCreatedById() == $user->getId() && $this->getCreatedOn()->getTimestamp()+15*60>DateTimeValueLib::now()->getTimestamp()) {
+        return true;
+      } // if
       $assigned_to = $this->getAssignedTo();
-      if($assigned_to instanceof User) {
-        if($user->getId() == $assigned_to->getId()) {
+      if ($assigned_to instanceof User) {
+        if ($user->getId() == $assigned_to->getId()) {
           return true;
         } // if
-      } elseif($assigned_to instanceof Company) {
-        if($user->getCompanyId() == $assigned_to->getId()) {
+      } elseif ($assigned_to instanceof Company) {
+        if ($user->getCompanyId() == $assigned_to->getId()) {
           return true;
         } // if
       } // if
@@ -423,10 +430,10 @@
     * @return boolean
     */
     function canDelete(User $user) {
-      if(!$user->isProjectUser($this->getProject())) {
+      if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if($user->isAdministrator()) {
+      if ($user->isAdministrator()) {
         return true;
       } // if
       
@@ -477,11 +484,22 @@
     * @return string
     */
     function getViewUrl() {
-      return $this->getEditUrl();
+      return get_url('ticket', 'view', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getViewUrl
     
     /**
-    * Return edit task URL
+    * Return add ticket URL
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getAddUrl() {
+      return get_url('ticket', 'add', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+    } // getEditUrl
+    
+    /**
+    * Return edit ticket URL
     *
     * @access public
     * @param void
@@ -492,7 +510,7 @@
     } // getEditUrl
     
     /**
-    * Return delete task URL
+    * Return delete ticket URL
     *
     * @access public
     * @param void
@@ -503,10 +521,10 @@
     } // getDeleteUrl
     
     /**
-    * Return comete task URL
+    * Return close ticket URL
     *
     * @access public
-    * @param string $redirect_to Redirect to this URL (referer will be used if this URL is not provided)
+    * @param string $redirect_to Redirect to this URL (referrer will be used if this URL is not provided)
     * @return string
     */
     function getCloseUrl($redirect_to = null) {
@@ -515,7 +533,7 @@
         'active_project' => $this->getProjectId()
       ); // array
       
-      if(trim($redirect_to)) {
+      if (trim($redirect_to)) {
         $params['redirect_to'] = $redirect_to;
       } // if
       
@@ -523,10 +541,10 @@
     } // getCompleteUrl
     
     /**
-    * Return open task URL
+    * Return open ticket URL
     *
     * @access public
-    * @param string $redirect_to Redirect to this URL (referer will be used if this URL is not provided)
+    * @param string $redirect_to Redirect to this URL (referrer will be used if this URL is not provided)
     * @return string
     */
     function getOpenUrl($redirect_to = null) {
@@ -535,7 +553,7 @@
         'active_project' => $this->getProjectId()
       ); // array
       
-      if(trim($redirect_to)) {
+      if (trim($redirect_to)) {
         $params['redirect_to'] = $redirect_to;
       } // if
       
@@ -584,8 +602,12 @@
     * @return null
     */
     function validate(&$errors) {
-      if(!$this->validatePresenceOf('summary')) $errors[] = lang('ticket summary required');
-      if(!$this->validatePresenceOf('description')) $errors[] = lang('ticket description required');
+      if (!$this->validatePresenceOf('summary')) {
+        $errors[] = lang('ticket summary required');
+      }
+      if (!$this->validatePresenceOf('description')) {
+        $errors[] = lang('ticket description required');
+      }
     } // validate
     
     /**
@@ -597,8 +619,11 @@
     */
     function delete() {
       $comments = $this->getComments();
-      if(is_array($comments)) foreach($comments as $comment) $comment->delete();
-      
+      if (is_array($comments)) {
+        foreach ($comments as $comment) {
+          $comment->delete();
+        }
+      }
       $this->clearSubscriptions();
       return parent::delete();
     } // delete

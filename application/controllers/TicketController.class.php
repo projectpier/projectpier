@@ -22,7 +22,7 @@
     
     function categories() {
       $page = (integer) array_var($_GET, 'page', 1);
-      if($page < 0) $page = 1;
+      if ($page < 0) $page = 1;
       
       $conditions = array('`project_id` = ?', active_project()->getId());
       
@@ -78,10 +78,15 @@
       if ($params['category_id'] = array_var($_GET, 'category_id')) {
         $conditions .= DB::prepareString(' AND `category_id` IN (?)', array(explode(',', $params['category_id'])));
       }
+      if ($params['assigned_to_user_id'] = array_var($_GET, 'assigned_to_user_id')) {
+        $conditions .= DB::prepareString(' AND `assigned_to_user_id` IN (?)', array(explode(',', $params['assigned_to_user_id'])));
+      }
       $params['order'] = (array_var($_GET, 'order') != 'DESC' ? 'ASC' : 'DESC');
       
+      $filtered = $params['status']!="" || $params['priority']!="" || $params['type']!="" || $params['category_id']!="" || $params['assigned_to_user_id']!="";
+
       // Clean up empty and malformed parameters
-      foreach($params as $key => $value) {
+      foreach ($params as $key => $value) {
         $value = preg_replace("/,+/", ",", $value);
         $value = preg_replace("/^,?(.*),?$/", "$1", $value);
         $params[$key] = $value;
@@ -91,7 +96,7 @@
       }
       
       $order = '`'.$params['sort_by'].'` '.$params['order'].'';
-      if(!logged_user()->isMemberOfOwnerCompany()) {
+      if (!logged_user()->isMemberOfOwnerCompany()) {
         $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));
       } // if
             
@@ -104,15 +109,45 @@
         $page
       ); // paginate
       
-      $filtered = $params['status']!="" || $params['priority']!="" || $params['type']!="" || $params['category_id']!="";
       tpl_assign('filtered', $filtered);
       tpl_assign('params', $params);
+      tpl_assign('grouped_users', active_project()->getUsers(true));
+      tpl_assign('categories', Categories::getProjectCategories(active_project()));
       tpl_assign('closed', $closed);
       tpl_assign('tickets', $tickets);
       tpl_assign('tickets_pagination', $pagination);
       
       $this->setSidebar(get_template_path('index_sidebar', 'ticket'));
     } // index
+    
+    /**
+    * View ticket
+    * 
+    * @access public
+    * @param void
+    * @return null
+    */
+    function view() {
+      $this->addHelper('textile');
+      $this->addHelper('ticket');
+      
+      $ticket = ProjectTickets::findById(get_id());
+      if (!($ticket instanceof ProjectTicket)) {
+        flash_error(lang('ticket dnx'));
+        $this->redirectTo('ticket');
+      } // if
+      
+      if (!$ticket->canView(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectToReferer(get_url('ticket'));
+      } // if
+      
+      tpl_assign('ticket', $ticket);
+      tpl_assign('subscribers', $ticket->getSubscribers());
+      tpl_assign('changes', $ticket->getChanges());
+      
+      $this->setSidebar(get_template_path('view_sidebar', 'ticket'));
+    } // view
     
     /**
     * Add ticket
@@ -124,22 +159,26 @@
     function add() {
       $this->addHelper('ticket');
       $this->addHelper('textile');
+      $this->setTemplate('add_ticket');
       
-      
-      if(!ProjectTicket::canAdd(logged_user(), active_project())) {
+      if (!ProjectTicket::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $ticket = new ProjectTicket();
       $ticket->setProjectId(active_project()->getId());
-      $ticket_data = array_var($_POST, 'ticket');
       
+      $ticket_data = array_var($_POST, 'ticket');
+      if (!is_array($ticket_data)) {
+        $ticket_data = array(
+          'milestone_id' => array_var($_GET, 'milestone_id')
+        ); // array
+      } // if
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
       $this->setSidebar(get_template_path('textile_help_sidebar'));
-      
-      if(is_array(array_var($_POST, 'ticket'))) {
+      if (is_array(array_var($_POST, 'ticket'))) {
         try {
           $uploaded_files = ProjectFiles::handleHelperUploads(active_project());
         } catch(Exception $e) {
@@ -154,15 +193,15 @@
           $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
           
           // Options are reserved only for members of owner company
-          if(!logged_user()->isMemberOfOwnerCompany()) {
+          if (!logged_user()->isMemberOfOwnerCompany()) {
             $ticket->setIsPrivate(false); 
           } // if
           
           DB::beginWork();
           $ticket->save();
           
-          if(is_array($uploaded_files)) {
-            foreach($uploaded_files as $uploaded_file) {
+          if (is_array($uploaded_files)) {
+            foreach ($uploaded_files as $uploaded_file) {
               $ticket->attachFile($uploaded_file);
               $uploaded_file->setIsPrivate($ticket->isPrivate());
               $uploaded_file->setIsVisible(true);
@@ -182,11 +221,11 @@
             
             $notify_people = array();
             $project_companies = active_project()->getCompanies();
-            foreach($project_companies as $project_company) {
+            foreach ($project_companies as $project_company) {
               $company_users = $project_company->getUsersOnProject(active_project());
-              if(is_array($company_users)) {
-                foreach($company_users as $company_user) {
-                  if((array_var($ticket_data, 'notify_company_' . $project_company->getId()) == 'checked') || (array_var($ticket_data, 'notify_user_' . $company_user->getId()))) {
+              if (is_array($company_users)) {
+                foreach ($company_users as $company_user) {
+                  if ((array_var($ticket_data, 'notify_company_' . $project_company->getId()) == 'checked') || (array_var($ticket_data, 'notify_user_' . $company_user->getId()))) {
                     $ticket->subscribeUser($company_user); // subscribe
                     $notify_people[] = $company_user;
                   } // if
@@ -206,8 +245,8 @@
         } catch(Exception $e) {
           DB::rollback();
           
-          if(is_array($uploaded_files)) {
-            foreach($uploaded_files as $uploaded_file) {
+          if (is_array($uploaded_files)) {
+            foreach ($uploaded_files as $uploaded_file) {
               $uploaded_file->delete();
             } // foreach
           } // if
@@ -229,23 +268,27 @@
     function edit() {
       $this->addHelper('textile');
       $this->addHelper('ticket');
+      $this->setTemplate('add_ticket');
       
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canView(logged_user())) {
+      if (!$ticket->canEdit(logged_user())) {
         flash_error(lang('no access permissions'));
-        $this->redirectToReferer(get_url('ticket'));
+        $this->redirectTo('ticket');
       } // if
       
       $ticket_data = array_var($_POST, 'ticket');
-      if(!is_array($ticket_data)) {
+      if (!is_array($ticket_data)) {
         $ticket_data = array(
+          'milestone_id' => $ticket->getMilestoneId(),
+          'status' => $ticket->getStatus(),
           'is_private' => $ticket->isPrivate(),
           'summary' => $ticket->getSummary(),
+          'description' => $ticket->getDescription(),
           'priority' => $ticket->getPriority(),
           'type' => $ticket->getType(),
           'category_id' => $ticket->getCategoryId(),
@@ -258,87 +301,88 @@
       tpl_assign('subscribers', $ticket->getSubscribers());
       tpl_assign('changes', $ticket->getChanges());
       
-      $this->setSidebar(get_template_path('edit_sidebar', 'ticket'));
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
-      if(is_array(array_var($_POST, 'ticket'))) {
-        if(!$ticket->canEdit(logged_user())) {
-          flash_error(lang('no access permissions'));
-          $this->redirectTo('ticket');
-        } else {
-          $old_fields = array(
+      if (is_array(array_var($_POST, 'ticket'))) {
+        $old_fields = array(
+          'summary' => $ticket->getSummary(),
+          'description' => $ticket->getDescription(),
+          'status' => $ticket->getStatus(),
+          'type' => $ticket->getType(),
+          'category' => $ticket->getCategory(),
+          'priority' => $ticket->getPriority(),
+          'milestone_id' => $ticket->getMilestoneId(),
+          'assigned to' => $ticket->getAssignedTo()
+          );
+        $old_private = $ticket->isPrivate();
+
+        try {
+          $ticket->setFromAttributes($ticket_data);
+          $ticket->setUpdated('settings');
+
+          // Options are reserved only for members of owner company
+          if (!logged_user()->isMemberOfOwnerCompany()) {
+            $ticket->setIsPrivate($old_private);
+          } // if
+
+          $old_assigned_user_id = $ticket->getAssignedToUserId();
+          $assigned_to = explode(':', array_var($ticket_data, 'assigned_to', ''));
+          $ticket->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
+          $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
+
+          DB::beginWork();
+          $ticket->save();
+
+          ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
+          DB::commit();
+
+          $user = $ticket->getAssignedToUser();
+          if ($user instanceof User && $user->getId() != $old_assigned_user_id) {
+            if (!$ticket->isSubscriber($user)) {
+              $ticket->subscribeUser($user);
+            } // if
+          } // if
+
+          $new_fields = array(
             'summary' => $ticket->getSummary(),
-            'priority' => $ticket->getPriority(),
+            'description' => $ticket->getDescription(),
+            'status' => $ticket->getStatus(),
             'type' => $ticket->getType(),
             'category' => $ticket->getCategory(),
+            'priority' => $ticket->getPriority(),
+            'milestone_id' => $ticket->getMilestoneId(),
             'assigned to' => $ticket->getAssignedTo()
-          );
-          $old_private = $ticket->isPrivate();
-          
-          try {
-            $ticket->setFromAttributes($ticket_data);
-            $ticket->setUpdated('settings');
-            
-            // Options are reserved only for members of owner company
-            if(!logged_user()->isMemberOfOwnerCompany()) {
-              $ticket->setIsPrivate($old_private);
-            } // if
-            
-            $old_assigned_user_id = $ticket->getAssignedToUserId();
-            $assigned_to = explode(':', array_var($ticket_data, 'assigned_to', ''));
-            $ticket->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
-            $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
-            
-            DB::beginWork();
-            $ticket->save();
-            
-            ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
-            DB::commit();
-            
-            $user = $ticket->getAssignedToUser();
-            if ($user instanceof User && $user->getId() != $old_assigned_user_id) {
-              if(!$ticket->isSubscriber($user)) {
-                $ticket->subscribeUser($user);
-              } // if
-            } // if
-            
-            $new_fields = array(
-              'summary' => $ticket->getSummary(),
-              'priority' => $ticket->getPriority(),
-              'type' => $ticket->getType(),
-              'category' => $ticket->getCategory(),
-              'assigned to' => $ticket->getAssignedTo()
             );
-        
-            foreach ($old_fields as $type => $old_field) {
-              $new_field = $new_fields[$type];
-              if ($old_field === $new_field) {
-                continue;
-              }
-              $from_data = ($old_field instanceof ApplicationDataObject) ? $old_field->getObjectName() : $old_field;
-              $to_data = ($new_field instanceof ApplicationDataObject) ? $new_field->getObjectName() : $new_field;
-              
-              $change = new TicketChange();
-              $change->setTicketId($ticket->getId());
-              $change->setType($type);
-              $change->setFromData($from_data);
-              $change->setToData($to_data);
-              $change->save();
-            } // foreach
-            
-            try {
-              Notifier::ticket($ticket, $ticket->getSubscribers(), 'edit_ticket', $ticket->getUpdatedBy());
-            } catch(Exception $e) {
-              // nothing here, just suppress error...
-            } // try
-            
-            flash_success(lang('success edit ticket', $ticket->getSummary()));
-            $this->redirectToUrl($ticket->getViewUrl());
-            
+
+          foreach ($old_fields as $type => $old_field) {
+            $new_field = $new_fields[$type];
+            if ($old_field === $new_field) {
+              continue;
+            }
+            $from_data = ($old_field instanceof ApplicationDataObject) ? $old_field->getObjectName() : $old_field;
+            $to_data = ($new_field instanceof ApplicationDataObject) ? $new_field->getObjectName() : $new_field;
+
+            $change = new TicketChange();
+            $change->setTicketId($ticket->getId());
+            $change->setType($type);
+            $change->setFromData($from_data);
+            $change->setToData($to_data);
+            $change->save();
+          } // foreach
+
+          try {
+            Notifier::ticket($ticket, $ticket->getSubscribers(), 'edit_ticket', $ticket->getUpdatedBy());
           } catch(Exception $e) {
-            DB::rollback();
-            tpl_assign('error', $e);
+            // nothing here, just suppress error...
           } // try
-        } // if
+
+          flash_success(lang('success edit ticket', $ticket->getSummary()));
+          $this->redirectToUrl($ticket->getViewUrl());
+
+        } catch(Exception $e) {
+          DB::rollback();
+          tpl_assign('error', $e);
+        } // try
       } // if
     } // edit
     
@@ -351,18 +395,18 @@
     */
     function update_options() {
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canUpdateOptions(logged_user())) {
+      if (!$ticket->canUpdateOptions(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket'));
       } // if
       
       $ticket_data = array_var($_POST, 'ticket');
-      if(is_array(array_var($_POST, 'ticket'))) {
+      if (is_array(array_var($_POST, 'ticket'))) {
         try {
           $old_private = $ticket->isPrivate();
           $ticket->setIsPrivate((boolean) array_var($ticket_data, 'is_private', $ticket->isPrivate()));
@@ -398,12 +442,12 @@
     */
     function close() {
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canChangeStatus(logged_user())) {
+      if (!$ticket->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket'));
       } // if
@@ -437,7 +481,7 @@
         DB::rollback();
       } // try
       
-      $this->redirectToUrl(ProjectTickets::getIndexUrl(true));
+      $this->redirectToUrl(get_url('ticket'));
     } // close
     
     /**
@@ -449,12 +493,12 @@
     */
     function open() {
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canChangeStatus(logged_user())) {
+      if (!$ticket->canChangeStatus(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket'));
       } // if
@@ -488,7 +532,7 @@
         DB::rollback();
       } // try
       
-      $this->redirectToUrl(ProjectTickets::getIndexUrl());
+      $this->redirectToUrl(get_url('ticket'));
     } // open
     
     /**
@@ -500,12 +544,12 @@
     */
     function delete() {
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canDelete(logged_user())) {
+      if (!$ticket->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('ticket');
       } // if
@@ -534,7 +578,7 @@
     * @return null
     */
     function add_category() {
-      if(!Category::canAdd(logged_user(), active_project())) {
+      if (!Category::canAdd(logged_user(), active_project())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket', 'categories'));
       } // if
@@ -545,7 +589,7 @@
       tpl_assign('category', $category);
       tpl_assign('category_data', $category_data);
       
-      if(is_array(array_var($_POST, 'category'))) {
+      if (is_array(array_var($_POST, 'category'))) {
         try {
           $category->setFromAttributes($category_data);
           $category->setProjectId(active_project()->getId());
@@ -581,18 +625,18 @@
       $this->setTemplate('add_category');
       
       $category = Categories::findById(get_id());
-      if(!($category instanceof Category)) {
+      if (!($category instanceof Category)) {
         flash_error(lang('category dnx'));
         $this->redirectTo('ticket', 'categories');
       } // if
       
-      if(!$category->canView(logged_user())) {
+      if (!$category->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket', 'categories'));
       } // if
       
       $category_data = array_var($_POST, 'category');
-      if(!is_array($category_data)) {
+      if (!is_array($category_data)) {
         $category_data = array(
           'name' => $category->getName(),
           'description' => $category->getDescription()
@@ -602,8 +646,8 @@
       tpl_assign('category', $category);
       tpl_assign('category_data', $category_data);
       
-      if(is_array(array_var($_POST, 'category'))) {
-        if(!$category->canEdit(logged_user())) {
+      if (is_array(array_var($_POST, 'category'))) {
+        if (!$category->canEdit(logged_user())) {
           flash_error(lang('no access permissions'));
           $this->redirectTo('ticket', 'categories');
         } else {
@@ -636,12 +680,12 @@
     */
     function delete_category() {
       $category = Categories::findById(get_id());
-      if(!($category instanceof Category)) {
+      if (!($category instanceof Category)) {
         flash_error(lang('category dnx'));
         $this->redirectTo('ticket', 'categories');
       } // if
       
-      if(!$category->canDelete(logged_user())) {
+      if (!$category->canDelete(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('ticket', 'categories'));
       } // if
@@ -674,17 +718,17 @@
     */
     function subscribe() {
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canView(logged_user())) {
+      if (!$ticket->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('ticket');
       } // if
       
-      if($ticket->subscribeUser(logged_user())) {
+      if ($ticket->subscribeUser(logged_user())) {
         flash_success(lang('success subscribe to ticket'));
       } else {
         flash_error(lang('error subscribe to ticket'));
@@ -700,17 +744,17 @@
     */
     function unsubscribe() {
       $ticket = ProjectTickets::findById(get_id());
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
         $this->redirectTo('ticket');
       } // if
       
-      if(!$ticket->canView(logged_user())) {
+      if (!$ticket->canView(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('ticket');
       } // if
       
-      if($ticket->unsubscribeUser(logged_user())) {
+      if ($ticket->unsubscribeUser(logged_user())) {
         flash_success(lang('success unsubscribe to ticket'));
       } else {
         flash_error(lang('error unsubscribe to ticket'));

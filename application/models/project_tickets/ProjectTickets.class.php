@@ -75,12 +75,7 @@
     * @param integer $page
     * @return string
     */
-    static function getIndexUrl($closed = false) {
-      if ($closed) {
-        $options = array('closed' => true);
-      } else {
-        $options = array();
-      } // if
+    static function getIndexUrl($options) {
       return get_url('ticket', 'index', $options);
     } // getIndexUrl
 

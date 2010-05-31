@@ -8,7 +8,7 @@
 \"<?php echo lang('link name') ?>\":http://url<br/>
 !<?php echo lang('image url') ?>!<br/>
 <h4>h4. <?php echo lang('header1to6') ?></h4>
-ang('table') ?><br/>
+<?php echo lang('table') ?><br/>
 |A|B|<br/>|C|D|<br/>
 <table style='border: 1px solid black !important;'><tr><td style='border: 1px solid black !important;'>A</td><td style='border: 1px solid black !important;'>B</td></tr><tr><td style='border: 1px solid black !important;'>C</td><td style='border: 1px solid black !important;'>D</td></tr></table><br/>
 -<del><?php echo lang('deleted text') ?></del>-<br/>

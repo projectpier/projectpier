@@ -14,7 +14,7 @@
     * @var array
     * @static
     */
-    static private $columns = array('id' => DATA_TYPE_INTEGER, 'project_id' => DATA_TYPE_INTEGER, 'category_id' => DATA_TYPE_INTEGER, 'created_by_id' => DATA_TYPE_INTEGER, 'closed_by_id' => DATA_TYPE_INTEGER, 'assigned_to_user_id' => DATA_TYPE_INTEGER, 'assigned_to_company_id' => DATA_TYPE_INTEGER, 'summary' => DATA_TYPE_STRING, 'status' => DATA_TYPE_STRING, 'type' => DATA_TYPE_STRING, 'description' => DATA_TYPE_STRING, 'priority' => DATA_TYPE_STRING, 'created_on' => DATA_TYPE_DATETIME, 'closed_on' => DATA_TYPE_DATETIME, 'updated_on' => DATA_TYPE_DATETIME, 'updated_by_id' => DATA_TYPE_INTEGER, 'updated' => DATA_TYPE_STRING, 'is_private' => DATA_TYPE_BOOLEAN);
+    static private $columns = array('id' => DATA_TYPE_INTEGER, 'project_id' => DATA_TYPE_INTEGER, 'category_id' => DATA_TYPE_INTEGER, 'milestone_id' => DATA_TYPE_INTEGER, 'created_by_id' => DATA_TYPE_INTEGER, 'closed_by_id' => DATA_TYPE_INTEGER, 'assigned_to_user_id' => DATA_TYPE_INTEGER, 'assigned_to_company_id' => DATA_TYPE_INTEGER, 'summary' => DATA_TYPE_STRING, 'status' => DATA_TYPE_STRING, 'type' => DATA_TYPE_STRING, 'description' => DATA_TYPE_STRING, 'priority' => DATA_TYPE_STRING, 'created_on' => DATA_TYPE_DATETIME, 'closed_on' => DATA_TYPE_DATETIME, 'updated_on' => DATA_TYPE_DATETIME, 'updated_by_id' => DATA_TYPE_INTEGER, 'updated' => DATA_TYPE_STRING, 'is_private' => DATA_TYPE_BOOLEAN);
   
     /**
     * Construct
@@ -67,7 +67,7 @@
     } // getPkColumns
     
     /**
-    * Return name of first auto_incremenent column if it exists
+    * Return name of first auto_increment column if it exists
     *
     * @access public
     * @param void
@@ -189,7 +189,7 @@
     * because you can't use associative indexing with list() construct
     *
     * @access public
-    * @param array $arguments Query argumens (@see find()) Limit and offset are ignored!
+    * @param array $arguments Query arguments (@see find()) Limit and offset are ignored!
     * @param integer $items_per_page Number of items per page
     * @param integer $current_page Current page number
     * @return array

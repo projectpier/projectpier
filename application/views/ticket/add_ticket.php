@@ -1,59 +1,74 @@
 <?php 
 
-  // Set page title and set crumbs to index
-  set_page_title(lang('add ticket'));
+  set_page_title($ticket->isNew() ? lang('add ticket') : lang('edit ticket'));
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   project_crumbs(array(
     array(lang('tickets'), get_url('ticket')),
-    array(lang('add ticket'))
+    array($ticket->isNew() ? lang('add ticket') : lang('edit ticket'))
   ));
-  
   add_stylesheet_to_page('project/tickets.css');
 ?>
-<h2><?php echo lang('ticket #', $ticket->getId()); ?></h2>
-
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/addMessageForm.js') ?>"></script>
+<?php if ($ticket->isNew()) { ?>
 <form action="<?php echo get_url('ticket', 'add') ?>" method="post" enctype="multipart/form-data">
+<?php } else { ?>
+<form action="<?php echo get_url('ticket', 'edit') ?>" method="post" enctype="multipart/form-data">
+<?php } // if?>
 
 <?php tpl_display(get_template_path('form_errors')) ?>
-
 
   <div>
     <?php echo label_tag(lang('summary'), 'ticketFormSummary', true) ?>
     <?php echo text_field('ticket[summary]', array_var($ticket_data, 'summary'), array('id' => 'ticketFormSummary', 'class' => 'title')) ?>
   </div>
   
-  <div>
-    <?php echo label_tag(lang('status'), 'ticketFormStatus') ?>
-    <?php echo select_ticket_status("ticket[status]", array_var($ticket_data, 'type'), array('id' => 'ticketFormStatus')) ?>
+  <div class="description">
+    <?php echo label_tag(lang('description'), 'ticketFormDescription', true) ?>
+    <?php echo editor_widget('ticket[description]', array_var($ticket_data, 'description'), array('id' => 'ticketFormDescription')) ?>
   </div>
   
+<?php if ($ticket->isNew()) { ?>
+  <div>
+    <?php echo label_tag(lang('status'), 'ticketFormStatus') ?>
+    <?php echo select_ticket_status("ticket[status]", array_var($ticket_data, 'status'), array('id' => 'ticketFormStatus')) ?>
+  </div>
+<?php } // if?>
+  
+<?php if ($ticket->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('type'), 'ticketFormType') ?>
     <?php echo select_ticket_type("ticket[type]", array_var($ticket_data, 'type'), array('id' => 'ticketFormType')) ?>
   </div>
+<?php } // if?>
   
+<?php if ($ticket->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('category'), 'ticketFormCategory') ?>
     <?php echo select_ticket_category("ticket[category_id]", $ticket->getProject(), array_var($ticket_data, 'category_id'), array('id' => 'ticketFormCategory')) ?>
   </div>
+<?php } // if?>
   
+<?php if ($ticket->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('priority'), 'ticketFormPriority') ?>
     <?php echo select_ticket_priority("ticket[priority]", array_var($ticket_data, 'priority'), array('id' => 'ticketFormPriority')) ?>
   </div>
-  
+<?php } // if?>
+
+<?php if ($ticket->isNew()) { ?>
+  <div>
+    <?php echo label_tag(lang('milestone'), 'ticketFormMilestone') ?>
+    <?php echo select_milestone('ticket[milestone_id]', active_project(), array_var($ticket_data, 'milestone_id'), array('id' => 'ticketFormMilestone')) ?>
+  </div>
+<?php } // if?>
+
+<?php if ($ticket->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('assigned to'), 'ticketFormAssignedTo') ?>
     <?php echo assign_to_select_box("ticket[assigned_to]", active_project(), array_var($ticket_data, 'assigned_to'), array('id' => 'ticketFormAssignedTo')) ?>
   </div>
+<?php } // if?>
 
-  <br />
-  <div class="description">
-    <?php echo label_tag(lang('description'), 'messageFormDescription', true) ?>
-    <?php echo editor_widget('ticket[description]', null, array('id' => 'messageFormDescription')) ?>
-  </div>
-  
 <?php if(logged_user()->isMemberOfOwnerCompany()) { ?>
   <fieldset>
     <legend><?php echo lang('options') ?></legend>
@@ -66,6 +81,10 @@
   </fieldset>
 <?php } // if ?>
   
+<?php if($ticket->canAttachFile(logged_user(), active_project())) { ?>
+  <?php echo render_attach_files() ?>
+<?php } // if ?>
+
   <fieldset id="emailNotification">
     <legend><?php echo lang('email notification') ?></legend>
     <p><?php echo lang('email notification ticket desc') ?></p>
@@ -97,10 +116,6 @@
 <?php } // if ?>
 <?php } // foreach ?>
   </fieldset>
-
-<?php if($ticket->canAttachFile(logged_user(), active_project())) { ?>
-  <?php echo render_attach_files() ?>
-<?php } // if ?>
 
   <?php echo submit_button($ticket->isNew() ? lang('add ticket') : lang('edit ticket')) ?>
 </form>

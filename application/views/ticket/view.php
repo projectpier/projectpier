@@ -2,68 +2,96 @@
   $canEdit = $ticket->canEdit(logged_user());
 
   // Set page title and set crumbs to index
-  $title = $canEdit ? 'edit ticket' : 'view ticket';
-  set_page_title(lang($title));
+  set_page_title($ticket->getTitle());
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   $crumbs = array(array(lang('tickets'), get_url('ticket')));
-  if ($ticket->isClosed()) {
-    $crumbs[] = array(lang('closed tickets'), ProjectTickets::getIndexUrl(true));
-  }
-  $crumbs[] = array(lang($title));
+  $crumbs[] = array($ticket->getTitle());
   project_crumbs($crumbs);
   
-  if ($ticket->canChangeStatus(logged_user())) {
-    if ($ticket->isClosed()) {
-      add_page_action(lang('open ticket'), $ticket->getOpenUrl());
-    } else {
-      add_page_action(lang('close ticket'), $ticket->getCloseUrl());
-    }
+  if ($ticket->canEdit(logged_user(), active_project())) {
+    add_page_action(lang('edit ticket'), $ticket->getEditUrl());
+  }
+  if ($ticket->canAdd(logged_user(), active_project())) {
+    add_page_action(lang('add ticket'), $ticket->getAddUrl());
+  }
+  if (logged_user()->isAdministrator()) {
+    add_page_action(lang('delete ticket'), $ticket->getDeleteUrl());
   }
   add_stylesheet_to_page('project/tickets.css');
 ?>
-<?php if($ticket->isPrivate()) { ?>
+<?php if ($ticket->isPrivate()) { ?>
     <div class="private" title="<?php echo lang('private ticket') ?>"><span><?php echo lang('private ticket') ?></span></div>
 <?php } // if ?>
-<h2><?php echo lang('ticket #', $ticket->getId()); ?></h2>
+<h2><?php echo lang('ticket #', $ticket->getId()).": ".$ticket->getTitle(); ?></h2>
 <h3 class="status"><?php echo lang('status') ?>: <strong><?php echo lang($ticket->getStatus()); ?></strong></h3>
-
-<form action="<?php echo $ticket->getEditUrl() ?>" method="post">
-
-<?php tpl_display(get_template_path('form_errors')) ?>
-
-
 <div id="ticket">
-
-<?php if ($canEdit) { ?>
-  <div>
-    <?php echo label_tag(lang('summary'), 'ticketFormSummary', $canEdit) ?>
-    <?php echo text_field('ticket[summary]', array_var($ticket_data, 'summary'), array('id' => 'ticketFormSummary', 'class' => 'title')) ?>
+  <div id="ticketSummary">
+    <h2><?php echo lang('summary') ?>:</h2>
+    <div class="title"><?php echo do_textile($ticket->getSummary()) ?></div>
   </div>
-  <br />
-<?php } else { ?>
-  <h2 class="summary"><?php echo clean($ticket->getSummary()); ?></h2>
-<?php } // if?>
-  
   <table class="properties">
     <tr>
       <th><span class="bold"><?php echo lang('reported by'); ?>:</span></th>
       <td><a href="<?php echo $ticket->getCreatedBy()->getCardUrl(); ?>"><?php echo $ticket->getCreatedByDisplayName(); ?></a></td>
-
       <th><span class="bold"><?php echo lang('edit by'); ?>:</span></th>
       <td>
 <?php if ($ticket->getUpdated()) { ?>
         <?php echo lang('updated on by', format_datetime($ticket->getUpdatedOn()), $ticket->getUpdatedBy()->getCardUrl(), $ticket->getUpdatedByDisplayName(), lang($ticket->getUpdated())); ?>
+<?php } else { ?>
+        <?php echo lang('n/a') ?>
 <?php } // if?>
       </td>
     </tr>
-    
+    <tr>
+      <th><?php echo lang('assigned to') ?></th>
+      <td>
+<?php if ($ticket->getAssignedTo()) { ?>
+          <a href="<?php echo $ticket->getAssignedTo()->getCardUrl() ?>"><?php echo clean($ticket->getAssignedTo()->getObjectName()) ?></a>
+<?php } else { ?>
+          <?php echo lang('none') ?>
+<?php } // if{ ?>
+      </td>
+      <th><?php echo lang('priority') ?></th>
+      <td><?php echo lang($ticket->getPriority()); ?></td>
+    </tr>
+    <tr>
+      <th><?php echo lang('type') ?></th>
+      <td><?php echo lang($ticket->getType()); ?></td>
+      <th><?php echo lang('category') ?></th>
+      <td>
+<?php if ($ticket->getCategory()) { ?>
+        <?php echo clean($ticket->getCategory()->getName()) ?>
+<?php } else { ?>
+          <?php echo lang('none') ?>
+<?php } // if ?>
+      </td>
+    </tr>
+    <tr>
+      <th><?php echo lang('milestone') ?></th>
+      <td>
+<?php if ($ticket->getMilestoneId()) { ?>
+        <a href="<?php echo ProjectMilestones::findById($ticket->getMilestoneId())->getViewUrl() ?>"><?php echo clean(ProjectMilestones::findById($ticket->getMilestoneId())->getName()) ?></a>
+<?php } else { ?>
+          <?php echo lang('none') ?>
+<?php } // if ?>
+      </td>
+    </tr>
+  </table>
+  <div>
+    <span class="bold"><?php echo lang('description') ?>:</span>
+    <div class="desc"><?php echo do_textile($ticket->getDescription()); ?></div>
+  </div>
+</div>
+<div>
+  <?php echo render_object_files($ticket, $ticket->canEdit(logged_user())) ?>
+</div>
     <tr>
       <th><?php echo label_tag(lang('assigned to'), 'ticketFormAssignedTo') ?></th>
 <?php if ($canEdit) { ?>
       <td><?php echo assign_to_select_box("ticket[assigned_to]", active_project(), array_var($ticket_data, 'assigned_to'), array('id' => 'ticketFormAssignedTo')) ?></td>
 <?php } else { ?>
       <td>
-<?php if($ticket->getAssignedTo()) { ?>
+<?php if ($ticket->getAssignedTo()) { ?>
           <?php echo clean($ticket->getAssignedTo()->getObjectName()) ?>
 <?php } // if{ ?>
       </td>
@@ -90,34 +118,15 @@
       <td><?php echo select_ticket_category("ticket[category_id]", $ticket->getProject(), array_var($ticket_data, 'category_id'), array('id' => 'ticketFormCategory')) ?></td>
 <?php } else { ?>
     <td>
-<?php if($ticket->getCategory()) { ?>
+<?php if ($ticket->getCategory()) { ?>
           <?php echo clean($ticket->getCategory()->getName()) ?>
 <?php } // if{ ?>
     </td>
 <?php } // if?>
     </tr>
-  </table>
-  
-  <br />
-  <div>
-    <span class="bold"><?php echo lang('description') ?>:</span>
-    <div class="desc"><?php echo do_textile($ticket->getDescription()); ?></div>
-  </div>
-</div>
-
-<?php if ($canEdit) { ?>
-  <?php echo submit_button($ticket->isNew() ? lang('add ticket') : lang('edit ticket')) ?>
-<?php } // if?>
-</form>
-<br />
-<div>
-  <?php echo render_object_files($ticket, $ticket->canEdit(logged_user())) ?>
-</div>
-
-<div id="messageComments"><?php echo render_object_comments($ticket, $ticket->getViewUrl()) ?></div>
 
 <h2><?php echo lang('history') ?></h2>
-<?php if(isset($changes) && is_array($changes) && count($changes)) { ?>
+<?php if (isset($changes) && is_array($changes) && count($changes)) { ?>
 <div id="changelog">
   <table>
     <tr>

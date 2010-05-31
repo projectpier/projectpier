@@ -207,7 +207,7 @@
     } // hasMessages
     
     /**
-    * Return assigned to object. It can be User, Company or nobady (NULL)
+    * Return assigned to object. It can be User, Company or nobody (NULL)
     *
     * @access public
     * @param void

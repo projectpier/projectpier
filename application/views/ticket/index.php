@@ -19,6 +19,8 @@
   <fieldset id="ticketsFilters">
     <?php
       $this->assign('tickets', $tickets);
+      $this->assign('categories', $categories);
+      $this->assign('grouped_users', $grouped_users);
       $this->assign('filtered', $filtered);
       $this->assign('params', $params);
       $this->includeTemplate(get_template_path('ticket_filters', 'ticket'))

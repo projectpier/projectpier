@@ -78,6 +78,28 @@
     } // setCategoryId() 
     
     /**
+    * Return value of 'milestone_id' field
+    *
+    * @access public
+    * @param void
+    * @return integer 
+    */
+    function getMilestoneId() {
+      return $this->getColumnValue('milestone_id');
+    } // getMilestoneId()
+    
+    /**
+    * Set value of 'milestone_id' field
+    *
+    * @access public   
+    * @param integer $value
+    * @return boolean
+    */
+    function setMilestoneId($value) {
+      return $this->setColumnValue('milestone_id', $value);
+    } // setMilestoneId() 
+    
+    /**
     * Return value of 'created_by_id' field
     *
     * @access public

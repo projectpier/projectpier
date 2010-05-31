@@ -311,6 +311,7 @@ CREATE TABLE `<?php echo $table_prefix ?>project_tickets` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `project_id` int(10) unsigned NOT NULL default '0',
   `category_id` int(10) unsigned default NULL,
+  `milestone_id` int(10) unsigned default NULL, 
   `assigned_to_company_id` smallint(5) unsigned default NULL,
   `assigned_to_user_id` int(10) unsigned default NULL,
   `summary` varchar(200) <?php echo $default_collation ?> NOT NULL default '',

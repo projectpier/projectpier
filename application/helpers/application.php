@@ -159,7 +159,7 @@
     if (is_array($milestones)) {
       foreach ($milestones as $milestone) {
         $option_attributes = $milestone->getId() == $selected ? array('selected' => 'selected') : null;
-        $options[] = option_tag($milestone->getName(), $milestone->getId(), $option_attributes);
+        $options[] = option_tag($milestone->getName()." (".format_date($milestone->getDueDate()).")", $milestone->getId(), $option_attributes);
       } // foreach
     } // if
     
