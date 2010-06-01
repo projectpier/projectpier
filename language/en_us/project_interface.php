@@ -155,6 +155,7 @@
     'change date' => 'Change date',
     'filter' => 'Filter',
     'filters' => 'Filters',
+    'see all tickets for project' => '&raquo; See all tickets for this project',
     
     // iCal
     'icalendar' => 'iCalendar',

@@ -1104,17 +1104,19 @@
     * Return array of task that are assigned to specific user or his company
     *
     * @param User $user
+    * @param array $options
     * @return array
     */
-    function getUsersTickets(User $user) {
+    function getUsersTickets(User $user, $options = null) {
       $conditions = DB::prepareString('`project_id` = ? AND ((`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR `created_by_id`= ?) AND `closed_on` = ?', array($this->getId(), $user->getId(), $user->getCompanyId(), 0, $user->getCompanyId(), 0, 0, $user->getId(), EMPTY_DATETIME));
       if(!$user->isMemberOfOwnerCompany()) {
         $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));
       } // if
-      return ProjectTickets::findAll(array(
-        'conditions' => $conditions,
-        'order' => '`created_on`'
-      )); // findAll
+      $options['conditions'] = $conditions;
+      if (!isset($options['order'])) {
+        $options['order'] = '`created_on`';
+      }
+      return ProjectTickets::findAll($options); // findAll
     } // getUsersTickets
     
     // ---------------------------------------------------

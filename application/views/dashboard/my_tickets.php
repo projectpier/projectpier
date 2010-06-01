@@ -16,7 +16,7 @@
 <div id="tickets">
 <?php foreach ($active_projects as $active_project) { ?>
 <?php
-  $tickets = $active_project->getUsersTickets(logged_user());
+  $tickets = $active_project->getUsersTickets(logged_user(), array('limit' => 5, 'order' => '`id` ASC'));
 ?>
 <?php if (is_array($tickets) && count($tickets)) { ?>
 <?php $has_assigned_tickets = true ?>
@@ -26,11 +26,14 @@
       <p><a href="<?php echo $active_project->getTicketsUrl() ?>"><?php echo lang('tickets') ?></a>:</p>
       <div>
 <?php
+  $params['active_project'] = $active_project->getId();
+  $this->assign('params', $params);
   $this->assign('tickets', $tickets);
   $this->includeTemplate(get_template_path('view_tickets', 'ticket'));
 ?>
       </div>
     </div>
+  <a href="<?php echo $active_project->getTicketsUrl() ?>"><?php echo lang('see all tickets for project') ?></a>
   </div>
 <?php } // if ?>
 
