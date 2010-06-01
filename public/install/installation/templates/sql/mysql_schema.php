@@ -412,7 +412,7 @@ CREATE TABLE `<?php echo $table_prefix ?>ticket_changes` (
   `created_by_id` int(10) default NULL,
   PRIMARY KEY  (`id`),
   KEY `created_on` (`created_on`),
-  KEY `ticket_id` (`ticket_id`)
+  KEY `changeset_id` (`changeset_id`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
 
 CREATE TABLE `<?php echo $table_prefix ?>ticket_subscriptions` (
