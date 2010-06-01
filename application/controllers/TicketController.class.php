@@ -141,12 +141,109 @@
         $this->redirectToReferer(get_url('ticket'));
       } // if
       
+      $ticket_data = array(
+        'milestone_id' => $ticket->getMilestoneId(),
+        'status' => $ticket->getStatus(),
+        'is_private' => $ticket->isPrivate(),
+        'summary' => $ticket->getSummary(),
+        'description' => $ticket->getDescription(),
+        'priority' => $ticket->getPriority(),
+        'type' => $ticket->getType(),
+        'category_id' => $ticket->getCategoryId(),
+        'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId()
+      ); // array
+      
+      
       tpl_assign('ticket', $ticket);
+      tpl_assign('ticket_data', $ticket_data);
       tpl_assign('subscribers', $ticket->getSubscribers());
-      tpl_assign('changes', $ticket->getChanges());
+      tpl_assign('changesets', $ticket->getChangesets());
       
       $this->setSidebar(get_template_path('view_sidebar', 'ticket'));
     } // view
+
+    /**
+    * Save changes to ticket
+    *
+    * @access public
+    * @param void
+    * @return null
+    */
+    function save_change() {
+      $ticket = ProjectTickets::findById(get_id());
+      if (!($ticket instanceof ProjectTicket)) {
+        flash_error(lang('ticket dnx'));
+        $this->redirectTo('ticket');
+      } // if
+      
+      if (!$ticket->canChangeStatus(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectToReferer(get_url('ticket'));
+      } // if
+      
+      $ticket_data = array_var($_POST, 'ticket');
+      if (is_array(array_var($_POST, 'ticket'))) {
+        try {
+          $old_fields = array(
+            'status' => $ticket->getStatus(),
+            'priority' => $ticket->getPriority(),
+            'type' => $ticket->getType(),
+            'category' => $ticket->getCategory(),
+            'assigned to' => $ticket->getAssignedTo(),
+            'milestone' => $ticket->getMilestone()
+            );
+          
+          $ticket->setFromAttributes($ticket_data);
+          $assigned_to = explode(':', array_var($ticket_data, 'assigned_to', ''));
+          $ticket->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
+          $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
+
+          DB::beginWork();
+          $ticket->save();
+          ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
+          DB::commit();
+          
+          $new_fields = array(
+            'status' => $ticket->getStatus(),
+            'priority' => $ticket->getPriority(),
+            'type' => $ticket->getType(),
+            'category' => $ticket->getCategory(),
+            'assigned to' => $ticket->getAssignedTo(),
+            'milestone' => $ticket->getMilestone()
+            );
+          
+          
+          $changeset = new TicketChangeset();
+          $changeset->setTicketId($ticket->getId());
+          $changeset->setComment(array_var($ticket_data, 'comment'));
+          $changeset->save();
+          foreach ($old_fields as $type => $old_field) {
+            $new_field = $new_fields[$type];
+            if ($old_field === $new_field) {
+              continue;
+            }
+            $from_data = ($old_field instanceof ApplicationDataObject) ? $old_field->getObjectName() : $old_field;
+            $to_data = ($new_field instanceof ApplicationDataObject) ? $new_field->getObjectName() : $new_field;
+
+            $change = new TicketChange();
+            $change->setChangesetId($changeset->getId());
+            $change->setType($type);
+            $change->setFromData($from_data);
+            $change->setToData($to_data);
+            $change->save();
+          } // foreach
+          if ($changeset->isEmpty()) {
+            $changeset->delete();
+          }
+
+          
+          flash_success(lang('success edit ticket', $ticket->getSummary()));
+        } catch(Exception $e) {
+          flash_error(lang('error update ticket options'), $ticket->getSummary());
+        } // try
+      } // if
+      $this->redirectToUrl($ticket->getViewUrl());
+    } // save_change
     
     /**
     * Add ticket
@@ -177,10 +274,11 @@
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
       $this->setSidebar(get_template_path('textile_help_sidebar'));
+      
       if (is_array(array_var($_POST, 'ticket'))) {
         try {
           $uploaded_files = ProjectFiles::handleHelperUploads(active_project());
-        } catch(Exception $e) {
+        } catch (Exception $e) {
           $uploaded_files = null;
         } // try
         
@@ -230,10 +328,10 @@
                   } // if
                 } // if
               } // if
-            } // if
+            } // foreach
             
             Notifier::ticket($ticket, $notify_people, 'new_ticket', $ticket->getCreatedBy());
-          } catch(Exception $e) {
+          } catch (Exception $e) {
           
           } // try
           
@@ -283,22 +381,15 @@
       $ticket_data = array_var($_POST, 'ticket');
       if (!is_array($ticket_data)) {
         $ticket_data = array(
-          'milestone_id' => $ticket->getMilestoneId(),
-          'status' => $ticket->getStatus(),
           'is_private' => $ticket->isPrivate(),
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
-          'priority' => $ticket->getPriority(),
-          'type' => $ticket->getType(),
-          'category_id' => $ticket->getCategoryId(),
-          'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId()
         ); // array
       } // if
       
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
       tpl_assign('subscribers', $ticket->getSubscribers());
-      tpl_assign('changes', $ticket->getChanges());
       
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
@@ -306,28 +397,19 @@
         $old_fields = array(
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
-          'status' => $ticket->getStatus(),
-          'type' => $ticket->getType(),
-          'category' => $ticket->getCategory(),
-          'priority' => $ticket->getPriority(),
-          'milestone_id' => $ticket->getMilestoneId(),
-          'assigned to' => $ticket->getAssignedTo()
+          'private' => $ticket->isPrivate()
           );
-        $old_private = $ticket->isPrivate();
 
         try {
-          $ticket->setFromAttributes($ticket_data);
+          $ticket->setSummary(array_var($ticket_data, 'summary'));
+          $ticket->setDescription(array_var($ticket_data, 'description'));
+          $ticket->setIsPrivate((boolean) array_var($ticket_data, 'is_private', $ticket->isPrivate()));
           $ticket->setUpdated('settings');
 
           // Options are reserved only for members of owner company
           if (!logged_user()->isMemberOfOwnerCompany()) {
-            $ticket->setIsPrivate($old_private);
+            $ticket->setIsPrivate($old_fields['private']);
           } // if
-
-          $old_assigned_user_id = $ticket->getAssignedToUserId();
-          $assigned_to = explode(':', array_var($ticket_data, 'assigned_to', ''));
-          $ticket->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
-          $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
 
           DB::beginWork();
           $ticket->save();
@@ -335,24 +417,15 @@
           ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
           DB::commit();
 
-          $user = $ticket->getAssignedToUser();
-          if ($user instanceof User && $user->getId() != $old_assigned_user_id) {
-            if (!$ticket->isSubscriber($user)) {
-              $ticket->subscribeUser($user);
-            } // if
-          } // if
-
           $new_fields = array(
             'summary' => $ticket->getSummary(),
             'description' => $ticket->getDescription(),
-            'status' => $ticket->getStatus(),
-            'type' => $ticket->getType(),
-            'category' => $ticket->getCategory(),
-            'priority' => $ticket->getPriority(),
-            'milestone_id' => $ticket->getMilestoneId(),
-            'assigned to' => $ticket->getAssignedTo()
+            'private' => $ticket->isPrivate()
             );
-
+          
+          $changeset = new TicketChangeset();
+          $changeset->setTicketId($ticket->getId());
+          $changeset->save();
           foreach ($old_fields as $type => $old_field) {
             $new_field = $new_fields[$type];
             if ($old_field === $new_field) {
@@ -362,16 +435,37 @@
             $to_data = ($new_field instanceof ApplicationDataObject) ? $new_field->getObjectName() : $new_field;
 
             $change = new TicketChange();
-            $change->setTicketId($ticket->getId());
+            $change->setChangesetId($changeset->getId());
             $change->setType($type);
             $change->setFromData($from_data);
             $change->setToData($to_data);
             $change->save();
           } // foreach
+          if ($changeset->isEmpty()) {
+            $changeset->delete();
+          }
 
           try {
+            if ($ticket->getAssignedToUserId()) {
+              $ticket_data['notify_user_' . $ticket->getAssignedToUserId()] = 'checked';
+            }
+            
+            $notify_people = array();
+            $project_companies = active_project()->getCompanies();
+            foreach ($project_companies as $project_company) {
+              $company_users = $project_company->getUsersOnProject(active_project());
+              if (is_array($company_users)) {
+                foreach ($company_users as $company_user) {
+                  if ((array_var($ticket_data, 'notify_company_' . $project_company->getId()) == 'checked') || (array_var($ticket_data, 'notify_user_' . $company_user->getId()))) {
+                    $ticket->subscribeUser($company_user); // subscribe
+                    $notify_people[] = $company_user;
+                  } // if
+                } // if
+              } // if
+            } // foreach
+            
             Notifier::ticket($ticket, $ticket->getSubscribers(), 'edit_ticket', $ticket->getUpdatedBy());
-          } catch(Exception $e) {
+          } catch (Exception $e) {
             // nothing here, just suppress error...
           } // try
 
@@ -416,8 +510,11 @@
           DB::commit();
           
           if ($old_private != $ticket->isPrivate()) {
+            $changeset = new TicketChangeset();
+            $changeset->setTicketId($ticket->getId());
+            $changeset->save();
             $change = new TicketChange();
-            $change->setTicketId($ticket->getId());
+            $change->setChangesetId($changeset->getId());
             $change->setType('private');
             $change->setFromData($old_private ? 'yes' : 'no');
             $change->setToData($ticket->isPrivate() ? 'yes' : 'no');

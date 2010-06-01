@@ -14,16 +14,12 @@
   if ($ticket->canAdd(logged_user(), active_project())) {
     add_page_action(lang('add ticket'), $ticket->getAddUrl());
   }
-  if (logged_user()->isAdministrator()) {
-    add_page_action(lang('delete ticket'), $ticket->getDeleteUrl());
-  }
   add_stylesheet_to_page('project/tickets.css');
 ?>
 <?php if ($ticket->isPrivate()) { ?>
     <div class="private" title="<?php echo lang('private ticket') ?>"><span><?php echo lang('private ticket') ?></span></div>
 <?php } // if ?>
 <h2><?php echo lang('ticket #', $ticket->getId()).": ".$ticket->getTitle(); ?></h2>
-<h3 class="status"><?php echo lang('status') ?>: <strong><?php echo lang($ticket->getStatus()); ?></strong></h3>
 <div id="ticket">
   <div id="ticketSummary">
     <h2><?php echo lang('summary') ?>:</h2>
@@ -43,14 +39,9 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo lang('assigned to') ?></th>
-      <td>
-<?php if ($ticket->getAssignedTo()) { ?>
-          <a href="<?php echo $ticket->getAssignedTo()->getCardUrl() ?>"><?php echo clean($ticket->getAssignedTo()->getObjectName()) ?></a>
-<?php } else { ?>
-          <?php echo lang('none') ?>
-<?php } // if{ ?>
-      </td>
+      <th><?php echo lang('status') ?></th>
+      <td><?php echo lang($ticket->getStatus()); ?></td>
+      
       <th><?php echo lang('priority') ?></th>
       <td><?php echo lang($ticket->getPriority()); ?></td>
     </tr>
@@ -67,13 +58,23 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo lang('milestone') ?></th>
+      <th><?php echo lang('assigned to') ?></th>
       <td>
-<?php if ($ticket->getMilestoneId()) { ?>
-        <a href="<?php echo ProjectMilestones::findById($ticket->getMilestoneId())->getViewUrl() ?>"><?php echo clean(ProjectMilestones::findById($ticket->getMilestoneId())->getName()) ?></a>
+<?php if ($ticket->getAssignedTo()) { ?>
+          <a href="<?php echo $ticket->getAssignedTo()->getCardUrl() ?>"><?php echo clean($ticket->getAssignedTo()->getObjectName()) ?></a>
 <?php } else { ?>
           <?php echo lang('none') ?>
 <?php } // if ?>
+      </td>
+      <th><?php echo lang('milestone') ?></th>
+      <td>
+<?php if ($ticket->getMilestoneId()) {
+  $milestone = ProjectMilestones::findById($ticket->getMilestoneId());
+  ?>
+        <a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> (<?php echo format_datetime($milestone->getDueDate()) ?>)
+<?php } else {
+  echo lang('none');
+} ?>        
       </td>
     </tr>
   </table>
@@ -85,70 +86,75 @@
 <div>
   <?php echo render_object_files($ticket, $ticket->canEdit(logged_user())) ?>
 </div>
-    <tr>
-      <th><?php echo label_tag(lang('assigned to'), 'ticketFormAssignedTo') ?></th>
-<?php if ($canEdit) { ?>
-      <td><?php echo assign_to_select_box("ticket[assigned_to]", active_project(), array_var($ticket_data, 'assigned_to'), array('id' => 'ticketFormAssignedTo')) ?></td>
-<?php } else { ?>
-      <td>
-<?php if ($ticket->getAssignedTo()) { ?>
-          <?php echo clean($ticket->getAssignedTo()->getObjectName()) ?>
-<?php } // if{ ?>
-      </td>
-<?php } // if?>
 
+<?php if ($ticket->canChangeStatus(logged_user())) { ?>
+<fieldset>
+  <form action="<?php echo $ticket->getSaveChangeUrl(); ?>" method="post" enctype="multipart/form-data">
+  <div class="comment">
+    <?php echo label_tag(lang('comment'), 'changesetFormComment', false) ?>
+    <?php echo textarea_field('ticket[comment]', null, array('id' => 'ticketFormComment')) ?>
+  </div>
+  <table width="100%">
+    <tr>
+      <th><?php echo label_tag(lang('status'), 'ticketFormStatus') ?></th>
+      <td><?php echo select_ticket_status("ticket[status]", array_var($ticket_data, 'status'), array('id' => 'ticketFormStatus')) ?></td>
       <th><?php echo label_tag(lang('priority'), 'ticketFormPriority') ?></th>
-<?php if ($canEdit) { ?>
       <td><?php echo select_ticket_priority("ticket[priority]", array_var($ticket_data, 'priority'), array('id' => 'ticketFormPriority')) ?></td>
-<?php } else { ?>
-      <td><?php echo lang($ticket->getPriority()); ?></td>
-<?php } // if?>
     </tr>
-    
     <tr>
       <th><?php echo label_tag(lang('type'), 'ticketFormType') ?></th>
-<?php if ($canEdit) { ?>
       <td><?php echo select_ticket_type("ticket[type]", array_var($ticket_data, 'type'), array('id' => 'ticketFormType')) ?></td>
-<?php } else { ?>
-      <td><?php echo lang($ticket->getType()); ?></td>
-<?php } // if?>
-
       <th><?php echo label_tag(lang('category'), 'ticketFormCategory') ?></th>
-<?php if ($canEdit) { ?>
       <td><?php echo select_ticket_category("ticket[category_id]", $ticket->getProject(), array_var($ticket_data, 'category_id'), array('id' => 'ticketFormCategory')) ?></td>
-<?php } else { ?>
-    <td>
-<?php if ($ticket->getCategory()) { ?>
-          <?php echo clean($ticket->getCategory()->getName()) ?>
-<?php } // if{ ?>
-    </td>
-<?php } // if?>
     </tr>
-
+    <tr>
+      <th><?php echo label_tag(lang('assigned to'), 'ticketFormAssignedTo') ?></th>
+      <td><?php echo assign_to_select_box("ticket[assigned_to]", active_project(), array_var($ticket_data, 'assigned_to'), array('id' => 'ticketFormAssignedTo')) ?></td>
+      <th><?php echo label_tag(lang('milestone'), 'ticketFormMilestone') ?></th>
+      <td><?php echo select_milestone('ticket[milestone_id]', active_project(), array_var($ticket_data, 'milestone_id'), array('id' => 'ticketFormMilestone')) ?></td>
+    </tr>
+  </table>
+  <?php echo submit_button(lang('update')) ?>
+  </form>
+</fieldset>
+<?php } ?>
 <h2><?php echo lang('history') ?></h2>
-<?php if (isset($changes) && is_array($changes) && count($changes)) { ?>
+<?php if (isset($changesets) && is_array($changesets) && count($changesets)) { ?>
 <div id="changelog">
-  <table>
-    <tr>
-      <th><?php echo lang('field') ?></th>
-      <th><?php echo lang('old value') ?></th>
-      <th><?php echo lang('new value') ?></th>
-      <th><?php echo lang('user') ?></th>
-      <th><?php echo lang('change date') ?></th>
-    </tr>
-<?php foreach($changes as $change) { ?>
-    <tr>
-      <td><?php echo lang($change->getType()) ?></td>
-<?php if ($change->dataNeedsTranslation()) { ?>
-      <td><?php echo lang($change->getFromData()) ?></td>
-      <td><?php echo lang($change->getToData()) ?></td>
-<?php } else { ?>
-      <td><?php echo $change->getFromData() ?></td>
-      <td><?php echo $change->getToData() ?></td>
-<?php } // if ?>
-      <td><?php echo $change->getCreatedByDisplayName() ?></td>
-      <td><?php echo format_datetime($change->getCreatedOn()) ?></td>
-    </tr>
+  <table width="100%">
+<?php $counter = 0; ?>
+<?php foreach ($changesets as $changeset) { ?>
+  <tr class="<?php echo $counter%2 ? 'odd':'even'; $counter++ ?>">
+    <td><?php echo format_datetime($changeset->getCreatedOn()) ?>
+    <td><a href="<?php echo $changeset->getCreatedBy()->getCardUrl(); ?>"><?php echo $changeset->getCreatedByDisplayName(); ?></a></td>
+    <td>
+<?php $changes = $changeset->getChanges(); ?>
+      <ul>
+<?php foreach ($changes as $change) { ?>
+        <li><?php
+        if ($change->getFromData() == "") {
+          if ($change->dataNeedsTranslation()) {
+            echo lang('change set to', lang($change->getType()), lang($change->getToData()));
+          } else {
+            echo lang('change set to', lang($change->getType()), $change->getToData());
+          }
+        } else {
+          if ($change->dataNeedsTranslation()) {
+            echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang($change->getToData()));
+          } else {
+            echo lang('change from to', lang($change->getType()), $change->getFromData(), $change->getToData());
+          }
+        } // if ?>
+        </li>
+<?php
+  } // foreach
+?>
+      </ul>
+<?php if (count($changes) && $changeset->getComment() != "") { ?>
+      <hr/>
+<?php } ?>
+      <p><?php echo do_textile($changeset->getComment()) ?></p>
+    </td>
 <?php } // foreach ?>
   </table>
 </div>

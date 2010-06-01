@@ -1,103 +1,70 @@
 <?php
 
   /**
-  * BaseTicketChange class
+  * BaseTicketChangeset class
   *
   * @http://www.projectpier.org/
   */
-  abstract class BaseTicketChange extends ApplicationDataObject {
+  abstract class BaseTicketChangeset extends ApplicationDataObject {
   
     // -------------------------------------------------------
     //  Access methods
     // -------------------------------------------------------
   
     /**
-    * Return value of 'changeset_id' field
+    * Return value of 'id' field
     *
     * @access public
     * @param void
     * @return integer 
     */
-    function getChangesetId() {
-      return $this->getColumnValue('changeset_id');
-    } // getChangesetId()
+    function getId() {
+      return $this->getColumnValue('id');
+    } // getId()
+
+    /**
+    * Return value of 'ticket_id' field
+    *
+    * @access public
+    * @param void
+    * @return integer 
+    */
+    function getTicketId() {
+      return $this->getColumnValue('ticket_id');
+    } // getTicketId()
     
     /**
-    * Set value of 'changeset_id' field
+    * Set value of 'ticket_id' field
     *
     * @access public   
     * @param integer $value
     * @return boolean
     */
-    function setChangesetId($value) {
-      return $this->setColumnValue('changeset_id', $value);
-    } // setChangesetId() 
+    function setTicketId($value) {
+      return $this->setColumnValue('ticket_id', $value);
+    } // setTicketId()
     
     /**
-    * Return value of 'type' field
+    * Return value of 'comment' field
     *
     * @access public
     * @param void
     * @return string 
     */
-    function getType() {
-      return $this->getColumnValue('type');
-    } // getType()
+    function getComment() {
+      return $this->getColumnValue('comment');
+    } // getComment()
     
     /**
-    * Set value of 'type' field
+    * Set value of 'comment' field
     *
     * @access public   
     * @param string $value
     * @return boolean
     */
-    function setType($value) {
-      return $this->setColumnValue('type', $value);
-    } // setType() 
-    
-    /**
-    * Return value of 'from_data' field
-    *
-    * @access public
-    * @param void
-    * @return string 
-    */
-    function getFromData() {
-      return $this->getColumnValue('from_data');
-    } // getFromData()
-    
-    /**
-    * Set value of 'from_data' field
-    *
-    * @access public   
-    * @param string $value
-    * @return boolean
-    */
-    function setFromData($value) {
-      return $this->setColumnValue('from_data', $value);
-    } // setFromData() 
-    
-    /**
-    * Return value of 'to_data' field
-    *
-    * @access public
-    * @param void
-    * @return string 
-    */
-    function getToData() {
-      return $this->getColumnValue('to_data');
-    } // getToData()
-    
-    /**
-    * Set value of 'to_data' field
-    *
-    * @access public   
-    * @param string $value
-    * @return boolean
-    */
-    function setToData($value) {
-      return $this->setColumnValue('to_data', $value);
-    } // setToData() 
+    function setComment($value) {
+      return $this->setColumnValue('comment', $value);
+    } // setComment() 
     
     /**
     * Return value of 'created_on' field
@@ -149,15 +116,15 @@
     *
     * @access protected
     * @param void
-    * @return TicketChanges 
+    * @return TicketChangesets
     */
     function manager() {
-      if (!($this->manager instanceof TicketChanges)) {
-        $this->manager = TicketChanges::instance();
+      if (!($this->manager instanceof TicketChangesets)) {
+        $this->manager = TicketChangesets::instance();
       }
       return $this->manager;
     } // manager
   
-  } // BaseTicketChange
+  } // BaseTicketChangeset
 
 ?>

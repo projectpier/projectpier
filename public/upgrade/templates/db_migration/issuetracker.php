@@ -32,11 +32,21 @@ CREATE TABLE `<?php echo $table_prefix ?>project_tickets` (
   KEY `project_id` (`project_id`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
 
+CREATE TABLE `<?php echo $table_prefix ?>ticket_changesets` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `ticket_id` int(11) unsigned NOT NULL default  '0',
+  `comment` TEXT NULL ,
+  `created_on` datetime NOT NULL default  '0000-00-00 00:00:00',
+  `created_by_id` int(10) default NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_on` (`created_on`),
+  KEY `ticket_id` (`ticket_id`)
+) ENGINE=InnoDB <?php echo $default_charset ?>;
 
 CREATE TABLE `<?php echo $table_prefix ?>ticket_changes` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `ticket_id` int(11) unsigned NOT NULL default '0',
-  `type` enum('status','priority','assigned to','summary','category','type','private','comment','attachment') <?php echo $default_collation ?> NOT NULL,
+  `changeset_id` int(11) unsigned NOT NULL default '0',
+  `type` enum('status','priority','assigned to','summary','category','type','private','comment','attachment','milestone') <?php echo $default_collation ?> NOT NULL,
   `from_data` varchar(255) <?php echo $default_collation ?> NOT NULL default '',
   `to_data` varchar(255) <?php echo $default_collation ?> NOT NULL default '',
   `created_on` datetime NOT NULL default '0000-00-00 00:00:00',

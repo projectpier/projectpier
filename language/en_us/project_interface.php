@@ -146,6 +146,8 @@
     'legend' => 'Legend',
     'ticket #' => 'Ticket #%s',
     'updated on by' => '%s | <a href="%s">%s</a> | %s',
+    'change set to' => '<strong>%s</strong> set to <em>%s</em>',
+    'change from to' => '<strong>%s</strong> from <em>%s</em> to <em>%s</em>',
     'history' => 'Change history',
     'field' => 'Field',
     'old value' => 'Old value',

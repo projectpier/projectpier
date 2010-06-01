@@ -2,11 +2,11 @@
 
   
   /**
-  * TicketChanges class
+  * TicketChangeset class
   *
   * @http://www.projectpier.org/
   */
-  abstract class BaseTicketChanges extends DataManager {
+  abstract class BaseTicketChangesets extends DataManager {
   
     /**
     * Column name => Column type map
@@ -14,15 +14,15 @@
     * @var array
     * @static
     */
-    static private $columns = array('id' => DATA_TYPE_INTEGER, 'changeset_id' => DATA_TYPE_INTEGER, 'type' => DATA_TYPE_STRING, 'from_data' => DATA_TYPE_STRING, 'to_data' => DATA_TYPE_STRING, 'created_on' => DATA_TYPE_DATETIME, 'created_by_id' => DATA_TYPE_INTEGER);
+    static private $columns = array('id' => DATA_TYPE_INTEGER, 'ticket_id' => DATA_TYPE_INTEGER, 'comment' => DATA_TYPE_STRING, 'created_on' => DATA_TYPE_DATETIME, 'created_by_id' => DATA_TYPE_INTEGER);
   
     /**
     * Construct
     *
-    * @return BaseTicketChanges 
+    * @return BaseTicketChangeset
     */
     function __construct() {
-      parent::__construct('TicketChange', 'ticket_changes', true);
+      parent::__construct('TicketChangeset', 'ticket_changesets', true);
     } // __construct
     
     // -------------------------------------------------------
@@ -93,14 +93,14 @@
     *  - offset - limit offset, valid only if limit is present
     *  - limit
     * 
-    * @return one or TicketChanges objects
+    * @return one or TicketChangesets objects
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::find($arguments);
       } else {
-        return TicketChanges::instance()->find($arguments);
+        return TicketChangesets::instance()->find($arguments);
       } // if
     } // find
     
@@ -109,13 +109,13 @@
     *
     * @access public
     * @param array $arguments
-    * @return one or TicketChanges objects
+    * @return one or TicketChangesets objects
     */
     function findAll($arguments = null) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::findAll($arguments);
       } else {
-        return TicketChanges::instance()->findAll($arguments);
+        return TicketChangesets::instance()->findAll($arguments);
       } // if
     } // findAll
     
@@ -124,13 +124,13 @@
     *
     * @access public
     * @param array $arguments
-    * @return TicketChange 
+    * @return TicketChangeset
     */
     function findOne($arguments = null) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::findOne($arguments);
       } else {
-        return TicketChanges::instance()->findOne($arguments);
+        return TicketChangesets::instance()->findOne($arguments);
       } // if
     } // findOne
     
@@ -140,13 +140,13 @@
     * @access public
     * @param mixed $id
     * @param boolean $force_reload If true cache will be skipped and data will be loaded from database
-    * @return TicketChange 
+    * @return TicketChangeset
     */
     function findById($id, $force_reload = false) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::findById($id, $force_reload);
       } else {
-        return TicketChanges::instance()->findById($id, $force_reload);
+        return TicketChangesets::instance()->findById($id, $force_reload);
       } // if
     } // findById
     
@@ -158,10 +158,10 @@
     * @return integer
     */
     function count($condition = null) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::count($condition);
       } else {
-        return TicketChanges::instance()->count($condition);
+        return TicketChangesets::instance()->count($condition);
       } // if
     } // count
     
@@ -173,10 +173,10 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::delete($condition);
       } else {
-        return TicketChanges::instance()->delete($condition);
+        return TicketChangesets::instance()->delete($condition);
       } // if
     } // delete
     
@@ -195,26 +195,26 @@
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if(isset($this) && instance_of($this, 'TicketChanges')) {
+      if(isset($this) && instance_of($this, 'TicketChangesets')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
-        return TicketChanges::instance()->paginate($arguments, $items_per_page, $current_page);
+        return TicketChangesets::instance()->paginate($arguments, $items_per_page, $current_page);
       } // if
     } // paginate
     
     /**
     * Return manager instance
     *
-    * @return TicketChanges 
+    * @return TicketChangesets
     */
     function instance() {
       static $instance;
-      if(!instance_of($instance, 'TicketChanges')) {
-        $instance = new TicketChanges();
+      if(!instance_of($instance, 'TicketChangesets')) {
+        $instance = new TicketChangesets();
       } // if
       return $instance;
     } // instance
   
-  } // TicketChanges 
+  } // BaseTicketChangesets
 
 ?>

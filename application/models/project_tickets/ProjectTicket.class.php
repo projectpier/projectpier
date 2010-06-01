@@ -23,13 +23,6 @@
     protected $searchable_columns = array('summary', 'description');
     
     /**
-    * Tickets are commentable
-    *
-    * @var boolean
-    */
-    protected $is_commentable = true;
-    
-    /**
     * Ticket is file container
     *
     * @var boolean
@@ -51,11 +44,11 @@
     private $subscribers;
         
     /**
-    * Cached array of changes
+    * Cached array of changesets
     *
     * @var array
     */
-    private $changes;
+    private $changesets;
     
     // ---------------------------------------------------
     //  Comments
@@ -99,11 +92,14 @@
         $this->setUpdated('attachment');
         $this->save();
         
+        $changeset = new TicketChangeset();
+        $changeset->setTicketId($this->getId());
+        $changeset->save();
         foreach ($files as $file) {
           $change = new TicketChange();
-          $change->setTicketId($this->getId());
           $change->setType('attachment');
           $change->setToData($file->getFilename());
+          $change->setChangesetId($changeset->getId());
           $change->save();
         } // foreach
         
@@ -114,7 +110,7 @@
     } // onAttachFiles
     
     // ---------------------------------------------------
-    //  Changes
+    //  Changesets
     // ---------------------------------------------------
     
     /**
@@ -123,12 +119,12 @@
     * @param void
     * @return array
     */
-    function getChanges() {
-      if (is_null($this->changes)) {
-        $this->changes = TicketChanges::getChangesByTicket($this);
+    function getChangesets() {
+      if (is_null($this->changesets)) {
+        $this->changesets = TicketChangesets::getChangesetsByTicket($this);
       }
-      return $this->changes;
-    } // getChanges
+      return $this->changesets;
+    } // getChangesets
     
     // ---------------------------------------------------
     //  Subscriptions
@@ -302,6 +298,21 @@
     } // getAssignedTo
     
     /**
+    * Returns associated milestone
+    *
+    * @access public
+    * @param void
+    * @return ProjectMilestone
+    */
+    function getMilestone() {
+      if ($this->getMilestoneId() > 0) {
+        return ProjectMilestones::findById($this->getMilestoneId());
+      } else {
+        return null;
+      } // if
+    } // getMilestone
+    
+    /**
     * Returns true if this ticket was not closed
     *
     * @access public
@@ -370,12 +381,11 @@
       if (!$user->isProjectUser($this->getProject())) {
         return false;
       } // if
-      if ($this->canEdit($user)) {
-        return true;
+      if ($this->isPrivate() && !$user->isMemberOfOwnerCompany()) {
+        return false; // user that is not member of owner company can't access private objects
       } // if
-
-      return $user->getId() == $this->getCreatedById();
-    } // canEdit
+      return true;
+    } // canChangeStatus
     
     /**
     * Check if specific user can update this ticket
@@ -569,6 +579,16 @@
     function getUpdateOptionsUrl() {
       return get_url('ticket', 'update_options', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getUpdateOptionsUrl
+    
+    /**
+    * Return save change URL
+    *
+    * @param void
+    * @return string
+    */
+    function getSaveChangeUrl() {
+      return get_url('ticket', 'save_change', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
+    } // getSaveChangeUrl
     
     /**
     * Return subscribe URL

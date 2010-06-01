@@ -9,25 +9,27 @@
   class TicketChange extends BaseTicketChange {
     
     /**
-    * Ticket
+    * Cached Changeset
     *
-    * @var ProjectTicket
+    * @var TicketChangeset
     */
-    private $ticket;
+    private $changeset;
     
     /**
-    * Return ticket object
+    * Returns changeset object
     *
     * @param void
-    * @return ProjectTicket
+    * @return TicketChangeset
     */
-    function getTicket() {
-      if(is_null($this->ticket)) $this->ticket = ProjectTickets::findById($this->getTicketId());
-      return $this->ticket;
-    } // getTicket
+    function getChangeset() {
+      if (is_null($this->changeset)) {
+        $this->changeset = TicketChangesets::findById($this->getChangesetId());
+      }
+      return $this->changeset;
+    } // getChangeset
     
     /**
-    * Return if data needs translation
+    * Returns if data needs translation
     *
     * @param void
     * @return ProjectTicket
@@ -36,6 +38,6 @@
       return ($this->getType() == 'priority') || ($this->getType() == 'type') || ($this->getType() == 'status') || ($this->getType() == 'private');
     } // dataNeedsTranslation
   
-  } // TicketChanges 
+  } // TicketChange
 
 ?>
