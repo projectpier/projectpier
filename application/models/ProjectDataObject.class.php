@@ -741,7 +741,7 @@
     // ---------------------------------------------------
     
     /**
-    * Save object. If object is searchable this function will add conetent of searchable fields 
+    * Save object. If object is searchable this function will add content of searchable fields 
     * to search index
     *
     * @param void

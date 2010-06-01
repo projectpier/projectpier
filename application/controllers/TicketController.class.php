@@ -113,7 +113,6 @@
       tpl_assign('params', $params);
       tpl_assign('grouped_users', active_project()->getUsers(true));
       tpl_assign('categories', Categories::getProjectCategories(active_project()));
-      tpl_assign('closed', $closed);
       tpl_assign('tickets', $tickets);
       tpl_assign('tickets_pagination', $pagination);
       

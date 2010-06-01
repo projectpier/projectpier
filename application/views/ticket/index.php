@@ -13,7 +13,6 @@
   add_stylesheet_to_page('project/tickets.css');
   
   $options_pagination = array('page' => '#PAGE#');
-  if ($closed) $options_pagination['closed'] = true;
 ?>
 <div id="tickets">
   <fieldset id="ticketsFilters">

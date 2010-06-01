@@ -89,7 +89,7 @@
     // ---------------------------------------------------
     
     /**
-    * Handle on add comment event
+    * Handle on attach file event
     *
     * @param array $files Attached files
     * @return null

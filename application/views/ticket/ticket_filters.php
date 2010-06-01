@@ -28,17 +28,18 @@
     <strong><?php echo lang('category'); ?>:</strong>
     <?php
     $property_name = 'category_id';
+    $property_in_url = isset($params[$property_name]) ? $params[$property_name] : "";
     
     // TODO make filter_links template more flexible so that it can be used with Categories and not only text.
-    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> ''))).'" '.($params[$property_name] == "" ? 'class="selected"' : '').'>'.lang('all').'</a> ';
+    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> ''))).'" '.($property_in_url == "" ? 'class="selected"' : '').'>'.lang('all').'</a> ';
 
     foreach ($categories as $category) {
       $category_id = $category->getId();
-      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => $category_id))).'" '.(preg_match("/^(.*,)?$category_id(,.*)?$/", $params[$property_name]) ? 'class="selected"' : '').'>'.$category->getName().'</a> ';
-      if (preg_match("/^(.*,)?$category_id(,.*)?$/", $params[$property_name])) {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$category_id,/", "/,$category_id,/", "/,$category_id$/","/^$category_id$/"), array('', ',', '', ''), $params[$property_name])))).'">-</a> ';
+      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => $category_id))).'" '.(preg_match("/^(.*,)?$category_id(,.*)?$/", $property_in_url) ? 'class="selected"' : '').'>'.$category->getName().'</a> ';
+      if (preg_match("/^(.*,)?$category_id(,.*)?$/", $property_in_url)) {
+        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$category_id,/", "/,$category_id,/", "/,$category_id$/","/^$category_id$/"), array('', ',', '', ''), $property_in_url)))).'">-</a> ';
       } else {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($params[$property_name] == "" ? $category_id : $params[$property_name].','.$category_id)))).'">+</a> ';
+        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($property_in_url == "" ? $category_id : $property_in_url.','.$category_id)))).'">+</a> ';
       }
     }
     ?>
@@ -47,20 +48,21 @@
     <strong><?php echo lang('assigned to'); ?>:</strong>
     <?php
     $property_name = 'assigned_to_user_id';
+    $property_in_url = isset($params[$property_name]) ? $params[$property_name] : "";
     
     // TODO make filter_links template more flexible so that it can be used with Users and not only text.
-    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> ''))).'" '.($params[$property_name] == "" ? 'class="selected"' : '').'>'.lang('all').'</a> ';
+    echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> ''))).'" '.($property_in_url == "" ? 'class="selected"' : '').'>'.lang('all').'</a> ';
 
     foreach ($grouped_users as $company_id => $company_users) {
       $company = Companies::findById($company_id);
       echo '<strong>'.$company->getName().'</strong>: ';
       foreach ($company_users as $user) {
         $user_id = $user->getId();
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => $user_id))).'" '.(preg_match("/^(.*,)?$user_id(,.*)?$/", $params[$property_name]) ? 'class="selected"' : '').'>'.$user->getDisplayName().'</a> ';
-        if (preg_match("/^(.*,)?$user_id(,.*)?$/", $params[$property_name])) {
-          echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$user_id,/", "/,$user_id,/", "/,$user_id$/","/^$user_id$/"), array('', ',', '', ''), $params[$property_name])))).'">-</a> ';
+        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => $user_id))).'" '.(preg_match("/^(.*,)?$user_id(,.*)?$/", $property_in_url) ? 'class="selected"' : '').'>'.$user->getDisplayName().'</a> ';
+        if (preg_match("/^(.*,)?$user_id(,.*)?$/", $property_in_url)) {
+          echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$user_id,/", "/,$user_id,/", "/,$user_id$/","/^$user_id$/"), array('', ',', '', ''), $property_in_url)))).'">-</a> ';
         } else {
-          echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($params[$property_name] == "" ? $user_id : $params[$property_name].','.$user_id)))).'">+</a> ';
+          echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($property_in_url == "" ? $user_id : $property_in_url.','.$user_id)))).'">+</a> ';
         }
       }
     }
