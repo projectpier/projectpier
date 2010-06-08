@@ -157,6 +157,7 @@
       $avatar = array_var($_FILES, 'new_avatar');
       if (is_array($avatar) && isset($avatar['size']) && $avatar['size'] != 0) {
         try {
+          $old_file = $contact->getAvatarPath();
           if (!isset($avatar['name']) || !isset($avatar['type']) || !isset($avatar['size']) || !isset($avatar['tmp_name']) || !is_readable($avatar['tmp_name'])) {
             throw new InvalidUploadError($avatar, lang('error upload file'));
           } // if
@@ -173,11 +174,18 @@
               throw new Error($avatar, lang('error edit avatar'));
               $contact->setAvatarFile('');
             } // if
+            if (is_file($old_file)) {
+              @unlink($old_file);
+            } // if
           } // if
         } catch (Exception $e) {
           flash_error($e->getMessage());
         }
       } else if ($contact_data['delete_avatar'] == "checked") {
+        $old_file = $contact->getAvatarPath();
+        if (is_file($old_file)) {
+          @unlink($old_file);
+        } // if
         $contact->setAvatarFile('');
       } // if
 
@@ -190,6 +198,7 @@
           
           ApplicationLogs::createLog($contact, null, ApplicationLogs::ACTION_ADD);
           DB::commit();
+          
           
           flash_success(lang('success edit contact', $contact->getDisplayName()));
           $this->redirectToUrl($contact->getCompany()->getViewUrl()); // Translate to profile page

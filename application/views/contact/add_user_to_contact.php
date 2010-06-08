@@ -27,7 +27,7 @@
   <div class="contactAvatar"><img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> <?php echo lang('avatar') ?>" /></div>
 <?php } ?>
   
-<form action="<?php echo $contact->getAddUserAccountUrl() ?>" method="post">
+<form action="<?php if ($user->isNew()) { echo $contact->getAddUserAccountUrl(); } else { echo $contact->getEditUserAccountUrl(); }?>" method="post">
 
 <?php tpl_display(get_template_path('form_errors')) ?>
 
