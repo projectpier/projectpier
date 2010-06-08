@@ -13,10 +13,6 @@
   if ($contact->canEdit(logged_user())) {
     $options[] = '<a href="' . $contact->getEditUrl() . '">' . lang('edit') . '</a>';
   }
-  if ($contact->canUpdateProfile(logged_user())) {
-    $options[] = '<a href="' . $contact->getEditProfileUrl($company->getViewUrl()) . '">' . lang('update profile') . '</a>';
-    $options[] = '<a href="' . $contact->getUpdateAvatarUrl($company->getViewUrl()) . '">' . lang('update avatar') . '</a>';
-  } // if
   if ($contact->canDelete(logged_user())) {
     $options[] = '<a href="' . $contact->getDeleteUrl() . '">' . lang('delete') . '</a>';
   } // if

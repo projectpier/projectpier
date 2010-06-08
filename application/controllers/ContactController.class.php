@@ -417,6 +417,80 @@
       
     } // add_user_account
     
+    /**
+    * Delete the user account associated with that contact
+    *
+    * @param void
+    * @return null
+    */
+    function delete_user_account() {
+      $this->setTemplate('del_user_account');
+
+      $contact = Contacts::findById(get_id());
+      if (!($contact instanceof Contact)) {
+        flash_error(lang('contact dnx'));
+        $this->redirectTo('dashboard');
+      } // if
+      
+      $user = $contact->getUserAccount();
+      if (!($user instanceof User)) {
+        flash_error(lang('user dnx'));
+        $this->redirectTo('administration');
+      } // if
+      
+      if (!$user->canDelete(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectToReferer(get_url('dashboard'));
+      } // if
+      
+      $company = $contact->getCompany();
+      
+      $delete_data = array_var($_POST, 'deleteUser');
+      tpl_assign('contact', $contact);
+      tpl_assign('company', $company);
+      tpl_assign('user', $user);
+      tpl_assign('delete_data', $delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+        ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid password')));
+          return $this->render();
+        }
+        try {
+
+          DB::beginWork();
+          $user->delete();
+          $contact->setUserId('0');
+          $contact->save();
+          ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success delete user', $user->getDisplayName()));
+
+        } catch (Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete user'));
+        } // try
+
+        $this->redirectToUrl($company->getViewUrl());
+      } else {
+        flash_error(lang('error delete user'));
+        $this->redirectToUrl($company->getViewUrl());
+      }
+
+    } // delete_user_account
+    
   } // ContactController
 
 ?>
