@@ -429,7 +429,7 @@
       $contact = Contacts::findById(get_id());
       if (!($contact instanceof Contact)) {
         flash_error(lang('contact dnx'));
-        $this->redirectTo('dashboard');
+        $this->redirectTo('administration');
       } // if
       
       $user = $contact->getUserAccount();
@@ -438,7 +438,7 @@
         $this->redirectTo('administration');
       } // if
       
-      if (!$user->canDelete(logged_user())) {
+      if (!$contact->canDeleteUserAccount(logged_user())) {
         flash_error(lang('no access permissions'));
         $this->redirectToReferer(get_url('dashboard'));
       } // if
