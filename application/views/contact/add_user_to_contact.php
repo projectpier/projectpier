@@ -74,11 +74,12 @@
 
 <?php if ($company->isOwner()) { ?>
   <div class="formBlock">
+<?php if (!$contact->isAccountOwner()) { ?>
     <div>
       <?php echo label_tag(lang('is administrator'), null, true) ?>
       <?php echo yes_no_widget('user[is_admin]', 'userFormIsAdmin', array_var($user_data, 'is_admin'), lang('yes'), lang('no')) ?>
     </div>
-    
+<?php } // if ?>
     <div>
       <?php echo label_tag(lang('is auto assign'), null, true) ?>
       <?php echo yes_no_widget('user[auto_assign]', 'userFormAutoAssign', array_var($user_data, 'auto_assign'), lang('yes'), lang('no')) ?>

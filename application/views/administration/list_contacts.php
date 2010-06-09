@@ -30,6 +30,9 @@ $user = $contact->getUserAccount();
     if ($contact->canDeleteUserAccount(logged_user())) {
       $options[] = '<a href="' . $contact->getDeleteUserAccountUrl() . '">' . lang('delete user account') . '</a>';
     }
+    if ($user->canUpdatePermissions(logged_user())) {
+      $options[] = '<a href="' . $user->getUpdatePermissionsUrl() . '">' . lang('update permissions') . '</a>';
+    }
   } else {
     if ($contact->canAddUserAccount(logged_user())) {
       $options[] = '<a href="' . $contact->getAddUserAccountUrl() . '">' . lang('add user account') . '</a>';

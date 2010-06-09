@@ -1015,8 +1015,10 @@
       } // if
       
       $this->deleteAvatar();
+      if ($this->hasUserAccount()) {
+        $this->getUserAccount()->delete();
+      }
       // TODO check all things that need to be deleted
-      // associated users
       // IM accounts
       // ticket subscriptions
       // message subscriptions

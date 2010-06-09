@@ -48,7 +48,7 @@
     } // forgotPassword
     
     /**
-    * Send new account notification email to the user whose accout has been created 
+    * Send new account notification email to the user whose account has been created 
     * (welcome message)
     *
     * @param User $user

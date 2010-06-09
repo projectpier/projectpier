@@ -58,7 +58,7 @@
     */
     function members() {
       tpl_assign('company', owner_company());
-      tpl_assign('users', owner_company()->getUsers());
+      tpl_assign('contacts', owner_company()->getContacts());
     } // members
     
     /**

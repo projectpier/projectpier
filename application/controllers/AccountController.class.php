@@ -214,7 +214,13 @@
         $this->redirectToReferer(get_url('dashboard'));
       } // if
       
-      $company = $user->getCompany();
+      $contact = $user->getContact();
+      if (!($contact instanceof Contact)) {
+        flash_error(lang('contact dnx'));
+        $this->redirectTo('dashboard');
+      } // if
+      
+      $company = $contact->getCompany();
       if (!($company instanceof Company)) {
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('dashboard'));
@@ -230,10 +236,11 @@
       
       $redirect_to = array_var($_GET, 'redirect_to');
       if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
-        $redirect_to = $user->getCardUrl();
+        $redirect_to = $company->getViewUrl();
       } // if
       
       tpl_assign('user', $user);
+      tpl_assign('contact', $contact);
       tpl_assign('company', $company);
       tpl_assign('projects', $projects);
       tpl_assign('permissions', $permissions);

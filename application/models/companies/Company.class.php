@@ -31,9 +31,21 @@
     */
     function getContacts() {
       return Contacts::findAll(array(
-        'conditions' => '`company_id` = ' . DB::escape($this->getId())
+        'conditions' => '`company_id` = ' . DB::escape($this->getId()),
+        'order' => '`display_name` ASC'
       )); // findAll
     } // getContacts
+    
+    /**
+    * Return number of company contacts
+    *
+    * @access public
+    * @param void
+    * @return integer
+    */
+    function countContacts() {
+      return Contacts::count('`company_id` = ' . DB::escape($this->getId()));
+    } // countContacts
     
     /**
     * Return array of all company members
@@ -327,6 +339,17 @@
     } // canAddClient
     
     /**
+    * Check if this user can add new contact to this company
+    *
+    * @access public
+    * @param User $user
+    * @return boolean
+    */
+    function canAddContact(User $user) {
+      return Contact::canAdd($user, $this);
+    } // canAddContact
+
+    /**
     * Check if this user can add new account to this company
     *
     * @access public
@@ -594,10 +617,10 @@
         throw new Error(lang('error delete owner company'));
       } // if
       
-      $users = $this->getUsers();
-      if (is_array($users) && count($users)) {
-        foreach ($users as $user) {
-          $user->delete();
+      $contacts = $this->getContacts();
+      if (is_array($contacts) && count($contacts)) {
+        foreach ($contacts as $contact) {
+          $contact->delete();
         }
       } // if
       

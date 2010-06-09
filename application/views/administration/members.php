@@ -3,11 +3,11 @@
   set_page_title(lang('members'));
   administration_tabbed_navigation(ADMINISTRATION_TAB_MEMBERS);
   administration_crumbs(lang('members'));
-  if (User::canAdd(logged_user(), owner_company())) {
+  if (Contact::canAdd(logged_user(), owner_company())) {
     add_page_action(array(
-      lang('add user') => owner_company()->getAddUserUrl()
+      lang('add contact') => owner_company()->getAddContactUrl()
     ));
   } // if
 
 ?>
-<?php $this->includeTemplate(get_template_path('list_users', 'administration')) ?>
+<?php $this->includeTemplate(get_template_path('list_contacts', 'administration')) ?>

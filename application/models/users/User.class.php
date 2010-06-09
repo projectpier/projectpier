@@ -234,6 +234,19 @@
     // ---------------------------------------------------
     
     /**
+    * Account owner has no creator per se, thus special handling
+    * 
+    * @param void
+    * @return User
+    */
+    function getCreatedBy() {
+      if ($this->isAccountOwner()) {
+        return $this;
+      }
+      return parent::getCreatedBy();
+    } // getCreatedBy
+    
+    /**
     * Return owner company
     *
     * @access public
@@ -241,7 +254,10 @@
     * @return Company
     */
     function getCompany() {
-      return Companies::findById($this->getCompanyId());
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getCompany();
+      }
+      return null;
     } // getCompany
     
     /**

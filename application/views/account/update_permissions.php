@@ -1,34 +1,26 @@
 <?php
 
   set_page_title(lang('update permissions'));
-  if ($user->getCompany()->isOwner()) {
+  if ($company->isOwner()) {
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(array(
-      array(lang('company'), $user->getCompany()->getViewUrl()),
-      array($user->getDisplayName(), $user->getCardUrl()),
+      array(lang('company'), $company->getViewUrl()),
+      array($contact->getDisplayName(), $contact->getCardUrl()),
       array(lang('update permissions'))
     ));
   } else {
     administration_tabbed_navigation(ADMINISTRATION_TAB_CLIENTS);
     administration_crumbs(array(
       array(lang('clients'), get_url('administration', 'clients')),
-      array($user->getCompany()->getName(), $user->getCompany()->getViewUrl()),
-      array($user->getDisplayName(), $user->getCardUrl()),
+      array($company->getName(), $company->getViewUrl()),
+      array($contact->getDisplayName(), $contact->getCardUrl()),
       array(lang('update permissions'))
     ));
   } // if
   
-  if ($user->canUpdateProfile(logged_user())) {
+  if ($contact->canEdit(logged_user())) {
     add_page_action(array(
-      lang('update profile')  => $user->getEditProfileUrl(),
-      lang('change password') => $user->getEditPasswordUrl(),
-      lang('update avatar')   => $user->getUpdateAvatarUrl()
-    ));
-  } // if
-  
-  if ($user->canUpdatePermissions(logged_user())) {
-    add_page_action(array(
-      lang('permissions')  => $user->getUpdatePermissionsUrl()
+      lang('update profile')  => $contact->getEditUrl(),
     ));
   } // if
   
