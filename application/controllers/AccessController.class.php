@@ -74,7 +74,7 @@
         
         try {
           CompanyWebsite::instance()->logUserIn($user, $remember);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
           tpl_assign('error', new Error(lang('invalid login data')));
           $this->render();
         } // try
@@ -132,7 +132,7 @@
       $your_email = trim(array_var($_POST, 'your_email'));
       tpl_assign('your_email', $your_email);
       
-      if (array_var($_POST, 'submited') == 'submited') {
+      if (array_var($_POST, 'submitted') == 'submitted') {
         if (!is_valid_email($your_email)) {
           tpl_assign('error', new InvalidEmailAddressError($your_email, lang('invalid email address')));
           $this->render();
@@ -198,6 +198,9 @@
           $administrator->setAutoAssign(true);
           
           $administrator->save();
+          
+          // TODO Create the contact for administrator
+          $administrator_contact = new Contact();
           
           // Create a company
           $company = new Company();

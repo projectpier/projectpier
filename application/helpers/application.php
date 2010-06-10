@@ -2,7 +2,7 @@
 
   /**
   * Application helpers. This helpers are injected into the controllers
-  * through ApplicationController constructio so they are available in
+  * through ApplicationController construction so they are available in
   * whole application
   *
   * @http://www.projectpier.org/
@@ -16,6 +16,7 @@
   */
   function render_user_box(User $user) {
     tpl_assign('_userbox_user', $user);
+    tpl_assign('_userbox_contact', $user->getContact());
     tpl_assign('_userbox_projects', $user->getActiveProjects());
     return tpl_fetch(get_template_path('user_box', 'application'));
   } // render_user_box

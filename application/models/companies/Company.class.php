@@ -48,17 +48,28 @@
     } // countContacts
     
     /**
-    * Return array of all company members
+    * Return company users
     *
     * @access public
     * @param void
     * @return array
     */
     function getUsers() {
-      return Users::findAll(array(
-        'conditions' => '`company_id` = ' . DB::escape($this->getId())
-      )); // findAll
-    } // getUsers
+      $users_table = Users::instance()->getTableName(true);
+      $contacts_table = Contacts::instance()->getTableName(true);
+      
+      $users = array();
+      $sql = "SELECT $users_table.* FROM $users_table, $contacts_table WHERE ($users_table.`id` = $contacts_table.`user_id` AND $contacts_table.`company_id` = ". DB::escape($this->getId()) . " )";
+      
+      $rows = DB::executeAll($sql);
+      if (is_array($rows)) {
+        foreach ($rows as $row) {
+          $users[] = Users::instance()->loadFromRow($row);
+        } // foreach
+      } // if
+      
+      return count($users) ? $users : null;
+    } // countUsers
     
     /**
     * Return number of company users
@@ -68,7 +79,15 @@
     * @return integer
     */
     function countUsers() {
-      return Users::count('`company_id` = ' . DB::escape($this->getId()));
+      $users_table = Users::instance()->getTableName(true);
+      $contacts_table = Contacts::instance()->getTableName(true);
+      $escaped_pk = is_array($pk_columns = Companies::getPkColumns()) ? '*' : DB::escapeField($pk_columns);
+      
+      $users = array();
+      $sql = "SELECT COUNT($users_table.$escaped_pk) AS 'row_count' FROM $users_table, $contacts_table WHERE ($users_table.`id` = $contacts_table.`user_id` AND $contacts_table.`company_id` = ". DB::escape($this->getId()) . " )";
+      
+      $row = DB::executeOne($sql);
+      return (integer) array_var($row, 'row_count', 0);
     } // countUsers
     
     /**
@@ -90,9 +109,20 @@
     * @return array
     */
     function getAutoAssignUsers() {
-      return Users::findAll(array(
-        'conditions' => '`company_id` = ' . DB::escape($this->getId()) . ' AND `auto_assign` > ' . DB::escape(0)
-      )); // findAll
+      $users_table = Users::instance()->getTableName(true);
+      $contacts_table = Contacts::instance()->getTableName(true);
+      
+      $users = array();
+      $sql = "SELECT $users_table.* FROM $users_table, $contacts_table WHERE ($users_table.`id` = $contacts_table.`user_id` AND $contacts_table.`company_id` = ". DB::escape($this->getId()) . " AND $users_table.`auto_assign` > ". DB::escape(0) . " )";
+      
+      $rows = DB::executeAll($sql);
+      if (is_array($rows)) {
+        foreach ($rows as $row) {
+          $users[] = Users::instance()->loadFromRow($row);
+        } // foreach
+      } // if
+      
+      return count($users) ? $users : null;
     } // getAutoAssignUsers
     
     /**
@@ -325,7 +355,7 @@
     } // canDelete
     
     /**
-    * Returns true if specific user can add clent company
+    * Returns true if specific user can add client company
     *
     * @access public
     * @param User $user

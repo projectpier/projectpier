@@ -494,6 +494,8 @@
           try {
             if (array_var($user_data, 'send_email_notification')) {
               Notifier::newUserAccount($user, $password);
+              // TODO use updatedUserAccount when user account gets column updated_by_id
+              // Notifier::updatedUserAccount($user, $password);
             } // if
           } catch(Exception $e) {
           

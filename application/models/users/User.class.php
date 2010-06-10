@@ -39,7 +39,7 @@
     private $is_administrator = null;
     
     /**
-    * Cached is_account_owner value. Value is retrived on first requests
+    * Cached is_account_owner value. Value is retrieved on first requests
     *
     * @var boolean
     */
@@ -67,7 +67,7 @@
     private $finished_projects;
     
     /**
-    * Array of all active milestons
+    * Array of all active milestones
     *
     * @var array
     */
@@ -111,27 +111,6 @@
       parent::__construct();
       $this->addProtectedAttribute('password', 'salt', 'session_lifetime', 'token', 'twister', 'last_login', 'last_visit', 'last_activity');
     } // __construct
-    
-    /**
-    * Check if this user is member of specific company
-    *
-    * @access public
-    * @param Company $company
-    * @return boolean
-    */
-    function isMemberOf(Company $company) {
-      return $this->getContact()->isMemberOf($company);
-    } // isMemberOf
-    
-    /**
-    * Usually we check if user is member of owner company so this is the shortcut method
-    *
-    * @param void
-    * @return boolean
-    */
-    function isMemberOfOwnerCompany() {
-      return $this->getContact()->isMemberOfOwnerCompany();
-    } // isMemberOfOwnerCompany
     
     /**
     * Check if this user is part of specific project
@@ -247,20 +226,6 @@
     } // getCreatedBy
     
     /**
-    * Return owner company
-    *
-    * @access public
-    * @param void
-    * @return Company
-    */
-    function getCompany() {
-      if ($this->getContact() instanceof Contact) {
-        return $this->getContact()->getCompany();
-      }
-      return null;
-    } // getCompany
-    
-    /**
     * Return associated contact
     *
     * @param void
@@ -353,18 +318,82 @@
       return $this->today_milestones;
     } // getTodayMilestones
     
+    
+    // ---------------------------------------------------
+    // Retrieve from associated Contact
+    // Mostly for backward compatibility and convenience
+    // following move of contact info to their own Contact
+    // model.
+    // ---------------------------------------------------
+    
     /**
-    * Return display name for this account. If there is no display name set username will be used
+    * Check if this user is member of specific company
     *
     * @access public
+    * @param Company $company
+    * @return boolean
+    */
+    function isMemberOf(Company $company) {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->isMemberOf($company);
+      }
+      return false;
+    } // isMemberOf
+
+    /**
+    * Usually we check if user is member of owner company so this is the shortcut method
+    *
+    * @param void
+    * @return boolean
+    */
+    function isMemberOfOwnerCompany() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->isMemberOfOwnerCompany();
+      }
+      return false;
+    } // isMemberOfOwnerCompany
+
+    /**
+    * Return user's company
+    *
+    * @access public
+    * @param void
+    * @return Company
+    */
+    function getCompany() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getCompany();
+      }
+      return null;
+    } // getCompany
+
+    /**
+    * Returns user's company's ID
+    *
+    * @access public
+    * @param void
+    * @return integer
+    */
+    function getCompanyId() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getCompanyId();
+      }
+      return null;
+    } // getCompanyId
+    
+    /**
+    * Return associated contact's display name
+    *
     * @param void
     * @return string
     */
     function getDisplayName() {
-      $display = parent::getDisplayName();
-      return trim($display) == '' ? $this->getUsername() : $display;
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getDisplayName();
+      }
+      return $this->getUsername();
     } // getDisplayName
-    
+
     /**
     * Returns true if we have title value set
     *
@@ -373,8 +402,68 @@
     * @return boolean
     */
     function hasTitle() {
-      return trim($this->getTitle()) <> '';
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->hasTitle();
+      }
+      return false;
     } // hasTitle
+
+    /**
+    * Return path to the avatar file. This function just generates the path, does not check if file really exists
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getAvatarPath() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getAvatarPath();
+      }
+      return null;
+    } // getAvatarPath
+
+    /**
+    * Return URL of avatar
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getAvatarUrl() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getAvatarUrl();
+      }
+      return null;
+    } // getAvatarUrl
+
+    /**
+    * Check if this user has uploaded avatar
+    *
+    * @access public
+    * @param void
+    * @return boolean
+    */
+    function hasAvatar() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->hasAvatar();
+      }
+      return false;
+    } // hasAvatar
+
+    /**
+    * Show user card page
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getCardUrl() {
+      if ($this->getContact() instanceof Contact) {
+        return $this->getContact()->getCardUrl();
+      }
+      return null;
+    } // getCardUrl
+    
     
     // ---------------------------------------------------
     //  IMs
@@ -449,103 +538,6 @@
     } // clearImValues
     
     // ---------------------------------------------------
-    //  Avatars
-    // ---------------------------------------------------
-    
-    /**
-    * Set user avatar from $source file
-    *
-    * @param string $source Source file
-    * @param integer $max_width Max avatar width
-    * @param integer $max_height Max avatar height
-    * @param boolean $save Save user object when done
-    * @return string
-    */
-    function setAvatar($source, $max_width = 50, $max_height = 50, $save = true) {
-      if (!is_readable($source)) {
-        return false;
-      }
-      
-      do {
-        $temp_file = ROOT . '/cache/' . sha1(uniqid(rand(), true));
-      } while (is_file($temp_file));
-      
-      try {
-        Env::useLibrary('simplegd');
-        
-        $image = new SimpleGdImage($source);
-        $thumb = $image->scale($max_width, $max_height, SimpleGdImage::BOUNDARY_DECREASE_ONLY, false);
-        $thumb->saveAs($temp_file, IMAGETYPE_PNG);
-        
-        $public_filename = PublicFiles::addFile($temp_file, 'png');
-        if ($public_filename) {
-          $this->setAvatarFile($public_filename);
-          if ($save) {
-            $this->save();
-          } // if
-        } // if
-        
-        $result = true;
-      } catch(Exception $e) {
-        $result = false;
-      } // try
-      
-      // Cleanup
-      if (!$result && $public_filename) {
-        PublicFiles::deleteFile($public_filename);
-      } // if
-      @unlink($temp_file);
-      
-      return $result;
-    } // setAvatar
-    
-    /**
-    * Delete avatar
-    *
-    * @param void
-    * @return null
-    */
-    function deleteAvatar() {
-      if ($this->hasAvatar()) {
-        PublicFiles::deleteFile($this->getAvatarFile());
-        $this->setAvatarFile('');
-      } // if
-    } // deleteAvatar
-    
-    /**
-    * Return path to the avatar file. This function just generates the path, does not check if file really exists
-    *
-    * @access public
-    * @param void
-    * @return string
-    */
-    function getAvatarPath() {
-      return PublicFiles::getFilePath($this->getAvatarFile());
-    } // getAvatarPath
-    
-    /**
-    * Return URL of avatar
-    *
-    * @access public
-    * @param void
-    * @return string
-    */
-    function getAvatarUrl() {
-      return $this->hasAvatar() ? PublicFiles::getFileUrl($this->getAvatarFile()) : get_image_url('avatar.gif');
-    } // getAvatarUrl
-    
-    /**
-    * Check if this user has uploaded avatar
-    *
-    * @access public
-    * @param void
-    * @return boolean
-    */
-    function hasAvatar() {
-      return (trim($this->getAvatarFile()) <> '') && is_file($this->getAvatarPath());
-    } // hasAvatar
-    
-    // ---------------------------------------------------
     //  Utils
     // ---------------------------------------------------
     
@@ -616,7 +608,7 @@
     // ---------------------------------------------------
     
     /**
-    * Can specific user add user to specific company
+    * Can specific user add a user to specific company
     *
     * @access public
     * @param User $user
@@ -686,6 +678,7 @@
     
     /**
     * Returns true if this user can see $contact
+    * TODO shouldn't it be in the Contact model?
     *
     * @param Contact $contact
     * @return boolean
@@ -707,6 +700,7 @@
     * Returns true if this user can see $company. Members of owner company and
     * coworkers are visible without project check! Also, members of owner company
     * can see all clients without any prior check!
+    * TODO shouldn't this be in the Company model?
     *
     * @param Company $company
     * @return boolean
@@ -839,17 +833,6 @@
     } // getAccountUrl
     
     /**
-    * Show company card page
-    *
-    * @access public
-    * @param void
-    * @return null
-    */
-    function getCardUrl() {
-      return get_url('user', 'card', $this->getId());
-    } // getCardUrl
-    
-    /**
     * Return edit user URL
     *
     * @access public
@@ -917,40 +900,10 @@
     } // getUpdatePermissionsUrl
     
     /**
-    * Return update avatar URL
-    *
-    * @param string
-    * @return string
-    */
-    function getUpdateAvatarUrl($redirect_to = null) {
-      $attributes = array('id' => $this->getId());
-      if (trim($redirect_to) <> '') {
-        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-      } // if
-      
-      return get_url('account', 'edit_avatar', $attributes);
-    } // getUpdateAvatarUrl
-    
-    /**
-    * Return delete avatar URL
-    *
-    * @param void
-    * @return string
-    */
-    function getDeleteAvatarUrl($redirect_to = null) {
-      $attributes = array('id' => $this->getId());
-      if (trim($redirect_to) <> '') {
-        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-      } // if
-      
-      return get_url('account', 'delete_avatar', $attributes);
-    } // getDeleteAvatarUrl
-    
-    /**
     * Return recent activities feed URL
     * 
     * If $project is valid project instance URL will be limited for that project only, else it will be returned for 
-    * overal feed
+    * overall feed
     *
     * @param Project $project
     * @return string
@@ -1030,11 +983,6 @@
         $errors[] = lang('email value is required');
       } // if
       
-      // // Company ID
-      // if (!$this->validatePresenceOf('company_id')) {
-      //   $errors[] = lang('company value required');
-      // }
-      
     } // validate
     
     /**
@@ -1048,7 +996,6 @@
         return false;
       } // if
       
-      $this->deleteAvatar();
       ProjectUsers::clearByUser($this);
       MessageSubscriptions::clearByUser($this);
       return parent::delete();

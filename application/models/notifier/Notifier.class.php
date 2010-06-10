@@ -19,7 +19,7 @@
     const SMTP_SECURE_CONNECTION_TLS = 'tls';
     
     /**
-    * Cached value of echange compatible config option
+    * Cached value of exchange compatible config option
     *
     * @var boolean
     */
@@ -67,6 +67,26 @@
         tpl_fetch(get_template_path('new_account', 'notifier'))
       ); // send
     } // newUserAccount
+  
+    /**
+    * Send account update notification email to the user whose account has been updated
+    *
+    * @param User $user
+    * @param string $raw_password
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function updatedUserAccount(User $user, $raw_password) {
+      tpl_assign('updated_account', $user);
+      tpl_assign('raw_password', $raw_password);
+      
+      return self::sendEmail(
+        self::prepareEmailAddress($user->getEmail(), $user->getDisplayName()),
+        self::prepareEmailAddress($user->getUpdatedBy()->getEmail(), $user->getUpdatedByDisplayName()),
+        lang('your account updated'),
+        tpl_fetch(get_template_path('updated_account', 'notifier'))
+      ); // send
+    } // updatedUserAccount
   
     /**
     * Send new message notification to the list of users ($people)

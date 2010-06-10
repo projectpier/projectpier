@@ -51,17 +51,20 @@
           <tr>
             <th colspan="2"><?php echo lang('company users involved in project', clean($company->getName()), clean(active_project()->getName())) ?>:</th>
           </tr>
-<?php foreach ($users as $user) { ?>
+<?php foreach ($users as $user) {
+  $contact = $user->getContact(); ?>
           <tr>
             <td style="width: 200px">
-              <div class="projectUserDisplayName"><a href="<?php echo $user->getCardUrl() ?>"><?php echo clean($user->getDisplayName()) ?></a></div>
-<?php if ($user->hasTitle()) { ?>
-              <div class="projectUserTitle"><?php echo clean($user->getTitle()) ?></div>
+              <div class="projectUserDisplayName"><a href="<?php echo $user->getCardUrl() ?>"><?php echo clean($contact->getDisplayName()) ?></a></div>
+<?php if ($contact->hasTitle()) { ?>
+              <div class="projectUserTitle"><?php echo clean($contact->getTitle()) ?></div>
 <?php } // if ?>
               <div class="projectUserEmail"><a href="mailto:<?php echo $user->getEmail() ?>"><?php echo $user->getEmail() ?></a></div>
             </td>
 <?php if (active_project()->canRemoveUserFromProject(logged_user(), $user)) { ?>
             <td><a href="<?php echo active_project()->getRemoveUserUrl($user) ?>" onclick="return confirm('<?php echo lang('confirm remove user from project') ?>')"><?php echo lang('remove user from project') ?></a></td>
+<?php } else { ?>
+            <td></td>
 <?php } // if ?>
           </tr>
 <?php } // foreach ?>

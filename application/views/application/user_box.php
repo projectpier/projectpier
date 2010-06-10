@@ -1,5 +1,5 @@
 <div id="userbox">
-  <?php echo lang('welcome back', clean($_userbox_user->getDisplayName())) ?> (<a href="<?php echo get_url('access', 'logout') ?>" onclick="return confirm('<?php echo lang('confirm logout') ?>')"><?php echo lang('logout') ?></a>),
+  <?php echo lang('welcome back', clean($_userbox_contact->getDisplayName())) ?> (<a href="<?php echo get_url('access', 'logout') ?>" onclick="return confirm('<?php echo lang('confirm logout') ?>')"><?php echo lang('logout') ?></a>),
   <ul>
     <li><a href="<?php echo logged_user()->getAccountUrl() ?>"><?php echo lang('account') ?></a> <?php echo render_icon('bullet_drop_down.gif', '', array('id' => 'account_more_icon', 'class' => 'PopupMenuWidgetAttachTo', 'title' => lang('enable javascript'))) ?></li>
 <?php if (isset($_userbox_projects) && is_array($_userbox_projects) && count($_userbox_projects)) { ?>
@@ -15,7 +15,6 @@
     <ul>
       <li><a href="<?php echo logged_user()->getEditProfileUrl() ?>"><?php echo lang('update profile') ?></a></li>
       <li><a href="<?php echo logged_user()->getEditPasswordUrl() ?>"><?php echo lang('change password') ?></a></li>
-      <li><a href="<?php echo logged_user()->getUpdateAvatarUrl() ?>"><?php echo lang('update avatar') ?></a></li>
     </ul>
     <p><?php echo lang('more') ?>:</p>
     <ul>

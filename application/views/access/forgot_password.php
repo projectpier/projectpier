@@ -5,6 +5,6 @@
     <?php echo label_tag(lang('email address'), 'forgotPasswordEmail')  ?>
     <?php echo text_field('your_email', $your_email, array('class' => 'long', 'id' => 'forgotPasswordEmail')) ?>
   </div>
-  <input type="hidden" name="submited" value="submited" />
+  <input type="hidden" name="submitted" value="submitted" />
   <div id="forgotPasswordSubmit"><?php echo submit_button(lang('email me my password')) ?><span>(<a href="<?php echo get_url('access', 'login') ?>"><?php echo lang('login') ?></a>)</span></div>
 </form>

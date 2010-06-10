@@ -454,19 +454,11 @@ CREATE TABLE `<?php echo $table_prefix ?>user_im_values` (
 
 CREATE TABLE `<?php echo $table_prefix ?>users` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `company_id` smallint(5) unsigned NOT NULL default '0',
   `username` varchar(50) <?php echo $default_collation ?> NOT NULL default '',
   `email` varchar(100) <?php echo $default_collation ?> default NULL,
   `token` varchar(40) <?php echo $default_collation ?> NOT NULL default '',
   `salt` varchar(13) <?php echo $default_collation ?> NOT NULL default '',
   `twister` varchar(10) <?php echo $default_collation ?> NOT NULL default '',
-  `display_name` varchar(50) <?php echo $default_collation ?> default NULL,
-  `title` varchar(30) <?php echo $default_collation ?> default NULL,
-  `avatar_file` varchar(44) <?php echo $default_collation ?> default NULL,
-  `office_number` varchar(20) <?php echo $default_collation ?> default NULL,
-  `fax_number` varchar(20) <?php echo $default_collation ?> default NULL,
-  `mobile_number` varchar(20) <?php echo $default_collation ?> default NULL,
-  `home_number` varchar(20) <?php echo $default_collation ?> default NULL,
   `timezone` float(3,1) NOT NULL default '0.0',
   `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
   `created_by_id` int(10) unsigned default NULL,
@@ -480,6 +472,5 @@ CREATE TABLE `<?php echo $table_prefix ?>users` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   KEY `last_visit` (`last_visit`),
-  KEY `company_id` (`company_id`),
   KEY `last_login` (`last_login`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;

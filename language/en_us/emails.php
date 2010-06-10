@@ -30,6 +30,7 @@
     'view new ticket' => 'View that ticket',
     
     'user created your account' => '%s created a new account for you',
+    'user updated your account' => '%s updated your account',
     'visit and login' => 'Visit %s and login with',
     
     'milestone assigned' => 'Milestone "%s" has been assigned to you',
