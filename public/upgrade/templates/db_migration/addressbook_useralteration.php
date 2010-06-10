@@ -1,0 +1,9 @@
+ALTER TABLE `<?php echo $table_prefix ?>users`
+  DROP `company_id`,
+  DROP `display_name`,
+  DROP `title`,
+  DROP `avatar_file`,
+  DROP `office_number`,
+  DROP `fax_number`,
+  DROP `mobile_number`,
+  DROP `home_number`;
