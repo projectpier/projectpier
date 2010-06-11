@@ -151,7 +151,7 @@
       
       $rows = mysql_query("SELECT * FROM `$users_table`");
       while ($row = mysql_fetch_assoc($rows)) {
-        if (!mysql_query("INSERT INTO $contacts_table (`company_id` , `user_id` , `email` , `display_name` , `title` , `avatar_file` , `office_number` , `fax_number` , `mobile_number` , `home_number` , `created_on` , `created_by_id` , `updated_on` , `updated_by_id`) VALUES ('".$row['company_id']."',  '".$row['id']."', '".$row['email']."', '".$row['display_name']."', '".$row['title']."', '".$row['avatar_file']."', '".$row['office_number']."', '".$row['fax_number']."' , '".$row['mobile_number']."' , '".$row['home_number']."' , '".$row['created_on']."', '".$row['created_by_id']."', '".$row['updated_on']."', '".$row['updated_by_id']."');")) {
+        if (!mysql_query("INSERT INTO $contacts_table (`company_id` , `user_id` , `email` , `display_name` , `title` , `avatar_file` , `office_number` , `fax_number` , `mobile_number` , `home_number` , `created_on` , `created_by_id` , `updated_on`) VALUES ('".$row['company_id']."',  '".$row['id']."', '".$row['email']."', '".$row['display_name']."', '".$row['title']."', '".$row['avatar_file']."', '".$row['office_number']."', '".$row['fax_number']."' , '".$row['mobile_number']."' , '".$row['home_number']."' , '".$row['created_on']."', '".$row['created_by_id']."', '".$row['updated_on']."');")) {
             
           $this->printMessage("Error while creating contact. Operation aborted. MySQL said: ".mysql_error($this->database_connection), true);
           mysql_query('ROLLBACK');

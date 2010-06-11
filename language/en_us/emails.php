@@ -15,7 +15,7 @@
     'hi john doe' => 'Hi %s',
     
     'user password reseted' => 'Your password has been reset. New password is \'%s\'.',
-    'password unchanged' => 'Your password has been unchanged.',
+    'password unchanged' => 'Your password stays unchanged.',
     
     'dont reply wraning' => 'THIS IS A SYSTEM NOTIFICATION. DO NOT REPLY TO THIS EMAIL!',
     'new message posted' => 'New message "%s" has been posted in the "%s" project',
