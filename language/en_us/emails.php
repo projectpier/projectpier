@@ -7,6 +7,7 @@
     'new comment' => 'New comment',
     'new ticket' => 'New ticket',
     'your account created' => 'Your account has been created',
+    'your account updated' => 'Your account has been updated',
     'your password' => 'Your password',
     'milestone assigned to you' => 'Milestone has been assigned to you',
     
@@ -14,6 +15,7 @@
     'hi john doe' => 'Hi %s',
     
     'user password reseted' => 'Your password has been reset. New password is \'%s\'.',
+    'password unchanged' => 'Your password has been unchanged.',
     
     'dont reply wraning' => 'THIS IS A SYSTEM NOTIFICATION. DO NOT REPLY TO THIS EMAIL!',
     'new message posted' => 'New message "%s" has been posted in the "%s" project',
