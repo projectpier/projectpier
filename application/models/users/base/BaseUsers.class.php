@@ -14,7 +14,7 @@
     * @var array
     * @static
     */
-    static private $columns = array('id' => DATA_TYPE_INTEGER, 'username' => DATA_TYPE_STRING, 'email' => DATA_TYPE_STRING, 'token' => DATA_TYPE_STRING, 'salt' => DATA_TYPE_STRING, 'twister' => DATA_TYPE_STRING, 'timezone' => DATA_TYPE_FLOAT, 'created_on' => DATA_TYPE_DATETIME, 'created_by_id' => DATA_TYPE_INTEGER, 'updated_on' => DATA_TYPE_DATETIME, 'last_login' => DATA_TYPE_DATETIME, 'last_visit' => DATA_TYPE_DATETIME, 'last_activity' => DATA_TYPE_DATETIME, 'is_admin' => DATA_TYPE_BOOLEAN, 'auto_assign' => DATA_TYPE_BOOLEAN);
+    static private $columns = array('id' => DATA_TYPE_INTEGER, 'username' => DATA_TYPE_STRING, 'email' => DATA_TYPE_STRING, 'token' => DATA_TYPE_STRING, 'salt' => DATA_TYPE_STRING, 'twister' => DATA_TYPE_STRING, 'timezone' => DATA_TYPE_FLOAT, 'created_on' => DATA_TYPE_DATETIME, 'created_by_id' => DATA_TYPE_INTEGER, 'updated_on' => DATA_TYPE_DATETIME, 'updated_by_id' => DATA_TYPE_INTEGER, 'last_login' => DATA_TYPE_DATETIME, 'last_visit' => DATA_TYPE_DATETIME, 'last_activity' => DATA_TYPE_DATETIME, 'is_admin' => DATA_TYPE_BOOLEAN, 'auto_assign' => DATA_TYPE_BOOLEAN);
   
     /**
     * Construct
@@ -201,7 +201,7 @@
     * because you can't use associative indexing with list() construct
     *
     * @access public
-    * @param array $arguments Query argumens (@see find()) Limit and offset are ignored!
+    * @param array $arguments Query arguments (@see find()) Limit and offset are ignored!
     * @param integer $items_per_page Number of items per page
     * @param integer $current_page Current page number
     * @return array

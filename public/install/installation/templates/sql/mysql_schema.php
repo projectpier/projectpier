@@ -463,6 +463,7 @@ CREATE TABLE `<?php echo $table_prefix ?>users` (
   `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
   `created_by_id` int(10) unsigned default NULL,
   `updated_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `updated_by_id` int(10) unsigned default NULL,
   `last_login` datetime NOT NULL default '0000-00-00 00:00:00',
   `last_visit` datetime NOT NULL default '0000-00-00 00:00:00',
   `last_activity` datetime NOT NULL default '0000-00-00 00:00:00',
