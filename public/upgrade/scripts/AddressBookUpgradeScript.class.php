@@ -169,11 +169,11 @@
       
       $total_queries = 0;
       $executed_queries = 0;
-      $upgrade_script = tpl_fetch(get_template_path('db_migration/addressbook_useralteration'));
+      $upgrade_script = tpl_fetch(get_template_path('db_migration/addressbook_usercompanyalteration'));
       
       mysql_query('BEGIN WORK');
       if ($this->executeMultipleQueries($upgrade_script, $total_queries, $executed_queries, $this->database_connection)) {
-        $this->printMessage("'Users' table correctly altered (total queries: $total_queries)");
+        $this->printMessage("'Users' and 'Companies' table correctly altered (total queries: $total_queries)");
         mysql_query('COMMIT');
       } else {
         $this->printMessage('Failed to execute DB schema transformations. MySQL said: ' . mysql_error(), true);

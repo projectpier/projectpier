@@ -9,3 +9,4 @@ ALTER TABLE `<?php echo $table_prefix ?>users`
   DROP `home_number`;
   
 ALTER TABLE `<?php echo $table_prefix ?>users` ADD `updated_by_id` INT(10) UNSIGNED NULL AFTER `updated_on`;
+ALTER TABLE `<?php echo $table_prefix ?>companies` ADD `is_favorite` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER  `logo_file`;

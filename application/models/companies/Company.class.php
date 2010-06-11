@@ -246,6 +246,16 @@
     } // isOwner
     
     /**
+    * Returns if company is a favorite
+    *
+    * @param void
+    * @return boolean
+    */
+    function isFavorite() {
+      return $this->getIsFavorite();
+    } // isFavorite
+    
+    /**
     * Check if this company is part of specific project
     *
     * @param Project $project
@@ -508,6 +518,21 @@
     function getDeleteLogoUrl() {
       return get_url('company', 'delete_logo', $this->getId());
     } // getDeleteLogoUrl
+    
+    /**
+    * Return toggle favorite URL
+    *
+    * @param void
+    * @return string
+    */
+    function getToggleFavoriteUrl($redirect_to = null) {
+      $attributes = array('id' => $this->getId());
+      if (trim($redirect_to) <> '') {
+        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
+      } // if
+      
+      return get_url('company', 'toggle_favorite', $attributes);
+    } // getToggleFavoriteUrl
     
     // ---------------------------------------------------
     //  Logo
