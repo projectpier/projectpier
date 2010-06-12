@@ -169,7 +169,7 @@
       $form_data = array_var($_POST, 'form');
       tpl_assign('form_data', $form_data);
       
-      if (array_var($form_data, 'submited') == 'submited') {
+      if (array_var($form_data, 'submitted') == 'submitted') {
         try {
           $admin_password = trim(array_var($form_data, 'admin_password'));
           $admin_password_a = trim(array_var($form_data, 'admin_password_a'));
@@ -190,7 +190,6 @@
           // Create the administrator user
           $administrator = new User();
           $administrator->setId(1);
-          $administrator->setCompanyId(1);
           $administrator->setUsername(array_var($form_data, 'admin_username'));
           $administrator->setEmail(array_var($form_data, 'admin_email'));
           $administrator->setPassword($admin_password);
@@ -199,8 +198,15 @@
           
           $administrator->save();
           
-          // TODO Create the contact for administrator
+          // Create the contact for administrator
           $administrator_contact = new Contact();
+          $administrator_contact->setId(1);
+          $administrator_contact->setCompanyId(1);
+          $administrator_contact->setEmail(array_var($form_data, 'admin_email'));
+          $administrator_contact->setUserId($administrator->getId());
+          $administrator_contact->setDisplayName($administrator->getUsername());
+          
+          $administrator_contact->save();
           
           // Create a company
           $company = new Company();
