@@ -121,6 +121,8 @@
         return false;
       } // if
             
+      mysql_query('BEGIN WORK');
+
       // ---------------------------------------------------
       //  Contact table creation
       // ---------------------------------------------------
@@ -129,10 +131,8 @@
       $executed_queries = 0;
       $upgrade_script = tpl_fetch(get_template_path('db_migration/addressbook_contactcreation'));
       
-      mysql_query('BEGIN WORK');
       if ($this->executeMultipleQueries($upgrade_script, $total_queries, $executed_queries, $this->database_connection)) {
         $this->printMessage("'Contacts' table correctly executed (total queries: $total_queries)");
-        mysql_query('COMMIT');
       } else {
         $this->printMessage('Failed to execute DB schema transformations. MySQL said: ' . mysql_error(), true);
         mysql_query('ROLLBACK');
@@ -147,7 +147,6 @@
       $users_table = TABLE_PREFIX.'users';
       $contacts_table = TABLE_PREFIX.'contacts';
       
-      mysql_query('BEGIN WORK');
       
       $rows = mysql_query("SELECT * FROM `$users_table`");
       while ($row = mysql_fetch_assoc($rows)) {
@@ -160,7 +159,6 @@
         $contacts_created++;
       } // while
       
-      mysql_query('COMMIT');
       $this->printMessage("$contacts_created contacts properly imported.");
 
       // ---------------------------------------------------------------
@@ -169,18 +167,39 @@
       
       $total_queries = 0;
       $executed_queries = 0;
-      $upgrade_script = tpl_fetch(get_template_path('db_migration/addressbook_usercompanyalteration'));
+      $upgrade_script = tpl_fetch(get_template_path('db_migration/addressbook_dbalteration'));
       
-      mysql_query('BEGIN WORK');
       if ($this->executeMultipleQueries($upgrade_script, $total_queries, $executed_queries, $this->database_connection)) {
-        $this->printMessage("'Users' and 'Companies' table correctly altered (total queries: $total_queries)");
-        mysql_query('COMMIT');
+        $this->printMessage("Database tables correctly modified. (total queries: $total_queries)");
       } else {
         $this->printMessage('Failed to execute DB schema transformations. MySQL said: ' . mysql_error(), true);
         mysql_query('ROLLBACK');
         return false;
       } // if
-            
+      
+      // ---------------------------------------------------------------
+      //  Migration of UserIm to ContactIm (change user_id to contact_id)
+      // ---------------------------------------------------------------
+      
+      $contact_im_changed = 0;
+      $contacts_table = TABLE_PREFIX.'contacts';
+      $contact_im_table = TABLE_PREFIX.'contact_im_values';
+      
+      // NB: user_id was renamed contact_id in the previous step
+      $rows = mysql_query("SELECT `$contacts_table`.`id`, `$contact_im_table`.`contact_id`, `$contact_im_table`.`im_type_id` FROM `$contacts_table`, `$contact_im_table` WHERE `$contacts_table`.`user_id` = `$contact_im_table`.`contact_id`");
+      while ($row = mysql_fetch_assoc($rows)) {
+        if (!mysql_query("UPDATE `$contact_im_table` SET `contact_id` = '".$row['id']."' WHERE `contact_id` = '".$row['contact_id']."' AND `im_type_id` = '".$row['im_type_id'])) {
+          $this->printMessage("Error while updating Contact-IM table. Upgrade aborted. MySQL said: ".mysql_error($this->database_connection), true);
+          mysql_query('ROLLBACK');
+          return false;
+        } // if
+        
+        $contact_im_changed++;
+      } // while
+      
+      $this->printMessage("$contact_im_changed contact-IM associations properly imported.");
+
+      mysql_query('COMMIT');
       $this->printMessage('ProjectPier has been patched for Address Book. Enjoy!');
     } // execute
     

@@ -54,6 +54,8 @@
       
       $contact = new Contact();
       
+      $im_types = ImTypes::findAll(array('order' => '`id`'));
+
       $contact_data = array_var($_POST, 'contact');
       if (!is_array($contact_data)) {
         $contact_data = array(
@@ -64,6 +66,7 @@
       tpl_assign('contact', $contact);
       tpl_assign('company', $company);
       tpl_assign('contact_data', $contact_data);
+      tpl_assign('im_types', $im_types);
 
       $avatar = array_var($_FILES, 'new_avatar');
       if (is_array($avatar)) {
@@ -99,6 +102,23 @@
         try {          
           DB::beginWork();
           $contact->save();
+          
+          $contact->clearImValues();
+          foreach ($im_types as $im_type) {
+            $value = trim(array_var($contact_data, 'im_' . $im_type->getId()));
+            if ($value <> '') {
+              
+              $contact_im_value = new ContactImValue();
+              
+              $contact_im_value->setContactId($contact->getId());
+              $contact_im_value->setImTypeId($im_type->getId());
+              $contact_im_value->setValue($value);
+              $contact_im_value->setIsDefault(array_var($contact_data, 'default_im') == $im_type->getId());
+              
+              $contact_im_value->save();
+            } // if
+          } // foreach
+          
           ApplicationLogs::createLog($contact, null, ApplicationLogs::ACTION_ADD);
           DB::commit();
           
@@ -134,6 +154,8 @@
         $this->redirectTo('dashboard');
       } // if
       
+      $im_types = ImTypes::findAll(array('order' => '`id`'));
+      
       $contact_data = array_var($_POST, 'contact');
       $company = $contact->getCompany();
       if (!is_array($contact_data)) {
@@ -147,11 +169,22 @@
           'mobile_number' => $contact->getMobileNumber(),
           'home_number' => $contact->getHomeNumber()
         ); // array
+        
+        if (is_array($im_types)) {
+          foreach ($im_types as $im_type) {
+            $contact_data['im_' . $im_type->getId()] = $contact->getImValue($im_type);
+          } // forech
+        } // if
+        
+        $default_im = $contact->getDefaultImType();
+        $contact_data['default_im'] = $default_im instanceof ImType ? $default_im->getId() : '';
+        
       } // if
       
       tpl_assign('contact', $contact);
       tpl_assign('company', $company);
       tpl_assign('contact_data', $contact_data);
+      tpl_assign('im_types', $im_types);
 
       
       $avatar = array_var($_FILES, 'new_avatar');
@@ -195,6 +228,22 @@
           
           $contact->setFromAttributes($contact_data);
           $contact->save();
+          
+          $contact->clearImValues();
+          foreach ($im_types as $im_type) {
+            $value = trim(array_var($contact_data, 'im_' . $im_type->getId()));
+            if ($value <> '') {
+              
+              $contact_im_value = new ContactImValue();
+              
+              $contact_im_value->setContactId($contact->getId());
+              $contact_im_value->setImTypeId($im_type->getId());
+              $contact_im_value->setValue($value);
+              $contact_im_value->setIsDefault(array_var($contact_data, 'default_im') == $im_type->getId());
+              
+              $contact_im_value->save();
+            } // if
+          } // foreach
           
           ApplicationLogs::createLog($contact, null, ApplicationLogs::ACTION_ADD);
           DB::commit();

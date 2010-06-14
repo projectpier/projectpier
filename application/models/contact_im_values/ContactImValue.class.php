@@ -1,12 +1,12 @@
 <?php
 
   /**
-  * UserImValue class
+  * ContactImValue class
   * Generated on Wed, 22 Mar 2006 15:37:58 +0100 by DataObject generation tool
   *
   * @http://www.projectpier.org/
   */
-  class UserImValue extends BaseUserImValue {
+  class ContactImValue extends BaseContactImValue {
   
     /**
     * Return IM type
@@ -20,16 +20,16 @@
     } // getImType
     
     /**
-    * Return user
+    * Return contact
     *
     * @access public
     * @param void
-    * @return User
+    * @return Contact
     */
-    function getUser() {
-      return Users::findById($this->getUserId());
-    } // getUser
+    function getContact() {
+      return Contacts::findById($this->getContactId());
+    } // getContact
     
-  } // UserImValue 
+  } // ContactImValue 
 
 ?>

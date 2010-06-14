@@ -1,37 +1,37 @@
 <?php
 
   /**
-  * BaseUserImValue class
+  * BaseContactImValue class
   *
   * @http://www.projectpier.org/
   */
-  abstract class BaseUserImValue extends DataObject {
+  abstract class BaseContactImValue extends DataObject {
   
     // -------------------------------------------------------
     //  Access methods
     // -------------------------------------------------------
   
     /**
-    * Return value of 'user_id' field
+    * Return value of 'contact_id' field
     *
     * @access public
     * @param void
     * @return integer 
     */
-    function getUserId() {
-      return $this->getColumnValue('user_id');
-    } // getUserId()
+    function getContactId() {
+      return $this->getColumnValue('contact_id');
+    } // getContactId()
     
     /**
-    * Set value of 'user_id' field
+    * Set value of 'contact_id' field
     *
     * @access public   
     * @param integer $value
     * @return boolean
     */
-    function setUserId($value) {
-      return $this->setColumnValue('user_id', $value);
-    } // setUserId() 
+    function setContactId($value) {
+      return $this->setColumnValue('contact_id', $value);
+    } // setContactId() 
     
     /**
     * Return value of 'im_type_id' field
@@ -105,15 +105,15 @@
     *
     * @access protected
     * @param void
-    * @return UserImValues 
+    * @return ContactImValues 
     */
     function manager() {
-      if (!($this->manager instanceof UserImValues)) {
-        $this->manager = UserImValues::instance();
+      if (!($this->manager instanceof ContactImValues)) {
+        $this->manager = ContactImValues::instance();
       }
       return $this->manager;
     } // manager
   
-  } // BaseUserImValue 
+  } // BaseContactImValue 
 
 ?>

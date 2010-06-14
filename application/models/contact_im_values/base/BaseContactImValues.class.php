@@ -2,11 +2,11 @@
 
   
   /**
-  * UserImValues class
+  * ContactImValues class
   *
   * @http://www.projectpier.org/
   */
-  abstract class BaseUserImValues extends DataManager {
+  abstract class BaseContactImValues extends DataManager {
   
     /**
     * Column name => Column type map
@@ -14,15 +14,15 @@
     * @var array
     * @static
     */
-    static private $columns = array('user_id' => DATA_TYPE_INTEGER, 'im_type_id' => DATA_TYPE_INTEGER, 'value' => DATA_TYPE_STRING, 'is_default' => DATA_TYPE_BOOLEAN);
+    static private $columns = array('contact_id' => DATA_TYPE_INTEGER, 'im_type_id' => DATA_TYPE_INTEGER, 'value' => DATA_TYPE_STRING, 'is_default' => DATA_TYPE_BOOLEAN);
   
     /**
     * Construct
     *
-    * @return BaseUserImValues 
+    * @return BaseContactImValues 
     */
     function __construct() {
-      parent::__construct('UserImValue', 'user_im_values', true);
+      parent::__construct('ContactImValue', 'contact_im_values', true);
     } // __construct
     
     // -------------------------------------------------------
@@ -64,13 +64,13 @@
     */
     function getPkColumns() {
       return array (
-  0 => 'user_id',
+  0 => 'contact_id',
   1 => 'im_type_id',
 );
     } // getPkColumns
     
     /**
-    * Return name of first auto_incremenent column if it exists
+    * Return name of first auto_increment column if it exists
     *
     * @access public
     * @param void
@@ -96,15 +96,15 @@
     *  - offset - limit offset, valid only if limit is present
     *  - limit
     * 
-    * @return one or UserImValues objects
+    * @return one or ContactImValues objects
     * @throws DBQueryError
     */
     function find($arguments = null) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::find($arguments);
       } else {
-        return UserImValues::instance()->find($arguments);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->find($arguments);
+        //$instance =& ContactImValues::instance();
         //return $instance->find($arguments);
       } // if
     } // find
@@ -114,14 +114,14 @@
     *
     * @access public
     * @param array $arguments
-    * @return one or UserImValues objects
+    * @return one or ContactImValues objects
     */
     function findAll($arguments = null) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::findAll($arguments);
       } else {
-        return UserImValues::instance()->findAll($arguments);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->findAll($arguments);
+        //$instance =& ContactImValues::instance();
         //return $instance->findAll($arguments);
       } // if
     } // findAll
@@ -131,14 +131,14 @@
     *
     * @access public
     * @param array $arguments
-    * @return UserImValue 
+    * @return ContactImValue 
     */
     function findOne($arguments = null) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::findOne($arguments);
       } else {
-        return UserImValues::instance()->findOne($arguments);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->findOne($arguments);
+        //$instance =& ContactImValues::instance();
         //return $instance->findOne($arguments);
       } // if
     } // findOne
@@ -149,14 +149,14 @@
     * @access public
     * @param mixed $id
     * @param boolean $force_reload If true cache will be skipped and data will be loaded from database
-    * @return UserImValue 
+    * @return ContactImValue 
     */
     function findById($id, $force_reload = false) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::findById($id, $force_reload);
       } else {
-        return UserImValues::instance()->findById($id, $force_reload);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->findById($id, $force_reload);
+        //$instance =& ContactImValues::instance();
         //return $instance->findById($id, $force_reload);
       } // if
     } // findById
@@ -169,11 +169,11 @@
     * @return integer
     */
     function count($condition = null) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::count($condition);
       } else {
-        return UserImValues::instance()->count($condition);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->count($condition);
+        //$instance =& ContactImValues::instance();
         //return $instance->count($condition);
       } // if
     } // count
@@ -186,11 +186,11 @@
     * @return boolean
     */
     function delete($condition = null) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::delete($condition);
       } else {
-        return UserImValues::instance()->delete($condition);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->delete($condition);
+        //$instance =& ContactImValues::instance();
         //return $instance->delete($condition);
       } // if
     } // delete
@@ -204,17 +204,17 @@
     * because you can't use associative indexing with list() construct
     *
     * @access public
-    * @param array $arguments Query argumens (@see find()) Limit and offset are ignored!
+    * @param array $arguments Query arguments (@see find()) Limit and offset are ignored!
     * @param integer $items_per_page Number of items per page
     * @param integer $current_page Current page number
     * @return array
     */
     function paginate($arguments = null, $items_per_page = 10, $current_page = 1) {
-      if (isset($this) && instance_of($this, 'UserImValues')) {
+      if (isset($this) && instance_of($this, 'ContactImValues')) {
         return parent::paginate($arguments, $items_per_page, $current_page);
       } else {
-        return UserImValues::instance()->paginate($arguments, $items_per_page, $current_page);
-        //$instance =& UserImValues::instance();
+        return ContactImValues::instance()->paginate($arguments, $items_per_page, $current_page);
+        //$instance =& ContactImValues::instance();
         //return $instance->paginate($arguments, $items_per_page, $current_page);
       } // if
     } // paginate
@@ -222,16 +222,16 @@
     /**
     * Return manager instance
     *
-    * @return UserImValues 
+    * @return ContactImValues 
     */
     function instance() {
       static $instance;
-      if (!instance_of($instance, 'UserImValues')) {
-        $instance = new UserImValues();
+      if (!instance_of($instance, 'ContactImValues')) {
+        $instance = new ContactImValues();
       } // if
       return $instance;
     } // instance
   
-  } // UserImValues 
+  } // ContactImValues 
 
 ?>

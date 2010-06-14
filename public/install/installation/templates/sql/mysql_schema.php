@@ -444,12 +444,12 @@ CREATE TABLE `<?php echo $table_prefix ?>ticket_subscriptions` (
   PRIMARY KEY  (`ticket_id`,`user_id`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
 
-CREATE TABLE `<?php echo $table_prefix ?>user_im_values` (
-  `user_id` int(10) unsigned NOT NULL default '0',
+CREATE TABLE `<?php echo $table_prefix ?>contact_im_values` (
+  `contact_id` int(10) unsigned NOT NULL default '0',
   `im_type_id` tinyint(3) unsigned NOT NULL default '0',
   `value` varchar(50) <?php echo $default_collation ?> NOT NULL default '',
   `is_default` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`,`im_type_id`),
+  PRIMARY KEY  (`contact_id`,`im_type_id`),
   KEY `is_default` (`is_default`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
 

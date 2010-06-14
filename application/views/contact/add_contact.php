@@ -97,5 +97,27 @@
     
   </fieldset>
 
+  <?php if (is_array($im_types) && count($im_types)) { ?>
+    <fieldset>
+      <legend><?php echo lang('instant messengers') ?></legend>
+      <table class="blank">
+        <tr>
+          <th colspan="2"><?php echo lang('im service') ?></th>
+          <th><?php echo lang('value') ?></th>
+          <th><?php echo lang('primary im service') ?></th>
+        </tr>
+  <?php foreach ($im_types as $im_type) { ?>
+        <tr>
+          <td style="vertical-align: middle"><img src="<?php echo $im_type->getIconUrl() ?>" alt="<?php echo $im_type->getName() ?> icon" /></td>
+          <td style="vertical-align: middle"><label class="checkbox" for="<?php echo 'profileFormIm' . $im_type->getId() ?>"><?php echo $im_type->getName() ?></label></td>
+          <td style="vertical-align: middle"><?php echo text_field('contact[im_' . $im_type->getId() . ']', array_var($contact_data, 'im_' . $im_type->getId()), array('id' => 'profileFormIm' . $im_type->getId())) ?></td>
+          <td style="vertical-align: middle"><?php echo radio_field('contact[default_im]', array_var($contact_data, 'default_im') == $im_type->getId(), array('value' => $im_type->getId())) ?></td>
+        </tr>
+  <?php } // foreach ?>
+      </table>
+      <p class="desc"><?php echo lang('primary im description') ?></p>
+    </fieldset>
+  <?php } // if ?>
+
   <?php echo submit_button($contact->isNew() ? lang('add contact') : lang('edit contact')) ?>
 </form>

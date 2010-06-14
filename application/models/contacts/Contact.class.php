@@ -323,7 +323,7 @@
     * @return boolean
     */
     function hasImValue() {
-      return UserImValues::count('`user_id` = ' . DB::escape($this->getId()));
+      return ContactImValues::count('`contact_id` = ' . DB::escape($this->getId()));
     } // hasImValue
     
     /**
@@ -334,7 +334,7 @@
     * @return array
     */
     function getImValues() {
-      return UserImValues::getByUser($this);
+      return ContactImValues::getByContact($this);
     } // getImValues
     
     /**
@@ -345,8 +345,8 @@
     * @return string
     */
     function getImValue(ImType $im_type) {
-      $im_value = UserImValues::findById(array('user_id' => $this->getId(), 'im_type_id' => $im_type->getId()));
-      return $im_value instanceof UserImValue && (trim($im_value->getValue()) <> '') ? $im_value->getValue() : null;
+      $im_value = ContactImValues::findById(array('contact_id' => $this->getId(), 'im_type_id' => $im_type->getId()));
+      return $im_value instanceof ContactImValue && (trim($im_value->getValue()) <> '') ? $im_value->getValue() : null;
     } // getImValue
     
     /**
@@ -362,14 +362,14 @@
     } // getDefaultImValue
     
     /**
-    * Return default user IM type. If there is no default user IM type NULL is returned
+    * Return default contact IM type. If there is no default contact IM type NULL is returned
     *
     * @access public
     * @param void
     * @return ImType
     */
     function getDefaultImType() {
-      return UserImValues::getDefaultUserImType($this);
+      return ContactImValues::getDefaultContactImType($this);
     } // getDefaultImType
     
     /**
@@ -380,7 +380,7 @@
     * @return boolean
     */
     function clearImValues() {
-      return UserImValues::instance()->clearByUser($this);
+      return ContactImValues::instance()->clearByContact($this);
     } // clearImValues
     
     // ---------------------------------------------------
