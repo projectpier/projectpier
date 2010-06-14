@@ -58,11 +58,13 @@
       lang('my tickets'),
       get_url('dashboard', 'my_tickets')
       ));
-    add_tabbed_navigation_item(new TabbedNavigationItem(
-      DASHBOARD_TAB_CONTACTS,
-      lang('contacts'),
-      get_url('dashboard', 'contacts')
-      ));
+    if (logged_user()->isMemberOfOwnerCompany()) {
+      add_tabbed_navigation_item(new TabbedNavigationItem(
+        DASHBOARD_TAB_CONTACTS,
+        lang('contacts'),
+        get_url('dashboard', 'contacts')
+        ));
+    }
     add_tabbed_navigation_item(new TabbedNavigationItem(
       DASHBOARD_TAB_WEEKLY_SCHEDULE,
       lang('weekly schedule'),

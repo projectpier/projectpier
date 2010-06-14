@@ -95,6 +95,10 @@
       * @return null
       */
     function contacts() {
+      if (!logged_user()->isMemberOfOwnerCompany()) {
+        flash_error(lang('no access permissions'));
+        $this->redirectTo('dashboard');
+      }
       // TODO write controller code
     } // contacts
 
