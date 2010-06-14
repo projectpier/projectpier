@@ -1039,17 +1039,18 @@
         return false;
       } // if
       
-      $this->deleteAvatar();
-      if ($this->hasUserAccount()) {
-        $this->getUserAccount()->delete();
-      }
       // TODO check all things that need to be deleted
-      // IM accounts
       // ticket subscriptions
       // message subscriptions
       // project-user association
+
+      $this->deleteAvatar();
+      $this->clearImValues();
       ProjectUsers::clearByUser($this);
       MessageSubscriptions::clearByUser($this);
+      if ($this->hasUserAccount()) {
+        $this->getUserAccount()->delete();
+      }
       return parent::delete();
     } // delete
     
