@@ -109,7 +109,26 @@
       * @return null
       */
     function weekly_schedule() {
-      // TODO write controller code
+      $this->addHelper('textile');
+      // Gets desired view 'detail', 'list' or 'calendar'
+      // $view_type is from URL, Cookie or set to default: 'calendar'
+      $view_type = array_var($_GET, 'view', Cookie::getValue('weeklyScheduleViewType', 'calendar'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('weeklyScheduleViewType', $view_type, $expiration);
+      
+      $monthYear = array_var($_GET, 'month');
+      if (!isset($monthYear) || trim($monthYear) == '' || preg_match('/^(\d{4})(\d{2})$/', $monthYear, $matches) == 0) {
+        $year = gmdate('Y');
+        $month = gmdate('m');
+      } else {
+        list(, $year, $month) = $matches;
+      }
+      tpl_assign('year', $year);
+      tpl_assign('month', $month);
+
+      tpl_assign('view_type', $view_type);
+      tpl_assign('all_visible_milestones', logged_user()->getActiveMilestones());
+      tpl_assign('late_milestones', logged_user()->getLateMilestones());
     } // weekly_schedule
 
     
