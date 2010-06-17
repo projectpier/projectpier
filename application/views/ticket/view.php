@@ -46,6 +46,19 @@
       <td><?php echo lang($ticket->getPriority()); ?></td>
     </tr>
     <tr>
+      <th><?php echo lang('due date') ?></th>
+      <td><?php echo $ticket->getDueDate()->format("m/d/Y"); ?></td>
+      <th><?php echo lang('milestone') ?></th>
+      <td>
+<?php if ($ticket->getMilestoneId()) {
+  $milestone = ProjectMilestones::findById($ticket->getMilestoneId());
+  ?>
+        <a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> (<?php echo format_datetime($milestone->getDueDate()) ?>)
+<?php } else {
+  echo lang('none');
+} ?>
+      </td>
+    <tr>
       <th><?php echo lang('type') ?></th>
       <td><?php echo lang($ticket->getType()); ?></td>
       <th><?php echo lang('category') ?></th>
@@ -65,16 +78,6 @@
 <?php } else { ?>
           <?php echo lang('none') ?>
 <?php } // if ?>
-      </td>
-      <th><?php echo lang('milestone') ?></th>
-      <td>
-<?php if ($ticket->getMilestoneId()) {
-  $milestone = ProjectMilestones::findById($ticket->getMilestoneId());
-  ?>
-        <a href="<?php echo $milestone->getViewUrl() ?>"><?php echo clean($milestone->getName()) ?></a> (<?php echo format_datetime($milestone->getDueDate()) ?>)
-<?php } else {
-  echo lang('none');
-} ?>        
       </td>
     </tr>
   </table>

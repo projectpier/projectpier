@@ -72,6 +72,15 @@
         }
           ?>"><?php echo lang("priority") ?></a>
     </th>
+    <th width="60" align="center">
+      <a href="<?php
+        if ($params['sort_by']=='due_date' && $params['order']=='ASC') {
+          echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'due_date', 'order' =>'DESC')));
+        } else {
+          echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'due_date', 'order' => 'ASC')));
+        }
+          ?>"><?php echo lang("due date") ?></a>
+    </th>
   </tr>
 <?php foreach($tickets as $ticket) { ?>
   <tr class="<?php echo $ticket->getPriority(); ?>">
@@ -91,6 +100,7 @@
     </td>
     <td><?php echo $ticket->getStatus(); ?></td>
     <td><?php echo $ticket->getPriority(); ?></td>
+    <td><?php echo $ticket->getDueDate()->format("m/d/Y"); ?></td>
   </tr>
 <?php } // foreach ?>
   </table>

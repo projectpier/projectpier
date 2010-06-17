@@ -54,6 +54,11 @@
     <?php echo select_ticket_priority("ticket[priority]", array_var($ticket_data, 'priority'), array('id' => 'ticketFormPriority')) ?>
   </div>
 <?php } // if?>
+<div>
+  <?php echo label_tag(lang('due date'), null) ?>
+  <?php echo pick_date_widget('ticket_due_date', array_var($ticket_data, 'due_date')) ?>
+</div>
+
 
 <?php if ($ticket->isNew()) { ?>
   <div>

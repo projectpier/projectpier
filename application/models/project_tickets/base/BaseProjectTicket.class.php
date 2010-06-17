@@ -298,6 +298,29 @@
     } // setPriority() 
     
     /**
+    * Return value of 'due_date' field
+    *
+    * @access public
+    * @param void
+    * @return DateTimeValue
+    */
+    function getDueDate() {
+      return $this->getColumnValue('due_date');
+    } // getDueDate()
+    
+    /**
+    * Set value of 'due_date' field
+    *
+    * @access public
+    * @param DateTimeValue $value
+    * @return boolean
+    */
+    function setDueDate($value) {
+      return $this->setColumnValue('due_date', $value);
+    } // setDueDate()
+    
+
+    /**
     * Return value of 'created_on' field
     *
     * @access public

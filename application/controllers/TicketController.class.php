@@ -148,6 +148,7 @@
         'summary' => $ticket->getSummary(),
         'description' => $ticket->getDescription(),
         'priority' => $ticket->getPriority(),
+        'due_date' => $ticket->getDueDate(),
         'type' => $ticket->getType(),
         'category_id' => $ticket->getCategoryId(),
         'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId()
@@ -268,7 +269,8 @@
       $ticket_data = array_var($_POST, 'ticket');
       if (!is_array($ticket_data)) {
         $ticket_data = array(
-          'milestone_id' => array_var($_GET, 'milestone_id')
+          'milestone_id' => array_var($_GET, 'milestone_id'),
+          'due_date' => DateTimeValueLib::now(),
         ); // array
       } // if
       tpl_assign('ticket', $ticket);
@@ -276,6 +278,7 @@
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'ticket'))) {
+        $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
         try {
           $uploaded_files = ProjectFiles::handleHelperUploads(active_project());
         } catch (Exception $e) {
@@ -384,6 +387,7 @@
           'is_private' => $ticket->isPrivate(),
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
+          'due_date' => $ticket->getDueDate(),
         ); // array
       } // if
       
@@ -394,16 +398,19 @@
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'ticket'))) {
+        $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
         $old_fields = array(
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
-          'private' => $ticket->isPrivate()
+          'private' => $ticket->isPrivate(),
+          'due date' => $ticket->getDueDate()
           );
 
         try {
           $ticket->setSummary(array_var($ticket_data, 'summary'));
           $ticket->setDescription(array_var($ticket_data, 'description'));
           $ticket->setIsPrivate((boolean) array_var($ticket_data, 'is_private', $ticket->isPrivate()));
+          $ticket->setDueDate(array_var($ticket_data, 'due_date'));
           $ticket->setUpdated('settings');
 
           // Options are reserved only for members of owner company
@@ -420,7 +427,8 @@
           $new_fields = array(
             'summary' => $ticket->getSummary(),
             'description' => $ticket->getDescription(),
-            'private' => $ticket->isPrivate()
+            'private' => $ticket->isPrivate(),
+            'due date' => $ticket->getDueDate()
             );
           
           $changeset = new TicketChangeset();
@@ -431,8 +439,20 @@
             if ($old_field === $new_field) {
               continue;
             }
-            $from_data = ($old_field instanceof ApplicationDataObject) ? $old_field->getObjectName() : $old_field;
-            $to_data = ($new_field instanceof ApplicationDataObject) ? $new_field->getObjectName() : $new_field;
+            if ($old_field instanceof ApplicationDataObject) {
+              $from_data = $old_field->getObjectName();
+            } elseif ($old_field instanceof DateTimeValue) {
+              $from_data = $old_field->format('m/d/Y');
+            } else {
+              $from_data = $old_field;
+            }
+            if ($new_field instanceof ApplicationDataObject) {
+              $to_data = $new_field->getObjectName();
+            } elseif ($new_field instanceof DateTimeValue) {
+              $to_data = $new_field->format('m/d/Y');
+            } else {
+              $to_data = $new_field;
+            }
 
             $change = new TicketChange();
             $change->setChangesetId($changeset->getId());

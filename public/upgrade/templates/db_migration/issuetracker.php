@@ -18,6 +18,7 @@ CREATE TABLE `<?php echo $table_prefix ?>project_tickets` (
   `type` enum('defect','enhancement','feature request') <?php echo $default_collation ?> NOT NULL default 'defect',
   `description` text <?php echo $default_collation ?>,
   `priority` enum('critical','major','minor','trivial') <?php echo $default_collation ?> NOT NULL default 'major',
+  `due_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `is_private` tinyint(1) NOT NULL default '0',
   `closed_on` datetime NOT NULL default '0000-00-00 00:00:00',
   `closed_by_id` int(10) default NULL,
@@ -28,6 +29,7 @@ CREATE TABLE `<?php echo $table_prefix ?>project_tickets` (
   `updated` enum('settings','comment','attachment','open','closed') <?php echo $default_collation ?> default NULL,
   PRIMARY KEY  (`id`),
   KEY `created_on` (`created_on`),
+  KEY `due_date` (`due_date`),
   KEY `closed_on` (`closed_on`),
   KEY `project_id` (`project_id`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
