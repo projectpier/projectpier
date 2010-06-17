@@ -402,7 +402,7 @@
         $old_fields = array(
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
-          'private' => $ticket->isPrivate(),
+          'private' => $ticket->isPrivate()?"private":"public",
           'due date' => $ticket->getDueDate()
           );
 
@@ -427,7 +427,7 @@
           $new_fields = array(
             'summary' => $ticket->getSummary(),
             'description' => $ticket->getDescription(),
-            'private' => $ticket->isPrivate(),
+            'private' => $ticket->isPrivate()?"private":"public",
             'due date' => $ticket->getDueDate()
             );
           

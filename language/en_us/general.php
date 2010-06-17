@@ -57,6 +57,8 @@
     'by' => 'By',
     'on' => 'On',
     'in' => 'In',
+    'true' => 'True',
+    'false' => 'False',
     'people' => 'People',
     'permission' => 'Permission',
     'permissions' => 'Permissions',
@@ -107,6 +109,7 @@
     'hint' => 'Hint',
     'order' => 'Order',
     'private' => 'Private',
+    'public' => 'Public',
     
     'project calendar' => '%s calendar',
     'user calendar' => '%s\'s calendar',

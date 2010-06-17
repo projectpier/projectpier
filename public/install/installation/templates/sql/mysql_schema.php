@@ -430,7 +430,7 @@ CREATE TABLE `<?php echo $table_prefix ?>ticket_changesets` (
 CREATE TABLE `<?php echo $table_prefix ?>ticket_changes` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `changeset_id` int(11) unsigned NOT NULL default '0',
-  `type` enum('status','priority','assigned to','summary','category','type','private','comment','attachment','milestone') <?php echo $default_collation ?> NOT NULL,
+  `type` varchar(50) <?php echo $default_collation ?> NOT NULL,
   `from_data` varchar(255) <?php echo $default_collation ?> NOT NULL default '',
   `to_data` varchar(255) <?php echo $default_collation ?> NOT NULL default '',
   `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
