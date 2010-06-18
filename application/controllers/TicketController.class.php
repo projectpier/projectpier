@@ -659,6 +659,8 @@
     * @return null
     */
     function delete() {
+      $this->setTemplate('del_ticket');
+      
       $ticket = ProjectTickets::findById(get_id());
       if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
@@ -670,20 +672,45 @@
         $this->redirectTo('ticket');
       } // if
       
-      try {
-        
-        DB::beginWork();
-        $ticket->delete();
-        ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_DELETE);
-        DB::commit();
-        
-        flash_success(lang('success deleted ticket', $ticket->getSummary()));
-      } catch(Exception $e) {
-        DB::rollback();
+      $delete_data = array_var($_POST, 'deleteTicket');
+      tpl_assign('ticket', $ticket);
+      tpl_assign('delete_data', $delete_data);
+
+      if (!is_array($delete_data)) {
+        $delete_data = array(
+          'really' => 0,
+          'password' => '',
+          ); // array
+        tpl_assign('delete_data', $delete_data);
+      } else if ($delete_data['really'] == 1) {
+        $password = $delete_data['password'];
+        if (trim($password) == '') {
+          tpl_assign('error', new Error(lang('password value missing')));
+          return $this->render();
+        }
+        if (!logged_user()->isValidPassword($password)) {
+          tpl_assign('error', new Error(lang('invalid password')));
+          return $this->render();
+        }
+        try {
+
+          DB::beginWork();
+          $ticket->delete();
+          ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_DELETE);
+          DB::commit();
+
+          flash_success(lang('success deleted ticket', $ticket->getSummary()));
+        } catch (Exception $e) {
+          DB::rollback();
+          flash_error(lang('error delete ticket'));
+        } // try
+
+        $this->redirectToUrl($ticket->getViewUrl());
+      } else {
         flash_error(lang('error delete ticket'));
-      } // try
-      
-      $this->redirectTo('ticket');
+        $this->redirectToUrl($ticket->getViewUrl());
+      } // if
+
     } // delete
     
     /**

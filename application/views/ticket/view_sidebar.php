@@ -37,7 +37,7 @@
   </div>
   <div class="messageOptions">
 <?php if($ticket->canDelete(logged_user())) { ?>
-    <a href="<?php echo $ticket->getDeleteUrl() ?>" onclick="return confirm('<?php echo lang('confirm delete ticket') ?>')"><?php echo lang('delete') ?></a>
+    <a href="<?php echo $ticket->getDeleteUrl() ?>"><?php echo lang('delete') ?></a>
 <?php } // if ?>
   </div>
 </div>
