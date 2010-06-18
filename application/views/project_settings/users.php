@@ -1,11 +1,13 @@
 <?php
 
-  set_page_title(lang('people'));
-  project_tabbed_navigation(PROJECT_TAB_PEOPLE);
-  project_crumbs(lang('people'));
+  set_page_title(lang('users'));
+  project_tabbed_navigation(PROJECT_TAB_SETTINGS);
+  project_crumbs(array(
+    array(lang('settings'), get_url('project_settings')),
+    lang('users')));
   
   if (active_project()->canChangePermissions(logged_user())) {
-    add_page_action(lang('permissions'), get_url('project', 'permissions'));
+    add_page_action(lang('permissions'), get_url('project_settings', 'permissions'));
   } // if
   
   add_stylesheet_to_page('project/people.css');
@@ -81,5 +83,5 @@
 <?php } // if ?>
 
 <?php if (active_project()->canChangePermissions(logged_user())) { ?>
-<div class="hint"><?php echo lang('project permissions form hint', '') ?></div>
+<div class="hint"><?php echo lang('project permissions form hint', get_url('project_settings', 'permissions')) ?></div>
 <?php } // if ?>

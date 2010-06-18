@@ -1383,7 +1383,7 @@
     * @return string
     */
     function getPermissionsUrl() {
-      return get_url('project', 'permissions', array('active_project' => $this->getId()));
+      return get_url('project_settings', 'permissions', array('active_project' => $this->getId()));
     } // getPermissionsUrl
     
     /**

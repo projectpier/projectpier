@@ -29,6 +29,7 @@
   define('PROJECT_TAB_TAGS', 'tags');
   define('PROJECT_TAB_FORMS', 'forms');
   define('PROJECT_TAB_PEOPLE', 'people');
+  define('PROJECT_TAB_SETTINGS', 'project_settings');
 
   /**
   * Prepare dashboard tabbed navigation
@@ -84,6 +85,13 @@
       lang('people'),
       get_url('project', 'people')
     ));
+    if (logged_user()->isAdministrator()) {
+      add_tabbed_navigation_item(new TabbedNavigationItem(
+        PROJECT_TAB_SETTINGS,
+        lang('settings'),
+        get_url('project_settings', 'users')
+      ));
+    } // if
     tabbed_navigation_set_selected($selected);
   } // project_tabbed_navigation
 

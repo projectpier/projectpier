@@ -1,9 +1,10 @@
 <?php
 
   set_page_title(lang('permissions'));
-  project_tabbed_navigation(PROJECT_TAB_PEOPLE);
+  project_tabbed_navigation(PROJECT_TAB_SETTINGS);
   project_crumbs(array(
-    array(lang('people'), get_url('project', 'people')),
+    array(lang('settings'), get_url('project_settings')),
+    array(lang('users'), get_url('project_settings', 'users')),
     array(lang('permissions'))
   ));
   add_stylesheet_to_page('project/permissions.css');
@@ -22,7 +23,7 @@
 </script>
 
 <?php if (isset($companies) && is_array($companies) && count($companies)) { ?>
-<form action="<?php echo get_url('project', 'permissions') ?>" method="post">
+<form action="<?php echo get_url('project_settings', 'permissions') ?>" method="post">
 <div id="projectCompanies">
 <?php foreach ($companies as $company) { ?>
 <?php if ($company->countUsers() > 0) { ?>
@@ -93,7 +94,7 @@
 <?php } // if ?>
 <?php } // foreach ?>
 
-<?php echo submit_button(lang('update people')) ?>
+<?php echo submit_button(lang('update permissions')) ?>
   <input type="hidden" name="process" value="process" />
 </div>
 </form>
