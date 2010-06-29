@@ -89,7 +89,7 @@
       add_tabbed_navigation_item(new TabbedNavigationItem(
         PROJECT_TAB_SETTINGS,
         lang('settings'),
-        get_url('project_settings', 'users')
+        get_url('project_settings')
       ));
     } // if
     tabbed_navigation_set_selected($selected);

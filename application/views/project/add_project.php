@@ -9,9 +9,9 @@
     ));
   } else {
     set_page_title(lang('edit project'));
-    administration_tabbed_navigation(ADMINISTRATION_TAB_PROJECTS);
-    administration_crumbs(array(
-      array(lang('projects'), get_url('administration', 'projects')),
+    project_tabbed_navigation(PROJECT_TAB_SETTINGS);
+    project_crumbs(array(
+      array(lang('settings'), get_url('project_settings')),
       array(lang('edit project'))
     ));
   } // if

@@ -293,8 +293,8 @@
           DB::commit();
           
           flash_success(lang('success edit project', $project->getName()));
-          $this->redirectToUrl($project->getOverviewUrl());
-        } catch(Exception $e) {
+          $this->redirectToUrl($project->getSettingsUrl());
+        } catch (Exception $e) {
           DB::rollback();
           tpl_assign('error', $e);
         } // try

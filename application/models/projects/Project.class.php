@@ -1406,6 +1406,16 @@
     } // getPeopleUrl
     
     /**
+    * Return project settings page URL
+    *
+    * @param void
+    * @return string
+    */
+    function getSettingsUrl() {
+      return get_url('project_settings', 'index', array('active_project' => $this->getId()));
+    } // getSettingsUrl
+    
+    /**
     * Return project permissions page URL
     *
     * @param void

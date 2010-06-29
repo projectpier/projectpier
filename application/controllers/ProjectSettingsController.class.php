@@ -34,7 +34,11 @@
     * @return null
     */
     function index() {
-      $this->redirectTo('project_settings', 'users');
+      if (!active_project()->canChangePermissions(logged_user()) && !logged_user()->isAdministrator() && !active_project()->canEdit(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectTo('dashboard');
+      } // if
+      tpl_assign('project', active_project());
     } // index
     
     /**
