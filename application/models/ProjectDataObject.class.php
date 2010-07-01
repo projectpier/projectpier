@@ -722,6 +722,16 @@
       return true;
     } // onAttachFiles
     
+    /**
+    * This event is triggered when we detach files
+    *
+    * @param array $files
+    * @return boolean
+    */
+    function onDetachFiles($files) {
+      return true;
+    } // onDetachFiles
+    
     // ---------------------------------------------------
     //  Subscribible
     // ---------------------------------------------------

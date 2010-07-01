@@ -827,6 +827,7 @@
         DB::beginWork();
         $attached_file->delete();
         DB::commit();
+        $object->onDetachFiles(array($attached_file->getFile()));
         flash_success(lang('success detach file'));
       } catch(Exception $e) {
         flash_error(lang('error detach file'));

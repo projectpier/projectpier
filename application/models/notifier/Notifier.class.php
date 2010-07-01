@@ -127,20 +127,20 @@
     * @throws NotifierConnectionError
     */
     static function ticket(ProjectTicket $ticket, $people, $template, $user) {
-      if(!is_array($people) || !count($people)) {
+      if (!is_array($people) || !count($people)) {
         return; // nothing here...
       } // if
 
       $recipients = array();
-      foreach($people as $subscriber) {
-        if($subscriber->getId() == $user->getId()) {
+      foreach ($people as $subscriber) {
+        if ($subscriber->getId() == $user->getId()) {
           continue; // skip comment author
         } // if
 
         $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
       } // foreach
 
-      if(!count($recipients)) {
+      if (!count($recipients)) {
         return true; // no recipients
       } // if
 
@@ -164,20 +164,20 @@
     */
     static function attachFilesToTicket(ProjectTicket $ticket, $attached_files) {
       $all_subscribers = $ticket->getSubscribers();
-      if(!is_array($all_subscribers)) {
+      if (!is_array($all_subscribers)) {
         return true; // no subscribers
       } // if
       
       $recipients = array();
-      foreach($all_subscribers as $subscriber) {
-        if($subscriber->getId() == $ticket->getUpdatedById()) {
+      foreach ($all_subscribers as $subscriber) {
+        if ($subscriber->getId() == $ticket->getUpdatedById()) {
           continue; // skip comment author
         } // if
         
         $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
       } // foreach
       
-      if(!count($recipients)) {
+      if (!count($recipients)) {
         return true; // no recipients
       } // if
       
@@ -191,6 +191,44 @@
         tpl_fetch(get_template_path('attach_files_ticket', 'notifier'))
       ); // send
     } // attachFilesToTicket
+    
+    /**
+    * Send some files detached from ticket notification to ticket subscribers
+    *
+    * @param ProjectTicket $ticket
+    * @param array $detached_files Files detached from ticket
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function detachFilesFromTicket(ProjectTicket $ticket, $detached_files) {
+      $all_subscribers = $ticket->getSubscribers();
+      if (!is_array($all_subscribers)) {
+        return true; // no subscribers
+      } // if
+      
+      $recipients = array();
+      foreach ($all_subscribers as $subscriber) {
+        if ($subscriber->getId() == $ticket->getUpdatedById()) {
+          continue; // skip comment author
+        } // if
+        
+        $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
+      } // foreach
+      
+      if (!count($recipients)) {
+        return true; // no recipients
+      } // if
+      
+      tpl_assign('ticket', $ticket);
+      tpl_assign('detached_files', $detached_files);
+      
+      return self::sendEmail(
+        $recipients,
+        self::prepareEmailAddress($ticket->getUpdatedBy()->getEmail(), $ticket->getUpdatedBy()->getDisplayName()),
+        $ticket->getProject()->getName() . ' - ' . $ticket->getSummary(),
+        tpl_fetch(get_template_path('detach_files_ticket', 'notifier'))
+      ); // send
+    } // detachFilesFromTicket
     
     /**
     * Send new comment notification to message subscriber
@@ -217,7 +255,7 @@
     */
     static function newTicketComment(Comment $comment) {
       $ticket = $comment->getObject();
-      if(!($ticket instanceof ProjectTicket)) {
+      if (!($ticket instanceof ProjectTicket)) {
         throw new Error('Invalid comment object');
       } // if
 

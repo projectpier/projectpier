@@ -29,6 +29,7 @@
     'ticket closed' => 'Ticket "%s" has been closed in "%s" project',
     'ticket opened' => 'Ticket "%s" has been opened in "%s" project',
     'attached files to ticket' => 'Some files have been attached to ticket "%s" in "%s" project',
+    'detached files from ticket' => 'Some files have been detached from ticket "%s" in "%s" project',
     'view new ticket' => 'View that ticket',
     
     'user created your account' => '%s created a new account for you',

@@ -109,6 +109,34 @@
       } // try
     } // onAttachFiles
     
+    /**
+    * Handle on detach file event
+    *
+    * @param array $files Attached files
+    * @return null
+    */
+    function onDetachFiles($files) {
+      try {
+        $this->setUpdated('attachment');
+        $this->save();
+        
+        $changeset = new TicketChangeset();
+        $changeset->setTicketId($this->getId());
+        $changeset->save();
+        foreach ($files as $file) {
+          $change = new TicketChange();
+          $change->setType('attachment');
+          $change->setFromData($file->getFilename());
+          $change->setChangesetId($changeset->getId());
+          $change->save();
+        } // foreach
+        
+        Notifier::detachFilesFromTicket($this, $files);
+      } catch (Exception $e) {
+        // nothing here, just suppress error...
+      } // try
+    } // onAttachFiles
+    
     // ---------------------------------------------------
     //  Changesets
     // ---------------------------------------------------
