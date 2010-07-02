@@ -310,6 +310,16 @@
     // ---------------------------------------------------
     
     /**
+    * Return file view URL
+    *
+    * @param void
+    * @return string
+    */
+    function getViewUrl() {
+      return $this->getDetailsUrl();
+    } // getViewUrl
+    
+    /**
     * Return file details URL
     *
     * @param void
