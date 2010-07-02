@@ -393,7 +393,6 @@
       
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
-      tpl_assign('subscribers', $ticket->getSubscribers());
       
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
@@ -427,7 +426,7 @@
           $new_fields = array(
             'summary' => $ticket->getSummary(),
             'description' => $ticket->getDescription(),
-            'private' => $ticket->isPrivate()?"private":"public",
+            'private' => $ticket->isPrivate() ? "private" : "public",
             'due date' => $ticket->getDueDate()
             );
           
@@ -461,9 +460,6 @@
             $change->setToData($to_data);
             $change->save();
           } // foreach
-          if ($changeset->isEmpty()) {
-            $changeset->delete();
-          }
 
           try {
             if ($ticket->getAssignedToUserId()) {
@@ -479,12 +475,19 @@
                   if ((array_var($ticket_data, 'notify_company_' . $project_company->getId()) == 'checked') || (array_var($ticket_data, 'notify_user_' . $company_user->getId()))) {
                     $ticket->subscribeUser($company_user); // subscribe
                     $notify_people[] = $company_user;
+                  } else {
+                    $ticket->unsubscribeUser($company_user);
                   } // if
                 } // if
               } // if
             } // foreach
             
-            Notifier::ticket($ticket, $ticket->getSubscribers(), 'edit_ticket', $ticket->getUpdatedBy());
+            // Notify only if the ticket itself has changed (not subscribers)
+            if ($changeset->isEmpty()) {
+              $changeset->delete();
+            } else {
+              Notifier::ticket($ticket, $ticket->getSubscribers(), 'edit_ticket', $ticket->getUpdatedBy());
+            } // if
           } catch (Exception $e) {
             // nothing here, just suppress error...
           } // try
