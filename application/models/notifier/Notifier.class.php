@@ -153,6 +153,45 @@
         tpl_fetch(get_template_path($template, 'notifier'))
       ); // send
     } // ticket
+    
+    /**
+    * Send ticket change notification to the list of users
+    *
+    * @param ProjectTicket $ticket
+    * @param TicketChangeset $changeset
+    * @param User $user
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function ticketChange(ProjectTicket $ticket, TicketChangeset $changeset, User $user) {
+      $all_subscribers = $ticket->getSubscribers();
+      if (!is_array($all_subscribers)) {
+        return true; // no subscribers
+      } // if
+      
+      $recipients = array();
+      foreach ($all_subscribers as $subscriber) {
+        if ($subscriber->getId() == $user->getId()) {
+          continue; // skip comment author
+        } // if
+        
+        $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
+      } // foreach
+      
+      if (!count($recipients)) {
+        return true; // no recipients
+      } // if
+      
+      tpl_assign('ticket', $ticket);
+      tpl_assign('changeset', $changeset);
+      
+      return self::sendEmail(
+        $recipients,
+        self::prepareEmailAddress($ticket->getUpdatedBy()->getEmail(), $ticket->getUpdatedBy()->getDisplayName()),
+        $ticket->getProject()->getName() . ' - ' . $ticket->getSummary(),
+        tpl_fetch(get_template_path('ticket_change', 'notifier'))
+      ); // send
+    } // ticketChange
 
     /**
     * Send some files attached to ticket notification to ticket subscribers

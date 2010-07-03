@@ -233,9 +233,12 @@
             $change->setToData($to_data);
             $change->save();
           } // foreach
+          
           if ($changeset->isEmpty()) {
             $changeset->delete();
-          }
+          } else {
+            Notifier::ticketChange($ticket, $changeset, logged_user());
+          } // if
 
           
           flash_success(lang('success edit ticket', $ticket->getSummary()));
