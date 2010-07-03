@@ -239,7 +239,7 @@
       // TODO find a more elegant solution for this parameter
       $page_name = 'project_overview';
       $this->setTemplate('add_project');
-      $this->setLayout('administration');
+      $this->setLayout('project_website');
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       $project = Projects::findById(get_id());
