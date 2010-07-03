@@ -9,6 +9,13 @@
   class ProjectTicket extends BaseProjectTicket {
     
     /**
+    * This project object is taggable
+    *
+    * @var boolean
+    */
+    protected $is_taggable = true;
+    
+    /**
     * Project tickets are searchable
     *
     * @var boolean

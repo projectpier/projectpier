@@ -85,6 +85,10 @@
     <span class="bold"><?php echo lang('description') ?>:</span>
     <div class="desc"><?php echo do_textile($ticket->getDescription()); ?></div>
   </div>
+  <div class="ticketTags">
+    <span class="bold"><?php echo lang('tags') ?>:</span>
+    <?php echo project_object_tags($ticket, $ticket->getProject()) ?>
+  </div>
 </div>
 <div>
   <?php echo render_object_files($ticket, $ticket->canEdit(logged_user())) ?>

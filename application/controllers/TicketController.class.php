@@ -60,11 +60,6 @@
       $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
       Cookie::setValue('ticketsSortBy', $params['sort_by'], $expiration);
       
-      
-      // $closed = (boolean) array_var($_GET, 'closed', false);
-      // $conditions = DB::prepareString('`closed_on` '.($closed ? '>' : '=').' ? and `project_id` = ?', array(EMPTY_DATETIME, active_project()->getId()));
-      
-      // $conditions = DB::prepareString('`status` LIKE "new" AND `project_id` = ?', array(active_project()->getId()));
       $conditions = DB::prepareString('`project_id` = ?', array(active_project()->getId()));
       if ($params['status'] = array_var($_GET, 'status')) {
         $conditions .= DB::prepareString(' AND `status` IN (?)', array(explode(',', $params['status'])));
@@ -302,6 +297,7 @@
           
           DB::beginWork();
           $ticket->save();
+          $ticket->setTagsFromCSV(array_var($ticket_data, 'tags'));
           
           if (is_array($uploaded_files)) {
             foreach ($uploaded_files as $uploaded_file) {
@@ -386,11 +382,13 @@
       
       $ticket_data = array_var($_POST, 'ticket');
       if (!is_array($ticket_data)) {
+        $tag_names = $ticket->getTagNames();
         $ticket_data = array(
           'is_private' => $ticket->isPrivate(),
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
           'due_date' => $ticket->getDueDate(),
+          'tags' => is_array($tag_names) ? implode(', ', $tag_names) : '',
         ); // array
       } // if
       
@@ -422,6 +420,7 @@
 
           DB::beginWork();
           $ticket->save();
+          $ticket->setTagsFromCSV(array_var($ticket_data, 'tags'));
 
           ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
           DB::commit();

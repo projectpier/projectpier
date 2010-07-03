@@ -122,5 +122,10 @@
 <?php } // foreach ?>
   </fieldset>
 
+  <fieldset>
+    <legend><?php echo lang('tags') ?></legend>
+    <?php echo project_object_tags_widget('ticket[tags]', active_project(), array_var($ticket_data, 'tags'), array('id' => 'ticketFormTags', 'class' => 'long')) ?>
+  </fieldset>
+
   <?php echo submit_button($ticket->isNew() ? lang('add ticket') : lang('edit ticket')) ?>
 </form>

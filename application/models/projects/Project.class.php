@@ -855,7 +855,7 @@
     * 
     *  - messages
     *  - milestones
-    *  - tast lists
+    *  - task lists
     *  - files
     *
     * @access public
@@ -868,6 +868,7 @@
         'messages'   => Tags::getProjectObjects($this, $tag, 'ProjectMessages', $exclude_private),
         'milestones' => Tags::getProjectObjects($this, $tag, 'ProjectMilestones', $exclude_private),
         'task_lists' => Tags::getProjectObjects($this, $tag, 'ProjectTaskLists', $exclude_private),
+        'tickets'    => Tags::getProjectObjects($this, $tag, 'ProjectTickets', $exclude_private),
         'files'      => Tags::getProjectObjects($this, $tag, 'ProjectFiles', $exclude_private),
       ); // array
     } // getObjectsByTag

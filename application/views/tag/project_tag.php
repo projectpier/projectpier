@@ -55,6 +55,21 @@
 </ul>
 <?php } // if ?>
 
+<?php if (isset($tagged_objects['tickets']) && is_array($tagged_objects['tickets']) && count($tagged_objects['tickets'])) { ?>
+<h2><?php echo lang('tickets') ?></h2>
+<ul>
+<?php foreach ($tagged_objects['tickets'] as $ticket) { ?>
+  <li>
+    <a href="<?php echo $ticket->getViewUrl() ?>"><?php echo clean($ticket->getSummary()) ?></a>
+<span class="desc"> - <?php echo lang($ticket->getStatus()); ?>
+<?php if ($ticket->getAssignedTo() instanceof ApplicationDataObject) { ?>
+     - <?php echo lang('assigned to name', clean($ticket->getAssignedTo()->getObjectName())) ?></span>
+<?php } // if ?>
+  </li>
+<?php } // foreach?>
+</ul>
+<?php } // if ?>
+
 <?php if (isset($tagged_objects['files']) && is_array($tagged_objects['files']) && count($tagged_objects['files'])) { ?>
 <h2><?php echo lang('files') ?></h2>
 <ul>
