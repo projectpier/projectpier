@@ -1,5 +1,22 @@
 <?php
 $company = $attachment->getObject();
+if (!$company) {
+?>
+<div class="companyAttachment">
+  <fieldset>
+  <legend><?php echo $attachment->getText();?></legend>
+  <div class="companyLogo"><img src="<?php echo get_image_url('logo.gif'); ?>"/></div>
+  <div class="companyName">&nbsp;</div>
+  <div class="companyInfo">
+    <div class="cardBlock">
+      <?php echo lang('edit project to select company'); ?>
+    </div>
+  </div>
+  <div class="clear"></div>
+  </fieldset>
+</div>
+<?php
+} else {
 ?>
 <div class="companyAttachment">
   <fieldset>
@@ -15,7 +32,8 @@ $company = $attachment->getObject();
 <?php } ?>
     </div>
 <?php } ?>
-    <a href="<?php echo $company->getCardUrl(); ?>"><?php echo $company->getName(); ?></a></div>
+    <a href="<?php echo $company->getCardUrl(); ?>"><?php echo $company->getName(); ?></a>
+  </div>
   <div class="companyInfo">
     <div class="cardBlock">
 <?php if (trim($company->getEmail()) != '') { ?>
@@ -42,3 +60,4 @@ $company = $attachment->getObject();
   <div class="clear"></div>
   </fieldset>
 </div>
+<?php } // if ?>

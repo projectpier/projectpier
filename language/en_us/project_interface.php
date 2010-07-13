@@ -24,6 +24,8 @@
     'view all completed tasks' => 'All completed tasks (total %s)',
     'recently completed tasks' => 'Recently completed tasks',
     'task open of total tasks' => '%s open of %s tasks in list',
+    'edit project to select task list' => '<em>Edit project details to select a task list</em>',
+    'edit project to select task' => '<em>Edit project details to select a task</em>',
     
     'read more' => 'Read more &raquo;',
     'message separator' => '<p>* * *</p>',
@@ -42,10 +44,12 @@
     'project started on' => 'Started on',
     
     'send milestone assigned to notification' => 'Send email notification to user',
+    'edit project to select milestone' => '<em>Edit project details to select a milestone</em>',
     
     'edit company data' => '<a href="%s">Edit</a> company data',
     'company users involved in project' => '%s users involved in %s',
     'companies involved in project' => 'Involved companies',
+    'edit project to select company' => '<em>Edit project details to select a company</em>',
     
     'tags used on projects' => 'Tags used on this project',
     'number of tagged objects' => '%s object(s)',
@@ -56,6 +60,7 @@
     'project permissions form hint' => 'Using the <a href="%s">permissions form</a> you can easily add or remove companies and users and control their access permissions.',
     
     'additional message text desc' => 'Additional message text is visible only on the comments page',
+    'edit project to select message' => '<em>Edit project details to select a message</em>',
     'expand additional text' => 'Expand',
     'collapse additional text' => 'Collapse',
     'email notification' => 'Email notification',
@@ -68,6 +73,7 @@
     'attach existing contact' => 'Attach an existing contact (from the Address Book)',
     'new contact' => 'New contact',
     'select contact' => 'Select contact',
+    'edit project to select contact' => '<em>Edit project details to select a contact</em>',
     
     'subscribers desc' => 'Subscribers will receive an email notification whenever someone (except themselves) posts a comment on this message',
     'admins can post comments on locked objects desc' => '<strong>Comments are locked</strong>, but you as administrator still have the permissions to post comments. Note that if you expect replies from your clients and non-admin users you need to unlock comments for this object <i>(set the "Enable comments" option to "Yes")</i>.',
@@ -127,6 +133,7 @@
     'remove attach file control' => 'Remove',
     'attach files to object desc' => 'Use this form to attach files to <strong><a href="%s">%s</a></strong>. You can attach one or many files. You can select any existing files from files section or upload new ones. <strong>New files will also be available through files section when you upload them</strong>.',
     'select file' => 'Select a file',
+    'edit project to select file' => '<em>Edit project details to select a file</em>',
     
     'admin notice comments disabled' => 'Comments are disabled for this object, but you as administrator still can comment. If you expect replies from other, non-admin users you should set "Enable comments" to "Yes".',
     
@@ -162,6 +169,7 @@
     'filter' => 'Filter',
     'filters' => 'Filters',
     'see all tickets for project' => '&raquo; See all tickets for this project',
+    'edit project to select ticket' => '<em>Edit project details to select a ticket</em>',
     
     // iCal
     'icalendar' => 'iCalendar',

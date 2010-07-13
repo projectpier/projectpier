@@ -1,6 +1,16 @@
 <?php
 $milestone = $attachment->getObject();
-if ($milestone->canView(logged_user())) {
+if (!$milestone) {
+?>
+  <div class="milestoneAttachment">
+    <div class="milestoneInfo">
+      <span class="milestoneDescription"><?php echo $attachment->getText() ?>:</span>
+      <span class="milestoneName"><?php echo lang('edit project to select milestone'); ?></span>
+    </div>
+    <div class="clear"></div>
+  </div>
+<?php } else {
+  if ($milestone->canView(logged_user())) {
 ?>
   <div class="milestoneAttachment">
 <?php if ($milestone->isPrivate()) { ?>
@@ -21,7 +31,7 @@ if ($milestone->canView(logged_user())) {
   <?php } else { ?>
         <img src="<?php echo get_image_url('icons/not-checked.jpg'); ?>"/>
   <?php } // if ?>
-<?php } // if?>
+<?php } // if ?>
         <a href="<?php echo $milestone->getViewUrl() ?>" title="<?php echo lang('view milestone') ?>"><?php echo clean($milestone->getName()) ?></a>
 <?php if ($milestone->isUpcoming()) { ?>
         <span>(<?php echo format_days('days left', $milestone->getLeftInDays()) ?>)</span>
@@ -47,4 +57,7 @@ if ($milestone->canView(logged_user())) {
   </div>
 
 
-<?php } ?>
+<?php
+  } // if
+} // if
+?>

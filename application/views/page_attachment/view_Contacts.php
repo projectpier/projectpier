@@ -1,6 +1,23 @@
 <?php
 $contact = $attachment->getObject();
-$company = $contact->getCompany();
+if (!$contact) {
+?>
+<div class="contactAttachment">
+  <fieldset>
+  <legend><?php echo $attachment->getText();?></legend>
+  <div class="contactAvatar"><img src="<?php echo get_image_url('avatar.gif') ?>" alt="<?php echo lang('avatar') ?>" /></div>
+  <div class="contactName">&nbsp;</div>
+  <div class="contactInfo">
+    <div class="cardBlock">
+      <?php echo lang('edit project to select contact'); ?>
+    </div>
+  </div>
+  <div class="clear"></div>
+  </fieldset>
+</div>
+<?php
+} else {
+  $company = $contact->getCompany();  
 ?>
 <div class="contactAttachment">
   <fieldset>
@@ -45,3 +62,4 @@ $company = $contact->getCompany();
   <div class="clear"></div>
   </fieldset>
 </div>
+<?php } // if ?>

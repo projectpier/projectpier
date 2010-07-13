@@ -121,6 +121,7 @@
     * @return null
     */
     function people() {
+      $this->addHelper('textile');
       $page_attachments = PageAttachments::getAttachmentsByTypeAndProject(array('Contacts', 'Companies'), active_project());
       tpl_assign('page_attachments', $page_attachments);
       tpl_assign('project', active_project());
@@ -147,7 +148,7 @@
       tpl_assign('project', $project);
       tpl_assign('project_data', $project_data);
       
-      // Submited...
+      // Submitted...
       if (is_array($project_data)) {
         $project->setFromAttributes($project_data);
         
@@ -281,7 +282,7 @@
           if (is_array($page_attachments)) {
             foreach ($page_attachments as $id => $page_attachment_data) {
               $page_attachment = PageAttachments::findById($id);
-              if (($page_attachment_data['rel_object_manager'] != '' && $page_attachment_data['rel_object_id'] == 0) || $page_attachment_data['delete'] == "checked") {
+              if ($page_attachment_data['delete'] == "checked") {
                 $page_attachment->delete();
               } else {
                 $page_attachment->setFromAttributes($page_attachment_data);

@@ -1,6 +1,16 @@
 <?php
 $ticket = $attachment->getObject();
-if ($ticket->canView(logged_user())) {
+if (!$ticket) {
+?>
+  <div class="ticketAttachment">
+    <div class="ticketInfo">
+      <span class="ticketDescription"><?php echo $attachment->getText() ?>:</span>
+      <span class="ticketName"><?php echo lang('edit project to select ticket'); ?></span>
+    </div>
+    <div class="clear"></div>
+  </div>
+<?php } else {
+  if ($ticket->canView(logged_user())) {
 ?>
   <div class="ticketAttachment">
 <?php if ($ticket->isPrivate()) { ?>
@@ -19,4 +29,7 @@ if ($ticket->canView(logged_user())) {
     </div>
     <div class="clear"></div>
   </div>
-<?php } ?>
+<?php
+  } // if
+} // if
+?>

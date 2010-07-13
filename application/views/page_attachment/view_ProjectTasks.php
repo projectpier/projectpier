@@ -1,6 +1,16 @@
 <?php
 $task = $attachment->getObject();
-if ($task->canView(logged_user())) {
+if (!$task) {
+?>
+  <div class="taskAttachment">
+    <div class="taskInfo">
+      <span class="taskDescription"><?php echo $attachment->getText() ?>:</span>
+      <span class="taskName"><?php echo lang('edit project to select task'); ?></span>
+    </div>
+    <div class="clear"></div>
+  </div>
+<?php } else {
+  if ($task->canView(logged_user())) {
 ?>
   <div class="taskAttachment">
 <?php if ($task->isPrivate()) { ?>
@@ -19,4 +29,7 @@ if ($task->canView(logged_user())) {
     </div>
     <div class="clear"></div>
   </div>
-<?php } ?>
+<?php
+  } // if
+} // if
+?>

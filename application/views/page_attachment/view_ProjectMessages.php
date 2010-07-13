@@ -1,6 +1,16 @@
 <?php
 $message = $attachment->getObject();
-if ($message->canView(logged_user())) {
+if (!$message) {
+?>
+  <div class="messageAttachment">
+    <div class="messageInfo">
+      <span class="messageDescription"><?php echo $attachment->getText() ?>:</span>
+      <span class="messageName"><?php echo lang('edit project to select message'); ?></span>
+    </div>
+    <div class="clear"></div>
+  </div>
+<?php } else {
+  if ($message->canView(logged_user())) {
 ?>
   <div class="messageAttachment">
 <?php if ($message->isPrivate()) { ?>
@@ -23,4 +33,7 @@ if ($message->canView(logged_user())) {
     </div>
     <div class="clear"></div>
   </div>
-<?php } ?>
+<?php
+  } // if 
+} // if
+?>

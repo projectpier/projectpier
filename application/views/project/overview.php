@@ -23,14 +23,14 @@
   add_stylesheet_to_page('project/project_log.css');
 
 ?>
-<?php if (trim(active_project()->getDescription()) && active_project()->getShowDescriptionInOverview()) { ?>
+<?php if ((trim(active_project()->getDescription()) || (is_array($page_attachments) && count($page_attachments))) && active_project()->getShowDescriptionInOverview()) { ?>
 <div class="hint">
   <div class="header"><?php echo clean(active_project()->getName()) ?></div>
   <div class="content"><?php echo do_textile(active_project()->getDescription()) ?></div>
   <div id="pageAttachments">
   <?php foreach ($page_attachments as $page_attachment) {
     tpl_assign('attachment', $page_attachment);
-    if ($page_attachment->getRelObjectManager() != '' && $page_attachment->getObject()) {
+    if ($page_attachment->getRelObjectManager() != '') {
       if (file_exists(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'))) {
         $this->includeTemplate(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'));
       } else {

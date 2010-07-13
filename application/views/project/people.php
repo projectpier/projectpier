@@ -16,7 +16,7 @@
 <div id="pageAttachments">
 <?php foreach ($page_attachments as $page_attachment) {
   tpl_assign('attachment', $page_attachment);
-  if ($page_attachment->getRelObjectManager() != '' && $page_attachment->getObject()) {
+  if ($page_attachment->getRelObjectManager() != '') {
     if (file_exists(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'))) {
       $this->includeTemplate(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'));
     } else {
