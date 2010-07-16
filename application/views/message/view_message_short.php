@@ -16,10 +16,10 @@
   <td>
     <a href="<?php echo $message->getCreatedBy()->getCardUrl() ?>"><?php echo clean($message->getCreatedBy()->getDisplayName()) ?></a>
   </td>
-  <td>
+  <td class="center">
     <a href="<?php echo $message->getViewUrl() ?>#objectComments"><?php echo $message->countComments() ?></a>
   </td>
-  <td>
+  <td class="center">
     <?php echo count($message->getAttachedFiles()) ?>
   </td>
 </tr>
