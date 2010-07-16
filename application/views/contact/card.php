@@ -21,6 +21,9 @@
   if (logged_user()->isAdministrator() && logged_user()->getId() != $contact->getUserId()) {
     if ($contact->hasUserAccount()) {
       add_page_action(array(
+        lang('edit user account') => $contact->getEditUserAccountUrl()
+      ));
+      add_page_action(array(
         lang('delete user account') => $contact->getDeleteUserAccountUrl()
       ));
     } else {
