@@ -139,18 +139,24 @@
       <ul>
 <?php foreach ($changes as $change) { ?>
         <li><?php
-        if ($change->getFromData() == "") {
+        if (trim($change->getFromData()) == "") {
           if ($change->dataNeedsTranslation()) {
             echo lang('change set to', lang($change->getType()), lang($change->getToData()));
           } else {
             echo lang('change set to', lang($change->getType()), $change->getToData());
-          }
+          } // if
+        } elseif (trim($change->getToData()) == "") {
+          if ($change->dataNeedsTranslation()) {
+            echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang('n/a'));
+          } else {
+            echo lang('change from to', lang($change->getType()), $change->getFromData(), lang('n/a'));
+          } // if
         } else {
           if ($change->dataNeedsTranslation()) {
             echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang($change->getToData()));
           } else {
             echo lang('change from to', lang($change->getType()), $change->getFromData(), $change->getToData());
-          }
+          } // if
         } // if ?>
         </li>
 <?php
