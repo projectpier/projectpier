@@ -75,6 +75,28 @@
       tpl_assign('active_projects', logged_user()->getActiveProjects());
       $this->setSidebar(get_template_path('my_tasks_sidebar', 'dashboard'));
     } // my_tasks
+
+    /**
+      * Lists all company contacts
+      * 
+      * @param void
+      * @return null
+      */
+    function contacts() {
+      // TODO write controller code
+    } // contacts
+
+    /**
+      * Shows weekly schedule in a calendar view
+      * 
+      * @param void
+      * @return null
+      */
+    function weekly_schedule() {
+      // TODO write controller code
+    } // weekly_schedule
+
+    
   
   } // DashboardController
 

@@ -79,6 +79,7 @@
     'country' => 'Country',
     'n/a' => '<acronym title="Not Available">n/a</acronym>',
     'contact' => 'Contact',
+    'contacts' => 'Contacts',
     'pagination page' => 'Page:',
     'pagination first' => 'First page',
     'pagination previous' => 'Previous page',
@@ -104,6 +105,7 @@
     
     'project calendar' => '%s calendar',
     'user calendar' => '%s\'s calendar',
+    'weekly schedule' => 'Weekly Schedule',
     
     'month 1' => 'January',
     'month 2' => 'February',

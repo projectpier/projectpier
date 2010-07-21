@@ -26,6 +26,8 @@
   define('DASHBOARD_TAB_OVERVIEW', 'overview');
   define('DASHBOARD_TAB_MY_PROJECTS', 'my_projects');
   define('DASHBOARD_TAB_MY_TASKS', 'my_task');
+  define('DASHBOARD_TAB_CONTACTS', 'contacts');
+  define('DASHBOARD_TAB_WEEKLY_SCHEDULE', 'weekly_schedule');
 
   /**
   * Prepare dashboard tabbed navigation
@@ -49,6 +51,16 @@
       DASHBOARD_TAB_MY_TASKS,
       lang('my tasks'),
       get_url('dashboard', 'my_tasks')
+    ));
+  add_tabbed_navigation_item(new TabbedNavigationItem(
+    DASHBOARD_TAB_CONTACTS,
+    lang('contacts'),
+    get_url('dashboard', 'contacts')
+    ));
+  add_tabbed_navigation_item(new TabbedNavigationItem(
+    DASHBOARD_TAB_WEEKLY_SCHEDULE,
+    lang('weekly schedule'),
+    get_url('dashboard', 'weekly_schedule')
     ));
     
     tabbed_navigation_set_selected($selected);
