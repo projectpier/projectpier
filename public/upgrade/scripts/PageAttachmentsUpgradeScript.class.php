@@ -1,12 +1,12 @@
 <?php
 
   /**
-  * Upgrade ProjectPier to support issue tracker
+  * Upgrade ProjectPier to support PageAttachments
   *
   * @package ScriptUpgrader.scripts
   * @http://www.projectpier.org/
   */
-  class IssueTrackerUpgradeScript extends ScriptUpgraderScript {
+  class PageAttachmentsUpgradeScript extends ScriptUpgraderScript {
   
     /**
     * Database connection link
@@ -16,10 +16,10 @@
     private $database_connection = null;
   
     /**
-    * Construct the IssueTrackerUpgradeScript
+    * Construct the PageAttachmentsUpgradeScript
     *
     * @param Output $output
-    * @return IssueTrackerUpgradeScript
+    * @return PageAttachmentsUpgradeScript
     */
     function __construct(Output $output) {
       parent::__construct($output);
@@ -74,7 +74,7 @@
       //  Check existence of tables for Tickets
       // ---------------------------------------------------
       
-      $tables_to_check = array('project_categories', 'project_tickets', 'ticket_changes', 'ticket_subscriptions');
+      $tables_to_check = array('page_attachments');
       
       foreach ($tables_to_check as $table) {
         $test_table_exists_sql = "SHOW TABLES LIKE '".TABLE_PREFIX."$table';";
@@ -121,15 +121,13 @@
         return false;
       } // if
       
-      //return ;
-      
       // ---------------------------------------------------
       //  Execute migration
       // ---------------------------------------------------
 
       $total_queries = 0;
       $executed_queries = 0;
-      $upgrade_script = tpl_fetch(get_template_path('db_migration/issuetracker'));
+      $upgrade_script = tpl_fetch(get_template_path('db_migration/page_attachments'));
       
       mysql_query('BEGIN WORK');
       if ($this->executeMultipleQueries($upgrade_script, $total_queries, $executed_queries, $this->database_connection)) {
@@ -141,7 +139,7 @@
         return false;
       } // if
             
-      $this->printMessage('ProjectPier has been patched for Issue Tracker. Enjoy!');
+      $this->printMessage('ProjectPier has been patched to use page attachments. Enjoy!');
     } // execute
     
 
@@ -152,10 +150,10 @@
     * @return string
     */
     function getScriptName() {
-      return 'Upgrade of DB for Issue Tracker patch';
+      return 'Upgrade of DB for Page Attachment patch';
     } // getName
     
   
-  } // IssueTrackerUpgradeScript
+  } // PageAttachmentsUpgradeScript
 
 ?>
