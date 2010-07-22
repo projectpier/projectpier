@@ -5,7 +5,7 @@
 <code>@<?php echo lang('code') ?>@</code><br/>
 * <?php echo lang('unordered list') ?><br/>
 # <?php echo lang('ordered list') ?><br/>
-\"<?php echo lang('link name') ?>\":http://url<br/>
+"<?php echo lang('link name') ?>":http://url<br/>
 !<?php echo lang('image url') ?>!<br/>
 <h4>h4. <?php echo lang('header1to6') ?></h4>
 <?php echo lang('table') ?><br/>
