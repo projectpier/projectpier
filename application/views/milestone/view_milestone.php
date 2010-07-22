@@ -48,8 +48,8 @@
 <?php } // if ?>
 
 <!-- Milestones -->
-<?php if (!$milestone->hasMessages() && !$milestone->hasTaskLists()) { ?>
-      <p><?php echo lang('empty milestone', $milestone->getAddMessageUrl(), $milestone->getAddTaskListUrl()) ?></p>
+<?php if (!$milestone->hasMessages() && !$milestone->hasTaskLists() && !$milestone->hasTickets()) { ?>
+      <p><?php echo lang('empty milestone', $milestone->getAddMessageUrl(), $milestone->getAddTaskListUrl(), $milestone->getAddTicketUrl()) ?></p>
 <?php } else { ?>
 <?php if ($milestone->hasMessages()) { ?>
       <p><?php echo lang('messages') ?>:</p>
@@ -76,6 +76,20 @@
 <?php } // foreach ?>
       </ul>
 <?php } // if ?>
+
+<!-- Tickets -->
+<?php if ($milestone->hasTickets()) { ?>
+      <p><?php echo lang('tickets') ?>:</p>
+      <ul>
+<?php foreach ($milestone->getTickets() as $ticket) { ?>
+        <li><a href="<?php echo $ticket->getViewUrl() ?>"><?php echo clean($ticket->getTitle()) ?></a>
+<?php if ($ticket->getCreatedBy() instanceof User) { ?>
+        <span class="desc">(<?php echo lang('posted on by', format_date($ticket->getUpdatedOn()), $ticket->getCreatedByCardUrl(), clean($ticket->getCreatedByDisplayName())) ?>)</span>
+<?php } // if ?>
+<?php } // foreach ?>
+      </ul>
+<?php } // if?>
+
 <?php } // if ?>
 
   <p><span><?php echo lang('tags') ?>:</span> <?php echo project_object_tags($milestone, $milestone->getProject()) ?></p>

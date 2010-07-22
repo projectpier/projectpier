@@ -207,6 +207,31 @@
     } // hasMessages
     
     /**
+    * Return all tickets related to this message
+    *
+    * @access public
+    * @param void
+    * @return array
+    */
+    function getTickets() {
+      return ProjectTickets::findAll(array(
+        'conditions' => '`milestone_id` = ' . DB::escape($this->getId()),
+        'order' => 'created_on'
+      )); // findAll
+    } // getTickets
+    
+    /**
+    * Returns true if there are tickets in this milestone
+    *
+    * @access public
+    * @param void
+    * @return boolean
+    */
+    function hasTickets() {
+      return (boolean) ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()));
+    } // hasTickets
+    
+    /**
     * Return assigned to object. It can be User, Company or nobody (NULL)
     *
     * @access public
@@ -445,6 +470,17 @@
     function getAddTaskListUrl() {
       return get_url('task', 'add_list', array('milestone_id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getAddTaskListUrl
+    
+    /**
+    * Return add ticket URL
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getAddTicketUrl() {
+      return get_url('ticket', 'add', array('milestone_id' => $this->getId(), 'active_project' => $this->getProjectId()));
+    } // getAddTicketUrl
     
     // ---------------------------------------------------
     //  System functions

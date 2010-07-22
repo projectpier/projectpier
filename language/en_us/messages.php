@@ -25,7 +25,7 @@
     'task dnx' => 'Requested task does not exist',
     'no milestones in project' => 'There are no milestones in this project',
     'no active milestones in project' => 'There are no active milestones in this project',
-    'empty milestone' => 'This milestone is empty. You can add a <a href="%s">message</a> or a <a href="%s">task list</a> to it at any time',
+    'empty milestone' => 'This milestone is empty. You can add a <a href="%s">message</a>, a <a href="%s">task list</a> or a <a href="%s">ticket</a> to it at any time',
     'no logs for project' => 'There are no log entries related to this project',
     'no recent activities' => 'There are no recent activities logged in the database',
     'no open task lists in project' => 'There are no open task lists in this project',
