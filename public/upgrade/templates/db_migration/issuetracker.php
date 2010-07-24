@@ -66,6 +66,8 @@ CREATE TABLE `<?php echo $table_prefix ?>ticket_subscriptions` (
 
 ALTER TABLE `<?php echo $table_prefix ?>project_users` ADD COLUMN `can_manage_tickets` tinyint(1) unsigned default '0' AFTER `can_manage_files`;
 
+INSERT INTO `<?php echo $table_prefix ?>config_options` (`category_name`, `name`, `value`, `config_handler_class`, `is_system`, `option_order`, `dev_comment`) VALUES ('general', 'default_ticket_categories', 'frontend\r\nbackend\r\ndocumentation\r\nother\r\n', 'TextConfigHandler', 0, 4, NULL);
+
 INSERT INTO `<?php echo $table_prefix ?>config_options` (`category_name`, `name`, `value`, `config_handler_class`, `is_system`, `option_order`, `dev_comment`) VALUES ('system', 'tickets_per_page', '25', 'IntegerConfigHandler', 1, 0, NULL);
 
 INSERT INTO `<?php echo $table_prefix ?>config_options` (`category_name`, `name`, `value`, `config_handler_class`, `is_system`, `option_order`, `dev_comment`) VALUES ('system', 'categories_per_page', '25', 'IntegerConfigHandler', 1, 0, NULL);

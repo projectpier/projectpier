@@ -44,6 +44,8 @@
     'config option desc file_storage_adapter' => 'Select where you want to store attachments, avatars, logos and any other uploaded documents. <strong>Database storage engine is recommended</strong>.',
     'config option name default_project_folders' => 'Default folders',
     'config option desc default_project_folders' => 'Folders that will be created when a project is created. Every folder name should be on a new line. Duplicate or empty lines will be ignored',
+    'config option name default_ticket_categories' => 'Default ticket categories',
+    'config option desc default_ticket_categories' => 'Ticket categories that will be created when a project is created. Every category name should be on a new line. Duplicate or empty lines will be ignored',
     'config option name theme' => 'Theme',
     'config option desc theme' => 'Using themes you can change the default look and feel of ProjectPier',
     

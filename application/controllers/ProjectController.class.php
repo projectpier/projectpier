@@ -159,6 +159,13 @@
           $default_folders = explode("\n", $default_folders_config);
         } // if
         
+        $default_categories_config = str_replace(array("\r\n", "\r"), array("\n", "\n"), config_option('default_ticket_categories', ''));
+        if (trim($default_categories_config) == '') {
+          $default_categories = array();
+        } else {
+          $default_categories = explode("\n", $default_categories_config);
+        } // if
+        
         try {
           DB::beginWork();
           $project->save();
@@ -212,6 +219,27 @@
               $folder->save();
               
               $added_folders[] = $folder_name;
+            } // foreach
+          } // if
+          
+          if (count($default_categories)) {
+            $added_categories = array();
+            foreach ($default_categories as $default_category) {
+              $category_name = trim($default_category);
+              if ($category_name == '') {
+                continue;
+              } // if
+              
+              if (in_array($category_name, $added_categories)) {
+                continue;
+              } // if
+              
+              $category = new Category();
+              $category->setProjectId($project->getId());
+              $category->setName($category_name);
+              $category->save();
+              
+              $added_categories[] = $category_name;
             } // foreach
           } // if
           
