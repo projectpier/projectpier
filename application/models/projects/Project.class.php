@@ -1142,7 +1142,7 @@
       if ($include_company) {      
         $conditions = DB::prepareString('`project_id` = ? AND ((`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR `created_by_id`= ?) AND `closed_on` = ?', array($this->getId(), $user->getId(), $user->getCompanyId(), 0, $user->getCompanyId(), 0, 0, $user->getId(), EMPTY_DATETIME));
       } else {
-        $conditions = DB::prepareString('`project_id` = ? AND `assigned_to_user_id` = ? AND `closed_on` = ?', array($this->getId(), $user->getId(), $user->getCompanyId(), EMPTY_DATETIME));
+        $conditions = DB::prepareString('`project_id` = ? AND `assigned_to_user_id` = ? AND `closed_on` = ?', array($this->getId(), $user->getId(), EMPTY_DATETIME));
       } // if
       if (!$user->isMemberOfOwnerCompany()) {
         $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));

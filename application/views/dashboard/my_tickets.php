@@ -45,6 +45,6 @@
 <p><?php echo lang('no active projects in db') ?></p>
 <?php } // if  ?>
 
-<?php if(!$has_assigned_tickets) { ?>
+<?php if (!$has_assigned_tickets) { ?>
 <p><?php echo lang('no my tickets') ?></p>
 <?php } // if ?>
