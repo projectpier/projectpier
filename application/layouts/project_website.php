@@ -23,6 +23,7 @@
 <?php echo render_page_head() ?>
   </head>
   <body>
+<script type="text/javascript"> jQuery.noConflict(); </script>
 <?php echo render_system_notices(logged_user()) ?>
     <div id="wrapper">
     
