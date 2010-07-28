@@ -1263,7 +1263,7 @@
     } // canAdd
     
     /**
-    * Returns true if user can update speicific project
+    * Returns true if user can update specific project
     *
     * @access public
     * @param User $user

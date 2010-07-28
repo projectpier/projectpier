@@ -123,6 +123,14 @@
     benchmark_timer_set_marker('Init application');
   } // if
   
+  // Load plugin helper file
+  require_once 'plugins.php';
+
+  // Set plugin manager timer
+  if (Env::isDebugging()) {
+    benchmark_timer_set_marker('Plugin Manager loaded');
+  } // if
+
   // We need to call application.php after the routing is executed because
   // some of the application classes may need CONTROLLER, ACTION or $_GET
   // data collected by the matched route

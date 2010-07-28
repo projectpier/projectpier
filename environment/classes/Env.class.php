@@ -15,7 +15,7 @@
     
     /**
     * Use specific library. This function will look in application directory 
-    * first and then in enviroment library folder. If it doesn't finds requested 
+    * first and then in environment library folder. If it doesn't finds requested
     * class in it LibraryDnxError will be raised
     *
     * @access public
@@ -28,16 +28,23 @@
       if (isset($included[$library]) && $included[$library]) {
         return;
       } // if
-      
+
       $library_path = ENVIRONMENT_PATH . "/library/$library/";
       if (!file_exists($library_path)) {
         $library_path = ROOT . "/library/$library/";
       } // if
-      
+
       if (!is_dir($library_path)) {
-        throw new LibraryDnxError($library);
+      	// Look into plugins library dir
+      	$library_path_plugins = ROOT . "/application/plugins/_library/$library/";
+      	// Look for library in plugins directory
+        if (is_dir($library_path_plugins)) {
+          $library_path = $library_path_plugins;
+        } else {
+          throw new LibraryDnxError($library);
+        } // if
       } // if
-      
+
       // Call init library file if it exists
       $library_init_file = $library_path . $library . '.php';
       if (is_file($library_init_file)) {
@@ -133,7 +140,7 @@
         return true;
       } // if
       
-      $controller_file = APPLICATION_PATH . "/controllers/$controller_class.class.php";
+      $controller_file = Env::getControllerPath($controller_name);
       if (is_file($controller_file)) {
         include_once $controller_file;
         return true;
@@ -142,6 +149,27 @@
       } // if
     } // useController
     
+    /**
+    * Get Controller File Path, looks for controller file and returns the path
+    *
+    * @access public
+    * @param string $controller_name
+    * @return boolean
+    * @throws FileDnxError if controller file does not exists
+    */
+    static function getControllerPath($controller_name) {
+      $controller_class = Env::getControllerClass($controller_name);
+      $controller_file = APPLICATION_PATH . "/controllers/$controller_class.class.php";
+      $controller_file_plugin = APPLICATION_PATH . "/plugins/$controller_name/application/controllers/$controller_class.class.php";
+      if (is_file($controller_file)) {
+        return $controller_file;
+      } elseif (is_file($controller_file_plugin)) {
+        return $controller_file_plugin;
+      } else {
+        throw new FileDnxError($controller_file, "Controller '$controller_name' does not exists (expected location '$controller_file' or '$controller_file_plugin')");
+      } // if
+    } // getControllerFilePath
+
     /**
     * Use specific helper
     *
@@ -205,7 +233,16 @@
     */
     static function getTemplatePath($template, $controller_name = null) {
       if ($controller_name) {
-        return APPLICATION_PATH . "/views/$controller_name/$template.php";
+      	// Look for template file path into core and plugins directories
+      	$template_path = APPLICATION_PATH . "/views/$controller_name/$template.php";
+      	$template_path_plugin = APPLICATION_PATH . "/plugins/$controller_name/application/views/$template.php";
+      	if (file_exists($template_path)) {
+      	  return $template_path;
+    	  } elseif (file_exists($template_path_plugin)) {
+    	    return $template_path_plugin;
+  	    } else {
+  	      throw new FileDnxError($template, "Template '$template' does not exists (expected location '$template_path' or '$template_path_plugin')");
+	      } // if
       } else {
         return APPLICATION_PATH . "/views/$template.php";
       } // if
@@ -230,7 +267,14 @@
     * @return string
     */
     static function getHelperPath($helper) {
-      return APPLICATION_PATH . "/helpers/$helper.php";
+      // Look for helper file path into core and plugins directories
+      $helper_path = APPLICATION_PATH . "/helpers/$helper.php";
+      $helper_path_plugins = APPLICATION_PATH . "/plugins/_helpers/$helper.php";
+      if (is_file($helper_path)) {
+        return $helper_path;
+      } elseif (is_file($helper_path_plugins)) {
+        return $helper_path_plugins;
+      } // if
     } // getHelperPath
     
     /**

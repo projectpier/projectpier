@@ -3,10 +3,10 @@
   /**
   * Localization class
   *
-  * This class will set up PHP environment to mach locale settings (using 
-  * setlocale() function) and import apropriate set of words from language
+  * This class will set up PHP environment to match locale settings (using 
+  * setlocale() function) and import appropriate set of words from language
   * folder. Properties of this class are used by some other system classes
-  * for outputing data in correct format (for instance DateTimeValueLib).
+  * for outputting data in correct format (for instance DateTimeValueLib).
   * 
   * @version 1.0
   * @http://www.projectpier.org/
@@ -160,11 +160,25 @@
             } // if
           } // foreach
         } // if
-        
       } else {
         throw new DirDnxError($langs_dir);
       } // if
       
+      // load plugins lang files
+      $langs_dir_pl = ROOT . '/application/plugins/_language/' . $this->getLocale();
+      if (is_dir($langs_dir_pl)) {
+        $files_pl = get_files($langs_dir_pl, 'php');
+        
+        // Loop through files and add langs
+        if (is_array($files_pl)) {
+          foreach ($files_pl as $file) {
+            $langs = include_once $file;
+            if (is_array($langs)) {
+              $this->langs->append($langs);
+            } // if
+          } // foreach
+        } // if
+      } // if
       // Done!
       return true;
       

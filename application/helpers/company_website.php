@@ -71,6 +71,10 @@
       get_url('dashboard', 'weekly_schedule')
       ));
 
+    // PLUGIN HOOK
+    plugin_manager()->do_action('add_dashboard_tab');
+    // PLUGIN HOOK
+
     tabbed_navigation_set_selected($selected);
   } // dashboard_tabbed_navigation
   
@@ -106,6 +110,7 @@
   define('ADMINISTRATION_TAB_CONFIGURATION', 'config');
   define('ADMINISTRATION_TAB_TOOLS', 'tools');
   define('ADMINISTRATION_TAB_UPGRADE', 'upgrade');
+  define('ADMINISTRATION_TAB_PLUGINS', 'plugins');
 
   /**
   * Prepare administration tabbed navigation
@@ -151,10 +156,20 @@
       get_url('administration', 'tools')
     ));
     add_tabbed_navigation_item(new TabbedNavigationItem(
+      ADMINISTRATION_TAB_PLUGINS,
+      lang('plugins'),
+      get_url('administration','plugins')
+    ));
+    add_tabbed_navigation_item(new TabbedNavigationItem(
       ADMINISTRATION_TAB_UPGRADE,
       lang('upgrade'),
       get_url('administration', 'upgrade')
     ));
+    
+    // PLUGIN HOOK
+    plugin_manager()->do_action('add_administration_tab');
+    // PLUGIN HOOK
+    
     tabbed_navigation_set_selected($selected);
   } // administration_tabbed_navigation
   
@@ -197,6 +212,11 @@
       lang('my account'), 
       get_url('account', 'index')
     ));
+    
+    // PLUGIN HOOK
+    plugin_manager()->do_action('add_my_account_tab');
+    // PLUGIN HOOK
+    
     tabbed_navigation_set_selected($selected);
   } // account_tabbed_navigation
 

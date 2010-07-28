@@ -7,7 +7,10 @@
   * @return array
   */
   function tabbed_navigation_items() {
-    return TabbedNavigation::instance()->getItems();
+    // PLUGIN HOOK
+    return plugin_manager()->apply_filters('tabbed_navigation_items',
+                                   TabbedNavigation::instance()->getItems());
+    // PLUGIN HOOK
   } // tabbed_navigation_items
   
   /**

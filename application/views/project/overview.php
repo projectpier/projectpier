@@ -18,6 +18,9 @@
   if (ProjectFile::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add file'), get_url('files', 'add_file'));
   } // if
+  // PLUGIN HOOK
+  plugin_manager()->do_action('project_overview_page_actions');
+  // PLUGIN HOOK
 
   add_stylesheet_to_page('project/attachments.css');
   add_stylesheet_to_page('project/project_log.css');

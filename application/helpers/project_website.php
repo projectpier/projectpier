@@ -92,6 +92,11 @@
         get_url('project_settings')
       ));
     } // if
+
+    // PLUGIN HOOK
+    plugin_manager()->do_action('add_project_tab');
+    // PLUGIN HOOK
+
     tabbed_navigation_set_selected($selected);
   } // project_tabbed_navigation
 

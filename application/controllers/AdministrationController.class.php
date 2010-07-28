@@ -121,11 +121,11 @@
       
       tpl_assign('versions_feed', $version_feed);
     } // upgrade
-    
+
     // ---------------------------------------------------
     //  Tool implementations
     // ---------------------------------------------------
-    
+
     /**
     * Render and execute test mailer form
     *
@@ -245,7 +245,99 @@
         } // try
       } // if
     } // tool_mass_mailer
-  
+
+    // ---------------------------------------------------
+    //  Plugins
+    // ---------------------------------------------------
+
+    /**
+    * Displays all local plugins (enabled or not)
+    *
+    * @param void
+    * @return null
+    */
+    function plugins() {
+      $plugins = Plugins::getAllPlugins();
+      tpl_assign('plugins', $plugins);
+    } // plugins
+
+    /**
+    * Allows admin to update installed plugins
+    *
+    * @param void
+    * @return null
+    */
+    function update_plugins() {
+      $plugins = array_var($_POST, 'plugins');
+      $reference = Plugins::getAllPlugins();
+      $errors = array();
+      foreach ($plugins as $name => $yes_no) {
+      	// If it is not a plugin continue
+      	$plugin_file_path = APPLICATION_PATH.'/plugins/plugin.'.$name.'.php';
+        if (!file_exists($plugin_file_path)) {
+          continue;
+        }
+        // get existing id
+        $id = $reference[$name];
+        $nicename = ucwords(str_replace('_',' ',$name));
+        if ($yes_no && '-' == $id) {
+          try {
+          	// Check if plugin exists in database
+          	$plugin = Plugins::findOne(array('conditions' => array('`name` = ?', $name)));
+          	if ($plugin == null) {
+          	  $plugin = new Plugin();
+            }
+            $plugin->setName($name);
+            $plugin->setInstalled(true);
+
+            DB::beginWork();
+            // get the file loaded here
+            include_once($plugin_file_path);
+
+            // get activation routine ready
+            $activate = $name.'_activate';
+            if (function_exists($activate) ) {
+              $activate();
+            }
+
+            // save to db now
+            $plugin->save();
+            DB::commit();
+          } catch (Exception $e) {
+            DB::rollback();
+            $errors[] = $nicename.' ('.$e->getMessage().')';
+          }
+        } elseif (!$yes_no && '-' != $id) {
+          try {
+            $plugin = Plugins::findById($id);
+            DB::beginWork();
+            $deactivate = $name.'_deactivate';
+            if (function_exists($deactivate)) {
+              // Check if user choose to purge data
+              if ($plugins[$name."_data"] == "0") {
+                $deactivate(true);
+              } else {
+              	$deactivate();
+              }
+            }
+            $plugin->setInstalled(false);
+            $plugin->save();
+            DB::commit();
+          } catch (Exception $e) {
+            DB::rollback();
+            $errors[] = $nicename.' ('.$e->getMessage().')';
+          }
+        }
+      }
+
+      if (count($errors)) {
+        flash_error(lang('plugin activation failed', implode(", ",$errors)));
+      } else {
+        flash_error(lang('plugins updated'));
+      }
+      $this->redirectTo('administration', 'plugins');
+    } // update_plugins
+
   } // AdministrationController 
 
 ?>
