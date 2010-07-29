@@ -201,6 +201,7 @@ class WikiController extends ApplicationController {
     tpl_assign('page', $page);
     tpl_assign('revision', new Revision);
     $this->setTemplate('edit');
+    $this->setSidebar(get_template_path('textile_help_sidebar'));
 
   } // add
 
@@ -264,7 +265,8 @@ class WikiController extends ApplicationController {
 
     tpl_assign('revision', $revision);
     tpl_assign('page', $page);
-    $this->setTemplate('edit');		
+    $this->setTemplate('edit');
+    $this->setSidebar(get_template_path('textile_help_sidebar'));
   } // edit
 
   /**
