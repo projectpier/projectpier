@@ -47,7 +47,7 @@
     </tr>
     <tr>
       <th><?php echo lang('due date') ?></th>
-      <td><?php echo $ticket->getDueDate()->format("m/d/Y"); ?></td>
+      <td><?php echo $ticket->hasDueDate() ? $ticket->getDueDate()->format("m/d/Y") : lang('none'); ?></td>
       <th><?php echo lang('milestone') ?></th>
       <td>
 <?php if ($ticket->getMilestoneId()) {

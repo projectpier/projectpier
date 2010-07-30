@@ -276,7 +276,11 @@
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'ticket'))) {
-        $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
+        if ($ticket_data['empty_due_date']) {
+          $ticket_data['due_date'] = EMPTY_DATETIME;
+        } else {
+          $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
+        } // if
         try {
           $uploaded_files = ProjectFiles::handleHelperUploads(active_project());
         } catch (Exception $e) {
@@ -387,7 +391,7 @@
           'is_private' => $ticket->isPrivate(),
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
-          'due_date' => $ticket->getDueDate(),
+          'due_date' => $ticket->hasDueDate()?$ticket->getDueDate():DateTimeValueLib::now(),
           'tags' => is_array($tag_names) ? implode(', ', $tag_names) : '',
         ); // array
       } // if
@@ -398,7 +402,11 @@
       $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       if (is_array(array_var($_POST, 'ticket'))) {
-        $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
+        if ($ticket_data['empty_due_date']) {
+          $ticket_data['due_date'] = EMPTY_DATETIME;
+        } else {
+          $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
+        } // if
         $old_fields = array(
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),

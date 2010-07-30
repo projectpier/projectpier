@@ -8,7 +8,7 @@
   ));
   add_stylesheet_to_page('project/tickets.css');
 ?>
-<script type="text/javascript" src="<?php echo get_javascript_url('modules/addMessageForm.js') ?>"></script>
+<script type="text/javascript" src="<?php echo get_javascript_url('modules/addTicketForm.js') ?>"></script>
 <?php if ($ticket->isNew()) { ?>
 <form action="<?php echo get_url('ticket', 'add') ?>" method="post" enctype="multipart/form-data">
 <?php } else { ?>
@@ -56,7 +56,11 @@
 <?php } // if?>
 <div>
   <?php echo label_tag(lang('due date'), null) ?>
+  <?php echo yes_no_widget('ticket[empty_due_date]', 'ticketFormEmptyDueDate', !$ticket->hasDueDate(), lang('no due date'), ''); ?>
   <?php echo pick_date_widget('ticket_due_date', array_var($ticket_data, 'due_date')) ?>
+  <script type="text/javascript">
+    App.modules.addTicketForm.setupRadioButtonToggle('ticket_due_date', 'ticketFormEmptyDueDateNo');
+  </script>
 </div>
 
 
@@ -94,7 +98,7 @@
     <p><?php echo lang('email notification ticket desc') ?></p>
 <?php foreach (active_project()->getCompanies() as $company) { ?>
     <script type="text/javascript">
-      App.modules.addMessageForm.notify_companies.company_<?php echo $company->getId() ?> = {
+      App.modules.addTicketForm.notify_companies.company_<?php echo $company->getId() ?> = {
         id          : <?php echo $company->getId() ?>,
         checkbox_id : 'notifyCompany<?php echo $company->getId() ?>',
         users       : []
@@ -102,17 +106,17 @@
     </script>
 <?php if (is_array($users = $company->getUsersOnProject(active_project())) && count($users)) { ?>
     <div class="companyDetails">
-      <div class="companyName"><?php echo checkbox_field('ticket[notify_company_' . $company->getId() . ']', false, array('id' => 'notifyCompany' . $company->getId(), 'onclick' => 'App.modules.addMessageForm.emailNotifyClickCompany(' . $company->getId() . ')')) ?> <label for="notifyCompany<?php echo $company->getId() ?>" class="checkbox"><?php echo clean($company->getName()) ?></label></div>
+      <div class="companyName"><?php echo checkbox_field('ticket[notify_company_' . $company->getId() . ']', false, array('id' => 'notifyCompany' . $company->getId(), 'onclick' => 'App.modules.addTicketForm.emailNotifyClickCompany(' . $company->getId() . ')')) ?> <label for="notifyCompany<?php echo $company->getId() ?>" class="checkbox"><?php echo clean($company->getName()) ?></label></div>
       <div class="companyMembers">
         <ul>
 <?php foreach ($users as $user) { ?>
-          <li><?php echo checkbox_field('ticket[notify_user_' . $user->getId() . ']', (!$ticket->isNew() && $ticket->isSubscriber($user)), array('id' => 'notifyUser' . $user->getId(), 'onclick' => 'App.modules.addMessageForm.emailNotifyClickUser(' . $company->getId() . ', ' . $user->getId() . ')')) ?> <label for="notifyUser<?php echo $user->getId() ?>" class="checkbox"><?php echo clean($user->getDisplayName()) ?></label></li>
+          <li><?php echo checkbox_field('ticket[notify_user_' . $user->getId() . ']', (!$ticket->isNew() && $ticket->isSubscriber($user)), array('id' => 'notifyUser' . $user->getId(), 'onclick' => 'App.modules.addTicketForm.emailNotifyClickUser(' . $company->getId() . ', ' . $user->getId() . ')')) ?> <label for="notifyUser<?php echo $user->getId() ?>" class="checkbox"><?php echo clean($user->getDisplayName()) ?></label></li>
           <script type="text/javascript">
-            App.modules.addMessageForm.notify_companies.company_<?php echo $company->getId() ?>.users.push({
+            App.modules.addTicketForm.notify_companies.company_<?php echo $company->getId() ?>.users.push({
               id          : <?php echo $user->getId() ?>,
               checkbox_id : 'notifyUser<?php echo $user->getId() ?>'
             });
-            App.modules.addMessageForm.emailNotifyClickUser(<?php echo $company->getId(); ?>, <?php echo $user->getId(); ?>);
+            App.modules.addTicketForm.emailNotifyClickUser(<?php echo $company->getId(); ?>, <?php echo $user->getId(); ?>);
           </script>
 <?php } // foreach ?>
         </ul>

@@ -29,6 +29,7 @@
     'additional text' => 'Additional text',
     'date' => 'Date',
     'due date' => 'Due date',
+    'no due date' => 'No due date',
     'assign to' => 'Assign to',
     'late' => 'Late',
     'upcoming' => 'Upcoming',

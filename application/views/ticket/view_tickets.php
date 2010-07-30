@@ -82,25 +82,25 @@
           ?>"><?php echo lang("due date") ?></a>
     </th>
   </tr>
-<?php foreach($tickets as $ticket) { ?>
+<?php foreach ($tickets as $ticket) { ?>
   <tr class="<?php echo $ticket->getPriority(); ?>">
     <td><a href="<?php echo $ticket->getViewUrl() ?>" title="<?php echo $ticket->getDescription() ?>"><?php echo $ticket->getId() ?></a></td>
     <td><a href="<?php echo $ticket->getViewUrl() ?>" title="<?php echo $ticket->getDescription() ?>"><?php echo $ticket->getSummary() ?></a></td>
     <td><?php echo lang($ticket->getType()) ?></td>
     <td>
-<?php if($ticket->getCategory()) { ?>
+<?php if ($ticket->getCategory()) { ?>
           <?php echo clean($ticket->getCategory()->getName()) ?>
 <?php } // if{ ?>
     </td>
     <td><a href="<?php echo $ticket->getCreatedBy()->getCardUrl(); ?>"><?php echo $ticket->getCreatedBy()->getDisplayName() ?></a></td>
     <td>
-<?php if($ticket->getAssignedTo()) { ?>
+<?php if ($ticket->getAssignedTo()) { ?>
           <?php echo "<a href=\"".$ticket->getAssignedTo()->getCardUrl()."\">".clean($ticket->getAssignedTo()->getObjectName())."</a>" ?>
 <?php } // if{ ?>
     </td>
     <td><?php echo $ticket->getStatus(); ?></td>
     <td><?php echo $ticket->getPriority(); ?></td>
-    <td><?php echo $ticket->getDueDate()->format("m/d/Y"); ?></td>
+    <td><?php echo $ticket->hasDueDate() ? $ticket->getDueDate()->format("m/d/Y") : ''; ?></td>
   </tr>
 <?php } // foreach ?>
   </table>
