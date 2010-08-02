@@ -250,7 +250,11 @@
           
           
           flash_success(lang('success edit contact', $contact->getDisplayName()));
-          $this->redirectToUrl($contact->getCompany()->getViewUrl()); // Translate to profile page
+          if (!logged_user()->isMemberOfOwnerCompany()) {
+            $this->redirectToUrl(logged_user()->getAccountUrl());
+          } else {
+            $this->redirectToUrl($contact->getCompany()->getViewUrl()); // Translate to profile page
+          } // if
           
         } catch (Exception $e) {
           DB::rollback();

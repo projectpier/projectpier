@@ -492,7 +492,7 @@
         } // foreach
       } // if
       
-      $this->setTemplate('add_contact', 'project');
+      $this->setTemplate('add_contact');
       
       $contact = new Contact();
       

@@ -5,13 +5,19 @@
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(array(
       array(lang('company'), $company->getViewUrl()),
+      ($contact->isNew() ? null : array($contact->getDisplayName(), $contact->getCardUrl())),
       array($contact->isNew() ? lang('add contact') : lang('edit contact'))
     ));
+  } elseif (!logged_user()->isMemberOfOwnerCompany() && ($contact->canEdit(logged_user()))) {
+    set_page_title(lang('update profile'));
+    account_tabbed_navigation();
+    account_crumbs(lang('update profile'));
   } else {
     administration_tabbed_navigation(ADMINISTRATION_TAB_CLIENTS);
     administration_crumbs(array(
       array(lang('clients'), get_url('administration', 'clients')),
       array($company->getName(), $company->getViewUrl()),
+      ($contact->isNew() ? null : array($contact->getDisplayName(), $contact->getCardUrl())),
       array($contact->isNew() ? lang('add contact') : lang('edit contact'))
     ));
   } // if

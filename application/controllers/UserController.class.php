@@ -201,30 +201,6 @@
       }
 
     } // delete
-    
-    /**
-    * Show user card
-    *
-    * @access public
-    * @param void
-    * @return null
-    */
-    function card() {
-      $this->setLayout('dashboard');
-      
-      $user = Users::findById(get_id());
-      if (!($user instanceof User)) {
-        flash_error(lang('user dnx'));
-        $this->redirectToReferer(ROOT_URL);
-      } // if
-      
-      if (!logged_user()->canSeeUser($user)) {
-        flash_error(lang('no access permissions'));
-        $this->redirectToReferer(ROOT_URL);
-      } // if
-      
-      tpl_assign('user', $user);
-    } // card
   
   } // UserController
 

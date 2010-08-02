@@ -31,7 +31,11 @@
         lang('add user account') => $contact->getAddUserAccountUrl()
       ));
     }
-  }
+  } elseif (logged_user()->getContact()->getId() == $contact->getId()) {
+    add_page_action(array(
+      lang('edit user account') => $contact->getEditUserAccountUrl()
+    ));
+  } // if
   
 ?>
 <?php 

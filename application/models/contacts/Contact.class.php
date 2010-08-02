@@ -573,8 +573,8 @@
     * @return boolean
     */
     function canEdit(User $user) {
-      if ($user->getId() == $this->getId()) {
-        return true; // account owner
+      if ($this->hasUserAccount() && $user->getId() == $this->getUserId()) {
+        return true; // own profile
       } // if
       if ($user->isAccountOwner()) {
         return true;
@@ -724,7 +724,7 @@
     * @return boolean
     */
     function canUpdateProfile(User $user) {
-      if ($this->getId() == $user->getId()) {
+      if ($this->hasUserAccount() && $this->getUserId() == $user->getId()) {
         return true;
       } // if
       if ($user->isAdministrator()) {
@@ -819,11 +819,16 @@
     * Return edit contact URL
     *
     * @access public
-    * @param void
+    * @param string $redirect_to URL where we need to redirect user when he updates contact
     * @return string
     */
-    function getEditUrl() {
-      return get_url('contact', 'edit', $this->getId());
+    function getEditUrl($redirect_to = null) {
+      $attributes = array('id' => $this->getId());
+      if (trim($redirect_to) <> '') {
+        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
+      } // if
+
+      return get_url('contact', 'edit', $attributes);
     } // getEditUrl
     
     /**
@@ -836,21 +841,6 @@
     function getDeleteUrl() {
       return get_url('contact', 'delete', $this->getId());
     } // getDeleteUrl
-    
-    /**
-    * Return edit profile URL
-    *
-    * @param string $redirect_to URL where we need to redirect user when he updates profile
-    * @return string
-    */
-    function getEditProfileUrl($redirect_to = null) {
-      $attributes = array('id' => $this->getId());
-      if (trim($redirect_to) <> '') {
-        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-      } // if
-      
-      return get_url('account', 'edit_profile', $attributes);
-    } // getEditProfileUrl
     
     /**
     * Returns URL to attach a User account to that contact
@@ -912,36 +902,6 @@
     //   
     //   return get_url('account', 'update_permissions', $attributes);
     // } // getUpdatePermissionsUrl
-    
-    /**
-    * Return update avatar URL
-    *
-    * @param string
-    * @return string
-    */
-    function getUpdateAvatarUrl($redirect_to = null) {
-      $attributes = array('id' => $this->getId());
-      if (trim($redirect_to) <> '') {
-        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-      } // if
-      
-      return get_url('account', 'edit_avatar', $attributes);
-    } // getUpdateAvatarUrl
-    
-    /**
-    * Return delete avatar URL
-    *
-    * @param void
-    * @return string
-    */
-    function getDeleteAvatarUrl($redirect_to = null) {
-      $attributes = array('id' => $this->getId());
-      if (trim($redirect_to) <> '') {
-        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-      } // if
-      
-      return get_url('account', 'delete_avatar', $attributes);
-    } // getDeleteAvatarUrl
     
     /**
     * Return toggle favorite URL

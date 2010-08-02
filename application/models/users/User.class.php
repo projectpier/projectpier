@@ -789,12 +789,12 @@
     * @return string
     */
     function getEditProfileUrl($redirect_to = null) {
-      $attributes = array('id' => $this->getId());
+      $attributes = array('id' => $this->getContact()->getId());
       if (trim($redirect_to) <> '') {
         $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
       } // if
       
-      return get_url('account', 'edit_profile', $attributes);
+      return get_url('contact', 'edit', $attributes);
     } // getEditProfileUrl
     
     /**
