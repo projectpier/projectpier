@@ -485,18 +485,7 @@
     function getAddContactUrl() {
       return get_url('contact', 'add', array('company_id' => $this->getId()));
     } // getAddContactUrl
-    
-    /**
-    * Return add user URL
-    *
-    * @access public
-    * @param void
-    * @return string
-    */
-    function getAddUserUrl() {
-      return get_url('user', 'add', array('company_id' => $this->getId()));
-    } // getAddUserUrl
-    
+
     /**
     * Return update avatar URL
     *

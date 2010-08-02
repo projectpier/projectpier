@@ -43,7 +43,7 @@
   
   <div>
     <?php echo label_tag(lang('timezone'), 'userFormTimezone', true)?>
-    <?php echo select_timezone_widget('user[timezone]', array_var($user_data, 'timezone'), array('id' => 'userFormTimezone', 'class' => 'long')) ?>
+    <?php echo select_timezone_widget('user[timezone]', array_var($user_data, 'timezone'), array('id' => 'userFormTimezone', 'class' => 'long combobox')) ?>
   </div>
   
 <?php if ($user->isNew() || logged_user()->isAdministrator()) { ?>
