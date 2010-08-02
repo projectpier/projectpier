@@ -59,10 +59,18 @@
           'company_id' => $company_id,
         ); // array
       } // if
-      
+
+      $user_data = array_var($contact_data, 'user');
+      if (!is_array($user_data)) {
+        $user_data = array(
+          'password_generator' => 'random'
+        ); // array
+      } // if
+
       tpl_assign('contact', $contact);
       tpl_assign('company', $company);
       tpl_assign('contact_data', $contact_data);
+      tpl_assign('user_data', $user_data);
       tpl_assign('im_types', $im_types);
 
       $avatar = array_var($_FILES, 'new_avatar');
@@ -97,6 +105,8 @@
 
         try {          
           DB::beginWork();
+
+          // Company info
           if ($_POST['contact']['company']['what'] == 'existing') {
             $company_id = $_POST['contact']['company_id'];
           } else {
@@ -107,7 +117,35 @@
             $company->save();
             $company_id = $company->getId();
           } // if
+          
           $contact->setCompanyId($company_id);
+
+          // User account info
+          if ($user_data['add_account'] == "yes") {
+            $user = new User();
+            $user->setFromAttributes($user_data);
+
+            if (array_var($user_data, 'password_generator') == 'random') {
+              // Generate random password
+              $password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
+
+            } else {
+              // Validate user input
+              $password = array_var($user_data, 'password');
+              if (trim($password) == '') {
+                throw new Error(lang('password value required'));
+              } // if
+              if ($password <> array_var($user_data, 'password_a')) {
+                throw new Error(lang('passwords dont match'));
+              } // if
+            } // if
+            $user->setPassword($password);
+            $user->save();
+            
+            $contact->setUserId($user->getId());
+            
+          } // if
+
           $contact->save();
           
           $contact->clearImValues();
@@ -128,6 +166,14 @@
           
           ApplicationLogs::createLog($contact, null, ApplicationLogs::ACTION_ADD);
           DB::commit();
+
+          // Send notification...
+          try {
+            if (array_var($user_data, 'send_email_notification')) {
+              Notifier::newUserAccount($user, $password);
+            } // if
+          } catch(Exception $e) {
+          } // try
           
           flash_success(lang('success add contact', $contact->getDisplayName()));
           $this->redirectToUrl($contact->getCardUrl()); // Translate to profile page
@@ -393,7 +439,6 @@
       if (!is_array($user_data)) {
         $user_data = array(
           'password_generator' => 'random',
-          'company_id' => $company->getId(),
           'timezone' => $company->getTimezone(),
         ); // array
       } // if
@@ -410,7 +455,6 @@
       
       if (is_array(array_var($_POST, 'user'))) {
         $user->setFromAttributes($user_data);
-        // $user->setCompanyId($company->getId());
         
         try {
           // Generate random password

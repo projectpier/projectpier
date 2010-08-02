@@ -33,7 +33,16 @@ App.modules.addContactForm = {
       $('contactFormExistingCompanyControls').style.display = 'none';
       $('contactFormNewCompanyControls').style.display = 'block';
     } // if
-  } // toggleAttachForms
+  }, // toggleCompanyForms
   
-  
+  /**
+   * Toggles user account sub-form based on selected option
+   */
+  toggleUserAccountForm: function() {
+    if($('contactFormNoUserAccount').checked) {
+      $('contactFormUserAccountControls').style.display = 'none';
+    } else {
+      $('contactFormUserAccountControls').style.display = 'block';
+    } // if
+  } // toggleUserAccountForm
 }

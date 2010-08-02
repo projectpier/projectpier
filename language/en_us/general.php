@@ -100,6 +100,7 @@
     'author' => 'Author',
     'contact title' => 'Title',
     'user title' => 'Title',
+    'user account' => 'User account',
     'more' => 'More',
     'order by' => 'Order by',
     'filename' => 'File name',
