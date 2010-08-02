@@ -41,11 +41,8 @@
     function add() {
       $this->setTemplate('add_contact');
       
-      $company = Companies::findById(get_id('company_id'));
-      if (!($company instanceof Company)) {
-        flash_error(lang('company dnx'));
-        $this->redirectTo('administration');
-      } // if
+      $company_id = get_id('company_id', null, 0);
+      $company = Companies::findById($company_id);
       
       if (!Contact::canAdd(logged_user(), $company)) {
         flash_error(lang('no access permissions'));
@@ -59,7 +56,7 @@
       $contact_data = array_var($_POST, 'contact');
       if (!is_array($contact_data)) {
         $contact_data = array(
-          'company_id' => $company->getId(),
+          'company_id' => $company_id,
         ); // array
       } // if
       
@@ -97,7 +94,6 @@
 
       if (is_array(array_var($_POST, 'contact'))) {
         $contact->setFromAttributes($contact_data);
-        $contact->setCompanyId($company->getId());
 
         try {          
           DB::beginWork();
@@ -123,7 +119,7 @@
           DB::commit();
           
           flash_success(lang('success add contact', $contact->getDisplayName()));
-          $this->redirectToUrl($company->getViewUrl()); // Translate to profile page
+          $this->redirectToUrl($contact->getCardUrl()); // Translate to profile page
           
         } catch (Exception $e) {
           DB::rollback();

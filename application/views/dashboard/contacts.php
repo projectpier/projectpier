@@ -7,6 +7,7 @@
   
   if (logged_user()->isAdministrator(owner_company())) {
     add_page_action(lang('add company'), get_url('company', 'add_client'));
+    add_page_action(lang('add contact'), get_url('contact', 'add'));
   }
 ?>
 <?php add_stylesheet_to_page('dashboard/company_list.css') ?>

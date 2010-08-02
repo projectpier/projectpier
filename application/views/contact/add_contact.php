@@ -1,7 +1,7 @@
 <?php
 
   set_page_title($contact->isNew() ? lang('add contact') : lang('edit contact'));
-  if ($company->isOwner()) {
+  if ($company instanceof Company && $company->isOwner()) {
     administration_tabbed_navigation(ADMINISTRATION_TAB_COMPANY);
     administration_crumbs(array(
       array(lang('company'), $company->getViewUrl()),
@@ -16,7 +16,7 @@
     administration_tabbed_navigation(ADMINISTRATION_TAB_CLIENTS);
     administration_crumbs(array(
       array(lang('clients'), get_url('administration', 'clients')),
-      array($company->getName(), $company->getViewUrl()),
+      ($company instanceof Company ? array($company->getName(), $company->getViewUrl()) : null),
       ($contact->isNew() ? null : array($contact->getDisplayName(), $contact->getCardUrl())),
       array($contact->isNew() ? lang('add contact') : lang('edit contact'))
     ));
@@ -26,7 +26,7 @@
 
 ?>
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/addUserForm.js') ?>"></script>
-<form action="<?php if ($contact->isNew()) { echo $company->getAddContactUrl(); } else { echo $contact->getEditUrl(); } ?>" method="post" enctype="multipart/form-data">
+<form action="<?php if ($contact->isNew()) { echo ($company instanceof Company ? $company->getAddContactUrl() : get_url('contact', 'add')); } else { echo $contact->getEditUrl(); } ?>" method="post" enctype="multipart/form-data">
 
 <?php tpl_display(get_template_path('form_errors')) ?>
 
@@ -35,7 +35,7 @@
     <?php echo text_field('contact[display_name]', array_var($contact_data, 'display_name'), array('class' => 'medium', 'id' => 'contactFormDisplayName')) ?>
   </div>
   
-<?php if (!$contact->isNew() && logged_user()->isAdministrator()) { ?>
+<?php if (logged_user()->isAdministrator()) { ?>
 <?php if (!$contact->isAdministrator()) { ?>
   <div>
     <?php echo label_tag(lang('company'), 'contactFormCompany', true) ?>
