@@ -74,7 +74,7 @@
       tpl_assign('im_types', $im_types);
 
       $avatar = array_var($_FILES, 'new_avatar');
-      if (is_array($avatar)) {
+      if (is_array($avatar) && isset($avatar['size']) && $avatar['size'] != 0) {
         try {
           if (!isset($avatar['name']) || !isset($avatar['type']) || !isset($avatar['size']) || !isset($avatar['tmp_name']) || !is_readable($avatar['tmp_name'])) {
             throw new InvalidUploadError($avatar, lang('error upload file'));
@@ -169,7 +169,7 @@
 
           // Send notification...
           try {
-            if (array_var($user_data, 'send_email_notification')) {
+            if (array_var($user_data, 'add_account') == "yes" && array_var($user_data, 'send_email_notification')) {
               Notifier::newUserAccount($user, $password);
             } // if
           } catch(Exception $e) {
