@@ -160,6 +160,16 @@
       }
       return $this->changesets;
     } // getChangesets
+
+    /**
+    * Returns last changeset
+    *
+    * @param void
+    * @return TicketChangeset
+    */
+    function getLastChangeset() {
+      return TicketChangesets::getLastChangesetByTicket($this);
+    } // getLastChangeset
     
     // ---------------------------------------------------
     //  Subscriptions

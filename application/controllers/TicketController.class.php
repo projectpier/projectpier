@@ -447,21 +447,21 @@
             $new_field = $new_fields[$type];
             if ($old_field === $new_field) {
               continue;
-            }
+            } // if
             if ($old_field instanceof ApplicationDataObject) {
               $from_data = $old_field->getObjectName();
             } elseif ($old_field instanceof DateTimeValue) {
               $from_data = $old_field->format('m/d/Y');
             } else {
               $from_data = $old_field;
-            }
+            } // if
             if ($new_field instanceof ApplicationDataObject) {
               $to_data = $new_field->getObjectName();
             } elseif ($new_field instanceof DateTimeValue) {
               $to_data = $new_field->format('m/d/Y');
             } else {
               $to_data = $new_field;
-            }
+            } // if
 
             $change = new TicketChange();
             $change->setChangesetId($changeset->getId());

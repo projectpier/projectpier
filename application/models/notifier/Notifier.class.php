@@ -144,6 +144,7 @@
         return true; // no recipients
       } // if
 
+      tpl_assign('changeset', $ticket->getLastChangeset());
       tpl_assign('ticket', $ticket);
 
       return self::sendEmail(

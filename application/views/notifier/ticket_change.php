@@ -36,8 +36,10 @@ if ((!defined('SHOW_TICKET_BODY')) or (SHOW_TICKET_BODY == true)) {
     echo "\n";
   } // foreach
   echo "\n";
-  echo lang('comment').":\n";
-  echo $changeset->getComment();
+  if (trim($changeset->getComment())) {
+    echo lang('comment').":\n";
+    echo $changeset->getComment();
+  } // if
   echo "\n----------------\n\n";
 }
 ?>

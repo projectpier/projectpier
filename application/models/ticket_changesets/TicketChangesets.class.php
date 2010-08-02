@@ -19,6 +19,19 @@
         'order' => '`created_on`'
       )); // array
     } // getChangesetsByTicket
+
+    /**
+    * Returns ticket's last changeset
+    *
+    * @param ProjectTicket $ticket
+    * @return TicketChangeset
+    */
+    static function getLastChangesetByTicket(ProjectTicket $ticket) {
+      return self::findOne(array(
+        'conditions' => array('`ticket_id` = ?', $ticket->getId()),
+        'order' => '`created_on` DESC',
+        'limit' => '1'));
+    } // getLastChangesetByTicket
     
   } // TicketChangesets
 
