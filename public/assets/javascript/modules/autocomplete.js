@@ -13,7 +13,7 @@
 						  select.children("option"), select.children("optgroup").children("option")).map(function() {
 						    var text = jQuery(this).text();
 						    if (jQuery(this).parent().attr('tagName') == "OPTGROUP") {
-						      var label = jQuery(this).text()+" @ "+this.parentElement.label;
+						      var label = jQuery(this).text()+" @ "+jQuery(this).parent().attr('label');
 						    } else {
                   var label = text;
 						    }
