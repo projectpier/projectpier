@@ -17,14 +17,16 @@
 <?php foreach ($page_attachments as $page_attachment) {
   tpl_assign('attachment', $page_attachment);
   if ($page_attachment->getRelObjectManager() != '') {
-    if (file_exists(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'))) {
-      $this->includeTemplate(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'));
-    } else {
-      $this->includeTemplate(get_template_path('view_DefaultObject', 'page_attachment'));
-    }
+    if ($page_attachment->getObject()) { // do not display empty contacts
+      if (file_exists(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'))) {
+        $this->includeTemplate(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'));
+      } else {
+        $this->includeTemplate(get_template_path('view_DefaultObject', 'page_attachment'));
+      } // if
+    } // if
   } else {
     $this->includeTemplate(get_template_path('view_EmptyAttachment', 'page_attachment'));
-  }
+  } // if
   if (active_project()->canChangePermissions(logged_user()) && $page_attachment->getPageName() == 'people') { ?>
     <div class="attachmentActions">
       <a href="<?php echo $project->getRemoveContactUrl($page_attachment->getRelObjectId()); ?>"><?php echo lang('remove contact'); ?></a>
