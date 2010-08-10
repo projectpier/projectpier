@@ -4,6 +4,7 @@
   project_tabbed_navigation(PROJECT_TAB_TICKETS);
   project_crumbs(array(
     array(lang('tickets'), get_url('ticket')),
+    ($ticket->isNew() ? null : array($ticket->getTitle(), $ticket->getViewUrl())),
     array($ticket->isNew() ? lang('add ticket') : lang('edit ticket'))
   ));
   add_stylesheet_to_page('project/tickets.css');

@@ -198,6 +198,8 @@
           $ticket->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
           $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
 
+          $ticket->subscribeUser($ticket->getAssignedToUser());
+
           DB::beginWork();
           $ticket->save();
           ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
@@ -478,7 +480,7 @@
           try {
             if ($ticket->getAssignedToUserId()) {
               $ticket_data['notify_user_' . $ticket->getAssignedToUserId()] = 'checked';
-            }
+            } // if
             
             $notify_people = array();
             $project_companies = active_project()->getCompanies();
