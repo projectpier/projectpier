@@ -16,13 +16,15 @@
 <div id="listing">
 <table width="100%" cellpadding="2" border="0">
   <tr bgcolor="#f4f4f4">
-    <th>Category</th>
-    <th>Description</th>
+    <th><?php echo lang('category'); php?></th>
+    <th><?php echo lang('description'); ?></th>
+    <th></th>
   </tr>
   <?php foreach($categories as $category) { ?>
     <tr>
       <td><a href="<?php echo $category->getViewUrl() ?>"><?php echo $category->getName() ?></a></td>
       <td><?php echo $category->getShortDescription() ?></td>
+      <td><a href="<?php echo $category->getEditUrl() ?>"><?php echo lang('edit'); ?></a></td>
     </tr>
   <?php } // foreach ?>
 </table>

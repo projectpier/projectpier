@@ -825,7 +825,7 @@
             DB::commit();
             
             flash_success(lang('success edit category', $category->getName()));
-            $this->redirectToUrl($category->getViewUrl());
+            $this->redirectTo('ticket', 'categories');
             
           } catch(Exception $e) {
             DB::rollback();

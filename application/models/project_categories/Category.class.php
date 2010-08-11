@@ -108,7 +108,7 @@
     * @return string
     */
     function getViewUrl() {
-      return $this->getEditUrl();
+      return get_url('ticket', 'index', array('category_id' => $this->getId(), 'active_project' => $this->getProjectId()));
     } // getViewUrl
     
     /**
