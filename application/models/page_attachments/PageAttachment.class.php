@@ -124,51 +124,6 @@
     //  URLs
     // ---------------------------------------------------
     
-    /**
-    * Return tag URL
-    *
-    * @param void
-    * @return string
-    */
-    function getViewUrl() {
-      $object = $this->getObject();
-      return $object instanceof ProjectDataObject ? $object->getObjectUrl() . '#comment' . $this->getId() : '';
-    } // getViewUrl
-    
-    /**
-    * Return attach to page URL for specific object
-    *
-    * @param ProjectDataObject $object
-    * @return string
-    */
-    static function getAddUrl(ProjectDataObject $object) {
-      return get_url('page_attachment', 'add', array(
-        'object_id' => $object->getObjectId(),
-        'object_manager' => get_class($object->manager()),
-        'active_project' => $object->getProject()->getId(),
-      )); // get_url
-    } // getAddUrl
-    
-    /**
-    * Return edit URL
-    *
-    * @param void
-    * @return string
-    */
-    function getEditUrl() {
-      return get_url('page_attachment', 'edit', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
-    } // getEditUrl
-    
-    /**
-    * Return delete URL
-    *
-    * @param void
-    * @return string
-    */
-    function getDeleteUrl() {
-      return get_url('page_attachment', 'delete', array('id' => $this->getId(), 'active_project' => $this->getProjectId()));
-    } // getDeleteUrl
-    
     // ---------------------------------------------------
     //  Permissions
     // ---------------------------------------------------
@@ -194,9 +149,6 @@
     
     /**
     * Empty implementation of static method.
-    * 
-    * Add tag permissions are done through ProjectDataObject::canComment() method. This
-    * will return comment permissions for specified object
     *
     * @param User $user
     * @param Project $project
@@ -207,8 +159,7 @@
     } // canAdd
     
     /**
-    * Empty implementation of static method. Update tag permissions are check by the taggable
-    * object, not tag itself
+    * Implementation of static method.
     *
     * @param User $user
     * @return boolean
@@ -226,19 +177,12 @@
         if (!$user->isMemberOfOwnerCompany() && $this->isPrivate()) {
           return false; // private object
         } // if
-        
-        $edit_limit = DateTimeValueLib::now();
-        $edit_limit->advance(180);
-        if (($this->getCreatedById() == $user->getId()) && ($this->getCreatedOn()->getTimestamp() < $edit_limit->getTimestamp())) {
-          return true; // author withing three minutes
-        } // if
       } // if
       return false;
     } // canEdit
     
     /**
-    * Empty implementation of static method. Update tag permissions are check by the taggable
-    * object, not tag itself
+    * Implementation of static method.
     *
     * @param User $user
     * @return boolean
