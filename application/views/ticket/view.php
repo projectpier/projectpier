@@ -31,8 +31,8 @@
       <td><a href="<?php echo $ticket->getCreatedBy()->getCardUrl(); ?>"><?php echo $ticket->getCreatedByDisplayName(); ?></a></td>
       <th><span class="bold"><?php echo lang('edit by'); ?>:</span></th>
       <td>
-<?php if ($ticket->getUpdated()) { ?>
-        <?php echo lang('updated on by', format_datetime($ticket->getUpdatedOn()), $ticket->getUpdatedBy()->getCardUrl(), $ticket->getUpdatedByDisplayName(), lang($ticket->getUpdated())); ?>
+<?php if ($ticket->getUpdatedBy()) { ?>
+        <?php echo lang('updated on by', format_datetime($ticket->getUpdatedOn()), $ticket->getUpdatedBy()->getCardUrl(), $ticket->getUpdatedByDisplayName()); ?>
 <?php } else { ?>
         <?php echo lang('n/a') ?>
 <?php } // if?>
