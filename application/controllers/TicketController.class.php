@@ -198,7 +198,9 @@
           $ticket->setAssignedToCompanyId(array_var($assigned_to, 0, 0));
           $ticket->setAssignedToUserId(array_var($assigned_to, 1, 0));
 
-          $ticket->subscribeUser($ticket->getAssignedToUser());
+          if ($ticket->getAssignedToUser()) {
+            $ticket->subscribeUser($ticket->getAssignedToUser());
+          } // if
 
           DB::beginWork();
           $ticket->save();

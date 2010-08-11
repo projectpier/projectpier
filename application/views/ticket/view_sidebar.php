@@ -15,7 +15,7 @@
 <?php } else { ?>
     <p><?php echo lang('no ticket subscribers') ?></p>
 <?php } // if ?>
-<?php if(!$ticket->isSubscriber(logged_user())) { ?>
+<?php if (!$ticket->isSubscriber(logged_user())) { ?>
     <p><a href="<?php echo $ticket->getSubscribeUrl() ?>" onclick="return confirm('<?php echo lang('confirm subscribe ticket') ?>')"><?php echo lang('subscribe to message') ?></a></p>
 <?php } // if ?>
   </div>

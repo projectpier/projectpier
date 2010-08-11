@@ -160,6 +160,7 @@
     'feature request' => 'Feature',
     'legend' => 'Legend',
     'ticket #' => 'Ticket #%s',
+    'updated on' => 'Updated on',
     'updated on by' => '%s | <a href="%s">%s</a>',
     'change set to' => '<strong>%s</strong> set to <em>%s</em>',
     'change from to' => '<strong>%s</strong> from <em>%s</em> to <em>%s</em>',

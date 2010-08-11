@@ -38,15 +38,6 @@
     </th>
     <th width="60" align="center">
       <a href="<?php
-        if ($params['sort_by']=='created_by_id' && $params['order']=='ASC') {
-          echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'created_by_id', 'order' =>'DESC')));
-        } else {
-          echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'created_by_id', 'order' => 'ASC')));
-        }
-          ?>"><?php echo ucfirst(lang("created by")) ?></a>
-    </th>
-    <th width="60" align="center">
-      <a href="<?php
         if ($params['sort_by']=='assigned_to_user_id' && $params['order']=='ASC') {
           echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'assigned_to_user_id', 'order' =>'DESC')));
         } else {
@@ -81,6 +72,15 @@
         }
           ?>"><?php echo lang("due date") ?></a>
     </th>
+    <th width="60" align="center">
+      <a href="<?php
+        if ($params['sort_by']=='updated_on' && $params['order']=='ASC') {
+          echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'updated_on', 'order' =>'DESC')));
+        } else {
+          echo get_url('ticket', 'index', array_merge($params, array('sort_by' => 'updated_on', 'order' => 'ASC')));
+        }
+          ?>"><?php echo ucfirst(lang('updated on')) ?></a>
+    </th>
   </tr>
 <?php foreach ($tickets as $ticket) { ?>
   <tr class="<?php echo $ticket->getPriority(); ?>">
@@ -92,7 +92,6 @@
           <?php echo clean($ticket->getCategory()->getName()) ?>
 <?php } // if{ ?>
     </td>
-    <td><a href="<?php echo $ticket->getCreatedBy()->getCardUrl(); ?>"><?php echo $ticket->getCreatedBy()->getDisplayName() ?></a></td>
     <td>
 <?php if ($ticket->getAssignedTo()) { ?>
           <?php echo "<a href=\"".$ticket->getAssignedTo()->getCardUrl()."\">".clean($ticket->getAssignedTo()->getObjectName())."</a>" ?>
@@ -101,6 +100,7 @@
     <td><?php echo $ticket->getStatus(); ?></td>
     <td><?php echo $ticket->getPriority(); ?></td>
     <td><?php echo $ticket->hasDueDate() ? $ticket->getDueDate()->format("m/d/Y") : ''; ?></td>
+    <td><?php echo $ticket->getUpdatedOn() ? $ticket->getUpdatedOn()->format("m/d/Y") : lang('n/a') ?></td>
   </tr>
 <?php } // foreach ?>
   </table>
