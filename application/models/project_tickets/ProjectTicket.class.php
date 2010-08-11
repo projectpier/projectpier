@@ -58,33 +58,6 @@
     private $changesets;
     
     // ---------------------------------------------------
-    //  Comments
-    // ---------------------------------------------------
-    
-    /**
-    * Handle on add comment event
-    *
-    * @param Comment $comment
-    * @return null
-    */
-    function onAddComment(Comment $comment) {
-      try {
-        $this->setUpdated('comment');
-        $this->save();
-        
-        $change = new TicketChange();
-        $change->setTicketId($this->getId());
-        $change->setType('comment');
-        $change->setToData('#'.$this->countAllComments());
-        $change->save();
-        
-        Notifier::newTicketComment($comment);
-      } catch (Exception $e) {
-        // nothing here, just suppress error...
-      } // try
-    } // onAddComment
-    
-    // ---------------------------------------------------
     //  Files
     // ---------------------------------------------------
     
@@ -694,12 +667,6 @@
     * @return boolean
     */
     function delete() {
-      $comments = $this->getComments();
-      if (is_array($comments)) {
-        foreach ($comments as $comment) {
-          $comment->delete();
-        }
-      }
       $this->clearSubscriptions();
       return parent::delete();
     } // delete
