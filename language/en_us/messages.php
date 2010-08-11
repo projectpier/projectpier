@@ -152,6 +152,7 @@
     'success unsubscribe to message' => 'You have been successfully unsubscribed from this message',
     
     'success subscribe to ticket' => 'You have been successfully subscribed to this ticket',
+    'success subscribe user to ticket' => 'You have successfully subscribed %s to this ticket',
     'success unsubscribe to ticket' => 'You have been successfully unsubscribed from this ticket',
     
     'success add project form' => 'Form \'%s\' has been added',

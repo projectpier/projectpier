@@ -100,8 +100,65 @@
       } // foreach
     } // if
     return select_box($name, $all_options, $attributes);
-  } // select_company
+  } // select_contact
   
+  /**
+  * Render select project user box
+  *
+  * @param string $name Name of the widget
+  * @param Project $project
+  * @param integer $selected ID of selected user
+  * @param array $exclude_users Array of IDs of users that need to be excluded (e.g. already subscribers)
+  * @param array $attributes Additional attributes
+  * @return string
+  */
+  function select_project_user($name, $project = null, $selected = null, $exclude_users = null, $attributes = null) {
+    if (is_null($project)) {
+      $project = active_project();
+    } // if
+    if (!($project instanceof Project)) {
+      throw new InvalidInstanceError('$project', $project, 'Project');
+    } // if
+
+    if (is_array($attributes)) {
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'select_project_user';
+      } // if
+    } else {
+      $attributes = array('class' => 'select_project_user');
+    } // if
+
+    $grouped_project_users = $project->getUsers(true);
+    $all_options = array(option_tag(lang('none'), 0));
+    if (is_array($grouped_project_users)) {
+      foreach ($grouped_project_users as $company_id => $users) {
+        $company = Companies::findById($company_id);
+        if (!($company instanceof Company)) {
+          continue;
+        } // if
+        
+        $options = array();
+        if (is_array($users)) {
+          foreach ($users as $user) {
+            if (is_array($exclude_users) && in_array($user->getId(), $exclude_users)) {
+              continue;
+            } // if
+            $option_attributes = ($user->getId() == $selected ? array('selected' => 'selected') : null);
+            $display_name = $user->getDisplayName().($user->getId() == logged_user()->getId() ? ' ('.lang('you').')' : '');
+            $options[] = option_tag($display_name, $user->getId(), $option_attributes);
+            
+          } // foreach
+          if (count($options)) {
+            $all_options[] = option_group_tag($company->getName(), $options);
+          } // if
+          
+        }
+      } // foreach
+    } // if
+    
+    return select_box($name, $all_options, $attributes);
+  } // select_project_user
+
   /**
   * Render assign to SELECT
   *

@@ -15,9 +15,10 @@
 <?php } else { ?>
     <p><?php echo lang('no ticket subscribers') ?></p>
 <?php } // if ?>
-<?php if (!$ticket->isSubscriber(logged_user())) { ?>
-    <p><a href="<?php echo $ticket->getSubscribeUrl() ?>" onclick="return confirm('<?php echo lang('confirm subscribe ticket') ?>')"><?php echo lang('subscribe to message') ?></a></p>
-<?php } // if ?>
+    <form action="<?php echo $ticket->getSubscribeUrl(); ?>" method="POST">
+<?php echo select_project_user('ticket[new_subscriber]', active_project(), logged_user()->getId(), $subscribers_ids); ?>
+<?php echo submit_button(lang('subscribe to message'), null); ?>
+    </form>
   </div>
 </div>
 

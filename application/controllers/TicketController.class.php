@@ -140,6 +140,12 @@
         $this->redirectToReferer(get_url('ticket'));
       } // if
       
+      $subscribers = $ticket->getSubscribers();
+      $subscribers_ids = null;
+      foreach ($subscribers as $subscriber) {
+        $subscribers_ids[] = $subscriber->getId();
+      } // foreach
+      
       $ticket_data = array(
         'milestone_id' => $ticket->getMilestoneId(),
         'status' => $ticket->getStatus(),
@@ -156,7 +162,8 @@
       tpl_assign('params', $params);
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
-      tpl_assign('subscribers', $ticket->getSubscribers());
+      tpl_assign('subscribers', $subscribers);
+      tpl_assign('subscribers_ids', $subscribers_ids);
       tpl_assign('changesets', $ticket->getChangesets($params['order']));
       
       $this->setSidebar(get_template_path('view_sidebar', 'ticket'));
@@ -892,10 +899,26 @@
         $this->redirectTo('ticket');
       } // if
       
-      if ($ticket->subscribeUser(logged_user())) {
-        flash_success(lang('success subscribe to ticket'));
-      } else {
-        flash_error(lang('error subscribe to ticket'));
+      $ticket_data = array_var($_POST, 'ticket');
+      if (is_array(array_var($_POST, 'ticket'))) {
+        try {
+          $user = Users::findById($ticket_data['new_subscriber']);
+          if ($user instanceof User) {
+            if ($ticket->subscribeUser($user)) {
+              if ($user->getId() == logged_user()->getId()) {
+                flash_success(lang('success subscribe to ticket'));
+              } else {
+                flash_success(lang('success subscribe user to ticket', $user->getDisplayName()));
+              } // if
+            } else {
+              flash_error(lang('error subscribe to ticket'));
+            } // if
+          } else {
+            flash_error(lang('user dnx'));
+          } // if
+        } catch (Exception $e) {
+          flash_error(lang('error subscribe to ticket'));
+        } // try
       } // if
       $this->redirectToUrl($ticket->getViewUrl());
     } // subscribe

@@ -37,6 +37,7 @@
     'yesterday' => 'Yesterday',
     'tomorrow' => 'Tomorrow',
     'n/a' => 'n/a',
+    'you' => 'You',
     'anyone' => 'Anyone',
     'nobody' => 'Nobody',
     'none' => '-- None --',

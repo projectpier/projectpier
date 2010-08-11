@@ -1019,7 +1019,6 @@
       } // if
       
       if ($group_by_company) {
-        
         $grouped = array();
         foreach ($users as $user) {
           if (!isset($grouped[$user->getCompanyId()]) || !is_array($grouped[$user->getCompanyId()])) {
