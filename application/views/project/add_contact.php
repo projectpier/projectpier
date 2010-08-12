@@ -16,7 +16,7 @@
 <?php tpl_display(get_template_path('form_errors')) ?>
   
   <div>
-    <?php echo radio_field('contact[what]', true, array('value' => 'existing', 'id'=>'contactFormExistingContact', 'onclick' => 'App.modules.addContactToProjectForm.toggleAttachForms()')); ?>
+    <?php echo radio_field('contact[what]', !isset($contact_data['what']) || $contact_data['what'] == 'existing', array('value' => 'existing', 'id'=>'contactFormExistingContact', 'onclick' => 'App.modules.addContactToProjectForm.toggleAttachForms()')); ?>
     <?php echo label_tag(lang('attach existing contact'), 'contactFormExistingContact', false, array('class'=>'checkbox')); ?>
   </div>
   
@@ -33,7 +33,7 @@
 
 
   <div>
-    <?php echo radio_field('contact[what]', false, array('value' => 'new', 'id'=>'contactFormNewContact', 'onclick' => 'App.modules.addContactToProjectForm.toggleAttachForms()')); ?>
+    <?php echo radio_field('contact[what]', isset($contact_data['what']) && $contact_data['what'] == 'new', array('value' => 'new', 'id'=>'contactFormNewContact', 'onclick' => 'App.modules.addContactToProjectForm.toggleAttachForms()')); ?>
     <?php echo label_tag(lang('new contact'), 'contactFormNewContact', false, array('class'=>'checkbox'))?>
   </div>
 

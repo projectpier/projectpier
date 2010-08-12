@@ -21,6 +21,7 @@
     
     // Contact validation errors
     'name value required' => 'Name is required',
+    'existing contact required' => 'You need to select an existing contact',
     
     // Add user to contact form
     'contact already has user' => 'This contact already has a user account attached to it.',

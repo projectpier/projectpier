@@ -511,14 +511,19 @@
 
       if (is_array(array_var($_POST, 'contact'))) {
         if ($_POST['contact']['what'] == 'existing') {
-          $page_attachment = new PageAttachment();
-          $page_attachment->setFromAttributes($contact_data['existing']);
-          $page_attachment->setProjectId(active_project());
-          $page_attachment->setPageName('people');
-          $page_attachment->save();
-          PageAttachments::reorder('people', active_project());
-          flash_success(lang('success add contact', $page_attachment->getObject()->getDisplayName()));
-          $this->redirectToUrl(get_url('project', 'people', active_project()));
+          if (!(Contacts::findById(array_var($contact_data['existing'], 'rel_object_id')) instanceof Contact)) {
+            tpl_assign('error', new FormSubmissionErrors(array(lang('existing contact required'))));
+          } else {
+            $page_attachment = new PageAttachment();
+            $page_attachment->setFromAttributes($contact_data['existing']);
+            $page_attachment->setRelObjectManager('Contacts');
+            $page_attachment->setProjectId(active_project());
+            $page_attachment->setPageName('people');
+            $page_attachment->save();
+            PageAttachments::reorder('people', active_project());
+            flash_success(lang('success add contact', $page_attachment->getObject()->getDisplayName()));
+            $this->redirectToUrl(get_url('project', 'people', active_project()));
+          } // if
         } else {
           // Save avatar
           $avatar = array_var($_FILES, 'new_avatar');
