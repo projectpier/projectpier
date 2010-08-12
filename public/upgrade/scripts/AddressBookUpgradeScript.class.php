@@ -188,7 +188,7 @@
       // NB: user_id was renamed contact_id in the previous step
       $rows = mysql_query("SELECT `$contacts_table`.`id`, `$contact_im_table`.`contact_id`, `$contact_im_table`.`im_type_id` FROM `$contacts_table`, `$contact_im_table` WHERE `$contacts_table`.`user_id` = `$contact_im_table`.`contact_id`");
       while ($row = mysql_fetch_assoc($rows)) {
-        if (!mysql_query("UPDATE `$contact_im_table` SET `contact_id` = '".$row['id']."' WHERE `contact_id` = '".$row['contact_id']."' AND `im_type_id` = '".$row['im_type_id'])) {
+        if (!mysql_query("UPDATE `$contact_im_table` SET `contact_id` = '".$row['id']."' WHERE `contact_id` = '".$row['contact_id']."' AND `im_type_id` = '".$row['im_type_id']."'")) {
           $this->printMessage("Error while updating Contact-IM table. Upgrade aborted. MySQL said: ".mysql_error($this->database_connection), true);
           mysql_query('ROLLBACK');
           return false;
