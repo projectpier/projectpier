@@ -95,7 +95,7 @@
     
     // Dashboard
     'welcome to new account' => 'Welcome to your newly created account',
-    'welcome to new account info' => '%s, welcome to your new account. From now on it will always be available on %s (you can bookmark this link). You can get started in a minute following these easy steps:',
+    'welcome to new account info' => '%s, welcome to your new account. From now on it will always be available at <a href="%s">%s</a> (you can bookmark this link). You can get started in a minute following these easy steps:',
     'new account step1' => 'Step 1: Update your company info',
     'new account step1 info' => '<a href="%s">Set your company details</a> such as phone and fax number, address, email, homepage, etc.',
     'new account step2' => 'Step 2: Add team members',

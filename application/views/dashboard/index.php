@@ -16,7 +16,7 @@
 <div class="hint">
 
   <div class="header"><?php echo lang('welcome to new account') ?></div>
-  <div class="content"><?php echo lang('welcome to new account info', clean(logged_user()->getDisplayName()), ROOT_URL) ?></div>
+  <div class="content"><?php echo lang('welcome to new account info', clean(logged_user()->getDisplayName()), with_slash(ROOT_URL), with_slash(ROOT_URL)) ?></div>
   
 <?php if (owner_company()->isInfoUpdated()) { ?>
   <div class="header"><del><?php echo lang('new account step1') ?></del></div>
@@ -28,10 +28,10 @@
   
 <?php if (owner_company()->countUsers() > 1) { ?>
   <div class="header"><del><?php echo lang('new account step2') ?></del></div>
-  <div class="content"><del><?php echo lang('new account step2 info', owner_company()->getAddUserUrl()) ?></del></div>
+  <div class="content"><del><?php echo lang('new account step2 info', owner_company()->getAddContactUrl()) ?></del></div>
 <?php } else { ?>
   <div class="header"><?php echo lang('new account step2') ?></div>
-  <div class="content"><?php echo lang('new account step2 info', owner_company()->getAddUserUrl()) ?></div>
+  <div class="content"><?php echo lang('new account step2 info', owner_company()->getAddContactUrl()) ?></div>
 <?php } // if?>
   
 <?php if (owner_company()->countClientCompanies() > 0) { ?>
