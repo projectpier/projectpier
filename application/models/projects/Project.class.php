@@ -1454,14 +1454,17 @@
     * Return edit project URL
     *
     * @access public
-    * @param void
+    * @param string $redirect_to URL where we need to redirect user when edit is done
     * @return string
     */
-    function getEditUrl() {
-      return get_url('project', 'edit', array(
-        'id' => $this->getId(),
-        'active_project' => $this->getId(),
-      ));
+    function getEditUrl($redirect_to = null) {
+      $attributes = array('id' => $this->getId(),
+        'active_project' => $this->getId());
+      if (trim($redirect_to) <> '') {
+        $attributes['redirect_to'] = urlencode(trim($redirect_to));
+      } // if
+      
+      return get_url('project', 'edit', $attributes);
     } // getEditUrl
     
     /**

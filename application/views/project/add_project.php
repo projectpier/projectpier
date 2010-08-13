@@ -21,7 +21,7 @@
 <?php if ($project->isNew()) { ?>
 <form action="<?php echo get_url('project', 'add') ?>" method="post">
 <?php } else { ?>
-<form action="<?php echo $project->getEditUrl() ?>" method="post">
+<form action="<?php echo $project->getEditUrl($redirect_to) ?>" method="post">
 <?php } // if ?>
 
 <?php tpl_display(get_template_path('form_errors')) ?>

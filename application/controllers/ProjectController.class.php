@@ -292,10 +292,13 @@
       } // if
       
       $page_attachments = PageAttachments::getAttachmentsByPageNameAndProject($page_name, $project);
+
+      $redirect_to = urldecode(array_var($_GET, 'redirect_to'));
       
       tpl_assign('project', $project);
       tpl_assign('project_data', $project_data);
       tpl_assign('page_attachments', $page_attachments);
+      tpl_assign('redirect_to', $redirect_to);
       
       if (is_array(array_var($_POST, 'project'))) {
         $project->setFromAttributes($project_data);
@@ -322,7 +325,11 @@
           DB::commit();
           
           flash_success(lang('success edit project', $project->getName()));
-          $this->redirectToUrl($project->getSettingsUrl());
+
+          if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+            $redirect_to = $project->getSettingsUrl();
+          } // if
+          $this->redirectToUrl($redirect_to);
         } catch (Exception $e) {
           DB::rollback();
           tpl_assign('error', $e);

@@ -52,7 +52,7 @@
     <ul>
     
 <?php if (active_project()->canEdit(logged_user())) { ?>
-      <li><a href="<?php echo active_project()->getEditUrl() ?>"><?php echo lang('edit project') ?></a></li>
+      <li><a href="<?php echo active_project()->getEditUrl(active_project()->getOverviewUrl()) ?>"><?php echo lang('edit project') ?></a></li>
 <?php } // if ?>
     
 <?php if (active_project()->canChangeStatus(logged_user())) { ?>

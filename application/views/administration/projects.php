@@ -31,7 +31,7 @@
 <?php
   $options = array();
   if ($project->canEdit(logged_user())) {
-    $options[] = '<a href="' . $project->getEditUrl() .'">' . lang('edit') . '</a>';
+    $options[] = '<a href="' . $project->getEditUrl(get_url('administration', 'projects')) .'">' . lang('edit') . '</a>';
   }
   if ($project->canDelete(logged_user())) {
     $options[] = '<a href="' . $project->getDeleteUrl() . '">' . lang('delete') . '</a>';
