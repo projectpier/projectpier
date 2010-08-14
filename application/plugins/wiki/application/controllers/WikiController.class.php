@@ -45,6 +45,10 @@ class WikiController extends ApplicationController {
       } // if
     } // if
 
+    if (!$page->canView(logged_user())) {
+      flash_error(lang('no access permissions'));
+      $this->redirectTo();
+    } // if
 
     tpl_assign('page', $page);
     tpl_assign('revision', $revision);
@@ -70,6 +74,12 @@ class WikiController extends ApplicationController {
       $this->redirectToReferer(get_url('wiki'));
     } // if
 
+    // Check that the page isn't locked
+    if ($page->isLocked() && !$page->canUnlock(logged_user())) {
+      flash_error(lang('wiki page locked by', $page->getLockedByUser()->getUsername()));
+      $this->redirectToUrl($page->getViewUrl());
+    } // if
+    
     $revision = $page->getLatestRevision();
 
     tpl_assign('page', $page);
@@ -94,6 +104,11 @@ class WikiController extends ApplicationController {
     } // if
   } // delete
 
+  /**
+    * Loads the sidebar
+    * 
+    * @return void
+    */
   function _load_sidebar() {
     // Quick error / XSS preventor
     if (request_action() == '_load_sidebar') {
@@ -142,7 +157,7 @@ class WikiController extends ApplicationController {
     // Get the revision the user wants. defaults to latest 
     $revision = $page->getRevision(array_var($_GET, 'revision'));
 
-    if (!instance_of($revision, 'Revision')) {
+    if (!$revision instanceof Revision) {
       flash_error(lang('wiki revision dnx'));
       $this->redirectTo('wiki');
     } // if
@@ -162,18 +177,30 @@ class WikiController extends ApplicationController {
   * @return void
   */
   function add() {
+    $page = new WikiPage;
+
     if (!WikiPage::canAdd(logged_user(), active_project())) {
       flash_error(lang('no access permissions'));
       $this->redirectTo('wiki');
     } // if
 
     if (false !== ($data = array_var($_POST, 'wiki', false))) {
-      $page = new WikiPage;
       $page->setProjectId(active_project()->getId());
       $page->setProjectIndex((logged_user()->isMemberOfOwnerCompany() ? $data['project_index'] : 0));
       $page->setProjectSidebar((logged_user()->isMemberOfOwnerCompany() ? $data['project_sidebar'] : 0));
 
       $revision = $page->makeRevision();
+      
+      // Check to see if we want to lock this page
+      if (isset($data['locked'])) {
+        if ($data['locked'] == 1 && $page->canLock(logged_user())) {
+          // If we want to lock this page and the user has permissions to lock it, and the page is not already locked
+          $page->setLocked(true);
+          $page->setLockedById(logged_user()->getId());
+          $page->setLockedOn(DateTimeValueLib::now());
+        } // if
+      } // if
+
       $revision->setFromAttributes($data);
       $revision->setCreatedbyId(logged_user()->getId());
 
@@ -191,15 +218,13 @@ class WikiController extends ApplicationController {
         DB::rollback();
         tpl_assign('error', $e);
       } // try
-    } // if
-
-    if (!isset($page) || !instance_of($page, 'WikiPage')) {
-      $page = new WikiPage;
-      $page->setProjectId(active_project()->getId());	
+    } else {
+      $revision = $page->makeRevision();
+      $revision->setName(array_var($_GET, 'name', ''));
     } // if
 
     tpl_assign('page', $page);
-    tpl_assign('revision', new Revision);
+    tpl_assign('revision', (isset($revision) && ($revision instanceof Revision) ? $revision : $page->makeRevision()));
     $this->setTemplate('edit');
     $this->setSidebar(get_template_path('textile_help_sidebar'));
 
@@ -211,21 +236,22 @@ class WikiController extends ApplicationController {
   * @return void
   */
   function edit() {
-    if (!WikiPage::canEdit(logged_user())) {
-      flash_error(lang('no wiki page edit permissions'));
-      $this->redirectToReferer(get_url('wiki'));
-    } // if
-
     $page = Wiki::getPageById(get_id(), active_project());
 
-    if (!instance_of($page, 'WikiPage')) {
+    if (!($page instanceof WikiPage)) {
       flash_error(lang('wiki page dnx'));
       $this->redirectToReferer(get_url('wiki'));
     } // if
 
+    // Check that the page isn't locked
+    if ($page->isLocked() && !$page->canUnlock(logged_user())) {
+      flash_error(lang('wiki page locked by', $page->getLockedByUser()->getUsername()));
+      $this->redirectToUrl($page->getViewUrl());
+    } // if
+
     if (!$page->canEdit(logged_user())) {
-      flash_error(lang('no access permissions'));
-      $this->redirectTo();
+      flash_error(lang('no wiki page edit permissions'));
+      $this->redirectToUrl(($page->isProjectIndex() ? get_url('wiki') : $page->getViewUrl()));
     } // if
 
     if (null !== ($data = array_var($_POST, 'wiki'))) {
@@ -234,6 +260,19 @@ class WikiController extends ApplicationController {
 
       $page->setProjectIndex($data['project_index']);
       $page->setProjectSidebar($data['project_sidebar']);
+
+      // Check to see if we want to lock this page
+      if (isset($data['locked'])) {
+        if ($data['locked'] == 1 && $page->canLock(logged_user()) && !$page->isLocked()) {
+          // If we want to lock this page and the user has permissions to lock it, and the page is not already locked
+          $page->setLocked(true);
+          $page->setLockedById(logged_user()->getId());
+          $page->setLockedOn(DateTimeValueLib::now());
+        } elseif ($data['locked'] == 0 & $page->canUnlock(logged_user()) && $page->isLocked()) {
+          // Else if we want to unlock the page, and the user is allowed to, and the page is locked
+          $page->setLocked(false);
+        } // if
+      } // if
 
       $revision->setCreatedById(logged_user()->getId());
 
@@ -277,7 +316,7 @@ class WikiController extends ApplicationController {
   function history() {
     $page = Wiki::getPageById(get_id(), active_project());
 
-    if (!instance_of($page, 'WikiPage')) {
+    if (!($page instanceof WikiPage)) {
       flash_error('wiki page dnx');
       $this->redirectTo('wiki');
     } // if
@@ -330,7 +369,7 @@ class WikiController extends ApplicationController {
 
     $old_revision = $page->getRevision(array_var($_GET, 'revision', -1));
 
-    if (!instance_of($old_revision, 'Revision')) {
+    if (!($old_revision instanceof Revision)) {
       flash_error(lang('wiki page revision dnx'));
       $this->redirectTo('wiki');
     } // if
@@ -343,7 +382,7 @@ class WikiController extends ApplicationController {
 
     try {
       DB::beginWork();
-    $page->save();
+      $page->save();
       DB::commit();
       flash_success(lang('success restore wiki page revision'));
       $this->redirectToUrl($page->getViewUrl());
@@ -363,7 +402,8 @@ class WikiController extends ApplicationController {
   */
   function diff() {
     $page = Wiki::getPageById(get_id(), active_project());
-    if (!instance_of($page, 'WikiPage')) {
+
+    if (!($page instanceof WikiPage)) {
       flash_error('wiki page dnx');
       $this->redirectTo('wiki');
     } // if
@@ -376,11 +416,16 @@ class WikiController extends ApplicationController {
     $rev1 = $page->getRevision(array_var($_GET, 'rev1', -1));
     $rev2 = $page->getRevision(array_var($_GET, 'rev2', -1));
 
-    if (!instance_of($rev1, 'Revision') || !instance_of($rev2, 'Revision')) {
+    if (!($rev1 instanceof Revision) || !($rev2 instanceof Revision)) {
       flash_error(lang('wiki page revision dnx'));
       $this->redirectTo('wiki');
     } // if
 
+    if ($rev1->getId() == $rev2->getId()) {
+      flash_error(lang('wiki no compare identical'));
+      $this->redirectToReferer($rev1->getViewUrl());
+    } // if
+    
     $this->addHelper('textile');
 
     // Load text diff library
@@ -388,15 +433,38 @@ class WikiController extends ApplicationController {
 
     $diff = new diff($rev1->getContent(), $rev2->getContent());
 
-    $output = new diff_renderer_inline;
+    $output = new diff_renderer_inline();
 
-    tpl_assign('diff', $output->render($diff));
+    // If there are no visible changes, then tell the user, as opposed to white screening them
+    $output = trim($output = $output->render($diff)) == '' ? lang('wiki no visible changes') : $output;
+
+    tpl_assign('diff', $output);
     tpl_assign('page', $page);
     tpl_assign('revision', $page->getLatestRevision());
     tpl_assign('rev1', $rev1);
     tpl_assign('rev2', $rev2);
 
   } // diff
+  
+  /**
+    * View all wiki pages
+    * 
+    * @return void
+    */
+  function all_pages() {
+    // There isn't a wiki page for all pages
+    $page = new WikiPage;
+    // Make a revision for the page
+    $revision = $page->makeRevision();
+    $revision->setName(lang('wiki all pages'));
+
+    $all_pages = Wiki::getPagesList(active_project());
+    tpl_assign('all_pages', $all_pages);
+    tpl_assign('page', $page);
+    tpl_assign('revision', $revision);
+    $this->_load_sidebar();
+  } // all_pages
+ 
 } // WikiController
 
 ?>

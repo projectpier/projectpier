@@ -11,10 +11,56 @@
  */
 class WikiPage extends BaseWikiPage {
 
-  protected $revisions = array(); 
+  /**
+    * Cache of specific revisions
+    * 
+    * @var array
+    */ 
+  protected $revisions = array();
+
+  /**
+    * Cache of the current revision
+    * 
+    * @var object
+    */
   protected $cur_revision;
+
+  /**
+    * object for the latest wiki revision
+    * 
+    * @var object
+    */
   protected $new_revision;
-  protected $is_taggable = true;
+
+  /**
+    * We want to be able to tag this object
+    * 
+    * @var boolean
+    */
+  protected $is_taggable 	= true;
+
+  /**
+    * We want the user to be able to search wiki pages
+    * 
+    * @var boolean 
+    */
+  protected $is_searchable = true;
+
+  /**
+    * We want to search the content and title columns
+    * 
+    * @var array
+    */
+  protected $searchable_columns = array('name', 'content');
+
+  /**
+    * Holds the project object for this wiki page
+    * 
+    * @var object
+    */
+
+  protected $project;
+
 
   //////////////////////////////////////////
   //	Permissions
@@ -23,9 +69,9 @@ class WikiPage extends BaseWikiPage {
   /**
   * Can the user add a wiki page?
   * 
-  * @param mixed User object
-  * @param mixed Project Object
-  * @return (bool)
+  * @param User $user
+  * @param Project $project
+  * @return boolean
   */
   function canAdd(User $user, Project $project) {
     return $user->isAdministrator() || $user->isMemberOfOwnerCompany();
@@ -34,8 +80,8 @@ class WikiPage extends BaseWikiPage {
   /**
   * Can the user edit this page
   * 
-  * @param mixed User object
-  * @return (bool)
+  * @param User $user
+  * @return boolean
   */
   function canEdit(User $user) {
     return $user->isAdministrator() || $user->isMemberOfOwnerCompany();
@@ -44,13 +90,35 @@ class WikiPage extends BaseWikiPage {
   /**
   * Can the user delete this page
   * 
-  * @param mixed User object
-  * @return (bool)
+  * @param User $user
+  * @return boolean
   */
   function canDelete(User $user) {
     return $user->isAdministrator();
   } // canDelete
 
+  /**
+    * Can the user lock this page
+    * 
+    * @param User $user
+    * @return boolean
+    */
+  function canLock(User $user) {
+    // Only admins can lock a page
+    return $user->isAdministrator();
+  } // canLock
+
+  /**
+    * Can the user unlock this page
+    * 
+    * @param User $user
+    * @return boolean
+    */
+  function canUnlock(User $user) {
+    // Only admins can unlock a page
+    return $user->isAdministrator();
+  } // canUnlock
+ 
   /**
   * Can the user view this page
   * 
@@ -111,6 +179,15 @@ class WikiPage extends BaseWikiPage {
   } // getViewUrl
 
   /**
+  * Get url to all wiki pages
+  * 
+  * @return string
+  */
+  function getAllPagesUrl() {
+    return $this->makeUrl('all_pages', array('active_project' => active_project()->getId()), false);
+  } // getAllPagesUrl
+  
+  /**
   * Generic function to make a url to a wiki page
   * 
   * @param string The action of the target page(e.g. view, delete etc.)
@@ -125,12 +202,6 @@ class WikiPage extends BaseWikiPage {
       array_merge(array('active_project' => active_project()->getId()), $params);
     
     return get_url('wiki', $action, $params);
-   
-    // ----- DEPRECTED ------ ///
-    // Decide if this link is for the wiki controller, or the dashboard
-    return $this->getProjectId() == 0 ?
-      get_url('dashboard', 'wiki', array_merge(array('s' => $action), $params), null, false)	:
-      get_url('wiki', $action, $params);
   } // makeUrl
 
   //////////////////////////////////////////
@@ -149,11 +220,14 @@ class WikiPage extends BaseWikiPage {
     } else if (isset($this->revisions[$revision])) {
       return $this->revisions[$revision];
     } else if ($revision === null) {
-
       // Update and return cache of latest revision
-      return $this->cur_revision = Revisions::getRevision($this->getId(), $revision);
-    } else {
+      $this->cur_revision = Revisions::getRevision($this->getId(), $revision);
 
+      // Make another cache of it
+      $this->revisions[$this->cur_revision->getId()] = $this->cur_revision;
+
+      return $this->cur_revision;
+    } else {
       // Cache and return the revision
       $revision = (int) $revision;
       return $this->revisions[$revision] = Revisions::getRevision($this->getId(), $revision);
@@ -257,6 +331,34 @@ class WikiPage extends BaseWikiPage {
 
     return Revisions::instance()->paginate($arguments, $items_per_page, $current_page);
   } // paginate
+  
+  //////////////////////////////////////////
+  //	Lockage
+  //////////////////////////////////////////
+  /**
+    * Get the user object for the user which locked this page
+    * 
+    * Returns null if user DNX or page is not locked
+    * 
+    * @return
+    */
+  function getLockedByUser() {
+    // Cache the user object
+    static $user = null;
+    return $this->getLocked() ? 
+      // If the page is locked 
+      (($user instanceof User) ? 
+      // If we have cached the user's object
+      $user : 
+      // Else find it and cache it
+      ($user = Users::findById($this->getLockedById()))) :
+      // If the page is not locked, return null	
+      null; 
+ 	} // getLockedByUser
+
+  function isLocked() {
+    return (bool) $this->getColumnValue('locked');
+  } // isLocked
 
 } // WikiPage
 

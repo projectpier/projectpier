@@ -1,6 +1,6 @@
 <?php
 
-  set_page_title(lang('delete message'));
+  set_page_title(lang('delete wiki page'));
   project_tabbed_navigation(PROJECT_TAB_WIKI);
   project_crumbs(array(
     array(lang('wiki'), get_url('wiki')),

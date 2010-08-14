@@ -38,22 +38,22 @@ foreach ($revisions as $revision) { ?>
   <td><a href="<?php echo $revision->getCreatedBy()->getCardUrl() ?>"><?php echo $revision->getCreatedBy()->getUsername() ?></a></td>
   <td><?php echo radio_field('rev1', ($iteration == 2), array('value' => $revision->getRevision())) ?></td>
   <td><?php echo radio_field('rev2', ($iteration == 1), array('value' => $revision->getRevision())) ?></td>
-  <?php if($can_edit): ?>
+  <?php if ($can_edit) { ?>
     <td>
-      <?php if($cur_revision->getRevision() != $revision->getRevision()) : ?>
+      <?php if ($cur_revision->getRevision() != $revision->getRevision()) { ?>
         <a href="<?php echo $revision->getRevertUrl(); ?>"><?php echo lang('revert') ?></a>
-      <?php else: ?>
+      <?php } else { ?>
         &nbsp;
-      <?php endif; ?>
+      <?php } // if ?>
     </td>
-  <?php endif; ?>
+  <?php } // if ?>
 </tr>
 <?php 
 ++$iteration;
 } // foreach ?>
 </table>
 
-<?php echo submit_button('Compare') ?>
+<?php echo submit_button(lang('compare')) ?>
 </form>
   <div id="wikiPageRevisionsPaginationBottom"><?php echo advanced_pagination($pagination, get_url('wiki', 'history', array('id' =>$page->getId(), 'page' => '#PAGE#'))) ?></div>
 </div>

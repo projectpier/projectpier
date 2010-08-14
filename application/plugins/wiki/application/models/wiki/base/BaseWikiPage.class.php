@@ -95,6 +95,27 @@ abstract class BaseWikiPage extends ProjectDataObject {
       return false;
     }	// if
   } // save
+  
+  /**
+    * Override the getSearchableColumnContent function
+    * The Wikipage doesn't store any content (The revisions table does),
+    * but we access the revisions through the wiki object.
+    * 
+    * To be able to search a wiki revision, we need to pretend that the wiki object
+    * stores the content, while actually getting it from the revision
+    * 
+    * @param mixed $column
+    * @return
+    */
+  function getSearchableColumnContent($column) {
+    if ($this->new_revision instanceof Revision) {
+      if ($this->new_revision->columnExists($column)) {
+        return $this->new_revision->getColumnValue($column);
+      } // if
+    } // if
+    return null;
+  } // getSearchableColumnContent
+
 } // BaseWikiPage
 
 ?>
