@@ -58,7 +58,9 @@
     <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectTickets', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add ticket') ?></a>
   </div>
   
-<?php  foreach ($page_attachments as $page_attachment) {
+<?php
+if (is_array($page_attachments) && count($page_attachments)) {
+  foreach ($page_attachments as $page_attachment) {
     $counter++;
     ?>
     <div class="pageAttachment <?php echo $counter%2 ? 'odd':'even'; ?>">
@@ -83,7 +85,8 @@
       <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectMilestones', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add milestone') ?></a> |
       <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectTickets', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add ticket') ?></a>
     </div>
-<?php  } // foreach ?>
+<?php  } // foreach
+} // if ?>
   </div>
 <?php } // if ?>
   <?php echo submit_button($project->isNew() ? lang('add project') : lang('edit project')) ?>

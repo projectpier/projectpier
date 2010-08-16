@@ -31,18 +31,21 @@
   <div class="header"><?php echo clean(active_project()->getName()) ?></div>
   <div class="content"><?php echo do_textile(active_project()->getDescription()) ?></div>
   <div id="pageAttachments">
-  <?php foreach ($page_attachments as $page_attachment) {
-    tpl_assign('attachment', $page_attachment);
-    if ($page_attachment->getRelObjectManager() != '') {
-      if (file_exists(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'))) {
-        $this->includeTemplate(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'));
+  <?php
+  if (is_array($page_attachments) && count($page_attachments)) {
+    foreach ($page_attachments as $page_attachment) {
+      tpl_assign('attachment', $page_attachment);
+      if ($page_attachment->getRelObjectManager() != '') {
+        if (file_exists(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'))) {
+          $this->includeTemplate(get_template_path('view_'.$page_attachment->getRelObjectManager(), 'page_attachment'));
+        } else {
+          $this->includeTemplate(get_template_path('view_DefaultObject', 'page_attachment'));
+        }
       } else {
-        $this->includeTemplate(get_template_path('view_DefaultObject', 'page_attachment'));
+        $this->includeTemplate(get_template_path('view_EmptyAttachment', 'page_attachment'));
       }
-    } else {
-      $this->includeTemplate(get_template_path('view_EmptyAttachment', 'page_attachment'));
-    }
-  } // foreach?>
+    } // foreach
+  } // if ?>
   </div>
 </div>
 <?php } // if ?>

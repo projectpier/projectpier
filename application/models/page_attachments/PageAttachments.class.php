@@ -88,11 +88,14 @@
     function reorder($page_name, Project $project) {
       $page_attachments = PageAttachments::getAttachmentsByPageNameAndProject($page_name, $project);
       $order = 0;
-      foreach ($page_attachments as $page_attachment) {
-        $order++;
-        $page_attachment->setOrder($order);
-        $page_attachment->save();
-      } // foreach
+      
+      if (is_array($page_attachments) && count($page_attachments)) {
+        foreach ($page_attachments as $page_attachment) {
+          $order++;
+          $page_attachment->setOrder($order);
+          $page_attachment->save();
+        } // foreach
+      } // if
     } // reorder
   } // PageAttachments 
 
