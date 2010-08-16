@@ -68,7 +68,10 @@
         flash_error(lang('no access permissions'));
         $this->redirectToUrl(active_project()->getOverviewUrl());
       } // if
+
+      $project_init = array_var($_GET, 'project_init');
       
+      tpl_assign('project_init', $project_init);
       tpl_assign('project_users', active_project()->getUsers(false));
       tpl_assign('project_companies', active_project()->getCompanies());
       tpl_assign('user_projects', logged_user()->getProjects());
@@ -143,7 +146,12 @@
           DB::commit();
           
           flash_success(lang('success update project permissions'));
-          $this->redirectTo('project_settings', 'users');
+          
+          if ($project_init) {
+            $this->redirectToUrl(active_project()->getEditUrl(active_project()->getOverviewUrl()));
+          } else {
+            $this->redirectTo('project_settings', 'users');
+          } // if
         } catch(Exception $e) {
           DB::rollback();
           flash_error(lang('error update project permissions'));

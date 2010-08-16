@@ -23,7 +23,7 @@
 </script>
 
 <?php if (isset($companies) && is_array($companies) && count($companies)) { ?>
-<form action="<?php echo get_url('project_settings', 'permissions') ?>" method="post">
+<form action="<?php echo ($project_init ? active_project()->getPermissionsUrl(array('project_init' => 1)) : active_project()->getPermissionsUrl()); ?>" method="post">
 <div id="projectCompanies">
 <?php foreach ($companies as $company) { ?>
 <?php if ($company->countUsers() > 0) { ?>

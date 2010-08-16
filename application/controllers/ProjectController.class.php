@@ -247,9 +247,9 @@
           DB::commit();
           
           flash_success(lang('success add project', $project->getName()));
-          $this->redirectToUrl($project->getPermissionsUrl());
+          $this->redirectToUrl($project->getAddContactUrl(array('project_init' => '1')));
           
-        } catch(Exception $e) {
+        } catch (Exception $e) {
           tpl_assign('error', $e);
           DB::rollback();
         } // try
@@ -510,9 +510,12 @@
         $contact_data = array(); // array
       } // if
       
+      $project_init = array_var($_GET, 'project_init');
+      
       tpl_assign('already_attached_contacts_ids', $already_attached_contacts_ids);
       tpl_assign('contact', $contact);
       tpl_assign('contact_data', $contact_data);
+      tpl_assign('project_init', $project_init);
       tpl_assign('im_types', $im_types);
       tpl_assign('project', active_project());
 
@@ -524,12 +527,16 @@
             $page_attachment = new PageAttachment();
             $page_attachment->setFromAttributes($contact_data['existing']);
             $page_attachment->setRelObjectManager('Contacts');
-            $page_attachment->setProjectId(active_project());
+            $page_attachment->setProjectId(active_project()->getId());
             $page_attachment->setPageName('people');
             $page_attachment->save();
             PageAttachments::reorder('people', active_project());
             flash_success(lang('success add contact', $page_attachment->getObject()->getDisplayName()));
-            $this->redirectToUrl(get_url('project', 'people', active_project()));
+            if ($project_init) {
+              $this->redirectToUrl(active_project()->getAddContactUrl(array('project_init' => '1')));
+            } else {
+              $this->redirectToUrl(get_url('project', 'people', active_project()));
+            } // if
           } // if
         } else {
           // Save avatar
@@ -597,7 +604,7 @@
             $page_attachment = new PageAttachment();
             $page_attachment->setFromAttributes($contact_data);
             $page_attachment->setRelObjectId($contact->getId());
-            $page_attachment->setProjectId(active_project());
+            $page_attachment->setProjectId(active_project()->getId());
             $page_attachment->setPageName('people');
             $page_attachment->save();
             PageAttachments::reorder('people', active_project());
@@ -605,7 +612,11 @@
             DB::commit();
 
             flash_success(lang('success add contact', $contact->getDisplayName()));
-            $this->redirectToUrl(get_url('project', 'people', active_project()));
+            if ($project_init) {
+              $this->redirectToUrl(active_project()->getAddContactUrl(array('project_init' => '1')));
+            } else {
+              $this->redirectToUrl(get_url('project', 'people', active_project()));
+            } // if
 
           } catch (Exception $e) {
             DB::rollback();

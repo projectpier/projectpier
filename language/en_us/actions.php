@@ -30,6 +30,7 @@
     'edit user account' => 'Edit user account',
     'delete user account' => 'Delete user account',
     'toggle favorite' => 'Toggle favorite',
+    'done adding contacts' => 'Done adding contacts &raquo;',
     
     // Users
     'add user' => 'Add user',

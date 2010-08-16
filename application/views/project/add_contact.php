@@ -12,7 +12,7 @@
 ?>
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/addContactToProjectForm.js') ?>"></script>
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/addContactForm.js') ?>"></script>
-<form action="<?php echo $project->getAddContactUrl(); ?>" method="post" enctype="multipart/form-data">
+<form action="<?php echo ($project_init ? $project->getAddContactUrl(array('project_init' => '1')) : $project->getAddContactUrl()); ?>" method="post" enctype="multipart/form-data">
 <?php tpl_display(get_template_path('form_errors')) ?>
   
   <div>
@@ -146,4 +146,7 @@
   </script>
 
   <?php echo submit_button(lang('add contact')) ?>
+<?php if ($project_init) { ?>
+  <button type="button" onclick="document.location='<?php echo $project->getPermissionsUrl(array('project_init' => 1)); ?>'" style="float: right;"><?php echo lang('done adding contacts') ?></button><div class="clear"></div>
+<?php } // if ?>
 </form>

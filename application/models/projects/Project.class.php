@@ -1423,11 +1423,12 @@
     /**
     * Return project permissions page URL
     *
-    * @param void
+    * @param array $params
     * @return string
     */
-    function getPermissionsUrl() {
-      return get_url('project_settings', 'permissions', array('active_project' => $this->getId()));
+    function getPermissionsUrl($params = null) {
+      $params['active_project'] = $this->getId();
+      return get_url('project_settings', 'permissions', $params);
     } // getPermissionsUrl
     
     /**
@@ -1510,8 +1511,9 @@
     * @param void
     * @return string
     */
-    function getAddContactUrl() {
-      return get_url('project', 'add_contact', $this->getId());
+    function getAddContactUrl($params = null) {
+      $params['active_project'] = $this->getId();
+      return get_url('project', 'add_contact', $params);
     } // getAddContactUrl
     
     /**
