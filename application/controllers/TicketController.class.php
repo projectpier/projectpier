@@ -153,7 +153,7 @@
         'summary' => $ticket->getSummary(),
         'description' => $ticket->getDescription(),
         'priority' => $ticket->getPriority(),
-        'due_date' => $ticket->getDueDate(),
+        'due_date' => $ticket->hasDueDate() ? $ticket->getDueDate():DateTimeValueLib::now(),
         'type' => $ticket->getType(),
         'category_id' => $ticket->getCategoryId(),
         'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId()
@@ -190,6 +190,11 @@
       
       $ticket_data = array_var($_POST, 'ticket');
       if (is_array(array_var($_POST, 'ticket'))) {
+        if ($ticket_data['empty_due_date']) {
+          $ticket_data['due_date'] = EMPTY_DATETIME;
+        } else {
+          $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
+        } // if
         try {
           $old_fields = array(
             'status' => $ticket->getStatus(),
@@ -197,7 +202,8 @@
             'type' => $ticket->getType(),
             'category' => $ticket->getCategory(),
             'assigned to' => $ticket->getAssignedTo(),
-            'milestone' => $ticket->getMilestone()
+            'milestone' => $ticket->getMilestone(),
+            'due date' => $ticket->getDueDate()
             );
           
           $ticket->setFromAttributes($ticket_data);
@@ -220,7 +226,8 @@
             'type' => $ticket->getType(),
             'category' => $ticket->getCategory(),
             'assigned to' => $ticket->getAssignedTo(),
-            'milestone' => $ticket->getMilestone()
+            'milestone' => $ticket->getMilestone(),
+            'due date' => $ticket->getDueDate()
             );
           
           
@@ -232,9 +239,21 @@
             $new_field = $new_fields[$type];
             if ($old_field === $new_field) {
               continue;
-            }
-            $from_data = ($old_field instanceof ApplicationDataObject) ? $old_field->getObjectName() : $old_field;
-            $to_data = ($new_field instanceof ApplicationDataObject) ? $new_field->getObjectName() : $new_field;
+            } // if
+            if ($old_field instanceof ApplicationDataObject) {
+              $from_data = $old_field->getObjectName();
+            } elseif ($old_field instanceof DateTimeValue) {
+              $from_data = $old_field->format('m/d/Y');
+            } else {
+              $from_data = $old_field;
+            } // if
+            if ($new_field instanceof ApplicationDataObject) {
+              $to_data = $new_field->getObjectName();
+            } elseif ($new_field instanceof DateTimeValue) {
+              $to_data = $new_field->format('m/d/Y');
+            } else {
+              $to_data = $new_field;
+            } // if
 
             $change = new TicketChange();
             $change->setChangesetId($changeset->getId());
@@ -406,7 +425,7 @@
           'is_private' => $ticket->isPrivate(),
           'summary' => $ticket->getSummary(),
           'description' => $ticket->getDescription(),
-          'due_date' => $ticket->hasDueDate()?$ticket->getDueDate():DateTimeValueLib::now(),
+          'due_date' => $ticket->hasDueDate() ? $ticket->getDueDate():DateTimeValueLib::now(),
           'tags' => is_array($tag_names) ? implode(', ', $tag_names) : '',
         ); // array
       } // if

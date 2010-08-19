@@ -16,6 +16,7 @@
   }
   add_stylesheet_to_page('project/tickets.css');
 ?>
+<script type="text/javascript" src="<?php echo get_javascript_url('modules/addTicketForm.js') ?>"></script>
 <?php if ($ticket->isPrivate()) { ?>
     <div class="private" title="<?php echo lang('private ticket') ?>"><span><?php echo lang('private ticket') ?></span></div>
 <?php } // if ?>
@@ -119,6 +120,16 @@
       <td><?php echo assign_to_select_box("ticket[assigned_to]", active_project(), array_var($ticket_data, 'assigned_to'), array('id' => 'ticketFormAssignedTo')) ?></td>
       <th><?php echo label_tag(lang('milestone'), 'ticketFormMilestone') ?></th>
       <td><?php echo select_milestone('ticket[milestone_id]', active_project(), array_var($ticket_data, 'milestone_id'), array('id' => 'ticketFormMilestone')) ?></td>
+    </tr>
+    <tr>
+      <th><?php echo label_tag(lang('due date'), 'ticketFormDueDate') ?></th>
+      <td colspan="3">
+        <?php echo yes_no_widget('ticket[empty_due_date]', 'ticketFormEmptyDueDate', !$ticket->hasDueDate(), lang('no due date'), ''); ?>
+        <?php echo pick_date_widget('ticket_due_date', array_var($ticket_data, 'due_date')) ?>
+        <script type="text/javascript">
+          App.modules.addTicketForm.setupRadioButtonToggle('ticket_due_date', 'ticketFormEmptyDueDateNo');
+        </script>
+      </td>
     </tr>
   </table>
   <?php echo submit_button(lang('update')) ?>
