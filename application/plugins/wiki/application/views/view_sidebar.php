@@ -1,7 +1,7 @@
 <div class="sidebarBlock">
   <h2><?php echo $sidebar_revision->getName() ?></h2>
   <div class="blockContent">
-    <?php echo wiki_links(do_textile($sidebar_revision->getContent())) ?>
+    <?php echo plugin_manager()->apply_filters('wiki_text', do_textile($sidebar_revision->getContent())); ?>
 <?php if (!$sidebar_page->isNew() && $sidebar_page->canEdit(logged_user())) { ?>
     <p><a href="<?php echo $sidebar_page->getEditUrl() ?>"><?php echo lang('edit') ?></a></p>
 <?php } // if ?>

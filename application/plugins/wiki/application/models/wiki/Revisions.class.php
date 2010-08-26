@@ -41,7 +41,7 @@ class Revisions extends BaseRevisions {
       $params = array(
         'conditions'	=>	array('page_id = ? AND revision = ?', $page_id, $revision));
     } // if
-    return parent::findone($params);
+    return parent::findOne($params);
   } // getRevision
 	
 } // Revisions

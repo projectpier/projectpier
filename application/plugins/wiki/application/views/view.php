@@ -32,5 +32,5 @@
 <?php } // if ?>
 
 <div id="wiki-page-content">
-<?php echo wiki_links(do_textile($revision->getContent())); ?>
+<?php echo plugin_manager()->apply_filters('wiki_text', do_textile($revision->getContent())); ?>
 </div>

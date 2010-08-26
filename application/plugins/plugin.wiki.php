@@ -4,6 +4,25 @@
 define('PROJECT_TAB_WIKI', 'wiki');
 add_action('add_project_tab', 'wiki_add_project_tab');
 
+// Add [wiki:234] filter to common pages
+add_filter('project_description', 'wiki_wiki_links');
+add_filter('all_messages_message_text', 'wiki_wiki_links');
+add_filter('message_text', 'wiki_wiki_links');
+add_filter('message_additional_text', 'wiki_wiki_links');
+add_filter('task_list_description', 'wiki_wiki_links');
+add_filter('open_task_text', 'wiki_wiki_links');
+add_filter('completed_task_text', 'wiki_wiki_links');
+add_filter('ticket_description', 'wiki_wiki_links');
+add_filter('ticket_change_comment', 'wiki_wiki_links');
+add_filter('milestone_description', 'wiki_wiki_links');
+add_filter('comment_text', 'wiki_wiki_links');
+add_filter('file_description', 'wiki_wiki_links');
+add_filter('form_description', 'wiki_wiki_links');
+add_filter('pageattachment_text', 'wiki_wiki_links');
+
+// Make sure the other kind of wiki links are filtered in the wiki pages
+add_filter('wiki_text', 'wiki_links');
+
 function wiki_add_project_tab() {
   add_tabbed_navigation_item(new TabbedNavigationItem(
     PROJECT_TAB_WIKI,
@@ -73,5 +92,66 @@ function wiki_deactivate($purge=false) {
     DB::execute("DELETE FROM ".TABLE_PREFIX."application_logs where rel_object_manager='Wiki';");
   } // if 
 } // wiki_deactivate
+
+
+
+
+/**
+  * Wiki link helper
+  * Replaces wiki links in format [wiki:{PAGE_ID}] with a textile link to the page
+  * 
+  * @param mixed $content
+  * @return
+  */
+
+function wiki_wiki_links($content) {
+  $content = preg_replace_callback('/\[wiki:([0-9]*)\]/', 'replace_wiki_link_callback', $content);
+  $content = preg_replace_callback('/\[wiki:(.*)\]/', 'replace_wiki_link_title_callback', $content);
+  return $content;
+} // wiki_links
+
+/**
+  * Call back function for wiki helper
+  * 
+  * @param mixed $matches
+  * @return
+  */
+function replace_wiki_link_callback($matches) {
+  if (count($matches) < 2){
+    return null;
+  } // if
+
+  $object = Revisions::findOne(array(
+    'conditions' => array('`page_id` = ? AND `project_id` = ?', $matches[1], active_project()->getId()),
+    'order' => '`revision` DESC'));
+  
+  if (!($object instanceof Revision)) {
+    return '<del>'.lang('invalid reference').'</del>';
+  } else {
+    return '<a href="'.$object->getPage()->getViewUrl().'">'.$object->getName().'</a>';
+  } // if
+} // replace_wiki_link_callback
+
+/**
+  * Call back function for wiki helper to link by title
+  * 
+  * @param mixed $matches
+  * @return
+  */
+function replace_wiki_link_title_callback($matches) {
+  if (count($matches) < 2){
+    return null;
+  } // if
+
+  $object = Revisions::findOne(array(
+    'conditions' => array('`name` = ? AND `project_id` = ?', $matches[1], active_project()->getId()),
+    'order' => '`revision` DESC'));
+  
+  if (!($object instanceof Revision)) {
+    return '<del>'.lang('invalid reference').'</del>';
+  } else {
+    return '<a href="'.$object->getPage()->getViewUrl().'">'.$object->getName().'</a>';
+  } // if
+} // replace_wiki_link_title_callback
 
 ?>

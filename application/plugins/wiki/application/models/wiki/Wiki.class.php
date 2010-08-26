@@ -16,7 +16,7 @@ class Wiki extends BaseWiki {
   * 
   * @param int Page Id
   * @param Project $project Active project
-  * @return
+  * @return WikiPage
   */
   function getPageById($wiki_page_id, Project $project) {
     $params = array(
