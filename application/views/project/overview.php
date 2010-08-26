@@ -29,7 +29,7 @@
 <?php if ((trim(active_project()->getDescription()) || (is_array($page_attachments) && count($page_attachments))) && active_project()->getShowDescriptionInOverview()) { ?>
 <div class="hint">
   <div class="header"><?php echo clean(active_project()->getName()) ?></div>
-  <div class="content"><?php echo do_textile(active_project()->getDescription()) ?></div>
+  <div class="content"><?php echo plugin_manager()->apply_filters('project_description', do_textile(active_project()->getDescription())) ?></div>
   <div id="pageAttachments">
   <?php
   if (is_array($page_attachments) && count($page_attachments)) {

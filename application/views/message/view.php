@@ -24,10 +24,10 @@
 <?php } // if ?>
   </div>
   <div class="messageText">
-    <?php echo do_textile($message->getText()) ?>
+    <?php echo plugin_manager()->apply_filters('message_text', do_textile($message->getText())); ?>
 <?php if (trim($message->getAdditionalText())) { ?>
     <div class="messageSeparator"><?php echo lang('message separator') ?></div>
-    <?php echo do_textile($message->getAdditionalText()) ?>
+    <?php echo plugin_manager()->apply_filters('message_additional_text', do_textile($message->getAdditionalText())); ?>
 <?php } // if?>
   </div>
 

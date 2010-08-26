@@ -36,7 +36,7 @@
     <div id="fileIcon"><img src="<?php echo $file->getTypeIconUrl() ?>" alt="<?php echo $file->getFilename() ?>" /></div>
     <div id="fileInfo">
 <?php if (($file->getDescription())) { ?>
-      <div id="fileDescription"><?php echo do_textile($file->getDescription()) ?></div>
+      <div id="fileDescription"><?php echo plugin_manager()->apply_filters('file_description', do_textile($file->getDescription())) ?></div>
 <?php } // if ?>
 <?php if ($folder instanceof ProjectFolder) { ?>
       <div id="fileFolder"><span class="propertyName"><?php echo lang('folder') ?>:</span> <a href="<?php echo $folder->getBrowseUrl() ?>"><?php echo clean($folder->getName()) ?></a></div>

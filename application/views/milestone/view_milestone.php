@@ -44,7 +44,7 @@
 <?php } // if ?>
       
 <?php if ($milestone->getDescription()) { ?>
-      <div class="description"><?php echo do_textile($milestone->getDescription()) ?></div>
+      <div class="description"><?php echo plugin_manager()->apply_filters('milestone_description', do_textile($milestone->getDescription())) ?></div>
 <?php } // if ?>
 
 <!-- Milestones -->

@@ -1,3 +1,3 @@
 <div class="emptyAttachment">
-<?php echo do_textile($attachment->getText()); ?>
+<?php echo plugin_manager()->apply_filters('pageattachment_text', do_textile($attachment->getText())); ?>
 </div>

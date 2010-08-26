@@ -14,7 +14,7 @@
       <div class="messageAuthor"><?php echo lang('posted on', format_datetime($message->getCreatedOn())) ?></div>
 <?php } // if ?>
       <div class="messageText">
-        <?php echo do_textile($message->getText()) ?>
+        <?php echo plugin_manager()->apply_filters('all_messages_message_text', do_textile($message->getText())) ?>
         <p><a href="<?php echo $message->getViewUrl() ?>"><?php echo lang('read more') ?></a></p>
       </div>
     

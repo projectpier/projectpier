@@ -15,7 +15,7 @@
     <div class="header"><?php echo clean($form->getName()) ?></div>
     <div class="content">
 <?php if (trim($form->getDescription())) { ?>
-      <div class="description"><?php echo do_textile($form->getDescription()) ?></div>
+      <div class="description"><?php echo plugin_manager()->apply_filters('form_description', do_textile($form->getDescription())) ?></div>
 <?php } // if ?>
       <div class="successMessage"><em><?php echo lang('success message') ?>:</em> <?php echo clean($form->getSuccessMessage()) ?></div>
 

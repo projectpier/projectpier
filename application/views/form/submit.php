@@ -9,7 +9,7 @@
   <?php tpl_display(get_template_path('form_errors')) ?>
   
 <?php if ($project_form->getDescription()) { ?>
-  <div class="formDescription"><?php echo do_textile($project_form->getDescription()) ?></div>
+  <div class="formDescription"><?php echo plugin_manager()->apply_filters('form_description', do_textile($project_form->getDescription())) ?></div>
 <?php } // if ?>
   <div>
     <?php echo textarea_field('project_form_data[content]', array_var($project_form_data, 'content'), array('class' => 'editor')) ?>

@@ -22,7 +22,7 @@
       <?php echo format_datetime($comment->getCreatedOn(), "m/d/Y, h:ia"); ?>
     </td>
     <td>
-      <?php echo do_textile($comment->getText()) ?>
+      <?php echo plugin_manager()->apply_filters('comment_text', do_textile($comment->getText())) ?>
     </td>
     <td>
       <a href="<?php echo $comment->getCreatedBy()->getCardUrl() ?>"><?php echo clean($comment->getCreatedBy()->getDisplayName()) ?></a>

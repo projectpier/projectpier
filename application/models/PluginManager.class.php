@@ -31,7 +31,7 @@
     
     function init() {
       if (isset($this) && ($this instanceof PluginManager)) {
-        $this->filter_table= array();
+        $this->filter_table = array();
         $activated_plugins = Plugins::getActivatedPlugins();
         
         // Load each plugin
@@ -102,7 +102,7 @@
       } // foreach
     } // do_action
 
-    function apply_filters($tag,$value) {
+    function apply_filters($tag, $value) {
       $args = func_get_args();
     
       if (!isset($this->filter_table[$tag]) ) {

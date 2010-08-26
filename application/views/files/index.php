@@ -59,7 +59,7 @@
 <?php } // if ?>
 
 <?php if (($file->getDescription())) { ?>
-      <div class="fileDescription"><?php echo do_textile($file->getDescription()) ?></div>
+      <div class="fileDescription"><?php echo plugin_manager()->apply_filters('file_description', do_textile($file->getDescription())) ?></div>
 <?php } // if ?>
       <div class="fileDetails"><?php if ($file->getCreatedBy() instanceof User) { ?><span><?php echo lang('created by') ?>:</span> <a href="<?php echo $file->getCreatedBy()->getCardUrl() ?>"><?php echo clean($file->getCreatedBy()->getDisplayName()) ?></a> | <?php } // if ?><span><a href="<?php echo $file->getCommentsUrl() ?>"><?php echo lang('comments') ?></a>:</span> <?php echo $file->countComments() ?> | <span><a href="<?php echo $file->getRevisionsUrl() ?>"><?php echo lang('revisions') ?></a>:</span> <?php echo $file->countRevisions() ?></div>
       <div class="fileTags"><?php echo lang('tags') ?>: <?php echo project_object_tags($file, active_project()) ?></div>

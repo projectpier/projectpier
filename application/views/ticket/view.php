@@ -84,7 +84,7 @@
   </table>
   <div>
     <span class="bold"><?php echo lang('description') ?>:</span>
-    <div class="desc"><?php echo do_textile($ticket->getDescription()); ?></div>
+    <div class="desc"><?php echo plugin_manager()->apply_filters('ticket_description', do_textile($ticket->getDescription())); ?></div>
   </div>
   <div class="ticketTags">
     <span class="bold"><?php echo lang('tags') ?>:</span>
@@ -177,7 +177,7 @@
 <?php if (count($changes) && $changeset->getComment() != "") { ?>
       <hr/>
 <?php } ?>
-      <p><?php echo do_textile($changeset->getComment()) ?></p>
+      <p><?php echo plugin_manager()->apply_filters('ticket_change_comment', do_textile($changeset->getComment())) ?></p>
     </td>
 <?php } // foreach ?>
   </table>
