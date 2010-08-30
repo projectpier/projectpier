@@ -218,20 +218,26 @@
       $active_projects = array();
       $projects_index = array();
       $counter = 1;
-      foreach ($upcoming_milestones as $milestone) {
-        if (!isset($projects_index[$milestone->getProjectId()])) {
-          $projects_index[$milestone->getProjectId()] = $counter;
-          $active_projects[] = $milestone->getProject();
-          $counter++;
-        } // if
-      } // foreach
-      foreach ($upcoming_tickets as $ticket) {
-        if (!isset($projects_index[$ticket->getProjectId()])) {
-          $projects_index[$ticket->getProjectId()] = $counter;
-          $active_projects[] = $ticket->getProject();
-          $counter++;
-        } // if
-      } // foreach
+
+      if ($upcoming_milestones) {
+        foreach ($upcoming_milestones as $milestone) {
+          if (!isset($projects_index[$milestone->getProjectId()])) {
+            $projects_index[$milestone->getProjectId()] = $counter;
+            $active_projects[] = $milestone->getProject();
+            $counter++;
+          } // if
+        } // foreach
+      }
+
+      if ($upcoming_tickets) {
+        foreach ($upcoming_tickets as $ticket) {
+          if (!isset($projects_index[$ticket->getProjectId()])) {
+            $projects_index[$ticket->getProjectId()] = $counter;
+            $active_projects[] = $ticket->getProject();
+            $counter++;
+          } // if
+        } // foreach
+      }
       
       tpl_assign('from_date', $from_date);
       tpl_assign('to_date', $to_date);
