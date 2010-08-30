@@ -12,15 +12,15 @@
   }
   add_stylesheet_to_page('project/tickets.css');
 ?>
-<?php if(isset($categories) && is_array($categories) && count($categories)) { ?>
+<?php if (isset($categories) && is_array($categories) && count($categories)) { ?>
 <div id="listing">
 <table width="100%" cellpadding="2" border="0">
   <tr bgcolor="#f4f4f4">
-    <th><?php echo lang('category'); php?></th>
+    <th><?php echo lang('category'); ?></th>
     <th><?php echo lang('description'); ?></th>
     <th></th>
   </tr>
-  <?php foreach($categories as $category) { ?>
+  <?php foreach ($categories as $category) { ?>
     <tr>
       <td><a href="<?php echo $category->getViewUrl() ?>"><?php echo $category->getName() ?></a></td>
       <td><?php echo $category->getShortDescription() ?></td>
