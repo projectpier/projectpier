@@ -17,7 +17,7 @@
 <?php echo use_widget('UserBoxMenu') ?>
 <?php echo render_page_head() ?>
   </head>
-  <body id="body">
+  <body id="body"><script type="text/javascript"> jQuery.noConflict(); </script> 
 <?php echo render_system_notices(logged_user()) ?>
     <div id="wrapper">
     

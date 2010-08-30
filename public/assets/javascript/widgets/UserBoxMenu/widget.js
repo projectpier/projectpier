@@ -100,9 +100,9 @@ App.widgets.UserBoxMenu.prototype = {
     // Hide all instances except this block
     App.widgets.UserBoxMenu.hideAllInstances(this.getBlockId());
     var context_pos = YUD.getXY(this.context);
-    
+
     // From some reason YUD.setXY() didn't work... Manualy set styles
-    this.block.style.left = context_pos[0] + 'px';
+    this.block.style.right = (YUD.getViewportWidth() - context_pos[0] - 15) + 'px';
     this.block.style.top  = context_pos[1] + this.context.height + 2 + 'px';
     this.block.style.display = 'block';
     this.block_visible = true;
