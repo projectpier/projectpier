@@ -19,6 +19,7 @@ add_filter('comment_text', 'wiki_wiki_links');
 add_filter('file_description', 'wiki_wiki_links');
 add_filter('form_description', 'wiki_wiki_links');
 add_filter('pageattachment_text', 'wiki_wiki_links');
+add_filter('wiki_text', 'wiki_wiki_links');
 
 // Make sure the other kind of wiki links are filtered in the wiki pages
 add_filter('wiki_text', 'wiki_links');

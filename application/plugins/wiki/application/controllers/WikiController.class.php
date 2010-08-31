@@ -11,7 +11,6 @@ class WikiController extends ApplicationController {
     parent::__construct();
     prepare_company_website_controller($this, 'project_website');
     $this->addHelper('textile');
-    $this->addHelper('wiki');
   } // __construct
 
   /**
@@ -208,7 +207,6 @@ class WikiController extends ApplicationController {
         DB::beginWork();				
         $page->save();
         ApplicationLogs::createLog($page, active_project(), ApplicationLogs::ACTION_ADD);
-        $page->setTagsFromCSV();
 
         DB::commit();
         flash_success(lang('success add wiki page'));
@@ -285,7 +283,6 @@ class WikiController extends ApplicationController {
 
         ApplicationLogs::createLog($page, active_project(), ApplicationLogs::ACTION_EDIT);
 
-        $page->setTagsFromCSV($data['tags']);	
         DB::commit();
 
         flash_success(lang('success edit wiki page'));
