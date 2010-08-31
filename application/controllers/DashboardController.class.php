@@ -219,7 +219,7 @@
       $projects_index = array();
       $counter = 1;
 
-      if ($upcoming_milestones) {
+      if (is_array($upcoming_milestones)) {
         foreach ($upcoming_milestones as $milestone) {
           if (!isset($projects_index[$milestone->getProjectId()])) {
             $projects_index[$milestone->getProjectId()] = $counter;
@@ -227,9 +227,9 @@
             $counter++;
           } // if
         } // foreach
-      }
+      } // if
 
-      if ($upcoming_tickets) {
+      if (is_array($upcoming_tickets)) {
         foreach ($upcoming_tickets as $ticket) {
           if (!isset($projects_index[$ticket->getProjectId()])) {
             $projects_index[$ticket->getProjectId()] = $counter;
@@ -237,7 +237,7 @@
             $counter++;
           } // if
         } // foreach
-      }
+      } // if
       
       tpl_assign('from_date', $from_date);
       tpl_assign('to_date', $to_date);
