@@ -141,10 +141,12 @@
       } // if
       
       $subscribers = $ticket->getSubscribers();
-      $subscribers_ids = null;
-      foreach ($subscribers as $subscriber) {
-        $subscribers_ids[] = $subscriber->getId();
-      } // foreach
+      $subscribers_ids = array();
+      if (is_array($subscribers)) {
+        foreach ($subscribers as $subscriber) {
+          $subscribers_ids[] = $subscriber->getId();
+        } // foreach
+      } // if
       
       $ticket_data = array(
         'milestone_id' => $ticket->getMilestoneId(),
