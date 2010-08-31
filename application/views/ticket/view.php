@@ -147,6 +147,7 @@
     <td><a href="<?php echo $changeset->getCreatedBy()->getCardUrl(); ?>"><?php echo $changeset->getCreatedByDisplayName(); ?></a></td>
     <td>
 <?php $changes = $changeset->getChanges(); ?>
+<?php if (is_array($changes)) { ?>
       <ul>
 <?php foreach ($changes as $change) { ?>
         <li><?php
@@ -176,7 +177,8 @@
       </ul>
 <?php if (count($changes) && $changeset->getComment() != "") { ?>
       <hr/>
-<?php } ?>
+<?php } // if ?>
+<?php } // if ?>
       <p><?php echo plugin_manager()->apply_filters('ticket_change_comment', do_textile($changeset->getComment())) ?></p>
     </td>
 <?php } // foreach ?>
