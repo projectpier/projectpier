@@ -309,11 +309,11 @@
           $project->save();
           ApplicationLogs::createLog($project, null, ApplicationLogs::ACTION_EDIT, false, true);
           
-          $page_attachments = $project_data['page_attachments'];
+          $page_attachments = array_var($project_data, 'page_attachments');
           if (is_array($page_attachments)) {
             foreach ($page_attachments as $id => $page_attachment_data) {
               $page_attachment = PageAttachments::findById($id);
-              if ($page_attachment_data['delete'] == "checked") {
+              if (array_var($page_attachment_data, 'delete') == "checked") {
                 $page_attachment->delete();
               } else {
                 $page_attachment->setFromAttributes($page_attachment_data);
