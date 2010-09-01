@@ -41,7 +41,7 @@
       </span>
     <?php } // foreach ?>
   </div>
-  <div id="contactsPaginationTop"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'contacts', array('page' => '#PAGE#'))) ?></div>
+  <div id="contactsPaginationTop"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'contacts', (trim($initial) == '' ? array('page'=> '#PAGE#') : array('page' => '#PAGE#', 'initial' => $initial)))) ?></div>
 
 <?php
 $counter = 0;
@@ -93,5 +93,5 @@ if (is_array($contacts)) {
   </div>
 <?php } // foreach ?>
 <?php } // if ?>
-  <div id="contactsPaginationBottom"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'contacts', array('page' => '#PAGE#'))) ?></div>
+  <div id="contactsPaginationBottom"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'contacts', (trim($initial) == '' ? array('page'=> '#PAGE#') : array('page' => '#PAGE#', 'initial' => $initial)))) ?></div>
 </div>
