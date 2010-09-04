@@ -54,6 +54,8 @@
         $page = 1;
       }
       
+      $this->canGoOn();
+
       $params = array();
       
       $params['sort_by'] = array_var($_GET, 'sort_by', Cookie::getValue('ticketsSortBy', 'id'));
