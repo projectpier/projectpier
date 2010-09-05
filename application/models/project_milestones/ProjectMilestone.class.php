@@ -547,15 +547,27 @@
     } // getObjectUrl
 
     /**
-    * Returns a count of tickets in this milestone by status
+    * Returns a count of tickets in this milestone by state
     *
     * @access public
     * @param void
     * @return string
     */
-    function hasTicketsByStatus($status) {
-      return ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()) . ' AND `status` = ' . DB::escape($status) . '');
-    } // hasTicketsByStatus
+    function hasTicketsByState($state) {
+
+      if ($state == 'open') {
+        $new = ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()) . ' AND `status` = ' . DB::escape('new') . '');
+        $open = ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()) . ' AND `status` = ' . DB::escape('open') . '');
+        return $new + $open;
+      }
+      else if ($state == 'in_progress') {
+        return ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()) . ' AND `status` = ' . DB::escape('pending') . '');
+      }
+      else if ($state == 'resolved') {
+        return ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()) . ' AND `status` = ' . DB::escape('closed') . '');
+      }
+      
+    } // hasTicketsByState
 
     /**
     * Returns a total count of all tickets.
@@ -575,9 +587,9 @@
     * @param void
     * @return string
     */
-    function getPercentageByTicketStatus($status) {
-      return floor(($this->hasTicketsByStatus($status) / $this->getTotalTicketCount()) * 100);
-    } // getPercentageByTicketStatus
+    function getPercentageByTicketState($state) {
+      return floor(($this->hasTicketsByState($state) / $this->getTotalTicketCount()) * 100);
+    } // getPercentageByTicketState
     
   } // ProjectMilestone 
 

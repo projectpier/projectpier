@@ -81,19 +81,19 @@
 <?php if ($milestone->hasTickets()) { ?>
   <div class="milestone-progress-wrapper">
       <div class="progress clearfix">
-        <div style="width:<?php print $milestone->getPercentageByTicketStatus('closed'); ?>%;" class="resolved"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
-          <div style="width: <?php print $milestone->getPercentageByTicketStatus('pending'); ?>%;" class="in-progress"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
-          <div style="width: <?php print floor((($milestone->hasTicketsByStatus('new') + $milestone->hasTicketsByStatus('open')) / $milestone->getTotalTicketCount()) * 100) ?>%;" class="open"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
+        <div style="width:<?php print $milestone->getPercentageByTicketState('resolved'); ?>%;" class="resolved"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
+          <div style="width: <?php print $milestone->getPercentageByTicketState('in_progress'); ?>%;" class="in-progress"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
+          <div style="width: <?php print $milestone->getPercentageByTicketState('open'); ?>%;" class="open"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
       </div>
     <div class="ticket-details">
-      <?php print $milestone->getPercentageByTicketStatus('closed'); ?>% completed -
-      Tickets: <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'closed')); ?>">Closed (<?php print $milestone->hasTicketsByStatus('closed') ?>)</a>,
-      <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'pending')); ?>">Pending (<?php print $milestone->hasTicketsByStatus('pending') ?>)</a>,
-      <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'new,open')); ?>">New/Open (<?php print $milestone->hasTicketsByStatus('open') + $milestone->hasTicketsByStatus('new'); ?>)</a>
+      <?php print $milestone->getPercentageByTicketState('resolved'); ?>% completed -
+      Tickets: <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'closed')); ?>">Resolved (<?php print $milestone->hasTicketsByState('resolved'); ?>)</a>,
+      <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'pending')); ?>">In Progress (<?php print $milestone->hasTicketsByState('in_progress'); ?>)</a>,
+      <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'new,open')); ?>">Open (<?php print $milestone->hasTicketsByState('open'); ?>)</a>
     </div>
   </div>
-      <p><?php echo lang('tickets') ?>:</p>
-      <ul class="milestone-tickets">
+<p><a onclick="var s=document.getElementById('milestone-tickets-list'); s.style.display = (s.style.display=='none'?'block':'none');" href="#"><?php echo lang('tickets') ?> (<?php print $milestone->getTotalTicketCount(); ?>)</a>:</p>
+      <ul id="milestone-tickets-list" class="milestone-tickets" style="display: none;">
 <?php foreach ($milestone->getTickets() as $ticket) { ?>
         <li><a href="<?php echo $ticket->getViewUrl() ?>"><?php echo clean($ticket->getTitle()) ?></a>
         <span class="ticket-meta-details">(
