@@ -87,8 +87,9 @@
   </tr>
 <?php foreach ($tickets as $ticket) { ?>
   <tr class="<?php echo $ticket->getPriority(); ?>">
-    <td><a href="<?php echo $ticket->getViewUrl() ?>" title="<?php echo $ticket->getDescription() ?>"><?php echo $ticket->getId() ?></a></td>
-    <td><a href="<?php echo $ticket->getViewUrl() ?>" title="<?php echo $ticket->getDescription() ?>"><?php echo $ticket->getSummary() ?></a></td>
+<?php $ticket_description = strlen($ticket->getDescription()) > 200 ? clean(substr($ticket->getDescription(), 0, 200))."&hellip;" : clean($ticket->getDescription()); ?>
+    <td><a href="<?php echo $ticket->getViewUrl() ?>" alt="<?php echo $ticket_description ?>" title="<?php echo $ticket_description ?>"><?php echo $ticket->getId() ?></a></td>
+    <td><a href="<?php echo $ticket->getViewUrl() ?>" alt="<?php echo $ticket_description ?>" title="<?php echo $ticket_description ?>"><?php echo $ticket->getSummary() ?></a></td>
     <td><?php echo lang($ticket->getType()) ?></td>
     <td>
 <?php if ($ticket->getCategory()) { ?>
