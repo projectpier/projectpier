@@ -535,7 +535,7 @@
             if ($project_init) {
               $this->redirectToUrl(active_project()->getAddContactUrl(array('project_init' => '1')));
             } else {
-              $this->redirectToUrl(get_url('project', 'people', active_project()));
+              $this->redirectToUrl(get_url('project', 'people'));
             } // if
           } // if
         } else {
@@ -615,7 +615,7 @@
             if ($project_init) {
               $this->redirectToUrl(active_project()->getAddContactUrl(array('project_init' => '1')));
             } else {
-              $this->redirectToUrl(get_url('project', 'people', active_project()));
+              $this->redirectToUrl(get_url('project', 'people'));
             } // if
 
           } catch (Exception $e) {
