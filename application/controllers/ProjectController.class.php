@@ -541,7 +541,7 @@
         } else {
           // Save avatar
           $avatar = array_var($_FILES, 'new_avatar');
-          if (is_array($avatar)) {
+          if (is_array($avatar) && isset($avatar['size']) && $avatar['size'] != 0) {
             try {
               if (!isset($avatar['name']) || !isset($avatar['type']) || !isset($avatar['size']) || !isset($avatar['tmp_name']) || !is_readable($avatar['tmp_name'])) {
                 throw new InvalidUploadError($avatar, lang('error upload file'));
