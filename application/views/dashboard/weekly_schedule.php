@@ -10,7 +10,10 @@
 
 ?>
 <script type="text/javascript" src="<?php echo get_javascript_url('modules/calendar.js') ?>"></script>
-<?php if ((isset($upcoming_milestones) && is_array($upcoming_milestones) && count($upcoming_milestones)) || isset($upcoming_tickets) && is_array($upcoming_tickets) && count($upcoming_tickets)) { ?>
+<?php if ((isset($upcoming_milestones) && is_array($upcoming_milestones) && count($upcoming_milestones)) ||
+(isset($upcoming_tickets) && is_array($upcoming_tickets) && count($upcoming_tickets)) ||
+(isset($late_milestones) && is_array($late_milestones) && count($late_milestones)) ||
+(isset($late_tickets) && is_array($late_tickets) && count($late_tickets))) { ?>
   <div id="viewToggle">
     <a href="<?php echo get_url('dashboard', 'weekly_schedule', array('view'=>'list')); ?>"><img src="<?php if ($view_type=="list") { echo get_image_url("icons/list_on.png"); } else { echo get_image_url("icons/list_off.png"); } ?>" title="<?php echo lang('list view'); ?>" alt="<?php echo lang('list view'); ?>"/></a>
     <a href="<?php echo get_url('dashboard', 'weekly_schedule', array('view'=>'detail')); ?>"><img src="<?php if ($view_type=="detail") { echo get_image_url("icons/excerpt_on.png"); } else { echo get_image_url("icons/excerpt_off.png"); } ?>" title="<?php echo lang('detail view'); ?>" alt="<?php echo lang('detail view'); ?>"/></a>
