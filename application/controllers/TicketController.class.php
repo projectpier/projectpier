@@ -65,32 +65,35 @@
       $conditions = DB::prepareString('`project_id` = ?', array(active_project()->getId()));
       if ($params['status'] = array_var($_GET, 'status')) {
         $conditions .= DB::prepareString(' AND `status` IN (?)', array(explode(',', $params['status'])));
-      }
+      } // if
       if ($params['priority'] = array_var($_GET, 'priority')) {
         $conditions .= DB::prepareString(' AND `priority` IN (?)', array(explode(',', $params['priority'])));
-      }
+      } // if
       if ($params['type'] = array_var($_GET, 'type')) {
         $conditions .= DB::prepareString(' AND `type` IN (?)', array(explode(',', $params['type'])));
-      }
+      } // if
       if ($params['category_id'] = array_var($_GET, 'category_id')) {
         $conditions .= DB::prepareString(' AND `category_id` IN (?)', array(explode(',', $params['category_id'])));
-      }
+      } // if
       if ($params['assigned_to_user_id'] = array_var($_GET, 'assigned_to_user_id')) {
         $conditions .= DB::prepareString(' AND `assigned_to_user_id` IN (?)', array(explode(',', $params['assigned_to_user_id'])));
-      }
+      } // if
+      if ($params['created_by_id'] = array_var($_GET, 'created_by_id')) {
+        $conditions .= DB::prepareString(' AND `created_by_id` IN (?)', array(explode(',', $params['created_by_id'])));
+      } // if
       $params['order'] = (array_var($_GET, 'order') != 'DESC' ? 'ASC' : 'DESC');
       
-      $filtered = $params['status']!="" || $params['priority']!="" || $params['type']!="" || $params['category_id']!="" || $params['assigned_to_user_id']!="";
+      $filtered = $params['status']!="" || $params['priority']!="" || $params['type']!="" || $params['category_id']!="" || $params['assigned_to_user_id']!="" || $params['created_by_id']!="";
 
       // Clean up empty and malformed parameters
       foreach ($params as $key => $value) {
-        $value = preg_replace("/,+/", ",", $value);
-        $value = preg_replace("/^,?(.*),?$/", "$1", $value);
+        $value = preg_replace("/,+/", ",", $value); // removes multiple commas
+        $value = preg_replace("/^,?(.*),?$/", "$1", $value); // removes commas at both ends
         $params[$key] = $value;
         if ($value=="") {
-          unset($params[$key]);
-        }
-      }
+          unset($params[$key]); // deletes empty keys
+        } // if
+      } // foreach
       
       $order = '`'.$params['sort_by'].'` '.$params['order'].'';
       if (!logged_user()->isMemberOfOwnerCompany()) {
