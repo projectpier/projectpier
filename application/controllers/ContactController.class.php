@@ -121,7 +121,7 @@
           $contact->setCompanyId($company_id);
 
           // User account info
-          if ($user_data['add_account'] == "yes") {
+          if (array_var($user_data, 'add_account') == "yes") {
             $user = new User();
             $user->setFromAttributes($user_data);
 
@@ -143,10 +143,12 @@
             $user->save();
             
             $contact->setUserId($user->getId());
-            
+          } else {
+            $contact->setUserId(0);
           } // if
 
           $contact->save();
+          $contact->setTagsFromCSV(array_var($contact_data, 'tags'));
           
           $contact->clearImValues();
           foreach ($im_types as $im_type) {

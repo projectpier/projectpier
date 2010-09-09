@@ -510,22 +510,43 @@
         $contact_data = array(); // array
       } // if
       
+      $existing_contact_data = array_var($contact_data, 'existing');
+      if (!is_array($existing_contact_data)) {
+        $existing_contact_data = array(); // array
+      } // if
+      $new_contact_data = array_var($contact_data, 'new');
+      if (!is_array($new_contact_data)) {
+        $new_contact_data = array(); // array
+      } // if
+      $company_data = array_var($new_contact_data, 'company');
+      if (!is_array($company_data)) {
+        $company_data = array(); // array
+      } // if
+      $user_data = array_var($new_contact_data, 'user');
+      if (!is_array($user_data)) {
+        $user_data = array(); // array
+      } // if
+      
       $project_init = array_var($_GET, 'project_init');
       
       tpl_assign('already_attached_contacts_ids', $already_attached_contacts_ids);
       tpl_assign('contact', $contact);
       tpl_assign('contact_data', $contact_data);
+      tpl_assign('existing_contact_data', $existing_contact_data);
+      tpl_assign('new_contact_data', $new_contact_data);
+      tpl_assign('company_data', $company_data);
+      tpl_assign('user_data', $user_data);
       tpl_assign('project_init', $project_init);
       tpl_assign('im_types', $im_types);
       tpl_assign('project', active_project());
 
       if (is_array(array_var($_POST, 'contact'))) {
-        if ($_POST['contact']['what'] == 'existing') {
-          if (!(Contacts::findById(array_var($contact_data['existing'], 'rel_object_id')) instanceof Contact)) {
+        if (array_var($contact_data, 'what') == 'existing') {
+          if (!(Contacts::findById(array_var($existing_contact_data, 'rel_object_id')) instanceof Contact)) {
             tpl_assign('error', new FormSubmissionErrors(array(lang('existing contact required'))));
           } else {
             $page_attachment = new PageAttachment();
-            $page_attachment->setFromAttributes($contact_data['existing']);
+            $page_attachment->setFromAttributes($existing_contact_data);
             $page_attachment->setRelObjectManager('Contacts');
             $page_attachment->setProjectId(active_project()->getId());
             $page_attachment->setPageName('people');
@@ -539,6 +560,7 @@
             } // if
           } // if
         } else {
+          // New contact
           // Save avatar
           $avatar = array_var($_FILES, 'new_avatar');
           if (is_array($avatar) && isset($avatar['size']) && $avatar['size'] != 0) {
@@ -566,26 +588,54 @@
             $contact->setAvatarFile('');
           } // if
           
-          $contact_data = $contact_data['new'];
-          $contact->setFromAttributes($contact_data);
           try {
             DB::beginWork();
-            if ($contact_data['company']['what'] == 'existing') {
-              $company_id = $contact_data['company_id'];
+            $contact->setFromAttributes($new_contact_data);
+            
+            if (array_var($company_data, 'what') == 'existing') {
+              $company_id = $new_contact_data['company_id'];
             } else {
               $company = new Company();
-              $company->setName($contact_data['company']['name']);
-              $company->setTimezone($contact_data['company']['timezone']);
+              $company->setName(array_var($company_data, 'name'));
+              $company->setTimezone(array_var($company_data, 'timezone'));
               $company->setClientOfId(owner_company()->getId());
               $company->save();
               $company_id = $company->getId();
             } // if
             $contact->setCompanyId($company_id);
+
+            // User account info
+            if (array_var($user_data, 'add_account') == "yes") {
+              $user = new User();
+              $user->setFromAttributes($user_data);
+
+              if (array_var($user_data, 'password_generator') == 'random') {
+                // Generate random password
+                $password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
+              } else {
+                // Validate user input
+                $password = array_var($user_data, 'password');
+                if (trim($password) == '') {
+                  throw new Error(lang('password value required'));
+                } // if
+                if ($password <> array_var($user_data, 'password_a')) {
+                  throw new Error(lang('passwords dont match'));
+                } // if
+              } // if
+              $user->setPassword($password);
+              $user->save();
+
+              $contact->setUserId($user->getId());
+            } else {
+              $contact->setUserId(0);
+            } // if
+
             $contact->save();
+            $contact->setTagsFromCSV(array_var($new_contact_data, 'tags'));
 
             $contact->clearImValues();
             foreach ($im_types as $im_type) {
-              $value = trim(array_var($contact_data, 'im_' . $im_type->getId()));
+              $value = trim(array_var($new_contact_data, 'im_' . $im_type->getId()));
               if ($value <> '') {
 
                 $contact_im_value = new ContactImValue();
@@ -593,23 +643,32 @@
                 $contact_im_value->setContactId($contact->getId());
                 $contact_im_value->setImTypeId($im_type->getId());
                 $contact_im_value->setValue($value);
-                $contact_im_value->setIsDefault(array_var($contact_data, 'default_im') == $im_type->getId());
+                $contact_im_value->setIsDefault(array_var($new_contact_data, 'default_im') == $im_type->getId());
 
                 $contact_im_value->save();
               } // if
             } // foreach
 
             ApplicationLogs::createLog($contact, null, ApplicationLogs::ACTION_ADD);
-            
+
             $page_attachment = new PageAttachment();
-            $page_attachment->setFromAttributes($contact_data);
+            $page_attachment->setFromAttributes($new_contact_data);
             $page_attachment->setRelObjectId($contact->getId());
+            $page_attachment->setRelObjectManager('Contacts');
             $page_attachment->setProjectId(active_project()->getId());
             $page_attachment->setPageName('people');
             $page_attachment->save();
             PageAttachments::reorder('people', active_project());
 
             DB::commit();
+
+            // Send notification...
+            try {
+              if (array_var($user_data, 'add_account') == "yes" && array_var($user_data, 'send_email_notification')) {
+                Notifier::newUserAccount($user, $password);
+              } // if
+            } catch(Exception $e) {
+            } // try
 
             flash_success(lang('success add contact', $contact->getDisplayName()));
             if ($project_init) {
