@@ -14,6 +14,9 @@
     if (ProjectTaskList::canAdd(logged_user(), $milestone->getProject())) {
       add_page_action(lang('add task list'), $milestone->getAddTaskListUrl());
     } //if
+    if (ProjectTicket::canAdd(logged_user(), $milestone->getProject())) {
+      add_page_action(lang('add ticket'), $milestone->getAddTicketUrl());
+    } // if
   } // if
 
 ?>
