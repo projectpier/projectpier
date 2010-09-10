@@ -40,7 +40,7 @@
     function getAttachmentsByPageNameAndProject($page_name, Project $project) {
       if (trim($page_name) == '' || !($project instanceof Project)) {
         return null;
-      }
+      } // if
       
       return self::findAll(array(
         'conditions' => array('`page_name` = ? AND `project_id` = ?', $page_name, $project->getId()),
@@ -57,11 +57,11 @@
     function getAttachmentsByTypeAndProject($types, Project $project) {
       if (!($project instanceof Project)) {
         return null;
-      }
+      } // if
       
       if (!is_array($types)) {
         $types = array($types);
-      }
+      } // if
       
       return self::findAll(array(
         'conditions' => array('`rel_object_manager` IN (?) AND `project_id` = ?', $types, $project->getId()),
@@ -71,10 +71,10 @@
     /**
     * Clear all attachments by object
     *
-    * @param ProjectDataObject
+    * @param ApplicationDataObject
     * @return boolean
     */
-    static function clearAttachmentsByObject(ProjectDataObject $object) {
+    static function clearAttachmentsByObject(ApplicationDataObject $object) {
       return self::delete(array('`rel_object_manager` = ? AND `rel_object_id` = ?', get_class($object->manager()), $object->getObjectId()));
     } // clearAttachmentsByObject
     

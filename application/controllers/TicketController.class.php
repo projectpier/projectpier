@@ -153,6 +153,7 @@
         } // foreach
       } // if
       
+      $tag_names = $ticket->getTagNames();
       $ticket_data = array(
         'milestone_id' => $ticket->getMilestoneId(),
         'status' => $ticket->getStatus(),
@@ -163,7 +164,8 @@
         'due_date' => $ticket->hasDueDate() ? $ticket->getDueDate():DateTimeValueLib::now(),
         'type' => $ticket->getType(),
         'category_id' => $ticket->getCategoryId(),
-        'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId()
+        'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId(),
+        'tags' => is_array($tag_names) ? implode(', ', $tag_names) : '',
       ); // array
       
       tpl_assign('params', $params);
@@ -210,7 +212,8 @@
             'category' => $ticket->getCategory(),
             'assigned to' => $ticket->getAssignedTo(),
             'milestone' => $ticket->getMilestone(),
-            'due date' => $ticket->getDueDate()
+            'due date' => $ticket->getDueDate(),
+            'tags' => $ticket->getTagNames()
             );
           
           $ticket->setFromAttributes($ticket_data);
@@ -224,6 +227,8 @@
 
           DB::beginWork();
           $ticket->save();
+          $ticket->setTagsFromCSV(array_var($ticket_data, 'tags'));
+          
           ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
           DB::commit();
           
@@ -234,7 +239,8 @@
             'category' => $ticket->getCategory(),
             'assigned to' => $ticket->getAssignedTo(),
             'milestone' => $ticket->getMilestone(),
-            'due date' => $ticket->getDueDate()
+            'due date' => $ticket->getDueDate(),
+            'tags' => $ticket->getTagNames()
             );
           
           
@@ -251,6 +257,18 @@
               $from_data = $old_field->getObjectName();
             } elseif ($old_field instanceof DateTimeValue) {
               $from_data = $old_field->format('m/d/Y');
+            } elseif (is_array($old_field)) {
+              $removed = array();
+              foreach ($old_field as $item) {
+                if (!in_array($item, $new_field)) {
+                  $removed[] = $item;
+                } // if
+              } // foreach
+              if (count($removed)) {
+                $from_data = implode(', ', $removed);
+              } else {
+                $from_data = lang('n/a');
+              } // if
             } else {
               $from_data = $old_field;
             } // if
@@ -258,6 +276,18 @@
               $to_data = $new_field->getObjectName();
             } elseif ($new_field instanceof DateTimeValue) {
               $to_data = $new_field->format('m/d/Y');
+            } elseif (is_array($new_field)) {
+              $added = array();
+              foreach ($new_field as $item) {
+                if (!in_array($item, $old_field)) {
+                  $added[] = $item;
+                } // if
+              } // foreach
+              if (count($added)) {
+                $to_data = implode(', ', $added);
+              } else {
+                $to_data = lang('n/a');
+              } // if
             } else {
               $to_data = $new_field;
             } // if

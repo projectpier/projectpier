@@ -164,6 +164,7 @@
     'updated on by' => '%s | <a href="%s">%s</a>',
     'change set to' => '<strong>%s</strong> set to <em>%s</em>',
     'change from to' => '<strong>%s</strong> from <em>%s</em> to <em>%s</em>',
+    'tags removed added' => '<strong>%s</strong> removed: <em>%s</em> &mdash; added: <em>%s</em>',
     'history' => 'Change history',
     'field' => 'Field',
     'old value' => 'Old value',

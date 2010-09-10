@@ -131,6 +131,12 @@
         </script>
       </td>
     </tr>
+    <tr>
+      <th><?php echo label_tag(lang('tags'), 'ticketFormTags') ?></th>
+      <td colspan="3">
+        <?php echo project_object_tags_widget('ticket[tags]', active_project(), array_var($ticket_data, 'tags'), array('id' => 'ticketFormTags', 'class' => 'long')) ?>
+      </td>
+    </tr>
   </table>
   <?php echo submit_button(lang('update')) ?>
   </form>
@@ -151,24 +157,28 @@
       <ul>
 <?php foreach ($changes as $change) { ?>
         <li><?php
-        if (trim($change->getFromData()) == "") {
-          if ($change->dataNeedsTranslation()) {
-            echo lang('change set to', lang($change->getType()), lang($change->getToData()));
-          } else {
-            echo lang('change set to', lang($change->getType()), $change->getToData());
-          } // if
-        } elseif (trim($change->getToData()) == "") {
-          if ($change->dataNeedsTranslation()) {
-            echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang('n/a'));
-          } else {
-            echo lang('change from to', lang($change->getType()), $change->getFromData(), lang('n/a'));
-          } // if
+        if ($change->getType() == 'tags') {
+          echo lang('tags removed added', lang('tags'), $change->getFromData(), $change->getToData());
         } else {
-          if ($change->dataNeedsTranslation()) {
-            echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang($change->getToData()));
-          } else {
-            echo lang('change from to', lang($change->getType()), $change->getFromData(), $change->getToData());
-          } // if
+          if (trim($change->getFromData()) == "") {
+            if ($change->dataNeedsTranslation()) {
+              echo lang('change set to', lang($change->getType()), lang($change->getToData()));
+            } else {
+              echo lang('change set to', lang($change->getType()), $change->getToData());
+            } // if
+            } elseif (trim($change->getToData()) == "") {
+              if ($change->dataNeedsTranslation()) {
+                echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang('n/a'));
+              } else {
+                echo lang('change from to', lang($change->getType()), $change->getFromData(), lang('n/a'));
+              } // if
+            } else {
+              if ($change->dataNeedsTranslation()) {
+                echo lang('change from to', lang($change->getType()), lang($change->getFromData()), lang($change->getToData()));
+              } else {
+                echo lang('change from to', lang($change->getType()), $change->getFromData(), $change->getToData());
+              } // if
+            } // if
         } // if ?>
         </li>
 <?php
