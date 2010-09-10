@@ -205,6 +205,7 @@
           $ticket_data['due_date'] = DateTimeValueLib::make(0, 0, 0, array_var($_POST, 'ticket_due_date_month', 1), array_var($_POST, 'ticket_due_date_day', 1), array_var($_POST, 'ticket_due_date_year', 1970));
         } // if
         try {
+          $tag_names = $ticket->getTagNames();
           $old_fields = array(
             'status' => $ticket->getStatus(),
             'priority' => $ticket->getPriority(),
@@ -213,7 +214,7 @@
             'assigned to' => $ticket->getAssignedTo(),
             'milestone' => $ticket->getMilestone(),
             'due date' => $ticket->getDueDate(),
-            'tags' => $ticket->getTagNames()
+            'tags' => is_array($tag_names) ? $tag_names:array()
             );
           
           $ticket->setFromAttributes($ticket_data);
@@ -232,6 +233,7 @@
           ApplicationLogs::createLog($ticket, $ticket->getProject(), ApplicationLogs::ACTION_EDIT);
           DB::commit();
           
+          $tag_names = $ticket->getTagNames();
           $new_fields = array(
             'status' => $ticket->getStatus(),
             'priority' => $ticket->getPriority(),
@@ -240,7 +242,7 @@
             'assigned to' => $ticket->getAssignedTo(),
             'milestone' => $ticket->getMilestone(),
             'due date' => $ticket->getDueDate(),
-            'tags' => $ticket->getTagNames()
+            'tags' => is_array($tag_names) ? $tag_names:array()
             );
           
           
