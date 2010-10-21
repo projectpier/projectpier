@@ -11,8 +11,8 @@
 <?php if (isset($messages) && is_array($messages) && count($messages)) { ?>
 <div id="messages">
   <div id="messagesPaginationTop"><?php echo advanced_pagination($messages_pagination, get_url('message', 'index', array('page' => '#PAGE#'))) ?></div>
-  <table width="100%">
-    <tr><th></th><th>Date</th><th>Title</th><th>Author</th><th>Comments</th><th>Attachments</th></tr>
+  <table id="short_messages">
+    <tr class="message short header"><th></th><th>Date</th><th>Title</th><th>Author</th><th><img src="<?php echo get_image_url("icons/comments.png"); ?>" title="Comments" alt="Comments"/></th><th><img src="<?php echo get_image_url("icons/attach.png"); ?>" title="Attachments" alt="Attachments"/></th></tr>
 <?php $odd_or_even = "even"; ?>
 <?php foreach ($messages as $message) { ?>
 <?php 
