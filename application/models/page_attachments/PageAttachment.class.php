@@ -53,10 +53,10 @@
     function renderControl($control_name) {
       switch ($this->getRelObjectManager()) {
         case 'Companies':
-          return select_company($control_name, $this->getRelObjectId());
+          return select_company($control_name, $this->getRelObjectId(), array('class'=>'combobox'));
           break;
         case 'Contacts':
-          return select_contact($control_name, $this->getRelObjectId());
+          return select_contact($control_name, $this->getRelObjectId(), null, array('class'=>'combobox'));
           break;
         case 'ProjectFiles':
           return select_project_file($control_name, active_project(), $this->getRelObjectId());

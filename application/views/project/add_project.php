@@ -16,6 +16,10 @@
     ));
   } // if
   add_stylesheet_to_page('project/attachments.css');
+  add_javascript_to_page('jquery/jquery-1.4.2.min.js');
+  add_javascript_to_page('jquery/jquery-ui-1.8.2.custom.min.js');
+  add_stylesheet_to_page('../jquery-ui-theme/jquery-ui-1.8.2.custom.css');
+  add_javascript_to_page('modules/autocomplete.js');
   
 ?>
 <?php if ($project->isNew()) { ?>

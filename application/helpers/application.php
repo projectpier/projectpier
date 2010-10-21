@@ -70,11 +70,11 @@
   * Render select contact box
   *
   * @param integer $selected ID of selected contact
-  * @param array $exclude_files Array of IDs of contacts that need to be excluded (already attached to project etc)
+  * @param array $exclude_contacts Array of IDs of contacts that need to be excluded (already attached to project etc)
   * @param array $attributes Additional attributes
   * @return string
   */
-  function select_contact($name, $selected = null, $exclude_files = null, $attributes = null) {
+  function select_contact($name, $selected = null, $exclude_contacts = null, $attributes = null) {
     $grouped_contacts = Contacts::getGroupedByCompany();
     $all_options = array(option_tag(lang('none'), 0));
     if (is_array($grouped_contacts)) {
@@ -82,7 +82,7 @@
         if (is_array($contacts) && is_array($contacts['contacts']) && count($contacts['contacts'])) {
           $options = array();
           foreach ($contacts['contacts'] as $contact) {
-            if (is_array($exclude_files) && in_array($contact->getId(), $exclude_files)) {
+            if (is_array($exclude_contacts) && in_array($contact->getId(), $exclude_contacts)) {
               continue;
             }
             $contact_name = $contact->getDisplayName();
