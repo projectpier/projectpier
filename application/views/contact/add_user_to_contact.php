@@ -21,7 +21,7 @@
   add_stylesheet_to_page('admin/user_permissions.css');
 
 ?>
-<script type="text/javascript" src="<?php echo get_javascript_url('modules/addUserForm.js') ?>"></script>
+<script type="text/javascript" src="<?php echo get_javascript_url('modules/addContactForm.js') ?>"></script>
 <h2><?php echo $contact->getDisplayName() ?></h2>
 <?php if ($contact->hasAvatar()) { ?>
   <div class="contactAvatar"><img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> <?php echo lang('avatar') ?>" /></div>
@@ -50,10 +50,10 @@
   <fieldset>
     <legend><?php echo lang('password') ?></legend>
     <div>
-      <?php echo radio_field('user[password_generator]', array_var($user_data, 'password_generator') == 'random', array('value' => 'random', 'class' => 'checkbox', 'id' => 'userFormRandomPassword', 'onclick' => 'App.modules.addUserForm.generateRandomPasswordClick()')) ?> <?php echo label_tag(lang('user password generate'), 'userFormRandomPassword', false, array('class' => 'checkbox'), '') ?>
+      <?php echo radio_field('user[password_generator]', array_var($user_data, 'password_generator') == 'random', array('value' => 'random', 'class' => 'checkbox', 'id' => 'userFormRandomPassword', 'onclick' => 'App.modules.addContactForm.generateRandomPasswordClick()')) ?> <?php echo label_tag(lang('user password generate'), 'userFormRandomPassword', false, array('class' => 'checkbox'), '') ?>
     </div>
     <div>
-      <?php echo radio_field('user[password_generator]', array_var($user_data, 'password_generator') == 'specify', array('value' => 'specify', 'class' => 'checkbox', 'id' => 'userFormSpecifyPassword', 'onclick' => 'App.modules.addUserForm.generateSpecifyPasswordClick()')) ?> <?php echo label_tag(lang('user password specify'), 'userFormSpecifyPassword', false, array('class' => 'checkbox'), '') ?>
+      <?php echo radio_field('user[password_generator]', array_var($user_data, 'password_generator') == 'specify', array('value' => 'specify', 'class' => 'checkbox', 'id' => 'userFormSpecifyPassword', 'onclick' => 'App.modules.addContactForm.generateSpecifyPasswordClick()')) ?> <?php echo label_tag(lang('user password specify'), 'userFormSpecifyPassword', false, array('class' => 'checkbox'), '') ?>
     </div>
     <div id="userFormPasswordInputs">
       <div>
@@ -68,7 +68,7 @@
     </div>
   </fieldset>
   <script type="text/javascript">
-    App.modules.addUserForm.generateRandomPasswordClick();
+    App.modules.addContactForm.generateRandomPasswordClick();
   </script>
 <?php } // if ?>
 

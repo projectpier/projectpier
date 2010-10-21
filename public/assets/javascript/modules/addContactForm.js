@@ -1,4 +1,4 @@
-App.modules.addUserForm = {
+App.modules.addContactForm = {
   
   /**
   * Change state on generate random password checkbox
@@ -20,6 +20,20 @@ App.modules.addUserForm = {
     } else {
       $('userFormPasswordInputs').style.display = 'none';
     } // if
-  }
+  },
+  
+  /**
+   * Switch new/existing company forms based on selected option
+   */
+  toggleCompanyForms: function() {
+    if($('contactFormExistingCompany').checked) {
+      $('contactFormExistingCompanyControls').style.display = 'block';
+      $('contactFormNewCompanyControls').style.display = 'none';
+    } else {
+      $('contactFormExistingCompanyControls').style.display = 'none';
+      $('contactFormNewCompanyControls').style.display = 'block';
+    } // if
+  } // toggleAttachForms
+  
   
 }

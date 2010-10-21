@@ -46,6 +46,8 @@
     'send milestone assigned to notification' => 'Send email notification to user',
     'edit project to select milestone' => '<em>Edit project details to select a milestone</em>',
     
+    'new company' => 'New company',
+    'existing company' => 'Existing company',
     'edit company data' => '<a href="%s">Edit</a> company data',
     'company users involved in project' => '%s users involved in %s',
     'companies involved in project' => 'Involved companies',

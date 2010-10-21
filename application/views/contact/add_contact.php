@@ -25,7 +25,7 @@
   add_stylesheet_to_page('admin/user_permissions.css');
 
 ?>
-<script type="text/javascript" src="<?php echo get_javascript_url('modules/addUserForm.js') ?>"></script>
+<script type="text/javascript" src="<?php echo get_javascript_url('modules/addContactForm.js') ?>"></script>
 <form action="<?php if ($contact->isNew()) { echo ($company instanceof Company ? $company->getAddContactUrl() : get_url('contact', 'add')); } else { echo $contact->getEditUrl(); } ?>" method="post" enctype="multipart/form-data">
 
 <?php tpl_display(get_template_path('form_errors')) ?>
@@ -37,10 +37,31 @@
   
 <?php if (logged_user()->isAdministrator()) { ?>
 <?php if (!$contact->isAdministrator()) { ?>
-  <div>
-    <?php echo label_tag(lang('company'), 'contactFormCompany', true) ?>
-    <?php echo select_company('contact[company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany', 'class' => 'combobox')) ?>
-  </div>
+  <fieldset>
+    <legend><?php echo lang('company') ?> <span class="label_required">*</span></legend>
+    <div>
+      <?php echo radio_field('contact[company][what]', true, array('value' => 'existing', 'id'=>'contactFormExistingCompany', 'onclick' => 'App.modules.addContactForm.toggleCompanyForms()')); ?>
+      <?php echo label_tag(lang('existing company'), 'contactFormExistingCompany', false, array('class' => 'checkbox')) ?>
+    </div>
+    <div id="contactFormExistingCompanyControls">
+      <?php echo select_company('contact[company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany', 'class' => 'combobox')) ?>
+    </div>
+  
+    <div>
+      <?php echo radio_field('contact[company][what]', false, array('value' => 'new', 'id'=>'contactFormNewCompany', 'onclick' => 'App.modules.addContactForm.toggleCompanyForms()')); ?>
+      <?php echo label_tag(lang('new company'), 'contactFormNewCompany', false, array('class'=>'checkbox'))?>
+    </div>
+    <div id="contactFormNewCompanyControls">
+      <?php echo label_tag(lang('name'), 'contactFormNewCompanyName', true) ?>
+      <?php echo text_field('contact[company][name]', null, array('id' => 'contactFormNewCompanyName')) ?>
+      <?php echo label_tag(lang('timezone'), 'contactFormNewCompanyTimezone', true)?>
+      <?php echo select_timezone_widget('contact[company][timezone]', owner_company()->getTimezone(), array('id' => 'contactFormNewCompanyTimezone', 'class' => 'long combobox')) ?>
+    </div>
+    <script type="text/javascript">
+    App.modules.addContactForm.toggleCompanyForms();
+    </script>
+  </fieldset>
+
 <?php } else { ?>
   <div>
     <?php echo label_tag(lang('company'), 'contactFormCompany', false) ?>

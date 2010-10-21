@@ -551,6 +551,17 @@
           $contact->setFromAttributes($contact_data);
           try {
             DB::beginWork();
+            if ($contact_data['company']['what'] == 'existing') {
+              $company_id = $contact_data['company_id'];
+            } else {
+              $company = new Company();
+              $company->setName($contact_data['company']['name']);
+              $company->setTimezone($contact_data['company']['timezone']);
+              $company->setClientOfId(owner_company()->getId());
+              $company->save();
+              $company_id = $company->getId();
+            } // if
+            $contact->setCompanyId($company_id);
             $contact->save();
 
             $contact->clearImValues();

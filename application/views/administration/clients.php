@@ -7,6 +7,7 @@
   
   if (owner_company()->canAddClient(logged_user())) {
     add_page_action(lang('add client'), get_url('company', 'add_client'));
+    add_page_action(lang('add contact'), get_url('contact', 'add'));
   } // if
 
 ?>

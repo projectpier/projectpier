@@ -97,6 +97,17 @@
 
         try {          
           DB::beginWork();
+          if ($_POST['contact']['company']['what'] == 'existing') {
+            $company_id = $_POST['contact']['company_id'];
+          } else {
+            $company = new Company();
+            $company->setName($_POST['contact']['company']['name']);
+            $company->setTimezone($_POST['contact']['company']['timezone']);
+            $company->setClientOfId(owner_company()->getId());
+            $company->save();
+            $company_id = $company->getId();
+          } // if
+          $contact->setCompanyId($company_id);
           $contact->save();
           
           $contact->clearImValues();
