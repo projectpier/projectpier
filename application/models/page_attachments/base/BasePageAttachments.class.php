@@ -63,11 +63,7 @@
     * @return array or string
     */
     function getPkColumns() {
-      return array (
-  0 => 'rel_object_manager',
-  1 => 'rel_object_id',
-  2 => 'file_id',
-);
+      return 'id';
     } // getPkColumns
     
     /**
@@ -78,7 +74,7 @@
     * @return string
     */
     function getAutoIncrementColumn() {
-      return NULL;
+      return 'id';
     } // getAutoIncrementColumn
     
     // -------------------------------------------------------

@@ -260,14 +260,51 @@
     $options = array(option_tag(lang('none'), 0));
     $messages = $project->getMessages();
     if (is_array($messages)) {
-      foreach ($messages as $messages) {
-        $option_attributes = $messages->getId() == $selected ? array('selected' => 'selected') : null;
-        $options[] = option_tag($messages->getTitle(), $messages->getId(), $option_attributes);
+      foreach ($messages as $message) {
+        $option_attributes = $message->getId() == $selected ? array('selected' => 'selected') : null;
+        $options[] = option_tag($message->getTitle(), $message->getId(), $option_attributes);
       } // foreach
     } // if
     
     return select_box($name, $options, $attributes);
   } // select_message
+  
+  /**
+  * Return select ticket control
+  *
+  * @param string $name Control name
+  * @param Project $project
+  * @param integer $selected ID of selected ticket
+  * @param array $attributes Additional attributes
+  * @return string
+  */
+  function select_ticket($name, $project = null, $selected = null, $attributes = null) {
+    if (is_null($project)) {
+      $project = active_project();
+    }
+    if (!($project instanceof Project)) {
+      throw new InvalidInstanceError('$project', $project, 'Project');
+    }
+    
+    if (is_array($attributes)) {
+      if (!isset($attributes['class'])) {
+        $attributes['class'] = 'select_ticket';
+      }
+    } else {
+      $attributes = array('class' => 'select_ticket');
+    } // if
+    
+    $options = array(option_tag(lang('none'), 0));
+    $tickets = $project->getTickets();
+    if (is_array($tickets)) {
+      foreach ($tickets as $ticket) {
+        $option_attributes = $ticket->getId() == $selected ? array('selected' => 'selected') : null;
+        $options[] = option_tag($ticket->getTitle(), $ticket->getId(), $option_attributes);
+      } // foreach
+    } // if
+    
+    return select_box($name, $options, $attributes);
+  } // select_ticket
   
   /**
   * Render select folder box

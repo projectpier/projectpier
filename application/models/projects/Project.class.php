@@ -8,6 +8,17 @@
   */
   class Project extends BaseProject {
     
+    
+    // ---------------------------------------------------
+    // Page Attachments
+    // ---------------------------------------------------
+    
+    /** Cache of all page attachments
+    *
+    * @var array
+    */
+    private $all_page_attachments;
+    
     // ---------------------------------------------------
     //  Messages
     // ---------------------------------------------------
@@ -28,7 +39,7 @@
     private $messages;
     
     /**
-    * Array of all important messages (incliduing private ones)
+    * Array of all important messages (including private ones)
     *
     * @var array
     */
@@ -108,8 +119,8 @@
     private $all_completed_milestones;
     
     /**
-    * Cached array of completed milestones - is_private check is made before retriving meaning that if
-    * user is no member of owner company all private data will be hiddenas
+    * Cached array of completed milestones - is_private check is made before retrieving meaning that if
+    * user is no member of owner company all private data will be hidden
     *
     * @var array
     */
@@ -286,7 +297,7 @@
     private $important_files;
     
     /**
-    * All orphened files, user permissions are not checked
+    * All orphaned files, user permissions are not checked
     *
     * @var array
     */
@@ -298,6 +309,24 @@
     * @var array
     */
     private $orphaned_files;
+    
+    // ---------------------------------------------------
+    // Page Attachments
+    // ---------------------------------------------------
+    
+    /**
+    * This function will return all page attachments in project
+    *
+    * @param void
+    * @return array
+    */
+    function getAllPageAttachments() {
+      if (is_null($this->all_page_attachments)) {
+        $this->all_page_attachments = PageAttachments::getAllByProject($this);
+      }
+      return $this->all_page_attachments;
+    } // getAllPageAttachments
+    
     
     // ---------------------------------------------------
     //  Messages
@@ -406,7 +435,7 @@
     } // getMilestones
     
     /**
-    * Return all opet milestones without is_private check
+    * Return all open milestones without is_private check
     *
     * @param void
     * @return array
@@ -555,7 +584,7 @@
 
     /**
     * Return array of milestones for the month specified that the user has
-    * haccess to.
+    * access to.
     *
     * @access public
     * @param int $year
@@ -598,7 +627,7 @@
     } // getAllTaskLists
     
     /**
-    * Return all taks lists
+    * Return all task lists
     *
     * @access public
     * @param void
@@ -690,7 +719,7 @@
     } // getCompletedTaskLists
     
     // ---------------------------------------------------
-    //  Ticket
+    //  Tickets
     // ---------------------------------------------------
 
     /**
@@ -1516,8 +1545,10 @@
     * @return boolean
     */
     function delete() {
+      $this->clearPageAttachments();
       $this->clearMessages();
       $this->clearTaskLists();
+      $this->clearTickets();
       $this->clearMilestones();
       $this->clearFiles();
       $this->clearFolders();
@@ -1526,6 +1557,21 @@
       $this->clearLogs();
       return parent::delete();
     } // delete
+    
+    /**
+    * Clear all project page attachments
+    *
+    * @param void
+    * @return null
+    */
+    private function clearPageAttachments() {
+      $page_attachments = $this->getAllPageAttachments();
+      if (is_array($page_attachments)) {
+        foreach ($page_attachments as $page_attachment) {
+          $page_attachment->delete();
+        } // foreach
+      } // if
+    } // clearPageAttachments
     
     /**
     * Clear all project messages
@@ -1556,6 +1602,21 @@
         } // foreach
       } // if
     } // clearTaskLists
+    
+    /**
+    * Clear all tickets
+    *
+    * @param void
+    * @return null
+    */
+    private function clearTickets() {
+      $tickets = $this->getAllTickets();
+      if (is_array($tickets)) {
+        foreach ($tickets as $ticket) {
+          $ticket->delete();
+        } // foreach
+      } // if
+    } // clearTickets
     
     /**
     * Clear all milestones

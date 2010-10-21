@@ -121,7 +121,9 @@
     * @return null
     */
     function people() {
-
+      $contacts = PageAttachments::getAttachmentsByTypeAndProject(array('Contacts', 'Companies'), active_project());
+      tpl_assign('contacts', $contacts);
+      
     } // people
     
     /**

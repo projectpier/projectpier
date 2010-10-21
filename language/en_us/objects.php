@@ -46,6 +46,8 @@
     'no folder' => '(no folder)',
     'configuration category' => 'Configuration category',
     'configuration categories' => 'Configuration categories',
+    'text snippet' => 'Text snippet',
+    'text snippets' => 'Text snippets',
     
     // Variations
     'owner company' => 'Owner company',

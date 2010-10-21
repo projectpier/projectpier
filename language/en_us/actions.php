@@ -42,6 +42,7 @@
     'mark project as finished' => 'Mark project as finished',
     'mark project as active' => 'Mark project as active',
     'add text snippet' => 'Add text snippet',
+    'add text snippets' => 'Add text snippets',
     
     // Messages
     'add message' => 'Add message',
@@ -85,6 +86,7 @@
     'update ticket options' => 'Update options',
     
     // Milestone
+    'view milestone' => 'View milestone',
     'add milestone' => 'Add milestone',
     'edit milestone' => 'Edit milestone',
     'delete milestone' => 'Delete milestone',
