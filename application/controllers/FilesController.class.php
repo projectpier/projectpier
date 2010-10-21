@@ -237,7 +237,7 @@
           return $this->render();
         }
         if (!logged_user()->isValidPassword($password)) {
-          tpl_assign('error', new Error(lang('invalid login data')));
+          tpl_assign('error', new Error(lang('invalid password')));
           return $this->render();
         }
       
@@ -547,7 +547,7 @@
           return $this->render();
         }
         if (!logged_user()->isValidPassword($password)) {
-          tpl_assign('error', new Error(lang('invalid login data')));
+          tpl_assign('error', new Error(lang('invalid password')));
           return $this->render();
         }
         try {
@@ -676,7 +676,7 @@
           return $this->render();
         }
         if (!logged_user()->isValidPassword($password)) {
-          tpl_assign('error', new Error(lang('invalid login data')));
+          tpl_assign('error', new Error(lang('invalid password')));
           return $this->render();
         }
 

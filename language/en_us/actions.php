@@ -25,6 +25,9 @@
     'add contact' => 'Add contact',
     'edit contact' => 'Edit contact',
     'delete contact' => 'Delete contact',
+    'add user account' => 'Add user account',
+    'edit user account' => 'Edit user account',
+    'delete user account' => 'Delete user account',
     
     // Users
     'add user' => 'Add user',

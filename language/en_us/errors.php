@@ -21,6 +21,9 @@
     // Contact validation errors
     'name value required' => 'Name is required',
     
+    // Add user to contact form
+    'contact already has user' => 'This contact already has a user account attached to it.',
+    
     // User validation errors
     'username value required' => 'Username value is required',
     'username must be unique' => 'Sorry, but selected username is already taken',
@@ -49,6 +52,7 @@
     'username value missing' => 'Please enter your username',
     'password value missing' => 'Please enter your password',
     'invalid login data' => 'Failed to log you in. Please check your login data and try again',
+    'invalid password' => 'Incorrect password. Please check your password and try again',
     
     // Add project form
     'project name required' => 'Project name value is required',

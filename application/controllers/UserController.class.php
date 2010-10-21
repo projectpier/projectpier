@@ -177,7 +177,7 @@
           return $this->render();
         }
         if (!logged_user()->isValidPassword($password)) {
-          tpl_assign('error', new Error(lang('invalid login data')));
+          tpl_assign('error', new Error(lang('invalid password')));
           return $this->render();
         }
         try {
@@ -196,7 +196,7 @@
 
         $this->redirectToUrl($user->getCompany()->getViewUrl());
       } else {
-        flash_error(lang('error delete client'));
+        flash_error(lang('error delete user'));
         $this->redirectToUrl($user->getCompany()->getViewUrl());
       }
 

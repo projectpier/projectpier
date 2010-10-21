@@ -233,7 +233,7 @@
     } // hasAllProjectPermissions
     
     // ---------------------------------------------------
-    //  Retrive
+    //  Retrieve
     // ---------------------------------------------------
     
     /**
@@ -246,6 +246,16 @@
     function getCompany() {
       return Companies::findById($this->getCompanyId());
     } // getCompany
+    
+    /**
+    * Return associated contact
+    *
+    * @param void
+    * @return Contact
+    */
+    function getContact() {
+      return Contacts::findOne(array('conditions' => array('`user_id` = ? ', $this->getId())));
+    } // getContact
     
     /**
     * Return all projects that this user is member of
@@ -1007,10 +1017,10 @@
         $errors[] = lang('email value is required');
       } // if
       
-      // Company ID
-      if (!$this->validatePresenceOf('company_id')) {
-        $errors[] = lang('company value required');
-      }
+      // // Company ID
+      // if (!$this->validatePresenceOf('company_id')) {
+      //   $errors[] = lang('company value required');
+      // }
       
     } // validate
     

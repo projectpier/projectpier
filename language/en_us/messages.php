@@ -198,6 +198,7 @@
     'error open project' => 'Failed to reopen selected project',
     'error delete client' => 'Failed to delete selected client company',
     'error delete user' => 'Failed to delete selected user',
+    'error delete contact' => 'Failed to delete selected contact',
     'error update project permissions' => 'Failed to update project permissions',
     'error remove user from project' => 'Failed to remove user from project',
     'error remove company from project' => 'Failed to remove company from project',

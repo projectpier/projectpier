@@ -153,10 +153,9 @@
       tpl_assign('company', $company);
       tpl_assign('contact_data', $contact_data);
 
-
-      // TODO manage change of avatar
+      
       $avatar = array_var($_FILES, 'new_avatar');
-      if (is_array($avatar)) {
+      if (is_array($avatar) && isset($avatar['size']) && $avatar['size'] != 0) {
         try {
           if (!isset($avatar['name']) || !isset($avatar['type']) || !isset($avatar['size']) || !isset($avatar['tmp_name']) || !is_readable($avatar['tmp_name'])) {
             throw new InvalidUploadError($avatar, lang('error upload file'));
@@ -178,7 +177,7 @@
         } catch (Exception $e) {
           flash_error($e->getMessage());
         }
-      } else {
+      } else if ($contact_data['delete_avatar'] == "checked") {
         $contact->setAvatarFile('');
       } // if
 
@@ -243,7 +242,7 @@
           return $this->render();
         }
         if (!logged_user()->isValidPassword($password)) {
-          tpl_assign('error', new Error(lang('invalid login data')));
+          tpl_assign('error', new Error(lang('invalid password')));
           return $this->render();
         }
         try {
@@ -262,7 +261,7 @@
 
         $this->redirectToUrl($contact->getCompany()->getViewUrl());
       } else {
-        flash_error(lang('error delete client'));
+        flash_error(lang('error delete contact'));
         $this->redirectToUrl($contact->getCompany()->getViewUrl());
       }
 
@@ -292,6 +291,123 @@
       tpl_assign('contact', $contact);
     } // card
   
+    /**
+    * Create and attach a user account to the contact
+    * 
+    * @access public
+    * @param void
+    * @return null
+    */
+    function add_user_account() {
+      $this->setTemplate('add_user_to_contact');
+      
+      $contact = Contacts::findById(get_id());
+      if (!($contact instanceof Contact)) {
+        flash_error(lang('contact dnx'));
+        $this->redirectTo('dashboard');
+      } // if
+      
+      if (!$contact->canAddUserAccount(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectTo('dashboard');
+      } // if
+      
+      if ($contact->hasUserAccount()) {
+        flash_error(lang('contact already has user'));
+        $this->redirectToUrl($contact->getCardUrl());
+      }
+      
+      $user = new User();
+      $company = $contact->getCompany();
+            
+      $user_data = array_var($_POST, 'user');
+      if (!is_array($user_data)) {
+        $user_data = array(
+          'password_generator' => 'random',
+          'company_id' => $company->getId(),
+          'timezone' => $company->getTimezone(),
+        ); // array
+      } // if
+      
+      $projects = $company->getProjects();
+      $permissions = ProjectUsers::getNameTextArray();
+      
+      tpl_assign('contact', $contact);
+      tpl_assign('user', $user);
+      tpl_assign('company', $company);
+      tpl_assign('projects', $projects);
+      tpl_assign('permissions', $permissions);
+      tpl_assign('user_data', $user_data);
+      
+      if (is_array(array_var($_POST, 'user'))) {
+        $user->setFromAttributes($user_data);
+        // $user->setCompanyId($company->getId());
+        
+        try {
+          // Generate random password
+          if (array_var($user_data, 'password_generator') == 'random') {
+            $password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
+            
+          // Validate user input
+          } else {
+            $password = array_var($user_data, 'password');
+            if (trim($password) == '') {
+              throw new Error(lang('password value required'));
+            } // if
+            if ($password <> array_var($user_data, 'password_a')) {
+              throw new Error(lang('passwords dont match'));
+            } // if
+          } // if
+          $user->setPassword($password);
+          
+          DB::beginWork();
+          $user->save();
+          $contact->setUserId($user->getId());
+          $contact->save();
+          ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_ADD);
+          
+          if (is_array($projects)) {
+            foreach ($projects as $project) {
+              if (array_var($user_data, 'project_permissions_' . $project->getId()) == 'checked') {
+                $relation = new ProjectUser();
+                $relation->setProjectId($project->getId());
+                $relation->setUserId($user->getId());
+                
+                foreach ($permissions as $permission => $permission_text) {
+                  $permission_value = array_var($user_data, 'project_permission_' . $project->getId() . '_' . $permission) == 'checked';
+                  
+                  $setter = 'set' . Inflector::camelize($permission);
+                  $relation->$setter($permission_value);
+                } // foreach
+                
+                $relation->save();
+              } // if
+            } // forech
+          } // if
+          
+          DB::commit();
+          
+          // Send notification...
+          try {
+            if (array_var($user_data, 'send_email_notification')) {
+              Notifier::newUserAccount($user, $password);
+            } // if
+          } catch(Exception $e) {
+          
+          } // try
+          
+          flash_success(lang('success add user', $user->getDisplayName()));
+          $this->redirectToUrl($company->getViewUrl()); // Translate to profile page
+          
+        } catch(Exception $e) {
+          DB::rollback();
+          tpl_assign('error', $e);
+        } // try
+        
+      } // if
+      
+    } // add_user_account
+    
   } // ContactController
 
 ?>

@@ -30,10 +30,17 @@
   </div>
   
 <?php if (!$contact->isNew() && logged_user()->isAdministrator()) { ?>
+<?php if (!$contact->isAdministrator()) { ?>
   <div>
     <?php echo label_tag(lang('company'), 'contactFormCompany', true) ?>
     <?php echo select_company('contact[company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany')) ?>
   </div>
+<?php } else { ?>
+  <div>
+    <?php echo label_tag(lang('company'), 'contactFormCompany', false) ?>
+    <span><?php echo $company->getName()." (".lang('administrator').")"; ?></span>
+  </div>
+<?php } // if ?>
 <?php } else { ?>
   <input type="hidden" name="contact[company_id]" value="<?php echo $company->getId()?>" />
 <?php } // if ?>
@@ -49,6 +56,15 @@
   </div>
   
   <div>
+      <fieldset>
+        <legend><?php echo lang('current avatar') ?></legend>
+    <?php if ($contact->hasAvatar()) { ?>
+        <img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> avatar" />
+        <p><?php echo checkbox_field('contact[delete_avatar]', false, array('id'=>'contactDeleteAvatar', 'class' => 'checkbox')) ?> <?php echo label_tag(lang('delete current avatar'), 'contactDeleteAvatar', false, array('class' => 'checkbox'), '') ?></p>
+    <?php } else { ?>
+        <?php echo lang('no current avatar') ?>
+    <?php } // if ?>
+      </fieldset>
     <?php echo label_tag(lang('avatar'), 'contactFormAvatar', false) ?>
     <?php echo file_field('new avatar', null, array('id' => 'contactFormAvatar')) ?>
     <?php if ($contact->hasAvatar()) { ?>

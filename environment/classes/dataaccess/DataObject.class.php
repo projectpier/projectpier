@@ -5,7 +5,7 @@
   *
   * This class enables easy implementation of any object that is based
   * on single database row. It enables reading, updating, inserting and 
-  * deleting that row without writing any SQL. Also, it can chack if 
+  * deleting that row without writing any SQL. Also, it can check if 
   * specific row exists in database.
   * 
   * This class supports PKs over multiple fields

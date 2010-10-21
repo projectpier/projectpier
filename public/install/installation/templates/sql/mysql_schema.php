@@ -112,6 +112,7 @@ CREATE TABLE `<?php echo $table_prefix ?>contacts` (
   `display_name` varchar(50) <?php echo $default_collation ?> default NULL,
   `title` varchar(30) <?php echo $default_collation ?> default NULL,
   `avatar_file` varchar(44) <?php echo $default_collation ?> default NULL,
+  `is_favorite` tinyint(1) unsigned NOT NULL default '0',
   `office_number` varchar(20) <?php echo $default_collation ?> default NULL,
   `fax_number` varchar(20) <?php echo $default_collation ?> default NULL,
   `mobile_number` varchar(20) <?php echo $default_collation ?> default NULL,

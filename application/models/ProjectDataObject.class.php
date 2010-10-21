@@ -242,7 +242,7 @@
     *
     * @param User $user
     * @param ProjectFile $file
-    * @return booealn
+    * @return boolean
     */
     function canDetachFile(User $user, ProjectFile $file) {
       return $this->canEdit($user);
@@ -360,7 +360,7 @@
     // ---------------------------------------------------
     
     /**
-    * Returns true if this object is searchable (maked as searchable and has searchable columns)
+    * Returns true if this object is searchable (marked as searchable and has searchable columns)
     *
     * @param void
     * @return boolean
