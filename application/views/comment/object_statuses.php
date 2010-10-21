@@ -7,11 +7,13 @@
 <?php if (is_array($comments) && count($comments)) { ?>
 <?php $counter = 0; ?>
 <table id="objectStatuses">
-  <tr class="comment short header"><th></th><th>Date</th><th>Update</th><th>Author</th></tr>
-<?php foreach ($comments as $comment) { ?>
+  <tr class="comment short header"><th class="statusPrivate"></th><th class="statusDate">Date</th><th class="statusContent">Update</th><th class="statusAuthor">Author</th></tr>
+<?php // foreach ($comments as $comment) { ?>
+<?php for ($i = count($comments); $i > 0; $i--) {
+  $comment = $comments[$i-1];?>
 <?php $counter++; ?>
   <tr class="comment short <?php echo $counter % 2 ? 'even' : 'odd'; ?> <?php if ($comment->getCreatedOn()->isToday()) { echo "msgToday"; } else if ($comment->getCreatedOn()->isYesterday()) { echo "msgYesterday"; } else { echo "msgOlder"; }?>">
-    <td class="private">
+    <td>
       <?php if ($comment->isPrivate()) { ?>
       <div class="private" title="<?php echo lang('private comment') ?>"><span><?php echo lang('private comment') ?></span></div>
         <?php } // if ?>
@@ -20,7 +22,7 @@
       <?php echo format_datetime($comment->getCreatedOn(), "m/d/Y, h:ia"); ?>
     </td>
     <td>
-      <?php echo clean($comment->getText()) ?>
+      <?php echo do_textile($comment->getText()) ?>
     </td>
     <td>
       <a href="<?php echo $comment->getCreatedBy()->getCardUrl() ?>"><?php echo clean($comment->getCreatedBy()->getDisplayName()) ?></a>
