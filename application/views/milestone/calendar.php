@@ -36,33 +36,33 @@
   $daysInMonth = gmdate('d', strtotime('+1 month -1 day', $thisMonth));
   $firstDayOfWeek = 1; // configurable?
   $daysInWeek = 7;
+  $weekendDays = array(6,7);
   $lastDayOfWeek = $firstDayOfWeek + $daysInWeek;
   $firstDayOfMonth = gmdate('w', $thisMonth);
+  $firstDayOfMonth = $firstDayOfMonth ? $firstDayOfMonth : 7; // gmdate returns 0 for Sunday, but language file use 7 for Sunday
 ?>
-  <table width="100%">
-    <tr valign="top">
+  <table>
+    <tr>
 <?php
   for ($dow = $firstDayOfWeek; $dow < $lastDayOfWeek; $dow++) {
-    if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, array(1, 7))) {
+    if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, $weekendDays)) {
       $dow_class = "weekend";
     } else {
       $dow_class = "weekday";
-    }
+    } // if
 ?>
       <th class="<?php echo $dow_class; ?>"><?php echo clean(lang(sprintf('dow %u', $dow > $daysInWeek ? $dow - $daysInWeek : $dow))); ?></th>
-<?php
-  } // for
-?>
+<?php } // for ?>
     </tr>
-    <tr valign="top">
+    <tr>
 <?php
 
   /*
    * Skip days from previous month.
    */
 
-  for ($dow = $firstDayOfWeek; $dow <= $firstDayOfMonth; $dow++) {
-    if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, array(1, 7))) {
+  for ($dow = $firstDayOfWeek; $dow < $firstDayOfMonth; $dow++) {
+    if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, $weekendDays)) {
       $dow_class = "weekend";
     } else {
       $dow_class = "weekday";
@@ -78,11 +78,28 @@
 
   for ($dom = 1; $dom <= $daysInMonth;) {
     for (; ($dow < $lastDayOfWeek) && ($dom <= $daysInMonth); $dow++, $dom++) {
-      if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, array(1, 7))) {
+      if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, $weekendDays)) {
         $dow_class = "weekend";
       } else {
         $dow_class = "weekday";
       }
+      $today = gmdate('d');
+      if (gmdate('m', $thisMonth) == gmdate('m')) {
+        if ($dom == $today) {
+          $dow_class .= " today";
+        }
+        if ($dom == $today-1) {
+          $dow_class .= " daybefore";
+        }
+        if ($dom == $today+1) {
+          $dow_class .= " dayafter";
+        }
+        if ($dom == $today-$daysInWeek) {
+          $dow_class .= " weekbefore";
+        }
+      }
+
+      
 ?>
       <td class="<?php echo $dow_class; ?>">
         <div class="date"><?php echo $dom; ?></div>
@@ -98,7 +115,7 @@
               clean($m->getName()));
           }
 ?>
-        <ul>
+        </ul>
 <?php
         } // if
 ?>
@@ -108,7 +125,7 @@
 ?>
 <?php if ($dom <= $daysInMonth) { ?>
     </tr>
-    <tr valign="top">
+    <tr>
 <?php
       $dow = $firstDayOfWeek;
     } // if
@@ -120,7 +137,7 @@
 
   if ($dow < $lastDayOfWeek) {
     for (; $dow < $lastDayOfWeek; $dow++) {
-      if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, array(1, 7))) {
+      if (in_array($dow > $daysInWeek ? $dow - $daysInWeek : $dow, $weekendDays)) {
         $dow_class = "weekend";
       } else {
         $dow_class = "weekday";
@@ -136,7 +153,7 @@
 ?>
   </table>
   <div class="month-nav">
-    <div class="prev-month"><a href="<?php echo get_url('milestone', 'calendar', gmdate('Ym', $prevMonth)); ?>"><?php echo clean(lang(sprintf('month %u', gmdate('m', $prevMonth)))); ?> <?php echo gmdate('Y', $prevMonth); ?></a></div>
-    <div class="next-month"><a href="<?php echo get_url('milestone', 'calendar', gmdate('Ym', $nextMonth)); ?>"><?php echo clean(lang(sprintf('month %u', gmdate('m', $nextMonth)))); ?> <?php echo gmdate('Y', $nextMonth); ?></a></div>
+    <div class="prev-month"><a href="<?php echo get_url('milestone', 'calendar', array('month' => gmdate('Ym', $prevMonth))); ?>"><?php echo clean(lang(sprintf('month %u', gmdate('m', $prevMonth)))); ?> <?php echo gmdate('Y', $prevMonth); ?></a></div>
+    <div class="next-month"><a href="<?php echo get_url('milestone', 'calendar', array('month' => gmdate('Ym', $nextMonth))); ?>"><?php echo clean(lang(sprintf('month %u', gmdate('m', $nextMonth)))); ?> <?php echo gmdate('Y', $nextMonth); ?></a></div>
   </div>
 </div>
