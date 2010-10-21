@@ -1,8 +1,12 @@
 <?php if (is_array($contacts) && count($contacts)) { ?>
 <div class="companyContacts">
   <h4><?php echo lang('contacts'); ?></h4>
-<?php foreach ($contacts as $contact) { ?>
-  <div class="companyContact">
+<?php
+$counter = 0;
+foreach ($contacts as $contact) {
+  $counter++;
+?>
+  <div class="companyContact <?php echo $counter%2 ? 'odd': 'even' ?>">
 <?php if ($contact->hasAvatar()) { ?>
     <span class="contactAvatar"><a href="<?php echo $contact->getCardUrl() ?>"><img src="<?php echo $contact->getAvatarUrl(); ?>" alt="<?php echo clean($contact->getDisplayName()) ?> <?php echo lang('avatar') ?>" /></a></span>
 <?php } // if ?>
