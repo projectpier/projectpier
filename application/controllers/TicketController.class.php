@@ -125,6 +125,10 @@
       $this->addHelper('textile');
       $this->addHelper('ticket');
       
+      $params['order'] = array_var($_GET, 'order', Cookie::getValue('changesetOrder', 'DESC'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('changesetOrder', $params['order'], $expiration);
+      
       $ticket = ProjectTickets::findById(get_id());
       if (!($ticket instanceof ProjectTicket)) {
         flash_error(lang('ticket dnx'));
@@ -149,11 +153,11 @@
         'assigned_to' => $ticket->getAssignedToCompanyId() . ':' . $ticket->getAssignedToUserId()
       ); // array
       
-      
+      tpl_assign('params', $params);
       tpl_assign('ticket', $ticket);
       tpl_assign('ticket_data', $ticket_data);
       tpl_assign('subscribers', $ticket->getSubscribers());
-      tpl_assign('changesets', $ticket->getChangesets());
+      tpl_assign('changesets', $ticket->getChangesets($params['order']));
       
       $this->setSidebar(get_template_path('view_sidebar', 'ticket'));
     } // view

@@ -149,14 +149,14 @@
     // ---------------------------------------------------
     
     /**
-    * Return array of changes
+    * Return array of changesets
     *
-    * @param void
+    * @param string $order Order in which changesets should be displayed
     * @return array
     */
-    function getChangesets() {
+    function getChangesets($order = "ASC") {
       if (is_null($this->changesets)) {
-        $this->changesets = TicketChangesets::getChangesetsByTicket($this);
+        $this->changesets = TicketChangesets::getChangesetsByTicket($this, $order);
       }
       return $this->changesets;
     } // getChangesets

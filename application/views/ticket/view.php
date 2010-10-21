@@ -125,7 +125,7 @@
   </form>
 </fieldset>
 <?php } ?>
-<h2><?php echo lang('history') ?></h2>
+<h2><?php echo lang('history') ?> <a href="<?php echo get_url('ticket', 'view', array('id' => $ticket->getId(), 'active_project' => $ticket->getProjectId(), 'order' => (strtoupper(trim($params['order'])) == 'ASC' ? 'DESC':'ASC')), "changelog"); ?>"><img src="<?php echo get_image_url('icons/more_'.(strtoupper(trim($params['order'])) == 'ASC' ? 'down':'up').'.gif'); ?>"/></a></h2>
 <?php if (isset($changesets) && is_array($changesets) && count($changesets)) { ?>
 <div id="changelog">
   <table width="100%">
