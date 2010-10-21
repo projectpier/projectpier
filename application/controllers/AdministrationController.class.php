@@ -333,7 +333,7 @@
       if (count($errors)) {
         flash_error(lang('plugin activation failed', implode(", ",$errors)));
       } else {
-        flash_error(lang('plugins updated'));
+        flash_success(lang('plugins updated'));
       }
       $this->redirectTo('administration', 'plugins');
     } // update_plugins
