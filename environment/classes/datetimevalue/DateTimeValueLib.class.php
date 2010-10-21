@@ -1,7 +1,7 @@
 <?php
 
   /**
-  * This class is used to produce DateTimeValue object based on timestamos, strings etc
+  * This class is used to produce DateTimeValue object based on timestamps, strings etc
   *
   * @version 1.0
   * @http://www.projectpier.org/

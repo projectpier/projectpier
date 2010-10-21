@@ -134,6 +134,7 @@
       */
     function weekly_schedule() {
       $this->addHelper('textile');
+      
       // Gets desired view 'detail', 'list' or 'calendar'
       // $view_type is from URL, Cookie or set to default: 'calendar'
       $view_type = array_var($_GET, 'view', Cookie::getValue('weeklyScheduleViewType', 'calendar'));
@@ -147,11 +148,19 @@
       } else {
         list(, $year, $month) = $matches;
       }
-      tpl_assign('year', $year);
-      tpl_assign('month', $month);
-
+      
+      // TODO make first day of week configurable
+      $from_date = DateTimeValueLib::makeFromString('monday'.(date('w')==1?'':' last week'));
+      $to_date = $from_date->advance(60*60*24*7*3, false); // +3 weeks
+      $upcoming_milestones = ProjectMilestones::getActiveMilestonesInPeriodByUser(logged_user(), $from_date, $to_date);
+      $upcoming_tickets = ProjectTickets::getOpenTicketsInPeriodByUser(logged_user(), $from_date, $to_date);
+      
+      tpl_assign('from_date', $from_date);
+      tpl_assign('to_date', $to_date);
       tpl_assign('view_type', $view_type);
-      tpl_assign('all_visible_milestones', logged_user()->getActiveMilestones());
+      tpl_assign('upcoming_tickets', $upcoming_tickets);
+      tpl_assign('late_tickets', logged_user()->getLateTickets());
+      tpl_assign('upcoming_milestones', $upcoming_milestones);
       tpl_assign('late_milestones', logged_user()->getLateMilestones());
     } // weekly_schedule
 

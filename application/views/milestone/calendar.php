@@ -34,9 +34,9 @@
   $prevMonth = strtotime('-1 month', $thisMonth);
   $nextMonth = strtotime('+1 month', $thisMonth);
   $daysInMonth = gmdate('d', strtotime('+1 month -1 day', $thisMonth));
-  $firstDayOfWeek = 1; // configurable?
+  $firstDayOfWeek = 1; // TODO make this parameter configurable
   $daysInWeek = 7;
-  $weekendDays = array(6,7);
+  $weekendDays = array(6,7); // TODO make this parameter configurable
   $lastDayOfWeek = $firstDayOfWeek + $daysInWeek;
   $firstDayOfMonth = gmdate('w', $thisMonth);
   $firstDayOfMonth = $firstDayOfMonth ? $firstDayOfMonth : 7; // gmdate returns 0 for Sunday, but language file use 7 for Sunday
@@ -89,13 +89,13 @@
           $dow_class .= " today";
         }
         if ($dom == $today-1) {
-          $dow_class .= " daybefore";
+          $dow_class .= " yesterday";
         }
         if ($dom == $today+1) {
-          $dow_class .= " dayafter";
+          $dow_class .= " tomorrow";
         }
         if ($dom == $today-$daysInWeek) {
-          $dow_class .= " weekbefore";
+          $dow_class .= " lastweek";
         }
       }
 

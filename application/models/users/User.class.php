@@ -88,6 +88,20 @@
     private $today_milestones;
     
     /**
+    * Cached open tickets
+    *
+    * @var array
+    */
+    private $open_tickets;
+    
+    /**
+    * Cached late tickets
+    *
+    * @var array
+    */
+    private $late_tickets;
+    
+    /**
     * Cached array of new objects
     *
     * @var array
@@ -317,6 +331,35 @@
       } // if
       return $this->today_milestones;
     } // getTodayMilestones
+    
+    /**
+    * Returns all open tickets assigned to that user
+    *
+    * @access public
+    * @param void
+    * @return array
+    */
+    function getOpenTickets() {
+      if (is_null($this->open_tickets)) {
+        $this->open_tickets = ProjectTickets::getOpenTicketsByUser($this);
+      } // if
+      return $this->open_tickets;
+    } // getOpenTickets
+
+    /**
+    * Returns late tickets assigned to that user
+    *
+    * @access public
+    * @param void
+    * @return array
+    */
+    function getLateTickets() {
+      if (is_null($this->late_tickets)) {
+        $this->late_tickets = ProjectTickets::getLateTicketsByUser($this);
+      } // if
+      return $this->late_tickets;
+    } // getLateTickets
+
     
     
     // ---------------------------------------------------

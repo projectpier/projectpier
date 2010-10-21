@@ -9,6 +9,14 @@
   */
   class DateTimeValue {
     
+    
+    /**
+    * Weekend days
+    *
+    * @var array
+    */
+    private $weekendDays = array(0,6);
+    
     /**
     * Internal timestamp value
     *
@@ -73,7 +81,7 @@
     *
     * @param void
     * @param integer $input Move the timestamp for this number of seconds
-    * @param boolean $mutate If true update this timestamp, else reutnr new object and dont touch internal timestamp
+    * @param boolean $mutate If true update this timestamp, else return new object and dont touch internal timestamp
     * @throws InvalidParamError
     */
     function advance($input, $mutate = true) {
@@ -112,6 +120,26 @@
              $this->getMonth() == $yesterday->getMonth() &&
              $this->getYear() == $yesterday->getYear();
     } // isYesterday
+    
+    /**
+    * This function will return true if this datetime is a week-end day
+    *
+    * @param void
+    * @return boolean
+    */
+    function isWeekend() {
+      return in_array($this->format('w'), $this->weekendDays);
+    } // isWeekend
+    
+    /**
+    * This function will return true if this datetime is a weekday
+    *
+    * @param void
+    * @return boolean
+    */
+    function isWeekday() {
+      return !$this->isWeekend();
+    } // isWeekday
     
     /**
     * This function will move interlan data to the beginning of day and return modified object. 
@@ -299,7 +327,7 @@
     } // setYear
     
     /**
-    * Return numberic representation of month
+    * Return numeric representation of month
     *
     * @param void
     * @return integer

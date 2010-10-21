@@ -83,6 +83,8 @@
     'private comment' => 'Private comment',
     'private file' => 'Private file',
     'private ticket' => 'Private ticket',
+    'late tickets' => 'Late tickets',
+    'upcoming tickets' => 'Upcoming tickets',
     
   ); // array
 
