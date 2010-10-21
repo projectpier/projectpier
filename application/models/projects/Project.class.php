@@ -165,6 +165,62 @@
     private $completed_task_lists;
     
     // ---------------------------------------------------
+    //  Trac
+    // ---------------------------------------------------
+
+    /**
+    * All categories in this project
+    *
+    * @var array
+    */
+    private $categories;
+
+    /**
+    * All tickets in this project
+    *
+    * @var array
+    */
+    private $all_tickets;
+
+    /**
+    * Array of all tickets. If user is not member of owner company private tickets
+    * will be excluded from the list
+    *
+    * @var array
+    */
+    private $tickets;
+
+    /**
+    * All open tickets in this project
+    *
+    * @var array
+    */
+    private $all_open_tickets;
+
+    /**
+    * Array of open tickets. If user is not member of owner company private tickets
+    * will be excluded from the list
+    *
+    * @var array
+    */
+    private $open_tickets;
+
+    /**
+    * All closed tickets in this project
+    *
+    * @var array
+    */
+    private $all_closed_tickets;
+
+    /**
+    * Array of closed tickets. If user is not member of owner company private tickets
+    * will be excluded from the list
+    *
+    * @var array
+    */
+    private $closed_tickets;
+
+    // ---------------------------------------------------
     //  Tags
     // ---------------------------------------------------
     
@@ -634,6 +690,119 @@
     } // getCompletedTaskLists
     
     // ---------------------------------------------------
+    //  Trac
+    // ---------------------------------------------------
+
+    /**
+    * Return all categories
+    *
+    * @param void
+    * @return array
+    */
+    function getCategories() {
+      if(is_null($this->categories)) {
+        $this->categories = Categories::getProjectCategories($this);
+      } // if
+      return $this->categories;
+    } // getCategories
+
+    /**
+    * This function will return all tickets in project and it will not exclude private
+    * tickets if logged user is not member of owner company
+    *
+    * @param void
+    * @return array
+    */
+    function getAllTickets() {
+      if(is_null($this->all_tickets)) {
+        $this->all_tickets = ProjectTickets::getProjectTickets($this, true);
+      } // if
+      return $this->all_tickets;
+    } // getAllTickets
+
+    /**
+    * Return only the tickets that current user can see (if not member of owner company private
+    * tickets will be excluded)
+    *
+    * @param void
+    * @return array
+    */
+    function getTickets() {
+      if(logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllTickets(); // members of owner company can view all tickets
+      } // if
+
+      if(is_null($this->tickets)) {
+        $this->tickets = ProjectTickets::getProjectTickets($this, false);
+      } // if
+      return $this->tickets;
+    } // getTickets
+
+    /**
+    * This function will return all open tickets in project and it will not exclude private
+    * tickets if logged user is not member of owner company
+    *
+    * @param void
+    * @return array
+    */
+    function getAllOpenTickets() {
+      if(is_null($this->all_open_tickets)) {
+        $this->all_open_tickets = ProjectTickets::getOpenProjectTickets($this, true);
+      } // if
+      return $this->all_open_tickets;
+    } // getAllOpenTickets
+
+    /**
+    * Return only the open tickets that current user can see (if not member of owner company private
+    * tickets will be excluded)
+    *
+    * @param void
+    * @return array
+    */
+    function getOpenTickets() {
+      if(logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllOpenTickets(); // members of owner company can view all tickets
+      } // if
+
+      if(is_null($this->open_tickets)) {
+        $this->open_tickets = ProjectTickets::getOpenProjectTickets($this, false);
+      } // if
+      return $this->open_tickets;
+    } // getOpenTickets
+
+    /**
+    * This function will return all closed tickets in project and it will not exclude private
+    * tickets if logged user is not member of owner company
+    *
+    * @param void
+    * @return array
+    */
+    function getAllClosedTickets() {
+      if(is_null($this->all_closed_tickets)) {
+        $this->all_closed_tickets = ProjectTickets::getClosedProjectTickets($this, true);
+      } // if
+      return $this->all_closed_tickets;
+    } // getAllClosedTickets
+    
+    /**
+    * Return only the closed tickets that current user can see (if not member of owner company private 
+    * tickets will be excluded)
+    *
+    * @param void
+    * @return array
+    */
+    function getClosedTickets() {
+      if(logged_user()->isMemberOfOwnerCompany()) {
+        return $this->getAllClosedTickets(); // members of owner company can view all tickets
+      } // if
+      
+      if(is_null($this->closed_tickets)) {
+        $this->closed_tickets = ProjectTickets::getClosedProjectTickets($this, false);
+      } // if
+      return $this->closed_tickets;
+    } // getClosedTickets
+    
+    // ---------------------------------------------------
     //  Tags
     // ---------------------------------------------------
     
@@ -928,6 +1097,27 @@
     } // getUsersTasks
     
     // ---------------------------------------------------
+    //  User tickets
+    // ---------------------------------------------------
+    
+    /**
+    * Return array of task that are assigned to specific user or his company
+    *
+    * @param User $user
+    * @return array
+    */
+    function getUsersTickets(User $user) {
+      $conditions = DB::prepareString('`project_id` = ? AND ((`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR (`assigned_to_user_id` = ? AND `assigned_to_company_id` = ?) OR `created_by_id`= ?) AND `closed_on` = ?', array($this->getId(), $user->getId(), $user->getCompanyId(), 0, $user->getCompanyId(), 0, 0, $user->getId(), EMPTY_DATETIME));
+      if(!$user->isMemberOfOwnerCompany()) {
+        $conditions .= DB::prepareString(' AND `is_private` = ?', array(0));
+      } // if
+      return ProjectTickets::findAll(array(
+        'conditions' => $conditions,
+        'order' => '`created_on`'
+      )); // findAll
+    } // getUsersTickets
+    
+    // ---------------------------------------------------
     //  Files
     // ---------------------------------------------------
     
@@ -1154,6 +1344,16 @@
       return get_url('milestone', 'index', array('active_project' => $this->getId()));
     } // getMilestonesUrl
     
+    /**
+    * Return project trac index page URL
+    *
+    * @param void
+    * @return string
+    */
+    function getTracUrl() {
+      return get_url('trac', 'index', array('active_project' => $this->getId()));
+    } // getTracUrl
+
     /**
     * Return project forms index page URL
     *

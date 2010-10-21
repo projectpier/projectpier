@@ -60,6 +60,7 @@
     'collapse additional text' => 'Collapse',
     'email notification' => 'Email notification',
     'email notification desc' => 'Notify selected people about this message via email',
+    'email notification ticket desc' => 'Notify selected people about this ticket via email',
     
     'attach existing file' => 'Attach an existing file (from the Files section)',
     'upload and attach' => 'Upload a new file and attach it to the message',
@@ -67,12 +68,15 @@
     'subscribers desc' => 'Subscribers will receive an email notification whenever someone (except themselves) posts a comment on this message',
     'admins can post comments on locked objects desc' => '<strong>Comments are locked</strong>, but you as administrator still have the permissions to post comments. Note that if you expect replies from your clients and non-admin users you need to unlock comments for this object <i>(set the "Enable comments" option to "Yes")</i>.',
     
+    'subscribers ticket desc' => 'Subscribers will receive an email notification whenever someone (except themselves) makes a change or posts a comment on this ticket',
+
     'all permissions' => 'All',
     'can manage messages' => 'Manage messages',
     'can manage tasks' => 'Manage tasks',
     'can manage milestones' => 'Manage milestones',
     'can upload files' => 'Upload files',
     'can manage files' => 'Manage files',
+    'can manage tickets' => 'Manage tickets',
     'can assign to owners' => 'Assign tasks to members of owner company',
     'can assign to other' => 'Assign tasks to members of other clients',
     
@@ -122,6 +126,30 @@
     
     'admin notice comments disabled' => 'Comments are disabled for this object, but you as administrator still can comment. If you expect replies from other, non-admin users you should set "Enable comments" to "Yes".',
     
+    // Tickets
+    'summary' => 'Summary',
+    'category' => 'Category',
+    'priority' => 'Priority',
+    'assigned to' => 'Assigned to',
+    'reported by' => 'Reported by',
+    'closed' => 'Closed',
+    'open' => 'Open',
+    'critical' => 'Critical',
+    'major' => 'Major',
+    'minor' => 'Minor',
+    'trivial' => 'Trivial',
+    'defect' => 'Defect',
+    'enhancement' => 'Enhancement',
+    'feature request' => 'Feature',
+    'legend' => 'Legend',
+    'ticket #' => 'Ticket #%s',
+    'updated on by' => '%s | <a href="%s">%s</a> | %s',
+    'history' => 'Change history',
+    'field' => 'Field',
+    'old value' => 'Old value',
+    'new value' => 'New value',
+    'change date' => 'Change date',
+    
     // iCal
     'icalendar' => 'iCalendar',
     'icalendar subscribe' => 'iCalendar',
@@ -146,6 +174,7 @@
     'private task list desc' => 'Private task lists are visible only to owner company members. Members of client companies will not be able to see them.',
     'private comment desc' => 'Private comments are visible only to owner company members. Members of client companies will not be able to see them.',
     'private file desc' => 'Private files are visible only to the members of the owner company. Members of client companies will not be able to see them',
+    'private ticket desc' => 'Private tickets are visible only to owner company members. Members of client companies will not be able to see them.',
     
   ); // array
 

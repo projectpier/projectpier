@@ -60,6 +60,20 @@
     'mark task as completed' => 'Mark task as completed',
     'mark task as open' => 'Mark task as open',
     
+    // Bug Trac
+    'open tracTickets' => 'Open tickets',  
+    'closed tracTickets' => 'Closed tickets',
+    'add tracTicket' => 'Add ticket',  
+    'edit tracTicket' => 'Edit ticket',  
+    'view tracTicket' => 'View ticket',  
+    'open tracTicket' => 'Open ticket', 
+    'close tracTicket' => 'Close ticket',  
+    'delete tracTicket' => 'Delete ticket',  
+    'add tracCategory' => 'Add category',
+    'edit tracCategory' => 'Edit category',
+    'tracCategories' => 'Trac categories',
+    'update ticket options' => 'Update options',
+    
     // Milestone
     'add milestone' => 'Add milestone',
     'edit milestone' => 'Edit milestone',

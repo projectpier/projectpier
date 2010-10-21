@@ -26,6 +26,8 @@
     'tasks' => 'Tasks',
     'task list' => 'Task list',
     'task lists' => 'Task lists',
+    'ticket' => 'Ticket',
+    'tickets' => 'Tickets',
     'tag' => 'Tag',
     'tags' => 'Tags',
     'attachment' => 'Attachment',
@@ -76,6 +78,7 @@
     'private task list' => 'Private task lists',
     'private comment' => 'Private comment',
     'private file' => 'Private file',
+    'private ticket' => 'Private ticket',
     
   ); // array
 

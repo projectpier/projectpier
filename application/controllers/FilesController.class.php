@@ -767,6 +767,7 @@
           } // foreach
           
           DB::commit();
+          $object->onAttachFiles($attach_files);
           flash_success(lang('success attach files', $counter));
           $this->redirectToUrl($object->getObjectUrl());
           

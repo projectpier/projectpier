@@ -27,6 +27,7 @@
   define('DASHBOARD_TAB_MY_PROJECTS', 'my_projects');
   define('DASHBOARD_TAB_MY_TASKS', 'my_task');
   define('DASHBOARD_TAB_CONTACTS', 'contacts');
+  define('DASHBOARD_TAB_MY_TICKETS', 'my_tickets');
   define('DASHBOARD_TAB_WEEKLY_SCHEDULE', 'weekly_schedule');
 
   /**
@@ -38,31 +39,36 @@
   */
   function dashboard_tabbed_navigation($selected = DASHBOARD_TAB_OVERVIEW) {
     add_tabbed_navigation_item(new TabbedNavigationItem(
-      DASHBOARD_TAB_OVERVIEW, 
-      lang('overview'), 
+      DASHBOARD_TAB_OVERVIEW,
+      lang('overview'),
       get_url('dashboard', 'index')
-    ));
+      ));
     add_tabbed_navigation_item(new TabbedNavigationItem(
       DASHBOARD_TAB_MY_PROJECTS,
       lang('my projects'),
       get_url('dashboard', 'my_projects')
-    ));
+      ));
     add_tabbed_navigation_item(new TabbedNavigationItem(
       DASHBOARD_TAB_MY_TASKS,
       lang('my tasks'),
       get_url('dashboard', 'my_tasks')
-    ));
-  add_tabbed_navigation_item(new TabbedNavigationItem(
-    DASHBOARD_TAB_CONTACTS,
-    lang('contacts'),
-    get_url('dashboard', 'contacts')
-    ));
-  add_tabbed_navigation_item(new TabbedNavigationItem(
-    DASHBOARD_TAB_WEEKLY_SCHEDULE,
-    lang('weekly schedule'),
-    get_url('dashboard', 'weekly_schedule')
-    ));
-    
+      ));
+    add_tabbed_navigation_item(new TabbedNavigationItem(
+      DASHBOARD_TAB_MY_TICKETS,
+      lang('my tickets'),
+      get_url('dashboard', 'my_tickets')
+      ));
+    add_tabbed_navigation_item(new TabbedNavigationItem(
+      DASHBOARD_TAB_CONTACTS,
+      lang('contacts'),
+      get_url('dashboard', 'contacts')
+      ));
+    add_tabbed_navigation_item(new TabbedNavigationItem(
+      DASHBOARD_TAB_WEEKLY_SCHEDULE,
+      lang('weekly schedule'),
+      get_url('dashboard', 'weekly_schedule')
+      ));
+
     tabbed_navigation_set_selected($selected);
   } // dashboard_tabbed_navigation
   

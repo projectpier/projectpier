@@ -14,6 +14,9 @@
     'my tasks' => 'My tasks',
     'welcome back' => 'Welcome back <strong>%s</strong>',
     
+    // Bug Trac
+    'my tickets' => 'My tickets',
+    
     'online users' => 'Online users',
     'online users desc' => 'Users who were active in last 15 minutes:',
     

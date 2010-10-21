@@ -84,8 +84,8 @@
           
           ApplicationLogs::createLog($comment, active_project(), ApplicationLogs::ACTION_ADD);
           
-          // Subscribe user to message (if $object is message)
-          if ($object instanceof ProjectMessage) {
+          // Subscribe user to object (if $object is subscribible)
+          if($object->isSubscribible()) {
             if (!$object->isSubscriber(logged_user())) {
               $object->subscribeUser(logged_user());
             } // if

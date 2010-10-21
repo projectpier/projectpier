@@ -21,6 +21,7 @@
     <ul>
       <li><a href="<?php echo get_url('dashboard', 'my_projects') ?>"><?php echo lang('my projects') ?></a></li>
       <li><a href="<?php echo get_url('dashboard', 'my_tasks') ?>"><?php echo lang('my tasks') ?></a></li>
+      <li><a href="<?php echo get_url('dashboard', 'my_tickets') ?>"><?php echo lang('my tickets') ?></a></li>
     </ul>
   </div>
   <script type="text/javascript">

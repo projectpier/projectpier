@@ -95,6 +95,82 @@
         tpl_fetch(get_template_path('new_message', 'notifier'))
       ); // send
     } // newMessage
+
+    /**
+    * Send ticket notification to the list of users ($people)
+    *
+    * @param ProjectTicket $ticket New ticket
+    * @param array $people
+    * @param string $template template to send notification
+    * @param User $user user who send the notification
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function ticket(ProjectTicket $ticket, $people, $template, $user) {
+      if(!is_array($people) || !count($people)) {
+        return; // nothing here...
+      } // if
+
+      $recipients = array();
+      foreach($people as $subscriber) {
+        if($subscriber->getId() == $user->getId()) {
+          continue; // skip comment author
+        } // if
+
+        $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
+      } // foreach
+
+      if(!count($recipients)) {
+        return true; // no recipients
+      } // if
+
+      tpl_assign('ticket', $ticket);
+
+      return self::sendEmail(
+        $recipients,
+        self::prepareEmailAddress($user->getEmail(), $user->getDisplayName()),
+        $ticket->getProject()->getName() . ' - ' . $ticket->getSummary(),
+        tpl_fetch(get_template_path($template, 'notifier'))
+      ); // send
+    } // ticket
+
+    /**
+    * Send some files attached to ticket notification to ticket subscribers
+    *
+    * @param ProjectTicket $ticket
+    * @param array $attached_files Files attached to ticket
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function attachFilesToTicket(ProjectTicket $ticket, $attached_files) {
+      $all_subscribers = $ticket->getSubscribers();
+      if(!is_array($all_subscribers)) {
+        return true; // no subscribers
+      } // if
+      
+      $recipients = array();
+      foreach($all_subscribers as $subscriber) {
+        if($subscriber->getId() == $ticket->getUpdatedById()) {
+          continue; // skip comment author
+        } // if
+        
+        $recipients[] = self::prepareEmailAddress($subscriber->getEmail(), $subscriber->getDisplayName());
+      } // foreach
+      
+      if(!count($recipients)) {
+        return true; // no recipients
+      } // if
+      
+      tpl_assign('ticket', $ticket);
+      tpl_assign('attached_files', $attached_files);
+      
+      return self::sendEmail(
+        $recipients,
+        self::prepareEmailAddress($ticket->getUpdatedBy()->getEmail(), $ticket->getUpdatedBy()->getDisplayName()),
+        $ticket->getProject()->getName() . ' - ' . $ticket->getSummary(),
+        tpl_fetch(get_template_path('attach_files_ticket', 'notifier'))
+      ); // send
+    } // attachFilesToTicket
     
     /**
     * Send new comment notification to message subscriber
@@ -109,7 +185,36 @@
         throw new Error('Invalid comment object');
       } // if
       
-      $all_subscribers = $message->getSubscribers();
+      return self::newComment($comment, $message->getSubscribers());
+    } // newMessageComment
+
+    /**
+    * Send new comment notification to ticket subscriber
+    *
+    * @param TicketComment $comment
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function newTicketComment(Comment $comment) {
+      $ticket = $comment->getObject();
+      if(!($ticket instanceof ProjectTicket)) {
+        throw new Error('Invalid comment object');
+      } // if
+
+      return self::newComment($comment, $ticket->getSubscribers());
+    } // newTicketComment
+
+    /**
+    * Send new comment notification to subscribers
+    *
+    * @access private
+    * @param Comment $comment
+    * @param string $title title of object for subject
+    * @param array $all_subscribers subscribers
+    * @return boolean
+    * @throws NotifierConnectionError
+    */
+    static function newComment(Comment $comment, $all_subscribers) {
       if (!is_array($all_subscribers)) {
         return true; // no subscribers
       } // if
@@ -138,10 +243,10 @@
       return self::sendEmail(
         $recipients,
         self::prepareEmailAddress($comment->getCreatedBy()->getEmail(), $comment->getCreatedByDisplayName()),
-        $comment->getProject()->getName() . ' - ' . $message->getTitle(),
+        $comment->getProject()->getName() . ' - ' . $comment->getObject()->getTitle(),
         tpl_fetch(get_template_path('new_comment', 'notifier'))
       ); // send
-    } // newMessageComment
+    } // newComment
     
     // ---------------------------------------------------
     //  Milestone

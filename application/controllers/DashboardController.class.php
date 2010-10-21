@@ -77,6 +77,18 @@
     } // my_tasks
 
     /**
+      * Return all tickets assigned to this user
+      *
+      * @param void
+      * @return array
+      */
+    function my_tickets() {
+      tpl_assign('active_projects', logged_user()->getActiveProjects());
+      $this->setSidebar(get_template_path('index_sidebar', 'trac'));
+    } // my_trac
+
+
+    /**
       * Lists all company contacts
       * 
       * @param void

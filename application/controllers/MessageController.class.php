@@ -393,9 +393,9 @@
       } // if
       
       if ($message->subscribeUser(logged_user())) {
-        flash_success('success subscribe to message');
+        flash_success(lang('success subscribe to message'));
       } else {
-        flash_error('error subscribe to message');
+        flash_error(lang('error subscribe to message'));
       } // if
       $this->redirectToUrl($message->getViewUrl());
     } // subscribe
@@ -419,9 +419,9 @@
       } // if
       
       if ($message->unsubscribeUser(logged_user())) {
-        flash_success('success unsubscribe to message');
+        flash_success(lang('success unsubscribe to message'));
       } else {
-        flash_error('error unsubscribe to message');
+        flash_error(lang('error unsubscribe to message'));
       } // if
       $this->redirectToUrl($message->getViewUrl());
     } // unsubscribe

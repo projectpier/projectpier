@@ -42,7 +42,14 @@
     * @var boolean
     */
     protected $is_file_container = true;
-    
+
+    /**
+    * Message is subscribible
+    *
+    * @var boolean
+    */
+    protected $is_subscribible = true;
+  
     /**
     * Cached array of subscribers
     *

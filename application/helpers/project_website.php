@@ -17,12 +17,13 @@
     }
     BreadCrumbs::instance()->addByFunctionArguments($args);
     
-  } // dashboard_crumbs
+  } // project_crumbs
   
   // Tab IDs
   define('PROJECT_TAB_OVERVIEW', 'overview');
   define('PROJECT_TAB_MESSAGES', 'messages');
   define('PROJECT_TAB_TASKS', 'tasks');
+  define('PROJECT_TAB_TICKETS', 'tickets');
   define('PROJECT_TAB_MILESTONES', 'milestones');
   define('PROJECT_TAB_FILES', 'files');
   define('PROJECT_TAB_TAGS', 'tags');
@@ -52,6 +53,11 @@
       get_url('task')
     ));
     add_tabbed_navigation_item(new TabbedNavigationItem(
+      PROJECT_TAB_TICKETS, 
+      lang('tickets'), 
+      get_url('trac')
+    ));
+    add_tabbed_navigation_item(new TabbedNavigationItem(
       PROJECT_TAB_MILESTONES, 
       lang('milestones'), 
       get_url('milestone')
@@ -79,6 +85,6 @@
       get_url('project', 'people')
     ));
     tabbed_navigation_set_selected($selected);
-  } // dashboard_tabbed_navigation
+  } // project_tabbed_navigation
 
 ?>

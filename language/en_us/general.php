@@ -103,6 +103,7 @@
     'changelog' => 'Changelog',
     'hint' => 'Hint',
     'order' => 'Order',
+    'private' => 'Private',
     
     'project calendar' => '%s calendar',
     'user calendar' => '%s\'s calendar',

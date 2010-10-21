@@ -70,6 +70,13 @@
     // Add task
     'task text required' => 'Task text is required',
     
+    // Add category
+    'category name required' => 'Category name value is required',
+    
+    // Add ticket
+    'ticket summary required' => 'Summary value is required',
+    'ticket description required' => 'Description value is required',
+    
     // Add project form
     'form name required' => 'Form name is required',
     'form name unique' => 'Form name must be unique',

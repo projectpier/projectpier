@@ -210,6 +210,28 @@
     } // setCanManageFiles() 
     
     /**
+    * Return value of 'can_manage_tickets' field
+    *
+    * @access public
+    * @param void
+    * @return boolean 
+    */
+    function getCanManageTickets() {
+      return $this->getColumnValue('can_manage_tickets');
+    } // getCanManageFiles()
+    
+    /**
+    * Set value of 'can_manage_tickets' field
+    *
+    * @access public   
+    * @param boolean $value
+    * @return boolean
+    */
+    function setCanManageTickets($value) {
+      return $this->setColumnValue('can_manage_tickets', $value);
+    } // setCanManageFiles() 
+    
+    /**
     * Return value of 'can_assign_to_owners' field
     *
     * @access public

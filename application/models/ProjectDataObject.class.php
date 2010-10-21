@@ -114,6 +114,17 @@
     */
     protected $attached_files;
     
+    // ---------------------------------------------------
+    //  Subscribers
+    // ---------------------------------------------------
+    
+    /**
+    * Mark this object as subscribible
+    *
+    * @var boolean
+    */
+    protected $is_subscribible = false;
+    
     /**
     * Return owner project. If project_id field does not exists NULL is returned
     *
@@ -700,6 +711,30 @@
         'active_project' => $this->getProject()->getId()
       )); // get_url
     } // getDetachFileUrl
+    
+    /**
+    * This event is triggered when we attach new files
+    *
+    * @param array $files
+    * @return boolean
+    */
+    function onAttachFiles($files) {
+      return true;
+    } // onAttachFiles
+    
+    // ---------------------------------------------------
+    //  Subscribible
+    // ---------------------------------------------------
+    
+    /**
+    * Returns true if users can subscribe to this object
+    *
+    * @param void
+    * @return boolean
+    */
+    function isSubscribible() {
+      return (boolean) $this->is_subscribible;
+    } // isSubscribible
     
     // ---------------------------------------------------
     //  System

@@ -5,6 +5,7 @@
     // Titles
     'new message' => 'New message',
     'new comment' => 'New comment',
+    'new ticket' => 'New ticket',
     'your account created' => 'Your account has been created',
     'your password' => 'Your password',
     'milestone assigned to you' => 'Milestone has been assigned to you',
@@ -20,6 +21,13 @@
     
     'new comment posted' => 'New comment on "%s" has been posted',
     'view new comment' => 'View that comment',
+    
+    'new ticket posted' => 'New ticket "%s" has been posted in "%s" project',
+    'ticket edited' => 'Ticket "%s" has been edited in "%s" project',
+    'ticket closed' => 'Ticket "%s" has been closed in "%s" project',
+    'ticket opened' => 'Ticket "%s" has been opened in "%s" project',
+    'attached files to ticket' => 'Some files have been attached to ticket "%s" in "%s" project',
+    'view new ticket' => 'View that ticket',
     
     'user created your account' => '%s created a new account for you',
     'visit and login' => 'Visit %s and login with',

@@ -14,6 +14,7 @@
     const CAN_MANAGE_MILESTONES = 'can_manage_milestones';
     const CAN_UPLOAD_FILES      = 'can_upload_files';
     const CAN_MANAGE_FILES      = 'can_manage_files';
+    const CAN_MANAGE_TICKETS    = 'can_manage_tickets';
     const CAN_ASSIGN_TO_OWNERS  = 'can_assign_to_owners';
     const CAN_ASSIGN_TO_OTHER   = 'can_assign_to_other';
   
@@ -125,6 +126,7 @@
         self::CAN_MANAGE_MILESTONES,
         self::CAN_UPLOAD_FILES,
         self::CAN_MANAGE_FILES,
+        self::CAN_MANAGE_TICKETS,
         self::CAN_ASSIGN_TO_OWNERS,
         self::CAN_ASSIGN_TO_OTHER,
       ); // array
@@ -143,6 +145,7 @@
         ProjectUsers::CAN_MANAGE_MILESTONES => lang('can manage milestones'),
         ProjectUsers::CAN_UPLOAD_FILES      => lang('can upload files'),
         ProjectUsers::CAN_MANAGE_FILES      => lang('can manage files'),
+        ProjectUsers::CAN_MANAGE_TICKETS    => lang('can manage tickets'),
         ProjectUsers::CAN_ASSIGN_TO_OWNERS  => lang('can assign to owners'),
         ProjectUsers::CAN_ASSIGN_TO_OTHER   => lang('can assign to other'),
       ); // array
