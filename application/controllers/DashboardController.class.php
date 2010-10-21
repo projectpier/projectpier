@@ -98,16 +98,18 @@
       if (!logged_user()->isMemberOfOwnerCompany()) {
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
-      }
+      } // if
 
       $page = (integer) array_var($_GET, 'page', 1);
       if ($page < 0) {
         $page = 1;
-      }
+      } // if
       
       $companies_per_page = array_var($_GET, 'per_page', Cookie::getValue('companiesPerPage', '10'));
       $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
       Cookie::setValue('companiesPerPage', $companies_per_page, $expiration);
+      
+      $conditions = '';
       
       list($companies, $pagination) = Companies::paginate(
         array(
@@ -125,6 +127,46 @@
       tpl_assign('favorite_companies', $favorite_companies);
       $this->setSidebar(get_template_path('contacts_sidebar', 'dashboard'));
     } // contacts
+    
+    /**
+      * Contact search
+      *
+      * @param void
+      * @return null
+      */
+    function search_contacts() {
+      if (!logged_user()->isMemberOfOwnerCompany()) {
+        flash_error(lang('no access permissions'));
+        $this->redirectTo('dashboard');
+      } // if
+
+      $page = (integer) array_var($_GET, 'page', 1);
+      if ($page < 0) {
+        $page = 1;
+      } // if
+      
+      $contacts_per_page = array_var($_GET, 'per_page', Cookie::getValue('contactsPerPage', '10'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('contactsPerPage', $contacts_per_page, $expiration);
+      
+      $search_term = array_var($_GET, 'search_for', '');
+      $fuzzy_search_term = '%'.$search_term.'%';
+      $conditions = array('`display_name` LIKE ? OR `email` LIKE ? OR `title` LIKE ?', $fuzzy_search_term, $fuzzy_search_term, $fuzzy_search_term);
+      
+      list($contacts, $pagination) = Contacts::paginate(
+        array(
+          'conditions' => $conditions,
+          'order' => '`display_name` ASC'
+        ),
+        $contacts_per_page,
+        $page
+      ); // paginate
+      
+      tpl_assign('contacts', $contacts);
+      tpl_assign('contacts_pagination', $pagination);
+      tpl_assign('search_term', $search_term);
+
+    } // search_contacts
 
     /**
       * Shows weekly schedule in a calendar view

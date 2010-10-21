@@ -12,6 +12,7 @@
     'overview' => 'Overview',
     'search' => 'Search',
     'search results' => 'Search results',
+    'search results for' => 'Search results for \'%s\'',
     'account' => 'Account',
     'settings' => 'Settings',
     'index' => 'Index',

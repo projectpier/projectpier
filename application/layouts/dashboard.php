@@ -10,6 +10,10 @@
 <?php echo add_javascript_to_page('yui/event/event-min.js') ?>
 <?php echo add_javascript_to_page('yui/animation/animation-min.js') ?>
 <?php echo add_javascript_to_page('app.js') ?>
+<?php echo add_javascript_to_page('jquery/jquery-1.4.2.min.js'); ?>
+<?php echo add_javascript_to_page('jquery/jquery-ui-1.8.2.custom.min.js'); ?>
+<?php echo add_stylesheet_to_page('../jquery-ui-theme/jquery-ui-1.8.2.custom.css'); ?>
+<?php echo add_javascript_to_page('modules/autocomplete.js'); ?>
 <?php echo use_widget('UserBoxMenu') ?>
 <?php echo render_page_head() ?>
   </head>
@@ -53,6 +57,24 @@
             </ul>
 <?php } // if ?>
           </div>
+<?php if (request_action() == 'contacts' || request_action() == 'search_contacts') { ?>
+          <div id="searchBox">
+            <form action="<?php echo get_url('dashboard', 'search_contacts'); ?>" method="get">
+              <div>
+                <input type="hidden" name="c" value="dashboard" />
+                <input type="hidden" name="a" value="search_contacts" />
+<?php
+  $search_field_default_value = lang('search') . '...';
+  $search_field_attrs = array(
+    'onfocus' => 'if (value == \'' . $search_field_default_value . '\') value = \'\'',
+    'onblur' => 'if (value == \'\') value = \'' . $search_field_default_value . '\''
+    );
+?>
+                <?php echo input_field('search_for', array_var($_GET, 'search_for', $search_field_default_value), $search_field_attrs) ?><button type="submit"><?php echo lang('search button caption') ?></button>
+              </div>
+            </form>
+          </div>
+<?php } // if ?>
         </div>
       </div>
       
