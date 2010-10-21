@@ -13,6 +13,7 @@
     // General
     'invalid email address' => 'Email address format is not valid',
     'id missing' => 'Required ID value is missing',
+    'could not save info' => 'The information could not be saved.',
    
     // Company validation errors
     'company name required' => 'Company / organization name is required',

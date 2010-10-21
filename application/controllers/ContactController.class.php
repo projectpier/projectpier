@@ -585,6 +585,38 @@
 
     } // delete_user_account
     
+    /**
+    * Toggle favorite status
+    *
+    * @param void
+    * @return null
+    */
+    function toggle_favorite() {
+      if (!logged_user()->isAdministrator()) {
+        flash_error('no access permisssions');
+        $this->redirectToReferer(get_url('dashboard'));
+      }
+
+      $contact = Contacts::findById(get_id());
+      if (!($contact instanceof Contact)) {
+        flash_error(lang('contact dnx'));
+        $this->redirectToReferer(get_url('administration'));
+      } // if
+
+      $contact->setIsFavorite(!$contact->isFavorite());
+
+      if (!$contact->save()) {
+        flash_error(lang('could not save info'));
+      }
+      
+      $redirect_to = urldecode(array_var($_GET, 'redirect_to'));
+      if ((trim($redirect_to)) == '' || !is_valid_url($redirect_to)) {
+        $redirect_to = $contact->getCompany()->getViewUrl();
+      } // if
+      
+      $this->redirectToUrl($redirect_to);
+    } // toggleFavorite
+    
   } // ContactController
 
 ?>

@@ -81,6 +81,8 @@
     'n/a' => '<acronym title="Not Available">n/a</acronym>',
     'contact' => 'Contact',
     'contacts' => 'Contacts',
+    'favorite' => 'Favorite',
+    'not favorite' => 'Not favorite',
     'pagination page' => 'Page:',
     'pagination first' => 'First page',
     'pagination previous' => 'Previous page',

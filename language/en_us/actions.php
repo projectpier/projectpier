@@ -28,6 +28,7 @@
     'add user account' => 'Add user account',
     'edit user account' => 'Edit user account',
     'delete user account' => 'Delete user account',
+    'toggle favorite' => 'Toggle favorite',
     
     // Users
     'add user' => 'Add user',

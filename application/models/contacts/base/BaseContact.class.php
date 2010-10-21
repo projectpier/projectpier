@@ -166,6 +166,28 @@
     } // setAvatarFile() 
     
     /**
+    * Return value of 'is_favorite' field
+    *
+    * @access public
+    * @param void
+    * @return boolean
+    */
+    function getIsFavorite() {
+      return $this->getColumnValue('is_favorite');
+    } // getIsFavorite()
+
+    /**
+    * Set value of 'is_favorite' field
+    *
+    * @access public
+    * @param string $value
+    * @return boolean
+    */
+    function setIsFavorite($value) {
+      return $this->setColumnValue('is_favorite', $value);
+    } // setIsFavorite() 
+
+    /**
     * Return value of 'office_number' field
     *
     * @access public

@@ -104,6 +104,16 @@
       return false;
     } // isAccountOwner
     
+    /**
+    * Returns if contact is a favorite
+    *
+    * @param void
+    * @return boolean
+    */
+    function isFavorite() {
+      return $this->getIsFavorite();
+    } // isFavorite
+    
     // /**
     // * Check if this user have specific project permission. $permission is the name of table field that holds the value
     // *
@@ -932,6 +942,21 @@
       
       return get_url('account', 'delete_avatar', $attributes);
     } // getDeleteAvatarUrl
+    
+    /**
+    * Return toggle favorite URL
+    *
+    * @param void
+    * @return string
+    */
+    function getToggleFavoriteUrl($redirect_to = null) {
+      $attributes = array('id' => $this->getId());
+      if (trim($redirect_to) <> '') {
+        $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
+      } // if
+      
+      return get_url('contact', 'toggle_favorite', $attributes);
+    } // getToggleFavoriteUrl
     
     // /**
     // * Return recent activities feed URL

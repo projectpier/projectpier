@@ -2,7 +2,15 @@
 <div class="card">
   <div class="cardIcon"><img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> avatar" /></div>
   <div class="cardData">
-  
+<?php if (logged_user()->isMemberOfOwnerCompany() && !$contact->isMemberOfOwnerCompany()) { ?>
+      <div class="cardFavorite <?php if ($contact->isFavorite()) { echo "favorite_on"; } else { echo "favorite_off"; }?>">
+<?php if (logged_user()->isAdministrator()) { ?>
+        <a href="<?php echo $contact->getToggleFavoriteUrl($contact->getCardUrl()); ?>"><img src="<?php echo get_image_url("icons/favorite.png"); ?>" title="<?php echo lang('toggle favorite'); ?>" alt="<?php echo lang('toggle favorite'); ?>"/></a>
+<?php } else { ?>
+        <img src="<?php echo get_image_url("icons/favorite.png"); ?>" title="<?php echo ($contact->isFavorite() ? lang('favorite') : lang('not favorite')); ?>" alt="<?php echo ($contact->isFavorite() ? lang('favorite') : lang('not favorite')); ?>">
+<?php } ?>
+      </div>
+<?php } ?>
     <h2><?php echo clean($contact->getDisplayName()) ?></h2>
     
     <div class="cardBlock">

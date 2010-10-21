@@ -10,6 +10,15 @@ $user = $contact->getUserAccount();
   <div class="listedUser <?php echo $counter % 2 ? 'even' : 'odd' ?>">
     <div class="contactAvatar"><img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> <?php echo lang('avatar') ?>" /></div>
     <div class="contactDetails">
+<?php if (logged_user()->isMemberOfOwnerCompany() && !$contact->isMemberOfOwnerCompany()) { ?>
+      <div class="contactFavorite <?php if ($contact->isFavorite()) { echo "favorite_on"; } else { echo "favorite_off"; }?>">
+<?php if (logged_user()->isAdministrator()) { ?>
+        <a href="<?php echo $contact->getToggleFavoriteUrl($contact->getCompany()->getViewUrl()); ?>"><img src="<?php echo get_image_url("icons/favorite.png"); ?>" title="<?php echo lang('toggle favorite'); ?>" alt="<?php echo lang('toggle favorite'); ?>"/></a>
+<?php } else { ?>
+        <img src="<?php echo get_image_url("icons/favorite.png"); ?>" title="<?php echo ($contact->isFavorite() ? lang('favorite') : lang('not favorite')); ?>" alt="<?php echo ($contact->isFavorite() ? lang('favorite') : lang('not favorite')); ?>">
+<?php } ?>
+      </div>
+<?php } ?>
       <div class="contactName"><a href="<?php echo $contact->getCardUrl() ?>"><?php echo clean($contact->getDisplayName()) ?></a><?php if ($contact->getTitle() != '') echo " &mdash; ".clean($contact->getTitle()) ?></div>
 <?php if ($company->isOwner() && $contact->hasUserAccount()) { ?>
       <div class="userIsAdmin"><span><?php echo lang('administrator') ?>:</span> <?php echo $user->isAdministrator() ? lang('yes') : lang('no') ?></div>
