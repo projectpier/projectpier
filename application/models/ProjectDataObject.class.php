@@ -384,8 +384,8 @@
     } // getSearchableColumns
     
     /**
-    * This function will return content of specific searchable column. It can be overriden in child 
-    * classes to implement extra behaviour (like reading file contents for project files)
+    * This function will return content of specific searchable column. It can be overridden in child
+    * classes to implement extra behavior (like reading file contents for project files)
     *
     * @param string $column_name Column name
     * @return string

@@ -45,7 +45,10 @@
       
       $project = active_project();
       
+      $page_attachments = PageAttachments::getAttachmentsByPageNameAndProject('project_overview', active_project());
+      
       $this->setLayout('project_website');
+      tpl_assign('page_attachments', $page_attachments);
       tpl_assign('project_log_entries', $project->getProjectLog(
         config_option('project_logs_per_page', 20)
       ));
@@ -231,8 +234,11 @@
     * @return null
     */
     function edit() {
+      // TODO find a more elegant solution for this parameter
+      $page_name = 'project_overview';
       $this->setTemplate('add_project');
       $this->setLayout('administration');
+      $this->setSidebar(get_template_path('textile_help_sidebar'));
       
       $project = Projects::findById(get_id());
       if (!($project instanceof Project)) {
@@ -254,16 +260,34 @@
         ); // array
       } // if
       
+      $page_attachments = PageAttachments::getAttachmentsByPageNameAndProject($page_name, $project);
+      
       tpl_assign('project', $project);
       tpl_assign('project_data', $project_data);
+      tpl_assign('page_attachments', $page_attachments);
       
       if (is_array(array_var($_POST, 'project'))) {
         $project->setFromAttributes($project_data);
+        
         
         try {
           DB::beginWork();
           $project->save();
           ApplicationLogs::createLog($project, null, ApplicationLogs::ACTION_EDIT, false, true);
+          
+          $page_attachments = $project_data['page_attachments'];
+          if (is_array($page_attachments)) {
+            foreach ($page_attachments as $id => $page_attachment_data) {
+              $page_attachment = PageAttachments::findById($id);
+              if (($page_attachment_data['rel_object_manager'] != '' && $page_attachment_data['rel_object_id'] == 0) || $page_attachment_data['delete'] == "checked") {
+                $page_attachment->delete();
+              } else {
+                $page_attachment->setFromAttributes($page_attachment_data);
+                $page_attachment->save();
+              } // if
+            } // foreach
+            PageAttachments::reorder($page_name, $project);
+          } // if
           DB::commit();
           
           flash_success(lang('success edit project', $project->getName()));

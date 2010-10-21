@@ -10,7 +10,7 @@
   abstract class ConfigHandler {
   
     /**
-    * Config option that this handler is attached to (config options are used for handler contruction)
+    * Config option that this handler is attached to (config options are used for handler construction)
     *
     * @var ConfigOption
     */

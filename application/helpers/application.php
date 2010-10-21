@@ -67,6 +67,33 @@
   } // select_company
   
   /**
+  * Render select contact box
+  *
+  * @param integer $selected ID of selected contact
+  * @param array $attributes Additional attributes
+  * @return string
+  */
+  function select_contact($name, $selected = null, $attributes = null) {
+    $grouped_contacts = Contacts::getGroupedByCompany();
+    $options = array(option_tag(lang('none'), 0));
+    if (is_array($grouped_contacts)) {
+      foreach ($grouped_contacts as $company_name => $contacts) {
+        if (is_array($contacts) && is_array($contacts['contacts'])) {
+          foreach ($contacts['contacts'] as $contact) {
+            $contact_name = $contact->getDisplayName();
+            if ($contact->isAdministrator()) {
+              $contact_name .= ' (' . lang('administrator') . ')';
+            }
+            $option_attributes = $contact->getId() == $selected ? array('selected' => 'selected') : null;
+            $options[] = option_tag($company_name." - ".$contact_name, $contact->getId(), $option_attributes);
+          } // foreach
+        } // if
+      } // foreach
+    } // if
+    return select_box($name, $options, $attributes);
+  } // select_company
+  
+  /**
   * Render assign to SELECT
   *
   * @param string $list_name Name of the select control
@@ -492,7 +519,7 @@
   } // render_application_logs
   
   /**
-  * Render text that says when action was tacken and by who
+  * Render text that says when action was taken and by whom
   *
   * @param ApplicationLog $application_log_entry
   * @return string

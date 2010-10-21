@@ -108,7 +108,7 @@
   	abstract function manager();
   	
   	/**
-  	* Validate input data (usualy collected from from). This method is called
+  	* Validate input data (usually collected from form). This method is called
   	* before the item is saved and can be used to fetch errors in data before
   	* we really save it database. $errors array is populated with errors
   	*
@@ -242,7 +242,7 @@
   	} // isModifiedPrimaryKeyColumn
   	
   	/**
-  	* Return value of PK colum(s) that was initaly loaded (it will 
+  	* Return value of PK column(s) that was initially loaded (it will
   	* load old values of PK columns that was modified)
   	*
   	* @access public
@@ -413,7 +413,7 @@
   	} // save
   	
   	/**
-  	* Delete specific object (and related objects if neccecery)
+  	* Delete specific object (and related objects if necessary)
   	*
   	* @access public
   	* @param void
@@ -496,7 +496,7 @@
   	* Check if specific row exists in database
   	*
   	* @access public
-  	* @param mixed $value Primay key value that need to be checked
+  	* @param mixed $value Primary key value that need to be checked
   	* @return boolean
   	*/
   	private function rowExists($value) {
@@ -945,7 +945,7 @@
   	} // isPkUpdated
   	
   	/**
-  	* Reset modification idicators. Usefull when you use setXXX functions
+  	* Reset modification indicators. Useful when you use setXXX functions
   	* but you don't want to modify anything (just loading data from database
   	* in fresh object using setColumnValue function)
   	*
@@ -1056,7 +1056,7 @@
   	    return true;
   	  } // if
   	  
-  	  // Check if we have existsing columns
+  	  // Check if we have existing columns
   	  foreach ($columns as $column) {
   	    if (!$this->columnExists($column)) {
   	      return false;
@@ -1098,7 +1098,7 @@
   	
   	/**
   	* Validate max value of specific field. If that field is string time 
-  	* max lenght will be validated
+  	* max length will be validated
   	*
   	* @access public
   	* @param string $column
@@ -1131,7 +1131,7 @@
   	} // validateMaxValueOf
   	
   	/**
-  	* Valicate minimal value of specific field. If string minimal lenght is checked
+  	* Validate minimal value of specific field. If string, minimal length is checked
   	*
   	* @access public
   	* @param string $column

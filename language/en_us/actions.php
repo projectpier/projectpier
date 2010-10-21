@@ -41,6 +41,7 @@
     'delete project' => 'Delete project',
     'mark project as finished' => 'Mark project as finished',
     'mark project as active' => 'Mark project as active',
+    'add text snippet' => 'Add text snippet',
     
     // Messages
     'add message' => 'Add message',

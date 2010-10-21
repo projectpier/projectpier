@@ -15,6 +15,7 @@
       array(lang('edit project'))
     ));
   } // if
+  add_stylesheet_to_page('project/attachments.css');
   
 ?>
 <?php if ($project->isNew()) { ?>
@@ -38,6 +39,44 @@
   <div>
     <?php echo label_tag(lang('show project desciption in overview')) ?>
     <?php echo yes_no_widget('project[show_description_in_overview]', 'projectFormShowDescriptionInOverview', array_var($project_data, 'show_description_in_overview'), lang('yes'), lang('no')) ?>
+  </div>
+  
+  <div id="pageAttachments">
+  <?php
+  $counter = 0;
+  foreach ($page_attachments as $page_attachment) {
+    $counter++;
+    ?>
+    <div class="pageAttachment <?php echo $counter%2 ? 'odd':'even'; ?>">
+      <?php
+      $class_name = $page_attachment->getRelObjectManager();
+      if (trim($class_name) != '') {
+        $class = new $class_name();
+        $label = strtolower($class->getItemClass());
+        echo label_tag(lang($label));
+      }
+      ?>
+      <?php echo $page_attachment->render('project[page_attachments]['.$page_attachment->getId().'][text]'); ?>
+      <?php echo $page_attachment->renderControl('project[page_attachments]['.$page_attachment->getId().'][rel_object_id]'); ?>
+      <?php echo text_field('project[page_attachments]['.$page_attachment->getId().'][order]', $page_attachment->getOrder(), array('class' => 'short pageAttachmentOrder')) ?>
+      <span class="pageAttachmentDeleteBlock">
+      <?php echo label_tag(lang('delete'), 'project[page_attachments]['.$page_attachment->getId().'][delete]', false, array('class'=>'checkbox'));?>
+      <?php echo checkbox_field('project[page_attachments]['.$page_attachment->getId().'][delete]', false, array('class'=>'checkbox pageAttachmentDelete')); ?>
+      <input type="hidden" name="<?php echo 'project[page_attachments]['.$page_attachment->getId().'][rel_object_manager]'; ?>" value="<?php echo $page_attachment->getRelObjectManager(); ?>"/>
+      </span>
+      <div class="clear"></div>
+    </div>
+    <div class="addPageAttachment">
+      <!-- TODO make these links less hard-coded -->
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add text snippet') ?></a> |
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'Contacts', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add contact') ?></a> |
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'Companies', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add company') ?></a> |
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectFiles', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add file') ?></a> |
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectMessages', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add message') ?></a> |
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectMilestones', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add milestone') ?></a> |
+      <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'ProjectTickets', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add ticket') ?></a>
+    </div>
+<?php  } // foreach ?>
   </div>
   
   <?php echo submit_button($project->isNew() ? lang('add project') : lang('edit project')) ?>
