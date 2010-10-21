@@ -18,6 +18,19 @@
     } // getAllByProject
     
     /**
+    * Return attachments by object manager, object id, and project
+    *
+    * @param string $rel_object_manager
+    * @param integer $rel_object_id
+    * @param integer $project_id
+    * @return array
+    */
+    function getAttachmentsByManagerIdAndProject($rel_object_manager, $rel_object_id, $project_id) {
+      return self::findAll(array(
+        'conditions' => array('`rel_object_manager` = ? AND `rel_object_id` = ? AND `project_id` = ?', $rel_object_manager, $rel_object_id, $project_id)));
+    } // getAttachmentsByManagerIdAndProject
+    
+    /**
     * Return attachments by page name and project
     *
     * @param string

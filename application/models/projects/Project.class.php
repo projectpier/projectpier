@@ -1486,6 +1486,39 @@
     } // getOpenUrl
     
     /**
+    * Return add contact to project URL
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getAddContactUrl() {
+      return get_url('project', 'add_contact', $this->getId());
+    } // getAddContactUrl
+    
+    /**
+    * Return remove contact to project URL
+    *
+    * @access public
+    * @param integer $contact_id
+    * @return string
+    */
+    function getRemoveContactUrl($contact_id) {
+      return get_url('project', 'remove_contact', array('rel_object_manager' => 'Contacts', 'rel_object_id' => $contact_id, 'project_id' => $this->getId()));
+    } // getRemoveContactUrl
+    
+    /**
+    * Return edit contact to project URL
+    *
+    * @access public
+    * @param integer $contact_id
+    * @return string
+    */
+    function getEditContactUrl($contact_id) {
+      return get_url('project', 'edit_contact', array('rel_object_manager' => 'Contacts', 'rel_object_id' => $contact_id, 'project_id' => $this->getId()));
+    } // getEditContactUrl
+    
+    /**
     * Return remove user from project URL
     *
     * @access public

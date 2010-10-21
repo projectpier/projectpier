@@ -70,27 +70,36 @@
   * Render select contact box
   *
   * @param integer $selected ID of selected contact
+  * @param array $exclude_files Array of IDs of contacts that need to be excluded (already attached to project etc)
   * @param array $attributes Additional attributes
   * @return string
   */
-  function select_contact($name, $selected = null, $attributes = null) {
+  function select_contact($name, $selected = null, $exclude_files = null, $attributes = null) {
     $grouped_contacts = Contacts::getGroupedByCompany();
-    $options = array(option_tag(lang('none'), 0));
+    $all_options = array(option_tag(lang('none'), 0));
     if (is_array($grouped_contacts)) {
       foreach ($grouped_contacts as $company_name => $contacts) {
-        if (is_array($contacts) && is_array($contacts['contacts'])) {
+        if (is_array($contacts) && is_array($contacts['contacts']) && count($contacts['contacts'])) {
+          $options = array();
           foreach ($contacts['contacts'] as $contact) {
+            if (is_array($exclude_files) && in_array($contact->getId(), $exclude_files)) {
+              continue;
+            }
             $contact_name = $contact->getDisplayName();
             if ($contact->isAdministrator()) {
               $contact_name .= ' (' . lang('administrator') . ')';
             }
             $option_attributes = $contact->getId() == $selected ? array('selected' => 'selected') : null;
-            $options[] = option_tag($company_name." - ".$contact_name, $contact->getId(), $option_attributes);
+            $options[] = option_tag($contact_name, $contact->getId(), $option_attributes);
           } // foreach
+          if (count($options)) {
+            $all_options[] = option_tag('', 0); // separator
+            $all_options[] = option_group_tag($company_name, $options);
+          } // if
         } // if
       } // foreach
     } // if
-    return select_box($name, $options, $attributes);
+    return select_box($name, $all_options, $attributes);
   } // select_company
   
   /**

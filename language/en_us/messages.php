@@ -136,6 +136,7 @@
     
     'success update project permissions' => 'Project permissions have been updated successfully',
     'success remove user from project' => 'User has been successfully removed from the project',
+    'success remove contact from project' => 'Contact has been successfully removed from the project',
     'success remove company from project' => 'Company has been successfully removed from the project',
     
     'success update profile' => 'Profile has been updated',
@@ -201,6 +202,7 @@
     'error delete contact' => 'Failed to delete selected contact',
     'error update project permissions' => 'Failed to update project permissions',
     'error remove user from project' => 'Failed to remove user from project',
+    'error remove contact from project' => 'Failed to remove contact from project',
     'error remove company from project' => 'Failed to remove company from project',
     'error edit avatar' => 'Failed to edit avatar',
     'error delete avatar' => 'Failed to delete avatar',

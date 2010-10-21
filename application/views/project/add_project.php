@@ -46,8 +46,9 @@
   <?php
   $counter = 0;
   ?>
-  <div class="addPageAttachment">
+  <div class="attachmentActions">
     <!-- TODO make these links less hard-coded -->
+    <!-- TODO make a helper for these links -->
     <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add text snippet') ?></a> |
     <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'Contacts', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add contact') ?></a> |
     <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'Companies', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add company') ?></a> |
@@ -72,7 +73,7 @@
       </span>
       <div class="clear"></div>
     </div>
-    <div class="addPageAttachment">
+    <div class="attachmentActions">
       <!-- TODO make these links less hard-coded -->
       <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add text snippet') ?></a> |
       <a href="<?php echo get_url('page_attachment', 'add_attachment', array('page_name'=>'project_overview', 'rel_object_manager'=>'Contacts', 'order'=>$counter, 'redirect_to'=>get_url('project','edit',null,null,true)), null, true); ?>"><?php echo lang('add contact') ?></a> |
