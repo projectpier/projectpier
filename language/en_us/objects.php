@@ -51,6 +51,8 @@
     
     // Variations
     'owner company' => 'Owner company',
+    'favorite company' => 'Favorite company',
+    'favorite companies' => 'Favorite companies',
     
     'open milestone' => 'Open milestone',
     'open milestones' => 'Open milestones',

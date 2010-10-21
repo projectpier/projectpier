@@ -16,9 +16,9 @@ $user = $contact->getUserAccount();
         <a href="<?php echo $contact->getToggleFavoriteUrl($contact->getCompany()->getViewUrl()); ?>"><img src="<?php echo get_image_url("icons/favorite.png"); ?>" title="<?php echo lang('toggle favorite'); ?>" alt="<?php echo lang('toggle favorite'); ?>"/></a>
 <?php } else { ?>
         <img src="<?php echo get_image_url("icons/favorite.png"); ?>" title="<?php echo ($contact->isFavorite() ? lang('favorite') : lang('not favorite')); ?>" alt="<?php echo ($contact->isFavorite() ? lang('favorite') : lang('not favorite')); ?>">
-<?php } ?>
+<?php } // if ?>
       </div>
-<?php } ?>
+<?php } // if ?>
       <div class="contactName"><a href="<?php echo $contact->getCardUrl() ?>"><?php echo clean($contact->getDisplayName()) ?></a><?php if ($contact->getTitle() != '') echo " &mdash; ".clean($contact->getTitle()) ?></div>
 <?php if ($company->isOwner() && $contact->hasUserAccount()) { ?>
       <div class="userIsAdmin"><span><?php echo lang('administrator') ?>:</span> <?php echo $user->isAdministrator() ? lang('yes') : lang('no') ?></div>

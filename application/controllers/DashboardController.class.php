@@ -99,7 +99,31 @@
         flash_error(lang('no access permissions'));
         $this->redirectTo('dashboard');
       }
-      // TODO write controller code
+
+      $page = (integer) array_var($_GET, 'page', 1);
+      if ($page < 0) {
+        $page = 1;
+      }
+      
+      $companies_per_page = array_var($_GET, 'per_page', Cookie::getValue('companiesPerPage', '10'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('companiesPerPage', $companies_per_page, $expiration);
+      
+      list($companies, $pagination) = Companies::paginate(
+        array(
+          'conditions' => $conditions,
+          'order' => '`name` ASC'
+        ),
+        $companies_per_page,
+        $page
+      ); // paginate
+      
+      $favorite_companies = Companies::getFavorites();
+      
+      tpl_assign('companies', $companies);
+      tpl_assign('companies_pagination', $pagination);
+      tpl_assign('favorite_companies', $favorite_companies);
+      $this->setSidebar(get_template_path('contacts_sidebar', 'dashboard'));
     } // contacts
 
     /**

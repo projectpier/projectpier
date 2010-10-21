@@ -47,6 +47,7 @@
     'contact offline' => 'Contact offline',
     
     'avatar' => 'Avatar',
+    'logo' => 'Logo',
     'current avatar' => 'Current avatar',
     'current logo' => 'Current logo',
     'new avatar' => 'New avatar',

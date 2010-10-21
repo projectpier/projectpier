@@ -39,7 +39,13 @@
         $this->redirectToReferer(ROOT_URL);
       } // if
       
+      $contacts = $company->getContacts();
+      $active_projects = $company->getActiveProjects();
+      
       tpl_assign('company', $company);
+      tpl_assign('contacts', $contacts);
+      tpl_assign('active_projects', $active_projects);
+      $this->setSidebar(get_template_path('company_card_sidebar', 'company'));
     } // card
     
     /**
@@ -502,7 +508,12 @@
         flash_error(lang('company dnx'));
         $this->redirectToReferer(get_url('administration'));
       } // if
-
+      
+      if ($company->isOwner()) {
+        flash_error('no access permissions');
+        $this->redirectToReferer(get_url('dashboard'));
+      } // if
+      
       $company->setIsFavorite(!$company->isFavorite());
 
       if (!$company->save()) {
