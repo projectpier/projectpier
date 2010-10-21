@@ -98,7 +98,9 @@
     
     'order by filename' => 'filename (a-z)',
     'order by posttime' => 'date and time',
-    'order by folder' => 'folder (a-z)',
+    'order by folder' => 'folder',
+    'detail view' => 'Detail view',
+    'list view' => 'List view',
     'all files' => 'All files',
     'upload file desc' => 'You can upload files of any type. The max file size you are allowed to upload is %s',
     'file revision info short' => 'Revision #%s <span>(created on %s)</span>',

@@ -34,11 +34,19 @@
       $project = active_project();
 
       $this->canGoOn();
-
+      
+      // Gets desired view 'detail' or 'list'
+      // $view_type is from URL, Cookie or set to default: 'list'
+      $view_type = (array_var($_GET, 'view') ? array_var($_GET, 'view') : Cookie::getValue('milestoneViewType', 'list'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('milestoneViewType', $view_type, $expiration);
+      
+      tpl_assign('view_type', $view_type);
       tpl_assign('late_milestones', $project->getLateMilestones());
       tpl_assign('today_milestones', $project->getTodayMilestones());
       tpl_assign('upcoming_milestones', $project->getUpcomingMilestones());
       tpl_assign('completed_milestones', $project->getCompletedMilestones());
+      tpl_assign('all_milestones', $project->getAllMilestones());
       
       $this->setSidebar(get_template_path('index_sidebar', 'milestone'));
     } // index
