@@ -2,22 +2,31 @@
 	jQuery.widget("ui.combobox", {
 		_create: function() {
 			var self = this;
-			var select = this.element.hide();
+      var select = this.element.hide();
 			var input = jQuery("<input>")
 				.insertAfter(select)
 				.attr('value', jQuery.merge(select.children("option[selected]"), select.children('optgroup').children('option[selected]')).html())
 				.autocomplete({
 					source: function(request, response) {
 						var matcher = new RegExp(request.term, "i");
-						response(jQuery.merge(select.children("option"), select.children("optgroup").children("option")).map(function() {
-							var text = jQuery(this).text();
-							if (this.value && (!request.term || matcher.test(text)))
-								return {
-									id: this.value,
-									label: text.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + jQuery.ui.autocomplete.escapeRegex(request.term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),
-									value: text
-								};
-						}));
+						response(jQuery.merge(
+						  select.children("option"), select.children("optgroup").children("option")).map(function() {
+						    console.log(jQuery(this).parent());
+						    var text = jQuery(this).text();
+						    if (jQuery(this).parent().attr('tagName') == "OPTGROUP") {
+						      var label = jQuery(this).text()+" @ "+this.parentElement.label;
+						    } else {
+                  var label = text;
+						    }
+  							if (this.value && this.value != 0 && (!request.term || matcher.test(label))) {
+  								return {
+  									id: this.value,
+  									label: label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + jQuery.ui.autocomplete.escapeRegex(request.term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),
+  									value: text
+  								};
+								}
+  						})
+					  );
 					},
 					delay: 0,
 					select: function(event, ui) {
