@@ -24,7 +24,7 @@
 <?php 
   $options = array(); 
   if ($client->canAddUser(logged_user())) {
-    $options[] = '<a href="' . $client->getAddUserUrl() . '">' . lang('add user') . '</a>';
+    $options[] = '<a href="' . $client->getAddContactUrl() . '">' . lang('add contact') . '</a>';
   } // if
   if ($client->canUpdatePermissions(logged_user())) {
     $options[] = '<a href="' . $client->getUpdatePermissionsUrl() . '">' . lang('permissions') . '</a>';

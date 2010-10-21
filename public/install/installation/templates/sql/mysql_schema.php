@@ -104,6 +104,27 @@ CREATE TABLE `<?php echo $table_prefix ?>config_options` (
   KEY `category_id` (`category_name`)
 ) ENGINE=InnoDB <?php echo $default_charset ?>;
 
+CREATE TABLE `<?php echo $table_prefix ?>contacts` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `company_id` smallint(5) unsigned NOT NULL default '0',
+  `user_id` int(10) unsigned NULL default '0',
+  `email` varchar(100) <?php echo $default_collation ?> default NULL,
+  `display_name` varchar(50) <?php echo $default_collation ?> default NULL,
+  `title` varchar(30) <?php echo $default_collation ?> default NULL,
+  `avatar_file` varchar(44) <?php echo $default_collation ?> default NULL,
+  `office_number` varchar(20) <?php echo $default_collation ?> default NULL,
+  `fax_number` varchar(20) <?php echo $default_collation ?> default NULL,
+  `mobile_number` varchar(20) <?php echo $default_collation ?> default NULL,
+  `home_number` varchar(20) <?php echo $default_collation ?> default NULL,
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by_id` int(10) unsigned default NULL,
+  `updated_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `updated_by_id` int(10) unsigned default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `company_id` (`company_id`)
+) ENGINE=InnoDB <?php echo $default_charset ?>;
+
 CREATE TABLE `<?php echo $table_prefix ?>file_repo` (
   `id` varchar(40) <?php echo $default_collation ?> NOT NULL default '',
   `content` longblob NOT NULL,

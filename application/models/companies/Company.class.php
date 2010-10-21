@@ -29,6 +29,19 @@
     * @param void
     * @return array
     */
+    function getContacts() {
+      return Contacts::findAll(array(
+        'conditions' => '`company_id` = ' . DB::escape($this->getId())
+      )); // findAll
+    } // getContacts
+    
+    /**
+    * Return array of all company members
+    *
+    * @access public
+    * @param void
+    * @return array
+    */
     function getUsers() {
       return Users::findAll(array(
         'conditions' => '`company_id` = ' . DB::escape($this->getId())
@@ -398,6 +411,17 @@
     function getUpdatePermissionsUrl() {
       return get_url('company', 'update_permissions', $this->getId());
     } // getUpdatePermissionsUrl
+    
+    /**
+    * Return add contact URL
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getAddContactUrl() {
+      return get_url('contact', 'add', array('company_id' => $this->getId()));
+    } // getAddContactUrl
     
     /**
     * Return add user URL

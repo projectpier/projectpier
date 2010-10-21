@@ -44,7 +44,7 @@
     } // getByEmail
     
     /**
-    * Return all users that was active in past $active_in minutes (defautl is 15 minutes)
+    * Return all users that was active in past $active_in minutes (default is 15 minutes)
     *
     * @access public
     * @param integer $active_in

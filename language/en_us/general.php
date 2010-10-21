@@ -93,6 +93,7 @@
     'expand' => 'Expand',
     'collapse' => 'Collapse',
     'author' => 'Author',
+    'contact title' => 'Title',
     'user title' => 'Title',
     'more' => 'More',
     'order by' => 'Order by',

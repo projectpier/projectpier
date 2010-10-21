@@ -17,6 +17,8 @@
 <?php foreach ($active_projects as $active_project) { ?>
 <?php
   $tickets = $active_project->getUsersTickets(logged_user(), array('limit' => 5, 'order' => '`id` ASC'));
+  $params['sort_by'] = 'id';
+  $params['order'] = 'ASC';
 ?>
 <?php if (is_array($tickets) && count($tickets)) { ?>
 <?php $has_assigned_tickets = true ?>

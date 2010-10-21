@@ -21,6 +21,11 @@
     'edit client' => 'Edit client',
     'delete client' => 'Delete client',
     
+    // Contacts
+    'add contact' => 'Add contact',
+    'edit contact' => 'Edit contact',
+    'delete contact' => 'Delete contact',
+    
     // Users
     'add user' => 'Add user',
     'edit user' => 'Edit user',

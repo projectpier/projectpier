@@ -1,27 +1,12 @@
 <?php
 
   /**
-  * User class
+  * Contact class
   * Generated on Sat, 25 Feb 2006 17:37:12 +0100 by DataObject generation tool
   *
   * @http://www.projectpier.org/
   */
-  class User extends BaseUser {
-    
-    /**
-    * Cached project permission values. Two level array. First level are projects (project ID) and
-    * second are permissions associated with permission name
-    *
-    * @var array
-    */
-    private $project_permissions_cache = array();
-    
-    /**
-    * Associative array. Key is project ID and value is true if user has access to that project
-    *
-    * @var array
-    */
-    private $is_project_user_cache = array();
+  class Contact extends BaseContact {
     
     /**
     * True if user is member of owner company. This value is read on first request and cached
@@ -39,81 +24,14 @@
     private $is_administrator = null;
     
     /**
-    * Cached is_account_owner value. Value is retrived on first requests
+    * Cached is_account_owner value. Value is retrieved on first requests
     *
     * @var boolean
     */
     private $is_account_owner = null;
     
     /**
-    * Cached value of all projects
-    *
-    * @var array
-    */
-    private $projects;
-    
-    /**
-    * Cached value of active projects
-    *
-    * @var array
-    */
-    private $active_projects;
-    
-    /**
-    * Cached value of finished projects
-    *
-    * @var array
-    */
-    private $finished_projects;
-    
-    /**
-    * Array of all active milestons
-    *
-    * @var array
-    */
-    private $all_active_milestons;
-    
-    /**
-    * Cached late milestones
-    *
-    * @var array
-    */
-    private $late_milestones;
-    
-    /**
-    * Cached today milestones
-    *
-    * @var array
-    */
-    private $today_milestones;
-    
-    /**
-    * Cached array of new objects
-    *
-    * @var array
-    */
-    private $whats_new;
-    
-    /**
-    * canSeeCompany() method will cache its result here (company_id => visible as bool)
-    *
-    * @var array
-    */
-    private $visible_companies = array();
-    
-    /**
-    * Construct user object
-    *
-    * @param void
-    * @return User
-    */
-    function __construct() {
-      parent::__construct();
-      $this->addProtectedAttribute('password', 'salt', 'session_lifetime', 'token', 'twister', 'last_login', 'last_visit', 'last_activity');
-    } // __construct
-    
-    /**
-    * Check if this user is member of specific company
+    * Check if this contact is member of specific company
     *
     * @access public
     * @param Company $company
@@ -233,7 +151,7 @@
     } // hasAllProjectPermissions
     
     // ---------------------------------------------------
-    //  Retrive
+    //  Retrieve
     // ---------------------------------------------------
     
     /**
@@ -247,6 +165,16 @@
       return Companies::findById($this->getCompanyId());
     } // getCompany
     
+    /**
+    * Return associated user account
+    * 
+    * @param void
+    * @return User
+    */
+    function getUser() {
+      return Users::findById($this->getUserId());
+    } // getUser
+
     /**
     * Return all projects that this user is member of
     *
@@ -339,7 +267,7 @@
     */
     function getDisplayName() {
       $display = parent::getDisplayName();
-      return trim($display) == '' ? $this->getUsername() : $display;
+      return trim($display) == '' ? $this->getUser()->getUsername() : $display;
     } // getDisplayName
     
     /**
@@ -430,12 +358,12 @@
     // ---------------------------------------------------
     
     /**
-    * Set user avatar from $source file
+    * Set contact avatar from $source file
     *
     * @param string $source Source file
     * @param integer $max_width Max avatar width
     * @param integer $max_height Max avatar height
-    * @param boolean $save Save user object when done
+    * @param boolean $save Save contact object when done
     * @return string
     */
     function setAvatar($source, $max_width = 50, $max_height = 50, $save = true) {
@@ -463,7 +391,7 @@
         } // if
         
         $result = true;
-      } catch(Exception $e) {
+      } catch (Exception $e) {
         $result = false;
       } // try
       
@@ -512,7 +440,7 @@
     } // getAvatarUrl
     
     /**
-    * Check if this user has uploaded avatar
+    * Check if this contact has uploaded avatar
     *
     * @access public
     * @param void
@@ -565,7 +493,7 @@
     * @return string
     */
     function getTwistedToken() {
-      return StringTwister::twistHash($this->getToken(), $this->getTwister());
+      return $this->getUser()->getTwistedToken();
     } // getTwistedToken
     
     /**
@@ -660,25 +588,6 @@
       } // if
       return false;
     } // canSeeUser
-    
-    /**
-    * Returns true if this user can see $contact
-    *
-    * @param Contact $contact
-    * @return boolean
-    */
-    function canSeeContact(Contact $contact) {
-      if ($this->isMemberOfOwnerCompany()) {
-        return true; // see all
-      } // if
-      if ($contact->getCompanyId() == $this->getCompanyId()) {
-        return true; // see members of your own company
-      } // if
-      if ($contact->isMemberOfOwnerCompany()) {
-        return true; // see members of owner company
-      } // if
-      return false;
-    } // canSeeContact
     
     /**
     * Returns true if this user can see $company. Members of owner company and
@@ -823,29 +732,29 @@
     * @return null
     */
     function getCardUrl() {
-      return get_url('user', 'card', $this->getId());
+      return get_url('contact', 'card', $this->getId());
     } // getCardUrl
     
     /**
-    * Return edit user URL
+    * Return edit contact URL
     *
     * @access public
     * @param void
     * @return string
     */
     function getEditUrl() {
-      return get_url('user', 'edit', $this->getId());
+      return get_url('contact', 'edit', $this->getId());
     } // getEditUrl
     
     /**
-    * Return delete user URL
+    * Return delete contact URL
     *
     * @access public
     * @param void
     * @return string
     */
     function getDeleteUrl() {
-      return get_url('user', 'delete', $this->getId());
+      return get_url('contact', 'delete', $this->getId());
     } // getDeleteUrl
     
     /**
@@ -927,7 +836,7 @@
     * Return recent activities feed URL
     * 
     * If $project is valid project instance URL will be limited for that project only, else it will be returned for 
-    * overal feed
+    * overall feed
     *
     * @param Project $project
     * @return string
@@ -957,7 +866,7 @@
     */
     function getICalendarUrl($project = null) {
       $params = array(
-        'id' => $this->getId(),
+        'id' => $this->getUserId(),
         'token' => $this->getTwistedToken(),
       ); // array
       
@@ -982,36 +891,15 @@
     */
     function validate(&$errors) {
       
-      // Validate username if present
-      if ($this->validatePresenceOf('username')) {
-        if (!$this->validateUniquenessOf('username')) {
-          $errors[] = lang('username must be unique');
-        }
-      } else {
-        $errors[] = lang('username value required');
-      } // if
-      
-      if (!$this->validatePresenceOf('token')) {
-        $errors[] = lang('password value required');
-      }
-      
-      // Validate email if present
-      if ($this->validatePresenceOf('email')) {
-        if (!$this->validateFormatOf('email', EMAIL_FORMAT)) {
-          $errors[] = lang('invalid email address');
-        }
-        if (!$this->validateUniquenessOf('email')) {
-          $errors[] = lang('email address must be unique');
-        }
-      } else {
-        $errors[] = lang('email value is required');
+      // Validate display_name if present
+      if (!$this->validatePresenceOf('display_name')) {
+        $errors[] = lang('name value required');
       } // if
       
       // Company ID
       if (!$this->validatePresenceOf('company_id')) {
         $errors[] = lang('company value required');
       }
-      
     } // validate
     
     /**
@@ -1026,6 +914,12 @@
       } // if
       
       $this->deleteAvatar();
+      // TODO check all things that need to be deleted
+      // associated users
+      // IM accounts
+      // ticket subscriptions
+      // message subscriptions
+      // project-user association
       ProjectUsers::clearByUser($this);
       MessageSubscriptions::clearByUser($this);
       return parent::delete();
@@ -1053,7 +947,7 @@
     * @return string
     */
     function getObjectTypeName() {
-      return lang('user');
+      return lang('contact');
     } // getObjectTypeName
     
     /**
@@ -1067,6 +961,6 @@
       return $this->getCardUrl();
     } // getObjectUrl
   
-  } // User 
+  } // Contact 
 
 ?>

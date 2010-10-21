@@ -19,15 +19,15 @@
       add_page_action(lang('update permissions'), $company->getUpdatePermissionsUrl());
     } // if
   } // if
-  if (User::canAdd(logged_user(), $company)) {
-    add_page_action(lang('add user'), $company->getAddUserUrl());
+  if (Contact::canAdd(logged_user(), $company)) {
+    add_page_action(lang('add contact'), $company->getAddContactUrl());
   } // if
 
 ?>
 <?php $this->includeTemplate(get_template_path('company_card', 'company')) ?>
 
-<h2><?php echo lang('users') ?></h2>
+<h2><?php echo lang('contacts') ?></h2>
 <?php
-  $this->assign('users', $company->getUsers());
-  $this->includeTemplate(get_template_path('list_users', 'administration'));
+  $this->assign('contacts', $company->getContacts());
+  $this->includeTemplate(get_template_path('list_contacts', 'administration'));
 ?>

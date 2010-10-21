@@ -18,6 +18,9 @@
     'company name required' => 'Company / organization name is required',
     'company homepage invalid' => 'Homepage value is not a valid URL',
     
+    // Contact validation errors
+    'name value required' => 'Name is required',
+    
     // User validation errors
     'username value required' => 'Username value is required',
     'username must be unique' => 'Sorry, but selected username is already taken',

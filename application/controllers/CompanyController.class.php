@@ -423,7 +423,7 @@
           DB::rollback();
         } // try
         
-        $this->redirectToUrl($company->getEditLogoUrl());
+        $this->redirectToUrl($company->getViewUrl());
       } // if
     } // edit_logo
     
