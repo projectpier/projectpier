@@ -1,0 +1,6 @@
+.DS_Store
+cache/*
+config/config.php
+upload/*
+public/files/*
+# /public/assets/themes/

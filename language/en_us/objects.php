@@ -39,6 +39,7 @@
     'revisions' => 'Revisions',
     'folder' => 'Folder',
     'folders' => 'Folders',
+    'no folder' => '(no folder)',
     'configuration category' => 'Configuration category',
     'configuration categories' => 'Configuration categories',
     

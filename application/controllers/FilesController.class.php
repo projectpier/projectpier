@@ -30,8 +30,10 @@
       $this->addHelper('textile');
       
       $order = array_var($_GET, 'order');
-      if (($order <> ProjectFiles::ORDER_BY_NAME) && ($order <> ProjectFiles::ORDER_BY_POSTTIME)) {
-        $order = ProjectFiles::ORDER_BY_POSTTIME;
+      if (($order <> ProjectFiles::ORDER_BY_NAME)
+        && ($order <> ProjectFiles::ORDER_BY_POSTTIME)
+        && ($order <> ProjectFiles::ORDER_BY_FOLDER)) {
+        $order = ProjectFiles::ORDER_BY_FOLDER;
       } // if
       $page = (integer) array_var($_GET, 'page', 1);
       if ((integer) $page < 1) {
