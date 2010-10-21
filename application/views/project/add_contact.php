@@ -24,7 +24,7 @@
       <legend><?php echo lang('select contact'); ?></legend>
       <div>
         <?php echo text_field('contact[existing][text]', lang('description')); ?>
-        <?php echo select_contact('contact[existing][rel_object_id]', null, $already_attached_contacts_ids, array('id'=> 'contactFormSelectContact')); ?>
+        <?php echo select_contact('contact[existing][rel_object_id]', null, $already_attached_contacts_ids, array('id'=> 'contactFormSelectContact', 'class'=>'combobox')); ?>
         <input type="hidden" name="contact[existing][rel_object_manager]" value="Contacts"/>
       </div>
     </fieldset>
@@ -53,7 +53,7 @@
 
       <div>
         <?php echo label_tag(lang('company'), 'contactFormCompany', true) ?>
-        <?php echo select_company('contact[new][company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany')) ?>
+        <?php echo select_company('contact[new][company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany', 'class' => 'combobox')) ?>
       </div>
 
       <div>

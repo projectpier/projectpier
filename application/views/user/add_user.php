@@ -32,7 +32,7 @@
 <?php if (!$user->isNew() && logged_user()->isAdministrator()) { ?>
   <div>
     <?php echo label_tag(lang('company'), 'userFormCompany', true) ?>
-    <?php echo select_company('user[company_id]', array_var($user_data, 'company_id'), array('id' => 'userFormCompany')) ?>
+    <?php echo select_company('user[company_id]', array_var($user_data, 'company_id'), array('id' => 'userFormCompany', 'class' => 'combobox')) ?>
   </div>
 <?php } else { ?>
   <input type="hidden" name="user[company_id]" value="<?php echo $company->getId()?>" />

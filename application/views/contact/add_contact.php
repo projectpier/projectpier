@@ -33,7 +33,7 @@
 <?php if (!$contact->isAdministrator()) { ?>
   <div>
     <?php echo label_tag(lang('company'), 'contactFormCompany', true) ?>
-    <?php echo select_company('contact[company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany')) ?>
+    <?php echo select_company('contact[company_id]', array_var($contact_data, 'company_id'), array('id' => 'contactFormCompany', 'class' => 'combobox')) ?>
   </div>
 <?php } else { ?>
   <div>

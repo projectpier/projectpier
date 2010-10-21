@@ -11,14 +11,13 @@
 						var matcher = new RegExp(request.term, "i");
 						response(jQuery.merge(
 						  select.children("option"), select.children("optgroup").children("option")).map(function() {
-						    console.log(jQuery(this).parent());
 						    var text = jQuery(this).text();
 						    if (jQuery(this).parent().attr('tagName') == "OPTGROUP") {
 						      var label = jQuery(this).text()+" @ "+this.parentElement.label;
 						    } else {
                   var label = text;
 						    }
-  							if (this.value && this.value != 0 && (!request.term || matcher.test(label))) {
+  							if (this.value && !(this.value == 0 && text =="") && (!request.term || matcher.test(label))) {
   								return {
   									id: this.value,
   									label: label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + jQuery.ui.autocomplete.escapeRegex(request.term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),

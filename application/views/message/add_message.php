@@ -42,7 +42,7 @@
   
   <fieldset>
     <legend><?php echo lang('milestone') ?></legend>
-    <?php echo select_milestone('message[milestone_id]', active_project(), array_var($message_data, 'milestone_id'), array('id' => 'messageFormMilestone')) ?>
+    <?php echo select_milestone('message[milestone_id]', active_project(), array_var($message_data, 'milestone_id'), array('id' => 'messageFormMilestone', 'class' => 'combobox')) ?>
   </fieldset>
   
 <?php if (logged_user()->isMemberOfOwnerCompany()) { ?>

@@ -20,7 +20,7 @@
   <div id="attachFormExistingFileControls">
     <fieldset>
       <legend><?php echo lang('select file') ?></legend>
-      <?php echo select_project_file('attach[file_id]', active_project(), array_var($attach_data, 'file_id'), $already_attached_file_ids, array('id' => 'attachFormSelectFile', 'style' => 'width: 300px')) ?>
+      <?php echo select_project_file('attach[file_id]', active_project(), array_var($attach_data, 'file_id'), $already_attached_file_ids, array('id' => 'attachFormSelectFile', 'style' => 'width: 300px', 'class' => 'combobox')) ?>
     </fieldset>
   </div>
   

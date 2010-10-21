@@ -21,7 +21,7 @@
 <?php if (!$task->isNew()) { ?>
   <div>
     <?php echo label_tag(lang('task list'), 'addTaskTaskList', true) ?>
-    <?php echo select_task_list('task[task_list_id]', active_project(), array_var($task_data, 'task_list_id'), false, array('id' => 'addTaskTaskList')) ?>
+    <?php echo select_task_list('task[task_list_id]', active_project(), array_var($task_data, 'task_list_id'), false, array('id' => 'addTaskTaskList', 'class' => 'combobox')) ?>
   </div>
 <?php } // if ?>
 

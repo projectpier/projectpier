@@ -29,7 +29,7 @@
   
   <div class="formBlock">
     <?php echo label_tag(lang('milestone'), 'taskListFormMilestone') ?>
-    <?php echo select_milestone('task_list[milestone_id]', active_project(), array_var($task_list_data, 'milestone_id'), array('id' => 'taskListFormMilestone')) ?>
+    <?php echo select_milestone('task_list[milestone_id]', active_project(), array_var($task_list_data, 'milestone_id'), array('id' => 'taskListFormMilestone', 'class' => 'combobox')) ?>
   </div>
   
 <?php if (logged_user()->isMemberOfOwnerCompany()) { ?>

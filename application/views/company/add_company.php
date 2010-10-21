@@ -32,7 +32,7 @@
   
   <div>
     <?php echo label_tag(lang('timezone'), 'clientFormTimezone', true)?>
-    <?php echo select_timezone_widget('company[timezone]', array_var($company_data, 'timezone'), array('id' => 'clientFormTimezone', 'class' => 'long')) ?>
+    <?php echo select_timezone_widget('company[timezone]', array_var($company_data, 'timezone'), array('id' => 'clientFormTimezone', 'class' => 'long combobox')) ?>
   </div>
   
   <fieldset>

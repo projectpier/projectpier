@@ -15,6 +15,10 @@
 <?php echo add_javascript_to_page('yui/event/event-min.js') ?>
 <?php echo add_javascript_to_page('yui/animation/animation-min.js') ?>
 <?php echo add_javascript_to_page('app.js') ?>
+<?php echo add_javascript_to_page('jquery/jquery-1.4.2.min.js'); ?>
+<?php echo add_javascript_to_page('jquery/jquery-ui-1.8.2.custom.min.js'); ?>
+<?php echo add_stylesheet_to_page('../jquery-ui-theme/jquery-ui-1.8.2.custom.css'); ?>
+<?php echo add_javascript_to_page('modules/autocomplete.js'); ?>
 <?php echo use_widget('UserBoxMenu') ?>
 <?php echo render_page_head() ?>
   </head>

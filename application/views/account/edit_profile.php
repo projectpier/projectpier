@@ -53,7 +53,7 @@
       
       <div>
         <?php echo label_tag(lang('company'), 'userFormCompany', true) ?>
-        <?php echo select_company('user[company_id]', array_var($user_data, 'company_id'), array('id' => 'userFormCompany')) ?>
+        <?php echo select_company('user[company_id]', array_var($user_data, 'company_id'), array('id' => 'userFormCompany', 'class' => 'combobox')) ?>
       </div>
       
 <?php if ($company->isOwner()) { ?>

@@ -59,22 +59,22 @@
           return select_contact($control_name, $this->getRelObjectId(), null, array('class'=>'combobox'));
           break;
         case 'ProjectFiles':
-          return select_project_file($control_name, active_project(), $this->getRelObjectId());
+          return select_project_file($control_name, active_project(), $this->getRelObjectId(), null, array('class'=>'combobox'));
           break;
         case 'ProjectMessages':
-          return select_message($control_name, active_project(), $this->getRelObjectId());
+          return select_message($control_name, active_project(), $this->getRelObjectId(), array('class'=>'combobox'));
           break;
         case 'ProjectMilestones':
-          return select_milestone($control_name, active_project(), $this->getRelObjectId());
+          return select_milestone($control_name, active_project(), $this->getRelObjectId(), array('class'=>'combobox'));
           break;
         case 'ProjectTasks':
           
           break;
         case 'ProjectTaskLists':
-          return select_task_list($control_name, active_project(), $this->getRelObjectId());
+          return select_task_list($control_name, active_project(), $this->getRelObjectId(), array('class'=>'combobox'));
           break;
         case 'ProjectTickets':
-          return select_ticket($control_name, active_project(), $this->getRelObjectId());
+          return select_ticket($control_name, active_project(), $this->getRelObjectId(), array('class'=>'combobox'));
           break;
         default:
           return '';
