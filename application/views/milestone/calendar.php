@@ -12,6 +12,11 @@
   add_stylesheet_to_page('project/calendar.css');
 
 ?>
+<div id="viewToggle">
+  <a href="<?php echo get_url('milestone', 'index', array('view'=>'list')); ?>"><img src="<?php echo get_image_url("icons/list_off.png"); ?>" title="<?php echo lang('list view'); ?>" alt="<?php echo lang('list view'); ?>"/></a>
+  <a href="<?php echo get_url('milestone', 'index', array('view'=>'detail')); ?>"><img src="<?php echo get_image_url("icons/excerpt_off.png"); ?>" title="<?php echo lang('detail view'); ?>" alt="<?php echo lang('detail view'); ?>"/></a>
+  <a href="<?php echo get_url('milestone', 'calendar'); ?>"><img src="<?php echo get_image_url("icons/calendar_on.png"); ?>" title="<?php echo lang('view calendar'); ?>" alt="<?php echo lang('view calendar'); ?>"/></a>
+</div>
 <div class="calendar">
   <h2><?php echo clean(lang(sprintf('month %u', $month))); ?> <?php echo $year; ?></h2>
 <?php

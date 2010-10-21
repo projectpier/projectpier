@@ -6,13 +6,13 @@
   if (ProjectMilestone::canAdd(logged_user(), active_project())) {
     add_page_action(lang('add milestone'), get_url('milestone', 'add'));
   } // if
-  add_page_action(lang('view calendar'), get_url('milestone', 'calendar'));
 
 ?>
 <?php if ($all_visible_milestones) { ?>
   <div id="viewToggle">
     <a href="<?php echo get_url('milestone', 'index', array('view'=>'list')); ?>"><img src="<?php if ($view_type=="list") { echo get_image_url("icons/list_on.png"); } else { echo get_image_url("icons/list_off.png"); } ?>" title="<?php echo lang('list view'); ?>" alt="<?php echo lang('list view'); ?>"/></a>
     <a href="<?php echo get_url('milestone', 'index', array('view'=>'detail')); ?>"><img src="<?php if ($view_type=="detail") { echo get_image_url("icons/excerpt_on.png"); } else { echo get_image_url("icons/excerpt_off.png"); } ?>" title="<?php echo lang('detail view'); ?>" alt="<?php echo lang('detail view'); ?>"/></a>
+    <a href="<?php echo get_url('milestone', 'calendar'); ?>"><img src="<?php echo get_image_url("icons/calendar_off.png"); ?>" title="<?php echo lang('view calendar'); ?>" alt="<?php echo lang('view calendar'); ?>"/></a>
   </div>
   <div id="milestones">
 <?php   if ($view_type == 'list') { ?>
