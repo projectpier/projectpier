@@ -52,7 +52,7 @@
       $timezone = logged_user()->getTimezone();
     } // if
     $datetime = $value instanceof DateTimeValue ? $value : new DateTimeValue($value);
-    return Localization::instance()->formatDateTime($datetime, $timezone);
+    return Localization::instance()->formatDateTime($datetime, $format, $timezone);
   } // format_datetime
   
   /**

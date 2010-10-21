@@ -197,15 +197,18 @@
     } // formatDescriptiveDate
     
     /**
-    * Return formated datetime
+    * Return formatted datetime
     *
     * @access public
     * @param DateTimeValue $date
     * @param float $timezone Timezone offset in hours
     * @return string
     */
-    function formatDateTime(DateTimeValue $date, $timezone = 0) {
-      return date($this->datetime_format, $date->getTimestamp() + ($timezone * 3600));
+    function formatDateTime(DateTimeValue $date, $format, $timezone = 0) {
+      if (is_null($format)) {
+        $format = $this->datetime_format;
+      }
+      return date($format, $date->getTimestamp() + ($timezone * 3600));
     } // formatDateTime
     
     /**
