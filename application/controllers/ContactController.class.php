@@ -418,6 +418,100 @@
     } // add_user_account
     
     /**
+    * Edit the contact's user account
+    * 
+    * @access public
+    * @param void
+    * @return null
+    */
+    function edit_user_account() {
+      $this->setTemplate('add_user_to_contact');
+      
+      $contact = Contacts::findById(get_id());
+      if (!($contact instanceof Contact)) {
+        flash_error(lang('contact dnx'));
+        $this->redirectTo('dashboard');
+      } // if
+      
+      if (!$contact->canEditUserAccount(logged_user())) {
+        flash_error(lang('no access permissions'));
+        $this->redirectTo('dashboard');
+      } // if
+      
+      if (!$contact->hasUserAccount()) {
+        flash_error(lang('user dnx'));
+        $this->redirectToUrl($contact->getCompany()->getViewUrl());
+      }
+      
+      $user = $contact->getUserAccount();
+      $company = $contact->getCompany();
+            
+      $user_data = array_var($_POST, 'user');
+      if (!is_array($user_data)) {
+        $user_data = array(
+          'username' => $user->getUsername(),
+          'email' => $user->getEmail(),
+          'timezone' => $user->getTimezone(),
+          'is_admin' => $user->isAdministrator(),
+          'auto_assign' => $user->getAutoAssign()
+        ); // array
+      } // if
+      
+      tpl_assign('contact', $contact);
+      tpl_assign('user', $user);
+      tpl_assign('company', $company);
+      tpl_assign('user_data', $user_data);
+      
+      if (is_array(array_var($_POST, 'user'))) {
+        $user->setFromAttributes($user_data);
+        // $user->setCompanyId($company->getId());
+        
+        try {
+          // Generate random password
+          if (array_var($user_data, 'password_generator') == 'random') {
+            $password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
+            $user->setPassword($password);
+            
+          // Validate user input
+          } else if (array_var($user_data, 'password_generator') == 'specify') {
+            $password = array_var($user_data, 'password');
+            if (trim($password) == '') {
+              throw new Error(lang('password value required'));
+            } // if
+            if ($password <> array_var($user_data, 'password_a')) {
+              throw new Error(lang('passwords dont match'));
+            } // if
+            $user->setPassword($password);
+          } // if
+          
+          DB::beginWork();
+          $user->save();
+          ApplicationLogs::createLog($user, null, ApplicationLogs::ACTION_EDIT);
+          
+          DB::commit();
+          
+          // Send notification...
+          try {
+            if (array_var($user_data, 'send_email_notification')) {
+              Notifier::newUserAccount($user, $password);
+            } // if
+          } catch(Exception $e) {
+          
+          } // try
+          
+          flash_success(lang('success edit user', $user->getDisplayName()));
+          $this->redirectToUrl($company->getViewUrl()); // Translate to profile page
+          
+        } catch(Exception $e) {
+          DB::rollback();
+          tpl_assign('error', $e);
+        } // try
+        
+      } // if
+      
+    } // edit_user_account
+    
+    /**
     * Delete the user account associated with that contact
     *
     * @param void

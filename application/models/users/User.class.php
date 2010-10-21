@@ -120,7 +120,7 @@
     * @return boolean
     */
     function isMemberOf(Company $company) {
-      return $this->getCompanyId() == $company->getId();
+      return $this->getContact()->isMemberOf($company);
     } // isMemberOf
     
     /**
@@ -130,10 +130,7 @@
     * @return boolean
     */
     function isMemberOfOwnerCompany() {
-      if (is_null($this->is_member_of_owner_company)) {
-        $this->is_member_of_owner_company = $this->isMemberOf(owner_company());
-      }
-      return $this->is_member_of_owner_company;
+      return $this->getContact()->isMemberOfOwnerCompany();
     } // isMemberOfOwnerCompany
     
     /**

@@ -89,13 +89,13 @@
   <input type="hidden" name="user[auto_assign]" value="0" />
 <?php } // if ?>
   
-<?php if ($user->isNew()) { ?>
   <div class="formBlock">
     <?php echo label_tag(lang('send new account notification'), null, true) ?>
     <?php echo yes_no_widget('user[send_email_notification]', 'userFormEmailNotification', array($user_data, 'send_email_notification'), lang('yes'), lang('no')) ?>
     <br /><span class="desc"><?php echo lang('send new account notification desc') ?></span>
   </div>
   
+<?php if ($user->isNew()) { ?>
 <?php if (isset($projects) && is_array($projects) && count($projects)) { ?>
   <fieldset>
     <legend><?php echo lang('permissions') ?></legend>
