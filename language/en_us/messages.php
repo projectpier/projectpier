@@ -14,6 +14,7 @@
     'message dnx' => 'Requested message does not exist',
     'no comments in message' => 'There are no comments on this message',
     'no comments associated with object' => 'There are no comments posted for this object',
+    'no status updates associated with object' => 'There are no status updates posted for this object',
     'no messages in project' => 'There are no messages in this project',
     'no subscribers' => 'There are no users subscribed to this message',
     'no activities in project' => 'There are no activities logged for this project',

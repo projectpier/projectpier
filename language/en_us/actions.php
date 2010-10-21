@@ -45,6 +45,7 @@
     // Comments
     'add comment' => 'Post comment',
     'edit comment' => 'Edit comment',
+    'add status update' => 'Post status update',
     
     // Task list
     'add task list' => 'Add task list',

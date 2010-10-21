@@ -375,9 +375,10 @@
   * Show object comments block
   *
   * @param ProjectDataObject $object Show comments of this object
+  * @param String $redirect_to URL to redirect to, unused
   * @return null
   */
-  function render_object_comments(ProjectDataObject $object) {
+  function render_object_comments(ProjectDataObject $object, $redirect_to) {
     if (!$object->isCommentable()) {
       return '';
     }
@@ -399,6 +400,36 @@
     tpl_assign('comment_form_object', $object);
     return tpl_fetch(get_template_path('post_comment_form', 'comment'));
   } // render_post_comment_form
+  
+  /**
+  * Show object comments block in short form
+  * Status updates are just comments displayed in a short form
+  *
+  * @param ProjectDataObject $object Show comments of this object
+  * @return null
+  */
+  function render_object_status_updates(ProjectDataObject $object) {
+    if (!$object->isCommentable()) {
+      return '';
+    }
+    tpl_assign('__comments_object', $object);
+    return tpl_fetch(get_template_path('object_statuses', 'comment'));
+  } // render_object_status_updates
+  
+  /**
+  * Render post comment form for specific project object in short form
+  * Status updates are just comments displayed in a short form
+  *
+  * @param ProjectDataObject $object
+  * @return string
+  */
+  function render_status_update_form(ProjectDataObject $object) {
+    $comment = new Comment();
+    
+    tpl_assign('comment_form_comment', $comment);
+    tpl_assign('comment_form_object', $object);
+    return tpl_fetch(get_template_path('post_status_update_form', 'comment'));
+  } // render_status_update_form
   
   /**
   * This function will render the code for file attachment section of the form. Note that 

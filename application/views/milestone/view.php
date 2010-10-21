@@ -20,3 +20,5 @@
 <div id="milestones">
 <?php $this->includeTemplate(get_template_path('view_milestone', 'milestone')) ?>
 </div>
+<!-- Comments -->
+<div id="milestoneComments"><?php echo render_object_status_updates($milestone) ?></div>

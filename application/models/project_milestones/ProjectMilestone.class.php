@@ -30,6 +30,13 @@
     protected $searchable_columns = array('name', 'description');
     
     /**
+    * Milestones are commentable
+    *
+    * @var boolean
+    */
+    protected $is_commentable = true;
+    
+    /**
     * Cached User object of person who completed this milestone
     *
     * @var User

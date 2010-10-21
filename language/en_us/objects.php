@@ -18,6 +18,8 @@
     'messages' => 'Messages',
     'comment' => 'Comment',
     'comments' => 'Comments',
+    'status update' => 'Status update',
+    'status updates' => 'Status updates',
     'milestone' => 'Milestone',
     'milestones' => 'Milestones',
     'task' => 'Task',
