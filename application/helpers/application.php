@@ -478,7 +478,7 @@
   * @Param array $attributes Array of control attributes
   * @return string
   */
-  function project_object_tags_widget($name, Project $project, $value, $attributes) {
+  function project_object_tags_widget($name, Project $project = null, $value, $attributes) {
     return text_field($name, $value, $attributes) . '<br /><span class="desc">' . lang('tags widget description') . '</span>';
   } // project_object_tag_widget
   

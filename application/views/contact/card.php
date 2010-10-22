@@ -36,7 +36,8 @@
       lang('edit user account') => $contact->getEditUserAccountUrl()
     ));
   } // if
-  
+  add_stylesheet_to_page('dashboard/contact_list.css');
+
 ?>
 <?php 
   $this->includeTemplate(get_template_path('contact_card', 'contact')) 

@@ -2,7 +2,7 @@
 
   /**
   * Abstract class that implements methods that share all project objects (tags manipulation, 
-  * retriving data about object creator etc)
+  * retrieving data about object creator etc)
   * 
   * Project object is application object with few extra functions
   *
@@ -157,7 +157,7 @@
     abstract function canView(User $user);
     
     /**
-    * Check if this user can add a new object to this project. This method is called staticly
+    * Check if this user can add a new object to this project. This method is called statically
     *
     * @param User $user
     * @param Project $project
@@ -303,7 +303,7 @@
     function getTagNames() {
       if (!$this->isTaggable()) {
         throw new Error('Object not taggable');
-      }
+      } // if
       return Tags::getTagNamesByObject($this, get_class($this->manager()));
     } // getTagNames
     
@@ -320,7 +320,7 @@
         foreach ($tag_names as $k => $v) {
           if (trim($v) <> '') {
             $tag_names[$k] = trim($v);
-          }
+          } // if
         } // foreach
       } // if
       return $this->setTags($tag_names);

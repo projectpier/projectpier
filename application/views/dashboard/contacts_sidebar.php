@@ -6,3 +6,11 @@
 <?php } // foreach ?>
 </ul>
 <?php } // if ?>
+<?php if (is_array($tags) && count($tags)) { ?>
+<h2><?php echo lang('tags'); ?></h2>
+<div class="contactTags">
+<?php foreach ($tags as $tag) { ?>
+  <span><a href="<?php echo get_url('dashboard', 'search_by_tag', array('tag' => $tag)); ?>"><?php echo $tag;?></a></span>
+<?php } // foreach ?>
+</div>
+<?php } // if ?>

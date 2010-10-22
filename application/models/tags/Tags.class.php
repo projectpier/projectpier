@@ -12,11 +12,11 @@
     * Return tags for specific object
     *
     * @access public
-    * @param ProjectDataObject $object
+    * @param ApplicationDataObject $object
     * @param string $manager_class
     * @return array
     */
-    function getTagsByObject(ProjectDataObject $object, $manager_class) {
+    function getTagsByObject(ApplicationDataObject $object, $manager_class) {
       return self::findAll(array(
         'conditions' => array('`rel_object_id` = ? AND `rel_object_manager` = ?', $object->getObjectId(), get_class($object->manager())),
         'order' => '`tag`'
@@ -27,11 +27,11 @@
     * Return tag names as array for specific object
     *
     * @access public
-    * @param ProjectDataObject $object
+    * @param ApplicationDataObject $object
     * @param string $manager_class
     * @return array
     */
-    function getTagNamesByObject(ProjectDataObject $object, $manager_class) {
+    function getTagNamesByObject(ApplicationDataObject $object, $manager_class) {
       $rows = DB::executeAll('SELECT `tag` FROM ' .  self::instance()->getTableName(true) . ' WHERE `rel_object_id` = ? AND `rel_object_manager` = ? ORDER BY `tag`', $object->getId(), $manager_class);
       
       if (!is_array($rows)) {
@@ -49,11 +49,11 @@
     * Clear tags of specific object
     *
     * @access public
-    * @param ProjectDataObject $object
+    * @param ApplicationDataObject $object
     * @param string $manager_class
     * @return boolean
     */
-    function clearObjectTags(ProjectDataobject $object, $manager_class) {
+    function clearObjectTags(ApplicationDataObject $object, $manager_class) {
       $tags = $object->getTags(); // save the tags list
       if (is_array($tags)) {
         foreach ($tags as $tag) {
@@ -67,12 +67,12 @@
     *
     * @access public
     * @param array $tags Array of tags... Can be NULL or empty
-    * @param ProjectDataObject $object
+    * @param ApplicationDataObject $object
     * @param string $manager_class
     * @param Project $project
     * @return null
     */
-    function setObjectTags($tags, ProjectDataObject $object, $manager_class, $project = null) {
+    function setObjectTags($tags, ApplicationDataObject $object, $manager_class, $project = null) {
       self::clearObjectTags($object, $manager_class);
       if (is_array($tags) && count($tags)) {
         $tags = array_unique($tags);
@@ -83,7 +83,9 @@
             
             if ($project instanceof Project) {
               $tag->setProjectId($project->getId());
-            }
+            } else {
+              $tag->setProjectId(0);
+            } // if
             $tag->setTag($tag_name);
             $tag->setRelObjectId($object->getId());
             $tag->setRelObjectManager($manager_class);
@@ -123,7 +125,32 @@
     } // getProjectTagNames
     
     /**
-    * Return array of project objects. Optional filters are by tag and / or by object class
+    * Return unique tag names used for certain classes of objects
+    *
+    * @access public
+    * @param array $class_name
+    * @return array
+    */
+    function getClassTagNames($class_names, $exclude_private = false) {
+      if ($exclude_private) {
+        $rows = DB::executeAll("SELECT DISTINCT `tag` FROM " . self::instance()->getTableName(true) . ' WHERE `rel_object_manager` IN (?) AND `is_private` = ? ORDER BY `tag`', $class_names, 0);
+      } else {
+        $rows = DB::executeAll("SELECT DISTINCT `tag` FROM " . self::instance()->getTableName(true) . ' WHERE `rel_object_manager` IN (?) ORDER BY `tag`', $class_names);
+      } // if
+      if (!is_array($rows) || !count($rows)) {
+        return null;
+      } // if
+      
+      $tags = array();
+      foreach ($rows as $row) {
+        $tags[] = $row['tag'];
+      } // foreach
+      
+      return $tags;
+    } // getClassTagNames
+    
+    /**
+    * Return array of project objects. Optional filters are by project, by tag and / or by object class
     *
     * @access public
     * @param Project $project
@@ -132,17 +159,22 @@
     * @param boolean $exclude_private Exclude private objects from listing
     * @return array
     */
-    function getProjectObjects(Project $project, $tag = null, $class = null, $exclude_private = false) {
-      $conditions = '`project_id` = ' . DB::escape($project->getId());
+    function getTaggedObjects(Project $project = null, $tag = null, $class = null, $exclude_private = false) {
+      $conditions_array = array();
+      if ($project instanceof Project) {
+        $conditions_array[] = '`project_id` = ' . DB::escape($project->getId());
+      } // if
       if (trim($tag) <> '') {
-        $conditions .= ' AND `tag` = ' . DB::escape($tag);
-      }
+        $conditions_array[] = '`tag` = ' . DB::escape($tag);
+      } // if 
       if (trim($class) <> '') {
-        $conditions .= ' AND `rel_object_manager` = ' .  DB::escape($class);
-      }
+        $conditions_array[] = '`rel_object_manager` = ' .  DB::escape($class);
+      } // if
       if ($exclude_private) {
-        $conditions .= ' AND `is_private` = ' . DB::escape(0);
-      }
+        $conditions_array[] = '`is_private` = ' . DB::escape(0);
+      } // if
+      
+      $conditions = implode(" AND ", $conditions_array);
       
       $tags = self::findAll(array(
         'conditions' => $conditions,
@@ -151,19 +183,19 @@
       
       if (!is_array($tags)) {
         return null;
-      }
+      } // if
       
       $objects = array();
       foreach ($tags as $tag_object) {
         $object = $tag_object->getObject();
-        if ($object instanceof ProjectDataObject) {
+        if ($object instanceof ApplicationDataObject) {
           $objects[] = $object;
-        }
+        } // if
       } // foreach
       
       return count($objects) ? $objects : null;
       
-    } // getProjectObjects
+    } // getTaggedObjects
     
     /**
     * Returns number of objects tagged with specific tag

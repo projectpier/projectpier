@@ -865,11 +865,11 @@
     function getObjectsByTag($tag) {
       $exclude_private = !logged_user()->isMemberOfOwnerCompany();
       return array(
-        'messages'   => Tags::getProjectObjects($this, $tag, 'ProjectMessages', $exclude_private),
-        'milestones' => Tags::getProjectObjects($this, $tag, 'ProjectMilestones', $exclude_private),
-        'task_lists' => Tags::getProjectObjects($this, $tag, 'ProjectTaskLists', $exclude_private),
-        'tickets'    => Tags::getProjectObjects($this, $tag, 'ProjectTickets', $exclude_private),
-        'files'      => Tags::getProjectObjects($this, $tag, 'ProjectFiles', $exclude_private),
+        'messages'   => Tags::getTaggedObjects($this, $tag, 'ProjectMessages', $exclude_private),
+        'milestones' => Tags::getTaggedObjects($this, $tag, 'ProjectMilestones', $exclude_private),
+        'task_lists' => Tags::getTaggedObjects($this, $tag, 'ProjectTaskLists', $exclude_private),
+        'tickets'    => Tags::getTaggedObjects($this, $tag, 'ProjectTickets', $exclude_private),
+        'files'      => Tags::getTaggedObjects($this, $tag, 'ProjectFiles', $exclude_private),
       ); // array
     } // getObjectsByTag
     

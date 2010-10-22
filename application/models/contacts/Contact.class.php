@@ -38,6 +38,13 @@
     private $is_account_owner = null;
     
     /**
+    * If true this object will not throw object not taggable exception and will make tag methods available
+    *
+    * @var boolean
+    */
+    protected $is_taggable = true;
+    
+    /**
     * Check if this contact is member of specific company
     *
     * @access public
@@ -113,60 +120,19 @@
     function isFavorite() {
       return $this->getIsFavorite();
     } // isFavorite
+
+    /**
+    * Returns true. Functions to accommodate tags on Contacts
+    *
+    * @param void
+    * @return boolean
+    */
+    function isPrivate() {
+      return false;
+    } // isPrivate
     
-    // /**
-    // * Check if this user have specific project permission. $permission is the name of table field that holds the value
-    // *
-    // * @param Project $project
-    // * @param string $permission Name of the field where the permission value is stored. There are set of constants
-    // *   in ProjectUser that hold field names (ProjectUser::CAN_MANAGE_MESSAGES ...)
-    // * @return boolean
-    // */
-    // function hasProjectPermission(Project $project, $permission, $use_cache = true) {
-    //   if ($use_cache) {
-    //     if (isset($this->project_permissions_cache[$project->getId()]) && isset($this->project_permissions_cache[$project->getId()][$permission])) {
-    //       return $this->project_permissions_cache[$project->getId()][$permission];
-    //     } // if
-    //   } // if
-    //   
-    //   $project_user = ProjectUsers::findById(array('project_id' => $project->getId(), 'user_id' => $this->getId()));
-    //   if (!($project_user instanceof ProjectUser)) {
-    //     if ($use_cache) {
-    //       $this->project_permissions_cache[$project->getId()][$permission] = false;
-    //     } // if
-    //     return false;
-    //   } // if
-    //   
-    //   $getter_method = 'get' . Inflector::camelize($permission);
-    //   $project_user_methods = get_class_methods('ProjectUser');
-    //   
-    //   $value = in_array($getter_method, $project_user_methods) ? $project_user->$getter_method() : false;
-    //   
-    //   if ($use_cache) {
-    //     $this->project_permissions_cache[$project->getId()][$permission] = $value;
-    //   }
-    //   return $value;
-    // } // hasProjectPermission
-    
-    // /**
-    // * This function will check if this user have all project permissions
-    // *
-    // * @param Project $project
-    // * @param boolean $use_cache
-    // * @return boolean
-    // */
-    // function hasAllProjectPermissions(Project $project, $use_cache = true) {
-    //   $permissions = ProjectUsers::getPermissionColumns();
-    //   if (is_array($permissions)) {
-    //     foreach ($permissions as $permission) {
-    //       if (!$this->hasProjectPermission($project, $permission, $use_cache)) {
-    //         return false;
-    //       }
-    //     } // foreach
-    //   } // if
-    //   return true;
-    // } // hasAllProjectPermissions
-    
+
+        
     // ---------------------------------------------------
     //  Retrieve
     // ---------------------------------------------------
@@ -204,90 +170,7 @@
     function hasUserAccount() {
       return ($this->getUserAccount() ? true : false);
     } // hasUserAccount
-    
-    // /**
-    // * Return all projects that this user is member of
-    // *
-    // * @access public
-    // * @param void
-    // * @return array
-    // */
-    // function getProjects() {
-    //   if (is_null($this->projects)) {
-    //     $this->projects = ProjectUsers::getProjectsByUser($this);
-    //   } // if
-    //   return $this->projects;
-    // } // getProjects
-    
-    // /**
-    // * Return array of active projects that this user have access
-    // *
-    // * @access public
-    // * @param void
-    // * @return array
-    // */
-    // function getActiveProjects() {
-    //   if (is_null($this->active_projects)) {
-    //     $this->active_projects = ProjectUsers::getProjectsByUser($this, '`completed_on` = ' . DB::escape(EMPTY_DATETIME));
-    //   } // if
-    //   return $this->active_projects;
-    // } // getActiveProjects
-    
-    // /**
-    // * Return array of finished projects
-    // *
-    // * @access public
-    // * @param void
-    // * @return array
-    // */
-    // function getFinishedProjects() {
-    //   if (is_null($this->finished_projects)) {
-    //     $this->finished_projects = ProjectUsers::getProjectsByUser($this, '`completed_on` > ' . DB::escape(EMPTY_DATETIME));
-    //   } // if
-    //   return $this->finished_projects;
-    // } // getFinishedProjects
-    
-    // /**
-    // * Return all active milestones assigned to this user
-    // *
-    // * @param void
-    // * @return array
-    // */
-    // function getActiveMilestones() {
-    //   if (is_null($this->all_active_milestons)) {
-    //     $this->all_active_milestons = ProjectMilestones::getActiveMilestonesByUser($this);
-    //   } // if
-    //   return $this->all_active_milestons;
-    // } // getActiveMilestones
-    
-    // /**
-    // * Return late milestones that this user have access to
-    // *
-    // * @access public
-    // * @param void
-    // * @return array
-    // */
-    // function getLateMilestones() {
-    //   if (is_null($this->late_milestones)) {
-    //     $this->late_milestones = ProjectMilestones::getLateMilestonesByUser($this);
-    //   } // if
-    //   return $this->late_milestones;
-    // } // getLateMilestones
-    // 
-    // /**
-    // * Return today milestones that this user have access to
-    // *
-    // * @access public
-    // * @param void
-    // * @return array
-    // */
-    // function getTodayMilestones() {
-    //   if (is_null($this->today_milestones)) {
-    //     $this->today_milestones = ProjectMilestones::getTodayMilestonesByUser($this);
-    //   } // if
-    //   return $this->today_milestones;
-    // } // getTodayMilestones
-    
+
     /**
     * Return display name for this account. If there is no display name associated username will be used
     *
@@ -479,73 +362,7 @@
     function hasAvatar() {
       return (trim($this->getAvatarFile()) <> '') && is_file($this->getAvatarPath());
     } // hasAvatar
-    
-    // ---------------------------------------------------
-    //  Utils
-    // ---------------------------------------------------
-    
-    // /**
-    // * This function will generate new user password, set it and return it
-    // *
-    // * @param boolean $save Save object after the update
-    // * @return string
-    // */
-    // function resetPassword($save = true) {
-    //   $new_password = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
-    //   $this->setPassword($new_password);
-    //   if ($save) {
-    //     $this->save();
-    //   } // if
-    //   return $new_password;
-    // } // resetPassword
-    // 
-    // /**
-    // * Set password value
-    // *
-    // * @param string $value
-    // * @return boolean
-    // */
-    // function setPassword($value) {
-    //   do {
-    //     $salt = substr(sha1(uniqid(rand(), true)), rand(0, 25), 13);
-    //     $token = sha1($salt . $value);
-    //   } while (Users::tokenExists($token));
-    //   
-    //   $this->setToken($token);
-    //   $this->setSalt($salt);
-    //   $this->setTwister(StringTwister::getTwister());
-    // } // setPassword
-    // 
-    // /**
-    // * Return twisted token
-    // *
-    // * @param void
-    // * @return string
-    // */
-    // function getTwistedToken() {
-    //   return $this->getUser()->getTwistedToken();
-    // } // getTwistedToken
-    // 
-    // /**
-    // * Check if $check_password is valid user password
-    // *
-    // * @param string $check_password
-    // * @return boolean
-    // */
-    // function isValidPassword($check_password) {
-    //   return sha1($this->getSalt() . $check_password) == $this->getToken();
-    // } // isValidPassword
-    // 
-    // /**
-    // * Check if $twisted_token is valid for this user account
-    // *
-    // * @param string $twisted_token
-    // * @return boolean
-    // */
-    // function isValidToken($twisted_token) {
-    //   return StringTwister::untwistHash($twisted_token, $this->getTwister()) == $this->getToken();
-    // } // isValidToken
-    
+        
     // ---------------------------------------------------
     //  Permissions
     // ---------------------------------------------------
@@ -650,73 +467,6 @@
       return $user->isAdministrator();
     } // canEditUserAccount
     
-    // /**
-    // * Returns true if this user can see $user
-    // *
-    // * @param User $user
-    // * @return boolean
-    // */
-    // function canSeeUser(User $user) {
-    //   if ($this->isMemberOfOwnerCompany()) {
-    //     return true; // see all
-    //   } // if
-    //   if ($user->getCompanyId() == $this->getCompanyId()) {
-    //     return true; // see members of your own company
-    //   } // if
-    //   if ($user->isMemberOfOwnerCompany()) {
-    //     return true; // see members of owner company
-    //   } // if
-    //   return false;
-    // } // canSeeUser
-    
-    // /**
-    // * Returns true if this user can see $company. Members of owner company and
-    // * coworkers are visible without project check! Also, members of owner company
-    // * can see all clients without any prior check!
-    // *
-    // * @param Company $company
-    // * @return boolean
-    // */
-    // function canSeeCompany(Company $company) {
-    //   if ($this->isMemberOfOwnerCompany()) {
-    //     return true;
-    //   } // if
-    //   
-    //   if (isset($this->visible_companies[$company->getId()])) {
-    //     return $this->visible_companies[$company->getId()];
-    //   } // if
-    //   
-    //   if ($company->isOwner()) {
-    //     $this->visible_companies[$company->getId()] = true;
-    //     return true;
-    //   } // if
-    //   
-    //   if ($this->getCompanyId() == $company->getId()) {
-    //     $this->visible_companies[$company->getId()] = true;
-    //     return true;
-    //   } // if
-    //   
-    //   // Lets companye projects for company of this user and for $company and 
-    //   // compare if we have projects where both companies work together
-    //   $projects_1 = DB::executeAll("SELECT `project_id` FROM " . ProjectCompanies::instance()->getTableName(true) . " WHERE `company_id` = ?", $this->getCompanyId());
-    //   $projects_2 = DB::executeAll("SELECT `project_id` FROM " . ProjectCompanies::instance()->getTableName(true) . " WHERE `company_id` = ?", $company->getId());
-    //   
-    //   if (!is_array($projects_1) || !is_array($projects_2)) {
-    //     $this->visible_companies[$company->getId()] = false;
-    //     return false;
-    //   } // if
-    //   
-    //   foreach ($projects_1 as $project_id) {
-    //     if (in_array($project_id, $projects_2)) {
-    //       $this->visible_companies[$company->getId()] = true;
-    //       return true;
-    //     } // if
-    //   } // foreach
-    //   
-    //   $this->visible_companies[$company->getId()] = false;
-    //   return false;
-    // } // canSeeCompany
-    
     /**
     * Check if specific user can update this profile
     *
@@ -732,63 +482,7 @@
       } // if
       return false;
     } // canUpdateProfile
-    
-    // /**
-    // * Check if this user can update this users permissions
-    // *
-    // * @param User $user
-    // * @return boolean
-    // */
-    // function canUpdatePermissions(User $user) {
-    //   if ($this->isAccountOwner()) {
-    //     return false; // noone will touch this
-    //   } // if
-    //   return $user->isAdministrator();
-    // } // canUpdatePermissions
-    
-    // /**
-    // * Check if this user is company administration (used to check many other permissions). User must
-    // * be part of the company and have is_admin stamp set to true
-    // *
-    // * @access public
-    // * @param Company $company
-    // * @return boolean
-    // */
-    // function isCompanyAdmin(Company $company) {
-    //   return ($this->getCompanyId() == $company->getId()) && $this->getIsAdmin();
-    // } // isCompanyAdmin
-    
-    // /**
-    // * Return project permission for specific user if he is on project. In case of any error $default is returned
-    // *
-    // * @access public
-    // * @param Project $project
-    // * @param string $permission Permission name
-    // * @param boolean $default Default value
-    // * @return boolean
-    // */
-    // function getProjectPermission(Project $project, $permission, $default = false) {
-    //   static $valid_permissions = null;
-    //   if (is_null($valid_permissions)) {
-    //     $valid_permissions = ProjectUsers::getPermissionColumns();
-    //   } // if
-    //   
-    //   if (!in_array($permission, $valid_permissions)) {
-    //     return $default;
-    //   } // if
-    //   
-    //   $project_user = ProjectUsers::findById(array(
-    //     'project_id' => $project->getId(),
-    //     'user_id' => $this->getId()
-    //   )); // findById
-    //   if (!($project_user instanceof ProjectUser)) {
-    //     return $default;
-    //   } // if
-    //   
-    //   $getter = 'get' . Inflector::camelize($permission);
-    //   return $project_user->$getter();
-    // } // getProjectPermission
-    
+
     // ---------------------------------------------------
     //  URLs
     // ---------------------------------------------------
@@ -871,38 +565,7 @@
     function getDeleteUserAccountUrl() {
       return get_url('contact', 'delete_user_account', $this->getId());
     } // getDeleteUserAccountUrl
-    
-    
-    // /**
-    // * Edit users password
-    // *
-    // * @param string $redirect_to URL where we need to redirect user when he updates password
-    // * @return null
-    // */
-    // function getEditPasswordUrl($redirect_to = null) {
-    //   $attributes = array('id' => $this->getId());
-    //   if (trim($redirect_to) <> '') {
-    //     $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-    //   } // if
-    //   
-    //   return get_url('account', 'edit_password', $attributes);
-    // } // getEditPasswordUrl
-    
-    // /**
-    // * Return update user permissions page URL
-    // *
-    // * @param string $redirect_to
-    // * @return string
-    // */
-    // function getUpdatePermissionsUrl($redirect_to = null) {
-    //   $attributes = array('id' => $this->getId());
-    //   if (trim($redirect_to) <> '') {
-    //     $attributes['redirect_to'] = str_replace('&amp;', '&', trim($redirect_to));
-    //   } // if
-    //   
-    //   return get_url('account', 'update_permissions', $attributes);
-    // } // getUpdatePermissionsUrl
-    
+
     /**
     * Return toggle favorite URL
     *
@@ -918,51 +581,94 @@
       return get_url('contact', 'toggle_favorite', $attributes);
     } // getToggleFavoriteUrl
     
-    // /**
-    // * Return recent activities feed URL
-    // * 
-    // * If $project is valid project instance URL will be limited for that project only, else it will be returned for 
-    // * overall feed
-    // *
-    // * @param Project $project
-    // * @return string
-    // */
-    // function getRecentActivitiesFeedUrl($project = null) {
-    //   $params = array(
-    //     'id' => $this->getId(),
-    //     'token' => $this->getTwistedToken(),
-    //   ); // array
-    //   
-    //   if ($project instanceof Project) {
-    //     $params['project'] = $project->getId();
-    //     return get_url('feed', 'project_activities', $params, null, false);
-    //   } else {
-    //     return get_url('feed', 'recent_activities', $params, null, false);
-    //   } // if
-    // } // getRecentActivitiesFeedUrl
+    // ---------------------------------------------------
+    //  Tags
+    // ---------------------------------------------------
     
-    // /**
-    // * Return iCalendar URL
-    // * 
-    // * If $project is valid project instance calendar will be rendered just for that project, else it will be rendered 
-    // * for all active projects this user is involved with
-    // *
-    // * @param Project $project
-    // * @return string
-    // */
-    // function getICalendarUrl($project = null) {
-    //   $params = array(
-    //     'id' => $this->getUserId(),
-    //     'token' => $this->getTwistedToken(),
-    //   ); // array
-    //   
-    //   if ($project instanceof Project) {
-    //     $params['project'] = $project->getId();
-    //     return get_url('feed', 'project_ical', $params, null, false);
-    //   } else {
-    //     return get_url('feed', 'user_ical', $params, null, false);
-    //   } // if
-    // } // getICalendarUrl
+    /**
+    * Returns true if this project is taggable
+    *
+    * @param void
+    * @return boolean
+    */
+    function isTaggable() {
+      return $this->is_taggable;
+    } // isTaggable
+    
+    /**
+    * Return tags for this object
+    *
+    * @param void
+    * @return array
+    */
+    function getTags() {
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
+      return Tags::getTagsByObject($this, get_class($this->manager()));
+    } // getTags
+    
+    /**
+    * Return tag names for this object
+    *
+    * @access public
+    * @param void
+    * @return array
+    */
+    function getTagNames() {
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      } // if
+      return Tags::getTagNamesByObject($this, get_class($this->manager()));
+    } // getTagNames
+    
+    /**
+    * Explode input string and set array of tags
+    *
+    * @param string $input
+    * @return boolean
+    */
+    function setTagsFromCSV($input) {
+      $tag_names = array();
+      if (trim($input)) {
+        $tag_names = explode(',', $input);
+        foreach ($tag_names as $k => $v) {
+          if (trim($v) <> '') {
+            $tag_names[$k] = trim($v);
+          } // if
+        } // foreach
+      } // if
+      return $this->setTags($tag_names);
+    } // setTagsFromCSV
+    
+    /**
+    * Set object tags. This function accepts tags as params
+    *
+    * @access public
+    * @param void
+    * @return boolean
+    */
+    function setTags() {
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
+      $args = array_flat(func_get_args());
+      return Tags::setObjectTags($args, $this, get_class($this->manager()), null);
+    } // setTags
+    
+    /**
+    * Clear object tags
+    *
+    * @access public
+    * @param void
+    * @return boolean
+    */
+    function clearTags() {
+      if (!$this->isTaggable()) {
+        throw new Error('Object not taggable');
+      }
+      return Tags::clearObjectTags($this, get_class($this->manager()));
+    } // clearTags
     
     // ---------------------------------------------------
     //  System functions
@@ -998,6 +704,10 @@
       if ($this->isAccountOwner()) {
         return false;
       } // if
+
+      if ($this->isTaggable()) {
+        $this->clearTags();
+      } // if
       
       // TODO check all things that need to be deleted
       // ticket subscriptions
@@ -1006,11 +716,11 @@
 
       $this->deleteAvatar();
       $this->clearImValues();
-      ProjectUsers::clearByUser($this);
-      MessageSubscriptions::clearByUser($this);
       if ($this->hasUserAccount()) {
+        ProjectUsers::clearByUser($this->getUserAccount());
+        MessageSubscriptions::clearByUser($this->getUserAccount());
         $this->getUserAccount()->delete();
-      }
+      } // if
       return parent::delete();
     } // delete
     

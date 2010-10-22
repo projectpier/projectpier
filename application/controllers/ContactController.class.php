@@ -212,6 +212,7 @@
       $contact_data = array_var($_POST, 'contact');
       $company = $contact->getCompany();
       if (!is_array($contact_data)) {
+        $tag_names = $contact->getTagNames();
         $contact_data = array(
           'display_name' => $contact->getDisplayName(),
           'company_id' => $contact->getCompanyId(),
@@ -220,7 +221,8 @@
           'office_number' => $contact->getOfficeNumber(),
           'fax_number' => $contact->getFaxNumber(),
           'mobile_number' => $contact->getMobileNumber(),
-          'home_number' => $contact->getHomeNumber()
+          'home_number' => $contact->getHomeNumber(),
+          'tags' => is_array($tag_names) ? implode(', ', $tag_names) : '',
         ); // array
         
         if (is_array($im_types)) {
@@ -266,8 +268,8 @@
           } // if
         } catch (Exception $e) {
           flash_error($e->getMessage());
-        }
-      } else if ($contact_data['delete_avatar'] == "checked") {
+        } // try
+      } else if (array_var($contact_data, 'delete_avatar') == "checked") {
         $old_file = $contact->getAvatarPath();
         if (is_file($old_file)) {
           @unlink($old_file);
@@ -276,11 +278,12 @@
       } // if
 
       if (is_array(array_var($_POST, 'contact'))) {
-        try {          
+        try {
           DB::beginWork();
           
           $contact->setFromAttributes($contact_data);
           $contact->save();
+          $contact->setTagsFromCSV(array_var($contact_data, 'tags'));
           
           $contact->clearImValues();
           foreach ($im_types as $im_type) {

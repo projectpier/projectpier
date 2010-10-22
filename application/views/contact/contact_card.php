@@ -35,18 +35,26 @@
 <?php } // foreach ?>
       </table>
 <?php } // if ?>
-
     </div>
     
     <h2><?php echo lang('contact offline') ?></h2>
     
-    <div class="cardBlock" style="margin-bottom: 0">
+    <div class="cardBlock">
       <div><span><?php echo lang('office phone number') ?>:</span> <?php echo $contact->getOfficeNumber() ? clean($contact->getOfficeNumber()) : lang('n/a') ?></div>
       <div><span><?php echo lang('fax number') ?>:</span> <?php echo $contact->getFaxNumber() ? clean($contact->getFaxNumber()) : lang('n/a') ?></div>
       <div><span><?php echo lang('mobile phone number') ?>:</span> <?php echo $contact->getMobileNumber() ? clean($contact->getMobileNumber()) : lang('n/a') ?></div>
       <div><span><?php echo lang('home phone number') ?>:</span> <?php echo $contact->getHomeNumber() ? clean($contact->getHomeNumber()) : lang('n/a') ?></div>
     </div>
-  
+
+<?php $tags = $contact->getTags(); ?>
+<?php if (is_array($tags) && count($tags)) { ?>
+    <h2><?php echo lang('tags'); ?></h2>
+    <div class="contactTags">
+<?php foreach ($tags as $tag) { ?>
+      <span><a href="<?php echo get_url('dashboard', 'search_by_tag', array('tag' => $tag->getTag())); ?>"><?php echo $tag->getTag();?></a></span>
+<?php } // foreach ?>
+    </div>
+<?php } // if ?>
   </div>
 </div>
 <?php } // if ?>

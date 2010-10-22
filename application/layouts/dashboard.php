@@ -57,7 +57,8 @@
             </ul>
 <?php } // if ?>
           </div>
-<?php if (request_action() == 'contacts' || request_action() == 'search_contacts') { ?>
+<?php if ((request_controller() == 'dashboard' && in_array(request_action(), array('contacts', 'search_contacts', 'search_by_tag'))) ||
+          (request_controller() == 'contact' && in_array(request_action(), array('card')))) { ?>
           <div id="searchBox">
             <form action="<?php echo get_url('dashboard', 'search_contacts'); ?>" method="get">
               <div>

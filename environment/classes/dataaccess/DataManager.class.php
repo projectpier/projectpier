@@ -4,7 +4,7 @@
   * Data manager class
   *
   * This class implements methods for managing data objects, database rows etc. One 
-  * of its features is automatinc caching of loaded data.
+  * of its features is automatic caching of loaded data.
   *
   * @package System
   * @version 1.0

@@ -122,6 +122,7 @@
       
       $favorite_companies = Companies::getFavorites();
       
+      tpl_assign('tags', Tags::getClassTagNames('Contacts', false));
       tpl_assign('companies', $companies);
       tpl_assign('companies_pagination', $pagination);
       tpl_assign('favorite_companies', $favorite_companies);
@@ -167,6 +168,23 @@
       tpl_assign('search_term', $search_term);
 
     } // search_contacts
+
+    /**
+    * Search contacts by tag
+    *
+    * @param void
+    * @return null
+    */
+    function search_by_tag() {
+      $tag = array_var($_GET, 'tag');
+      if (trim($tag) == '') {
+        flash_error(lang('tag dnx'));
+        $this->redirectTo('dashboard', 'contacts');
+      } // if
+
+      tpl_assign('contacts', Tags::getTaggedObjects(null, $tag, 'Contacts', false));
+      tpl_assign('search_term', $tag);
+    } // search_by_tag
 
     /**
       * Shows weekly schedule in a calendar view
