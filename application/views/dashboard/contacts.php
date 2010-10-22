@@ -41,14 +41,19 @@
       </span>
     <?php } // foreach ?>
   </div>
+  <div id="viewToggle">
+    <a href="<?php echo get_url('dashboard', 'contacts', array('view'=>'list', 'page' => $contacts_pagination->getCurrentPage())); ?>"><img src="<?php if ($view_type=="list") { echo get_image_url("icons/list_on.png"); } else { echo get_image_url("icons/list_off.png"); } ?>" title="<?php echo lang('list view'); ?>" alt="<?php echo lang('list view'); ?>"/></a>
+    <a href="<?php echo get_url('dashboard', 'contacts', array('view'=>'detail', 'page' => $contacts_pagination->getCurrentPage())); ?>"><img src="<?php if ($view_type=="detail") { echo get_image_url("icons/excerpt_on.png"); } else { echo get_image_url("icons/excerpt_off.png"); } ?>" title="<?php echo lang('detail view'); ?>" alt="<?php echo lang('detail view'); ?>"/></a>
+  </div>
   <div id="contactsPaginationTop"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'contacts', (trim($initial) == '' ? array('page'=> '#PAGE#') : array('page' => '#PAGE#', 'initial' => $initial)))) ?></div>
 
 <?php
 $counter = 0;
 if (is_array($contacts)) {
-  foreach ($contacts as $contact) {
-    $counter++;
-    $company = $contact->getCompany();
+  if ($view_type == 'detail') {
+    foreach ($contacts as $contact) {
+      $counter++;
+      $company = $contact->getCompany();
 ?>
   <div class="listedContact <?php echo $counter%2 ? 'even' : 'odd' ?>">
     <div class="contactAvatar"><img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> <?php echo lang('avatar') ?>" /></div>
@@ -92,6 +97,52 @@ if (is_array($contacts)) {
     <div class="clear"></div>
   </div>
 <?php } // foreach ?>
+<?php } else { ?>
+  <table id="contactsTable">
+    <tr>
+      <th><?php echo lang('name'); ?></th>
+      <th><?php echo lang('email address'); ?></th>
+      <th><?php echo lang('office phone number'); ?></th>
+      <th><?php echo lang('fax number'); ?></th>
+      <th><?php echo lang('mobile phone number'); ?></th>
+      <th><?php echo lang('home phone number'); ?></th>
+    </tr>
+      
+<?php
+  foreach ($contacts as $contact) {
+    $counter++;
+    $company = $contact->getCompany();
+  ?>
+  <tr class="<?php echo $counter%2 ? 'even':'odd'?>">
+    <td width="30%"><strong><a href="<?php echo $contact->getCardUrl() ?>"><?php echo clean($contact->getDisplayName()) ?></a></strong> @ <a href="<?php echo $company->getCardUrl(); ?>"><?php echo $company->getName(); ?></a></td>
+    <td width="30%"><?php if (trim($contact->getEmail()) != '') { ?>
+      <a href="mailto:<?php echo $contact->getEmail()?>"><?php echo $contact->getEmail() ?></a>
+      <?php } // if ?>
+    </td>
+    <td width="10%">
+      <?php if (trim($contact->getOfficeNumber()) != '') { ?>
+        <?php echo clean($contact->getOfficeNumber()) ?>
+      <?php } // if ?>
+    </td>
+    <td width="10%">
+      <?php if (trim($contact->getFaxNumber()) != '') { ?>
+        <?php echo clean($contact->getFaxNumber()) ?>
+      <?php } // if ?>
+    </td>
+    <td width="10%">
+      <?php if (trim($contact->getMobileNumber()) != '') { ?>
+        <?php echo clean($contact->getMobileNumber()) ?>
+      <?php } // if ?>
+    </td>
+    <td width="10%">
+      <?php if (trim($contact->getHomeNumber()) != '') { ?>
+        <?php echo clean($contact->getHomeNumber()) ?>
+      <?php } // if ?>
+    </td>
+  </tr>
+<?php } // foreach ?>
+  </table>
+<?php } // if ?>
 <?php } // if ?>
   <div id="contactsPaginationBottom"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'contacts', (trim($initial) == '' ? array('page'=> '#PAGE#') : array('page' => '#PAGE#', 'initial' => $initial)))) ?></div>
 </div>

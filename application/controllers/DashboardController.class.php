@@ -105,9 +105,13 @@
         $page = 1;
       } // if
       
-      $contacts_per_page = array_var($_GET, 'per_page', Cookie::getValue('contactsPerPage', '10'));
+      $contacts_per_page = array_var($_GET, 'per_page', Cookie::getValue('contactsPerPage', '20'));
       $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
       Cookie::setValue('contactsPerPage', $contacts_per_page, $expiration);
+      
+      $view_type = array_var($_GET, 'view', Cookie::getValue('contactsViewType', 'detail'));
+      $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
+      Cookie::setValue('contactsViewType', $view_type, $expiration);
       
       $initial = array_var($_GET, 'initial', '');
       if (trim($initial) == '') {
@@ -129,6 +133,7 @@
       
       $favorite_companies = Companies::getFavorites();
       
+      tpl_assign('view_type', $view_type);
       tpl_assign('tags', Tags::getClassTagNames('Contacts', false));
       tpl_assign('contacts', $contacts);
       tpl_assign('contacts_pagination', $pagination);
