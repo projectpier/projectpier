@@ -19,9 +19,10 @@
 
 <?php
 $counter = 0;
-foreach ($contacts as $contact) {
-  $counter++;
-  $company = $contact->getCompany();
+if (is_array($contacts)) {
+  foreach ($contacts as $contact) {
+    $counter++;
+    $company = $contact->getCompany();
 ?>
   <div class="listedContact <?php echo $counter%2 ? 'even' : 'odd' ?>">
     <div class="contactAvatar"><img src="<?php echo $contact->getAvatarUrl() ?>" alt="<?php echo clean($contact->getDisplayName()) ?> <?php echo lang('avatar') ?>" /></div>
@@ -65,6 +66,7 @@ foreach ($contacts as $contact) {
     <div class="clear"></div>
   </div>
 <?php } // foreach ?>
+<?php } // if ?>
   <div id="contactsPaginationBottom"><?php echo advanced_pagination($contacts_pagination, get_url('dashboard', 'search_contacts', array('search_for' => $search_term, 'page' => '#PAGE#'))) ?></div>
 </div>
 <?php } else { ?>

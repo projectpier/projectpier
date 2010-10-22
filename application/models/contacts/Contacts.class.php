@@ -43,6 +43,28 @@
       return count($result) ? $result : null;
     } // getGroupedByCompany
     
+    /**
+    * Returns array of initials
+    *
+    * @param void
+    * @return array
+    */
+    function getInitials() {
+      $sql = "SELECT DISTINCT UPPER(SUBSTRING(`display_name`,1,1)) AS 'initial' FROM `".TABLE_PREFIX."contacts` ORDER BY `display_name` ASC";
+      $rows = DB::executeAll($sql);
+      $initials = array();
+      foreach ($rows as $row) {
+        if (preg_match('/^\d$/', $row['initial'])) {
+          if (!in_array('_', $initials)) {
+            $initials[] = '_';
+          } // if
+        } else {
+          $initials[] = $row['initial'];
+        } // if
+      } // foreach
+      return $initials;
+    } // getInitials
+
   } // Contacts 
 
 ?>

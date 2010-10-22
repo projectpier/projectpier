@@ -105,27 +105,36 @@
         $page = 1;
       } // if
       
-      $companies_per_page = array_var($_GET, 'per_page', Cookie::getValue('companiesPerPage', '10'));
+      $contacts_per_page = array_var($_GET, 'per_page', Cookie::getValue('contactsPerPage', '10'));
       $expiration = Cookie::getValue('remember'.TOKEN_COOKIE_NAME) ? REMEMBER_LOGIN_LIFETIME : null;
-      Cookie::setValue('companiesPerPage', $companies_per_page, $expiration);
+      Cookie::setValue('contactsPerPage', $contacts_per_page, $expiration);
       
-      $conditions = '';
+      $initial = array_var($_GET, 'initial', '');
+      if (trim($initial) == '') {
+        $conditions = '';
+      } elseif ($initial == "_") {
+        $conditions = "`display_name` REGEXP '^[^a-z]'";
+      } else {
+        $conditions = "`display_name` LIKE '$initial%'";
+      } // if
       
-      list($companies, $pagination) = Companies::paginate(
+      list($contacts, $pagination) = Contacts::paginate(
         array(
           'conditions' => $conditions,
-          'order' => '`name` ASC'
+          'order' => '`display_name` ASC'
         ),
-        $companies_per_page,
+        $contacts_per_page,
         $page
       ); // paginate
       
       $favorite_companies = Companies::getFavorites();
       
       tpl_assign('tags', Tags::getClassTagNames('Contacts', false));
-      tpl_assign('companies', $companies);
-      tpl_assign('companies_pagination', $pagination);
+      tpl_assign('contacts', $contacts);
+      tpl_assign('contacts_pagination', $pagination);
       tpl_assign('favorite_companies', $favorite_companies);
+      tpl_assign('initial', $initial);
+      tpl_assign('initials', Contacts::getInitials());
       $this->setSidebar(get_template_path('contacts_sidebar', 'dashboard'));
     } // contacts
     
@@ -250,8 +259,6 @@
       tpl_assign('projects_index', $projects_index);
     } // weekly_schedule
 
-    
-  
   } // DashboardController
 
 ?>

@@ -40,7 +40,7 @@
   <fieldset>
     <legend><?php echo lang('company') ?> <span class="label_required">*</span></legend>
     <div>
-      <?php echo radio_field('contact[company][what]', $contact_data['company']['what'] != 'new', array('value' => 'existing', 'id'=>'contactFormExistingCompany', 'onclick' => 'App.modules.addContactForm.toggleCompanyForms()')); ?>
+      <?php echo radio_field('contact[company][what]', array_var(array_var($contact_data, 'company'), 'what') != 'new', array('value' => 'existing', 'id'=>'contactFormExistingCompany', 'onclick' => 'App.modules.addContactForm.toggleCompanyForms()')); ?>
       <?php echo label_tag(lang('existing company'), 'contactFormExistingCompany', false, array('class' => 'checkbox')) ?>
     </div>
     <div id="contactFormExistingCompanyControls">
@@ -48,7 +48,7 @@
     </div>
   
     <div>
-      <?php echo radio_field('contact[company][what]', $contact_data['company']['what'] == 'new', array('value' => 'new', 'id'=>'contactFormNewCompany', 'onclick' => 'App.modules.addContactForm.toggleCompanyForms()')); ?>
+      <?php echo radio_field('contact[company][what]', array_var(array_var($contact_data, 'company'), 'what') == 'new', array('value' => 'new', 'id'=>'contactFormNewCompany', 'onclick' => 'App.modules.addContactForm.toggleCompanyForms()')); ?>
       <?php echo label_tag(lang('new company'), 'contactFormNewCompany', false, array('class'=>'checkbox'))?>
     </div>
     <div id="contactFormNewCompanyControls">

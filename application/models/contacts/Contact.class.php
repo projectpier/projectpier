@@ -375,7 +375,7 @@
     * @param Company $to Can user add user to this company
     * @return boolean
     */
-    function canAdd(User $user, Company $to) {
+    function canAdd(User $user, Company $to = null) {
       if ($user->isAccountOwner()) {
         return true;
       } // if

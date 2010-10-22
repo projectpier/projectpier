@@ -25,7 +25,7 @@
     private $layout;
     
     /**
-    * Array of helpers that will be automaticly loaded when render method is called
+    * Array of helpers that will be automatically loaded when render method is called
     *
     * @var array
     */
