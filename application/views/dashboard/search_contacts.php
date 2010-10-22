@@ -34,11 +34,11 @@ foreach ($contacts as $contact) {
   <?php } // if ?>
     </div>
   <?php } // if ?>
-    <div class="contactName"><a href="<?php echo $contact->getCardUrl() ?>"><?php echo clean($contact->getDisplayName()) ?></a><?php if ($contact->getTitle() != '') echo " &mdash; ".clean($contact->getTitle()) ?> @ <a href="<?php echo $company->getCardUrl(); ?>"><?php echo $company->getName(); ?></a></div>
+    <div class="contactName"><a href="<?php echo $contact->getCardUrl() ?>"><?php echo highlight($search_term, clean($contact->getDisplayName())) ?></a><?php if ($contact->getTitle() != '') echo " &mdash; ".highlight($search_term, clean($contact->getTitle())) ?> @ <a href="<?php echo $company->getCardUrl(); ?>"><?php echo $company->getName(); ?></a></div>
     <div class="contactDetails">
       <div class="contactInfo">
   <?php if (trim($contact->getEmail()) != '') { ?>
-        <div><span><?php echo lang('email address') ?>:</span> <a href="mailto:<?php echo $contact->getEmail() ?>"><?php echo $contact->getEmail() ?></a></div>
+        <div><span><?php echo lang('email address') ?>:</span> <a href="mailto:<?php echo $contact->getEmail() ?>"><?php echo highlight($search_term, $contact->getEmail()) ?></a></div>
   <?php } // if ?>
   <?php if (trim($contact->getOfficeNumber()) != '') { ?>
         <div><span><?php echo lang('office phone number') ?>:</span> <?php echo clean($contact->getOfficeNumber()) ?></div>

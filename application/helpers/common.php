@@ -45,6 +45,18 @@
   } // render_icon
   
   /**
+  * Highlight pattern in a word
+  *
+  * @access public
+  * @param string $pattern to match
+  * @param string $subject in which to change the pattern
+  * @return string modified string
+  */
+  function highlight($pattern, $subject) {
+    return preg_replace('/('.$pattern.')/i', '<span class="highlight">\1</span>', $subject);
+  } // highlight
+  
+  /**
   * Use widget
   *
   * @access public
