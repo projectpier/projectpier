@@ -545,6 +545,39 @@
     function getObjectUrl() {
       return $this->getViewUrl();
     } // getObjectUrl
+
+    /**
+    * Returns a count of tickets in this milestone by status
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function hasTicketsByStatus($status) {
+      return ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()) . ' AND `status` = ' . DB::escape($status) . '');
+    } // hasTicketsByStatus
+
+    /**
+    * Returns a total count of all tickets.
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getTotalTicketCount() {
+      return ProjectTickets::count('`milestone_id` = ' . DB::escape($this->getId()));
+    } // getTotalTicketCount
+
+    /**
+    * Returns a percentage value of a certain ticket status.
+    *
+    * @access public
+    * @param void
+    * @return string
+    */
+    function getPercentageByTicketStatus($status) {
+      return floor(($this->hasTicketsByStatus($status) / $this->getTotalTicketCount()) * 100);
+    } // getPercentageByTicketStatus
     
   } // ProjectMilestone 
 

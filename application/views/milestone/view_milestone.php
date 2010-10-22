@@ -79,13 +79,37 @@
 
 <!-- Tickets -->
 <?php if ($milestone->hasTickets()) { ?>
+  <div class="milestone-progress-wrapper">
+      <div class="progress clearfix">
+        <div style="width:<?php print $milestone->getPercentageByTicketStatus('closed'); ?>%;" class="resolved"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
+          <div style="width: <?php print $milestone->getPercentageByTicketStatus('pending'); ?>%;" class="in-progress"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
+          <div style="width: <?php print floor((($milestone->hasTicketsByStatus('new') + $milestone->hasTicketsByStatus('open')) / $milestone->getTotalTicketCount()) * 100) ?>%;" class="open"><img height="14" width="1" src="<?php print image_url('clear.gif'); ?>" alt=""></div>
+      </div>
+    <div class="ticket-details">
+      <?php print $milestone->getPercentageByTicketStatus('closed'); ?>% completed -
+      Tickets: <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'closed')); ?>">Closed (<?php print $milestone->hasTicketsByStatus('closed') ?>)</a>,
+      <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'pending')); ?>">Pending (<?php print $milestone->hasTicketsByStatus('pending') ?>)</a>,
+      <a href="<?php print get_url('ticket', 'index', array('active_project' => $milestone->getProjectId(), 'order' => 'ASC', 'status' => 'new,open')); ?>">New/Open (<?php print $milestone->hasTicketsByStatus('open') + $milestone->hasTicketsByStatus('new'); ?>)</a>
+    </div>
+  </div>
       <p><?php echo lang('tickets') ?>:</p>
-      <ul>
+      <ul class="milestone-tickets">
 <?php foreach ($milestone->getTickets() as $ticket) { ?>
         <li><a href="<?php echo $ticket->getViewUrl() ?>"><?php echo clean($ticket->getTitle()) ?></a>
-<?php if ($ticket->getCreatedBy() instanceof User) { ?>
-        <span class="desc">(<?php echo lang('posted on by', format_date($ticket->getUpdatedOn()), $ticket->getCreatedByCardUrl(), clean($ticket->getCreatedByDisplayName())) ?>)</span>
-<?php } // if ?>
+        <span class="ticket-meta-details">(
+          <?php if ($ticket->getStatus()) { ?>
+          <span class="ticket-status">Status: <?php echo $ticket->getStatus(); ?></span>
+          <?php } ?>
+
+          <?php if ($ticket->getAssignedToUserId() > 0) { ?>
+          | <span class="ticket-assigned-to">Assigned To: <?php echo clean($ticket->getAssignedToUser()->getContact()->getDisplayName());  ?></span>
+          <?php } ?>
+
+          <?php if ($ticket->getDueDate()) { ?>
+          | <span class="ticket-due-date">Due: <?php echo format_date($ticket->getDueDate())  ?></span>
+          <?php } ?>)
+        </span>
+
 <?php } // foreach ?>
       </ul>
 <?php } // if?>

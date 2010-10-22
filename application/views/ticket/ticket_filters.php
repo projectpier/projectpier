@@ -32,14 +32,15 @@
     
     // TODO make filter_links template more flexible so that it can be used with Categories and not only text.
     echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name=> ''))).'" '.($property_in_url == "" ? 'class="selected"' : '').'>'.lang('all').'</a> ';
-
-    foreach ($categories as $category) {
-      $category_id = $category->getId();
-      echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => $category_id))).'" '.(preg_match("/^(.*,)?$category_id(,.*)?$/", $property_in_url) ? 'class="selected"' : '').'>'.$category->getName().'</a> ';
-      if (preg_match("/^(.*,)?$category_id(,.*)?$/", $property_in_url)) {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$category_id,/", "/,$category_id,/", "/,$category_id$/","/^$category_id$/"), array('', ',', '', ''), $property_in_url)))).'">-</a> ';
-      } else {
-        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($property_in_url == "" ? $category_id : $property_in_url.','.$category_id)))).'">+</a> ';
+    if (is_array($categories)) {
+      foreach ($categories as $category) {
+        $category_id = $category->getId();
+        echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => $category_id))).'" '.(preg_match("/^(.*,)?$category_id(,.*)?$/", $property_in_url) ? 'class="selected"' : '').'>'.$category->getName().'</a> ';
+        if (preg_match("/^(.*,)?$category_id(,.*)?$/", $property_in_url)) {
+          echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => preg_replace(array("/^$category_id,/", "/,$category_id,/", "/,$category_id$/","/^$category_id$/"), array('', ',', '', ''), $property_in_url)))).'">-</a> ';
+        } else {
+          echo '<a href="'.get_url('ticket', 'index', array_merge($params, array($property_name => ($property_in_url == "" ? $category_id : $property_in_url.','.$category_id)))).'">+</a> ';
+        }
       }
     }
     ?>
