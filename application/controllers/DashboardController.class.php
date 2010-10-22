@@ -215,6 +215,24 @@
       $upcoming_milestones = ProjectMilestones::getActiveMilestonesInPeriodByUser(logged_user(), $from_date, $to_date);
       $upcoming_tickets = ProjectTickets::getOpenTicketsInPeriodByUser(logged_user(), $from_date, $to_date);
       
+      $active_projects = array();
+      $projects_index = array();
+      $counter = 1;
+      foreach ($upcoming_milestones as $milestone) {
+        if (!isset($projects_index[$milestone->getProjectId()])) {
+          $projects_index[$milestone->getProjectId()] = $counter;
+          $active_projects[] = $milestone->getProject();
+          $counter++;
+        } // if
+      } // foreach
+      foreach ($upcoming_tickets as $ticket) {
+        if (!isset($projects_index[$ticket->getProjectId()])) {
+          $projects_index[$ticket->getProjectId()] = $counter;
+          $active_projects[] = $ticket->getProject();
+          $counter++;
+        } // if
+      } // foreach
+      
       tpl_assign('from_date', $from_date);
       tpl_assign('to_date', $to_date);
       tpl_assign('view_type', $view_type);
@@ -222,6 +240,8 @@
       tpl_assign('late_tickets', logged_user()->getLateTickets());
       tpl_assign('upcoming_milestones', $upcoming_milestones);
       tpl_assign('late_milestones', logged_user()->getLateMilestones());
+      tpl_assign('projects', $active_projects);
+      tpl_assign('projects_index', $projects_index);
     } // weekly_schedule
 
     

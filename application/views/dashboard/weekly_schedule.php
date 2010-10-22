@@ -4,10 +4,12 @@
   set_page_title(lang('weekly schedule'));
   dashboard_tabbed_navigation(DASHBOARD_TAB_WEEKLY_SCHEDULE);
   dashboard_crumbs(lang('weekly schedule'));
+  add_stylesheet_to_page('dashboard/weekly_schedule.css');
   add_stylesheet_to_page('project/calendar.css');
   add_stylesheet_to_page('project/tickets.css');
 
 ?>
+<script type="text/javascript" src="<?php echo get_javascript_url('modules/calendar.js') ?>"></script>
 <?php if ((isset($upcoming_milestones) && is_array($upcoming_milestones) && count($upcoming_milestones)) || isset($upcoming_tickets) && is_array($upcoming_tickets) && count($upcoming_tickets)) { ?>
   <div id="viewToggle">
     <a href="<?php echo get_url('dashboard', 'weekly_schedule', array('view'=>'list')); ?>"><img src="<?php if ($view_type=="list") { echo get_image_url("icons/list_on.png"); } else { echo get_image_url("icons/list_off.png"); } ?>" title="<?php echo lang('list view'); ?>" alt="<?php echo lang('list view'); ?>"/></a>
@@ -189,9 +191,9 @@ if (isset($calendar[$current_date_str])
 <?php
 foreach ($calendar[$current_date_str] as $event) {
   if ($event instanceof ProjectMilestone) { ?>
-            <li><a href="<?php echo $event->getViewUrl(); ?>"><?php echo $event->getName(); ?></a></li>
+            <li class="event milestone <?php echo "project".$event->getProjectId()." projectColor".$projects_index[$event->getProjectId()]%16 ;?>"><a href="<?php echo $event->getViewUrl(); ?>"><?php echo $event->getName(); ?></a></li>
 <?php } elseif ($event instanceof ProjectTicket) { ?>
-            <li><a href="<?php echo $event->getViewUrl(); ?>"><?php echo $event->getSummary(); ?></a></li>
+            <li class="event task <?php echo "project".$event->getProjectId()." projectColor".$projects_index[$event->getProjectId()]%16 ;?>"><a href="<?php echo $event->getViewUrl(); ?>"><?php echo $event->getSummary(); ?></a></li>
 <?php } // if ?>
 <?php } // foreach ?>
 <?php } // if ?>
@@ -206,7 +208,22 @@ foreach ($calendar[$current_date_str] as $event) {
 
 ?>
     </table>
+    <div id="calendar_legend">
+      <h2><?php echo lang('legend'); ?></h2>
+      <ul>
+<?php foreach ($projects as $project) { ?>
+        <li id="projectLabel<?php echo $project->getId(); ?>" class="projectLabel projectColor<?php echo $projects_index[$project->getId()]%16 ?>" onclick="App.modules.calendar.toggleProject(<?php echo $project->getId() ?>); "><?php echo $project->getName(); ?></li>
+<?php } // foreach ?>
+      </ul>
+      <script type="text/javascript">
+      <?php foreach ($projects as $project) { ?>
+        App.modules.calendar.makeUnselectable("projectLabel<?php echo $project->getId(); ?>");
+      <?php } // foreach ?>
+      </script>
+    </div>
+    <div class="clear"></div>
   </div>
+
 
 <?php   } ?>
 </div><!-- // #milestones -->
