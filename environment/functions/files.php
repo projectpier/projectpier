@@ -387,7 +387,7 @@ function isOpenbasedirAllowedPath($path)    {
 
   // Prepare disposition
   $disposition = $force_download ? 'attachment' : 'inline';
-  header("Content-Disposition: $disposition; filename=\"" . $name) . "\"";
+  header("Content-Disposition: $disposition; filename=\"" . $name . "\"");
   header("Content-Transfer-Encoding: binary");
   print $content;
 
